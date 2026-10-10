@@ -10,7 +10,7 @@ Extends the existing 0D/1D Poiseuille-Bernoulli Windkessel solver with:
 
 from __future__ import annotations
 
-import copy
+import math
 from typing import Any, NotRequired, TypedDict
 
 from app.cardiotwin.hemodynamics.physics import (
@@ -93,7 +93,7 @@ def validate_parameter_range(param_name: str, value: float) -> tuple[bool, str]:
     bounds = PARAMETER_BOUNDS.get(param_name)
     if bounds is None:
         return False, f"Unknown parameter: {param_name}"
-    if value < bounds["min"] or value > bounds["max"]:
+    if isinstance(value, bool) or not isinstance(value, int | float) or not math.isfinite(value) or value < bounds["min"] or value > bounds["max"]:
         return False, (
             f"{param_name}={value} outside physiological range "
             f"[{bounds['min']}, {bounds['max']}] {bounds['unit']}"
@@ -112,34 +112,16 @@ def _solve_with_overrides(
     lesion_length_override_mm: float | None = None,
     microvascular_resistance_factor: float | None = None,
 ) -> SolverResult:
-    """Solve vessel physics with optional parameter overrides.
-
-    Temporarily patches module-level constants for the solve, then restores them.
-    This is safe because the solver is stateless and single-threaded per request.
-    """
-    import app.cardiotwin.hemodynamics.physics as phys
-
-    # Save originals
-    orig_viscosity = phys.BLOOD_VISCOSITY_PA_S
-    orig_density = phys.BLOOD_DENSITY_KG_M3
-    orig_geom = copy.deepcopy(phys.NOMINAL_GEOMETRY)
-
-    try:
-        if blood_viscosity_override is not None:
-            phys.BLOOD_VISCOSITY_PA_S = blood_viscosity_override
-        if blood_density_override is not None:
-            phys.BLOOD_DENSITY_KG_M3 = blood_density_override
-        if vessel_diameter_override_mm is not None and vessel_id in phys.NOMINAL_GEOMETRY:
-            phys.NOMINAL_GEOMETRY[vessel_id]["ref_diameter_mm"] = vessel_diameter_override_mm
-        if lesion_length_override_mm is not None and vessel_id in phys.NOMINAL_GEOMETRY:
-            phys.NOMINAL_GEOMETRY[vessel_id]["length_mm"] = lesion_length_override_mm
-        if microvascular_resistance_factor is not None and vessel_id in phys.NOMINAL_GEOMETRY:
-            phys.NOMINAL_GEOMETRY[vessel_id]["microvascular_resistance_base"] = (
-                orig_geom[vessel_id]["microvascular_resistance_base"] * microvascular_resistance_factor
-            )
-
-        state = solve_vessel_physics(vessel_id, stenosis_pct, mean_aortic_pressure_mmhg, hyperemia_factor)
-        return {
+    """Solve with request-local parameters; concurrent requests share no mutable physics state."""
+    state = solve_vessel_physics(
+        vessel_id, stenosis_pct, mean_aortic_pressure_mmhg, hyperemia_factor,
+        blood_viscosity_pa_s=blood_viscosity_override if blood_viscosity_override is not None else BLOOD_VISCOSITY_PA_S,
+        blood_density_kg_m3=blood_density_override if blood_density_override is not None else BLOOD_DENSITY_KG_M3,
+        vessel_diameter_mm=vessel_diameter_override_mm,
+        lesion_length_mm=lesion_length_override_mm,
+        microvascular_resistance_factor=microvascular_resistance_factor if microvascular_resistance_factor is not None else 1.0,
+    )
+    return {
             "ffr": state.ffr,
             "distal_pressure_mmhg": state.distal_pressure_mmhg,
             "flow_rate_ml_min": state.flow_rate_ml_min,
@@ -152,11 +134,7 @@ def _solve_with_overrides(
             "is_ischemic": state.is_ischemic,
             "stenosis_pct": state.stenosis_pct,
             "aortic_pressure_mmhg": state.aortic_pressure_mmhg,
-        }
-    finally:
-        phys.BLOOD_VISCOSITY_PA_S = orig_viscosity
-        phys.BLOOD_DENSITY_KG_M3 = orig_density
-        phys.NOMINAL_GEOMETRY = orig_geom
+    }
 
 
 def parameter_sweep(

@@ -12,6 +12,8 @@ from typing import Any
 
 from fastapi import HTTPException
 
+from .passport import seal_passport, verify_evidence_passport
+
 # Thread-safe in-memory store for passports (mirrors demo repository pattern)
 _LOCK = threading.Lock()
 _PASSPORTS: dict[str, dict[str, Any]] = {}
@@ -24,6 +26,21 @@ def save_passport(passport: dict[str, Any]) -> dict[str, Any]:
     cid = passport["case_id"]
 
     with _LOCK:
+        if not verify_evidence_passport(passport)["is_valid"]:
+            raise HTTPException(422, "Cannot save an invalid evidence passport")
+        if pid in _PASSPORTS:
+            if _PASSPORTS[pid] != passport:
+                raise HTTPException(409, "Existing evidence passports cannot be overwritten")
+            return copy.deepcopy(_PASSPORTS[pid])
+        parent_id = passport.get("parent_passport_id")
+        if parent_id:
+            parent = _PASSPORTS.get(parent_id)
+            if not parent or parent.get("case_id") != cid:
+                raise HTTPException(422, "Parent passport must exist in the same case")
+            if passport.get("previous_passport_hash") != parent["integrity"]["content_sha256"]:
+                raise HTTPException(422, "Parent passport digest does not match")
+        elif passport.get("previous_passport_hash") is not None:
+            raise HTTPException(422, "A previous digest requires an explicit parent")
         _PASSPORTS[pid] = copy.deepcopy(passport)
         if cid not in _CASE_INDEX:
             _CASE_INDEX[cid] = []
@@ -60,13 +77,22 @@ def sign_off_passport(
         if passport_id not in _PASSPORTS:
             raise HTTPException(404, f"Evidence passport '{passport_id}' not found")
 
+        if not approver_id.strip() or not approver_name.strip():
+            raise HTTPException(422, "Authenticated reviewer identity is required")
+        if approver_role not in {"reviewer", "admin", "cardiologist"}:
+            raise HTTPException(403, "Reviewer permission is required")
         p = _PASSPORTS[passport_id]
+        if not verify_evidence_passport(p)["is_valid"]:
+            raise HTTPException(409, "Invalid or modified passports cannot be reviewed")
+        if p["governance"].get("status") in {"CLINICALLY_APPROVED", "RESEARCH_REVIEWED"}:
+            raise HTTPException(409, "A completed review cannot be silently overwritten")
         content_hash = p["integrity"]["content_sha256"]
 
         # Record authenticated sign-off
         now_iso = datetime.now(UTC).isoformat()
         p["governance"] = {
-            "status": "CLINICALLY_APPROVED",
+            "status": "RESEARCH_REVIEWED",
+            "clinical_approval": False,
             "approver_id": approver_id,
             "approver_name": approver_name,
             "approver_role": approver_role,
@@ -76,6 +102,9 @@ def sign_off_passport(
             "ai_autonomous_prescribing_forbidden": True,
             "notes": notes,
         }
+        # This records an authenticated workspace review, not clinical credential
+        # verification. Seal the review state so fabricated approvals are detected.
+        seal_passport(p)
         return copy.deepcopy(p)
 
 

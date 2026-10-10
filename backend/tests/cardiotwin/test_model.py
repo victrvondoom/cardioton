@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -224,5 +225,8 @@ def test_serving_path_does_not_need_training_dependencies():
         assert 0 <= p["cad"]["probability"] <= 1
         """
     )
-    r = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=120)
+    backend_dir = str(Path(__file__).resolve().parents[2])
+    import os
+    env = {**os.environ, "PYTHONPATH": backend_dir}
+    r = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=120, cwd=backend_dir, env=env)
     assert r.returncode == 0, r.stderr[-800:]

@@ -55,10 +55,10 @@ export function Legend() {
       </div>
       <div className="flex flex-wrap gap-x-4 gap-y-1">
         <span>
-          <b className="text-ink-body">Outline</b> strength = model confidence
+          <b className="text-ink-body">Outline</b> strength = heuristic category, not clinical reliability
         </span>
         <span>
-          <b className="text-ink-body">Halo</b> width = uncertainty (80% interval)
+          <b className="text-ink-body">Halo</b> width = bootstrap model spread, not outcome coverage
         </span>
         <span>Tube thickness is constant — colour is <i>not</i> a stenosis measurement.</span>
       </div>
@@ -98,14 +98,14 @@ export function CadCard({ t, selected, onSelect }: { t: TargetPrediction; select
     >
       <div className="flex items-baseline justify-between gap-2">
         <span className="text-[11px] uppercase tracking-wide text-ink-muted">Predicted CAD probability</span>
-        <span className="text-[10.5px] text-ink-muted">{CONF_TEXT[t.confidence]}</span>
+        <span className="text-[10.5px] text-ink-muted" title="Heuristic category from ensemble width, training distance and feature completeness; not clinical reliability">{CONF_TEXT[t.confidence]} · heuristic</span>
       </div>
       <div className="flex items-baseline gap-3">
         <span className="text-4xl font-semibold tabular-nums text-ink-primary" data-testid="cad-probability">
           {pct(t.probability)}
         </span>
         <span className="text-[12px] text-ink-muted tabular-nums">
-          80% interval {pct(t.interval_80[0])}–{pct(t.interval_80[1])}
+          Bootstrap model range (10th–90th percentile) {pct(t.interval_80[0])}–{pct(t.interval_80[1])}
         </span>
       </div>
       <ProbBar p={t.probability} lo={t.interval_80[0]} hi={t.interval_80[1]} />
@@ -145,7 +145,7 @@ export function VesselCard({ t, selected, onSelect }: { t: TargetPrediction; sel
         <span className="text-[13px] font-semibold text-ink-primary">
           {id} <span className="font-normal text-ink-muted text-[11px]">· {VESSEL_NAMES[id]}</span>
         </span>
-        <span className="text-[10.5px] text-ink-muted">{CONF_TEXT[t.confidence]}</span>
+        <span className="text-[10.5px] text-ink-muted" title="Heuristic category from ensemble width, training distance and feature completeness; not clinical reliability">{CONF_TEXT[t.confidence]} · heuristic</span>
       </div>
       <div className="flex items-baseline gap-3">
         <span className="text-2xl font-semibold tabular-nums text-ink-primary" data-testid={`vessel-prob-${id}`}>
@@ -155,7 +155,7 @@ export function VesselCard({ t, selected, onSelect }: { t: TargetPrediction; sel
           {BAND_LABEL[t.band]}
         </span>
         <span className="text-[11px] text-ink-muted tabular-nums ml-auto">
-          {pct(t.interval_80[0])}–{pct(t.interval_80[1])}
+          Model range (10th–90th percentile) {pct(t.interval_80[0])}–{pct(t.interval_80[1])}
         </span>
       </div>
       <ProbBar p={t.probability} lo={t.interval_80[0]} hi={t.interval_80[1]} />

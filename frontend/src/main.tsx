@@ -49,6 +49,7 @@ const CardioTwin = lazy(() => import("./routes/CardioTwin"));
 const CardioHemoTwin = lazy(() => import("./routes/CardioHemoTwin"));
 const CardioTwinAtlas = lazy(() => import("./routes/CardioTwinAtlas"));
 const CardioIntelligence = lazy(() => import("./routes/CardioIntelligence"));
+const CardioGlobalIntelligence = lazy(() => import("./routes/CardioGlobalIntelligence"));
 const CaseDetail = lazy(() => import("./routes/CaseDetail"));
 const Cases = lazy(() => import("./routes/Cases"));
 const Cohorts = lazy(() => import("./routes/Cohorts"));
@@ -141,6 +142,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="/cardiotwin/evaluation" element={<CardioEvaluation />} />
             <Route path="/cardiotwin/hemo" element={<CardioHemoTwin />} />
             <Route path="/cardiotwin/intelligence" element={<CardioIntelligence />} />
+            <Route path="/cardiotwin/global" element={<CardioGlobalIntelligence />} />
             <Route path="/cardiotwin/atlas/:tab?" element={<CardioTwinAtlas />} />
 
             <Route path="/policies" element={<Policies />} />

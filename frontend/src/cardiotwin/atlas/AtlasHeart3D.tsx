@@ -24,7 +24,8 @@ function Geometry({snapshot,onSelect}:{snapshot:HemoSnapshot;onSelect:(axis:Hemo
       <mesh geometry={geometries.pulmonary}><meshStandardMaterial color="#7698ae" roughness={.5}/></mesh>
     </group>
     {HEMO_AXES.map(([axis],i)=><mesh key={axis} position={POSITIONS[i]} onClick={e=>{e.stopPropagation();onSelect(axis);}}><sphereGeometry args={[snapshot[axis].level==="HIGH"?.16:.12,20,16]}/><meshStandardMaterial color={COLORS[snapshot[axis].level]} emissive={COLORS[snapshot[axis].level]} emissiveIntensity={snapshot[axis].level==="UNKNOWN"?0:.18}/></mesh>)}
-    <OrbitControls enablePan={false} enableZoom minDistance={3.7} maxDistance={8} autoRotate={false}/>
+    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+    <OrbitControls {...{enablePan:false} as any} enableZoom minDistance={3.7} maxDistance={8} autoRotate={false}/>
   </>;
 }
 export default function AtlasHeart3D({snapshot,onSelect}:{snapshot:HemoSnapshot;onSelect:(axis:HemoAxisKey)=>void}) {

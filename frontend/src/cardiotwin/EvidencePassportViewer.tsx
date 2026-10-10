@@ -210,9 +210,9 @@ export default function EvidencePassportViewer({
 
   const signOff = useCallback(async () => {
     if (!passportId) return;
-    setLoading("Executing clinical sign-off...");
+    setLoading("Recording authenticated research review...");
     try {
-      const signed = await cardio.signOffPassport(passportId, "ESC/ACC Heart Team Review");
+      const signed = await cardio.signOffPassport(passportId, "Authenticated workspace research review");
       setPassport(signed);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Sign-off failed");
@@ -340,7 +340,7 @@ export default function EvidencePassportViewer({
               <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
                 <StatusBadge
                   label={governance.status}
-                  ok={governance.status === "CLINICALLY_APPROVED"}
+                  ok={governance.status === "RESEARCH_REVIEWED"}
                 />
                 {governance.approver_name && (
                   <span style={{ fontSize: 12, color: "#9aa8b8" }}>
@@ -359,8 +359,8 @@ export default function EvidencePassportViewer({
             <button onClick={verify} disabled={!!loading} style={btnStyle("#0d9")}>
               {"\uD83D\uDD0D"} Verify Integrity
             </button>
-            <button onClick={signOff} disabled={!!loading || governance?.status === "CLINICALLY_APPROVED"} style={btnStyle("#4488ff")}>
-              {"\u2705"} Clinical Sign-Off
+            <button onClick={signOff} disabled={!!loading || governance?.status === "RESEARCH_REVIEWED"} style={btnStyle("#4488ff")}>
+              {"\u2705"} Record Research Review
             </button>
             <button onClick={tamperDemo} disabled={!!loading} style={btnStyle("#fa0")}>
               {"\u26A0\uFE0F"} Tamper Demo

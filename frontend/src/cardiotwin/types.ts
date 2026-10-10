@@ -87,6 +87,12 @@ export interface Prediction {
   representativeness: Representativeness;
   feature_completeness: { provided: number; total: number; fraction: number; imputed: string[] };
   warnings: Warning[];
+  uncertainty_semantics?: {
+    interval_80: string;
+    confidence: string;
+    missingness: string;
+    clinical_validation: string;
+  };
   visualization: {
     encoding: Record<string, string>;
     vessels: Record<VesselId, VesselViz>;

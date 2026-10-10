@@ -1,101 +1,113 @@
-"""Distributionally Robust Conformal Prediction & Missingness Sensitivity Engine.
+"""Split-conformal outcome prediction with explicit calibration and missingness limits.
 
-Provides mathematically guaranteed prediction sets / confidence intervals:
-- Finite-sample split-conformal coverage at 1 - α (default 90% confidence).
-- Uncertainty-aware missingness propagation: calculates interval inflation
-  induced by absent EHR clinical values (bounding interval [min_p, max_p]).
-- Critical Information Deficit (CID): ranks which missing EHR test causes
-  the greatest epistemic uncertainty and should be acquired first.
+The shipped model has no held-out conformal calibration artifact. In its absence
+the reported outcome bound is [0, 1]; no coverage or clinical reliability is
+claimed. Missing-feature priorities are illustrative sensitivity weights, not
+validated adversarial bounds or recommendations to order clinical tests.
 """
 
 from __future__ import annotations
 
+import math
+from collections.abc import Sequence
 from typing import Any
 
-# Empirical non-conformity quantiles calibrated across stratified cross-validation folds
-# at confidence level 1 - α = 0.90
-CONFORMAL_QUANTILES_90: dict[str, float] = {
-    "CAD": 0.142,
-    "LAD": 0.168,
-    "LCX": 0.185,
-    "RCA": 0.174,
-}
-
-# Empirical feature sensitivities (gradient of log-odds w.r.t normalized feature range)
 FEATURE_SENSITIVITY: dict[str, float] = {
-    "typical_chest_pain": 0.22,
-    "oldpeak": 0.24,
-    "age": 0.12,
-    "trestbps": 0.08,
-    "thalach": 0.16,
-    "chol": 0.07,
-    "st_elevation": 0.18,
-    "st_depression": 0.21,
-    "t_inversion": 0.14,
-    "q_wave": 0.15,
-    "fbs": 0.05,
+    "typical_chest_pain": 0.22, "oldpeak": 0.24, "age": 0.12,
+    "trestbps": 0.08, "thalach": 0.16, "chol": 0.07,
+    "st_elevation": 0.18, "st_depression": 0.21, "t_inversion": 0.14,
+    "q_wave": 0.15, "fbs": 0.05,
 }
+CONFORMAL_REFERENCE = "https://arxiv.org/abs/2107.07511"
 
 
-def compute_conformal_interval(target: str, point_prob: float, alpha: float = 0.10) -> tuple[float, float]:
-    """Calculate finite-sample calibrated conformal prediction interval."""
-    q = CONFORMAL_QUANTILES_90.get(target, 0.16)
-    lower = max(0.0, point_prob - q)
-    upper = min(1.0, point_prob + q)
-    return round(lower, 3), round(upper, 3)
+def _unit_value(value: Any, name: str) -> float:
+    if isinstance(value, bool) or not isinstance(value, int | float):
+        raise ValueError(f"{name} must be a finite number in [0, 1]")
+    if not math.isfinite(value) or not 0 <= value <= 1:
+        raise ValueError(f"{name} must be a finite number in [0, 1]")
+    return float(value)
+
+
+def split_conformal_quantile(scores: Sequence[float], alpha: float = 0.10) -> float:
+    """Finite-sample order statistic for absolute binary-outcome residual scores.
+
+    Scores must come from exchangeable held-out observations, using a fixed
+    predictor. The augmented +infinity order statistic is bounded by 1 because
+    absolute residuals for binary labels and probabilities lie in [0, 1].
+    """
+    alpha = _unit_value(alpha, "alpha")
+    if not 0 < alpha < 1:
+        raise ValueError("alpha must lie strictly between 0 and 1")
+    ordered = sorted(_unit_value(score, "calibration score") for score in scores)
+    rank = math.ceil((len(ordered) + 1) * (1 - alpha))
+    return ordered[rank - 1] if rank <= len(ordered) else 1.0
+
+
+def compute_conformal_interval(
+    target: str,
+    point_prob: float,
+    alpha: float = 0.10,
+    *,
+    calibration_scores: Sequence[float] | None = None,
+) -> tuple[float, float]:
+    """Outcome prediction bounds, not confidence bounds on latent risk.
+
+    The target is retained for API compatibility. Calibration must be supplied
+    for that target; no invented target-specific quantiles are used.
+    """
+    point_prob = _unit_value(point_prob, "point probability")
+    q = split_conformal_quantile(calibration_scores if calibration_scores is not None else (), alpha)
+    # Do not round inward: that can exclude labels admitted by the procedure.
+    return max(0.0, point_prob - q), min(1.0, point_prob + q)
 
 
 def analyze_missingness_bounds(
     provided_features: dict[str, Any],
     all_features: list[str],
     baseline_predictions: dict[str, float],
+    *,
+    calibration_scores_by_target: dict[str, Sequence[float]] | None = None,
+    calibration_provenance: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Analyze the impact of missing EHR features on predictive uncertainty.
-
-    Instead of silent median imputation, this bounds the epistemic uncertainty
-    range [min_p, max_p] that could occur under adversarial feature values.
-    """
-    missing = [f for f in all_features if f not in provided_features or provided_features[f] is None]
-
-    # Calculate cumulative uncertainty inflation from missing inputs
-    total_missing_uncertainty = 0.0
-    deficit_ranking: list[dict[str, Any]] = []
-
-    for f in missing:
-        sensitivity = FEATURE_SENSITIVITY.get(f, 0.06)
-        total_missing_uncertainty += sensitivity
-        deficit_ranking.append({
-            "feature": f,
-            "uncertainty_contribution_pct": round(sensitivity * 100, 1),
-            "priority": "HIGH" if sensitivity >= 0.15 else ("MEDIUM" if sensitivity >= 0.09 else "ROUTINE"),
-            "clinical_recommendation": f"Acquire {f.replace('_', ' ').upper()} to shrink decision bounds.",
-        })
-
-    deficit_ranking.sort(key=lambda x: x["uncertainty_contribution_pct"], reverse=True)
-
-    # Bound inflation across targets
-    bounded_targets: dict[str, Any] = {}
-    for target, prob in baseline_predictions.items():
-        conf_low, conf_high = compute_conformal_interval(target, prob, alpha=0.10)
-
-        # Missingness stretches bounds outward
-        missing_delta = min(0.35, total_missing_uncertainty * 0.4)
-        robust_low = max(0.0, conf_low - missing_delta)
-        robust_high = min(1.0, conf_high + missing_delta)
-
-        bounded_targets[target] = {
-            "point_probability": round(prob, 3),
-            "conformal_90_interval": [conf_low, conf_high],
-            "robust_missingness_bounds": [round(robust_low, 3), round(robust_high, 3)],
-            "interval_width": round(robust_high - robust_low, 3),
-            "decision_reliable": (robust_high - robust_low) <= 0.40,
+    """Separate calibration availability from heuristic missing-data sensitivity."""
+    missing = [f for f in dict.fromkeys(all_features)
+               if provided_features.get(f) is None or provided_features.get(f) == ""]
+    ranking = [{
+        "feature": f,
+        "uncertainty_contribution_pct": round(FEATURE_SENSITIVITY.get(f, 0.06) * 100, 1),
+        "priority": "RESEARCH_REVIEW",
+        "clinical_recommendation": None,
+        "interpretation": "Illustrative sensitivity weight; clinical value of acquiring this input is unvalidated.",
+    } for f in missing]
+    ranking.sort(key=lambda item: item["uncertainty_contribution_pct"], reverse=True)
+    bounded: dict[str, Any] = {}
+    for target, probability in baseline_predictions.items():
+        scores = (calibration_scores_by_target or {}).get(target, ())
+        lower, upper = compute_conformal_interval(target, probability, calibration_scores=scores)
+        # Missingness outside calibration has no validated nontrivial bound.
+        robust = [0.0, 1.0] if missing else [lower, upper]
+        bounded[target] = {
+            "point_probability": probability,
+            "conformal_90_interval": [lower, upper],
+            "prediction_set": [label for label in (0, 1) if lower <= label <= upper],
+            "calibration_sample_count": len(scores),
+            "calibration_status": "SUPPLIED_UNVERIFIED" if scores else "UNAVAILABLE",
+            "robust_missingness_bounds": robust,
+            "interval_width": robust[1] - robust[0],
+            "decision_reliable": False,
         }
-
     return {
-        "conformal_method": "Split-Conformal Risk Control with Adversarial Missingness Bounding",
-        "guaranteed_coverage": "90% empirical coverage under exchangeability",
+        "conformal_method": "Absolute-residual split-conformal outcome prediction; uncalibrated fallback is vacuous",
+        "guaranteed_coverage": None,
+        "nominal_coverage": 0.90,
+        "interval_semantics": "Binary outcome prediction region, not a confidence interval for disease probability",
+        "coverage_assumptions": ["Fixed predictor", "Held-out exchangeable calibration scores for each target", "No unassessed distribution or missingness shift"],
+        "calibration_provenance": calibration_provenance,
+        "reference": CONFORMAL_REFERENCE,
+        "missingness_method": "Unvalidated illustrative sensitivity ranking; no quantitative adversarial guarantee",
         "missing_features_count": len(missing),
         "missing_features": missing,
-        "critical_information_deficit": deficit_ranking,
-        "bounded_targets": bounded_targets,
+        "critical_information_deficit": ranking,
+        "bounded_targets": bounded,
     }

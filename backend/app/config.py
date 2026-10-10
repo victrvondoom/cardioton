@@ -136,6 +136,14 @@ class Settings(BaseSettings):
     INTEROP_RECEIVER_DB: str = ":memory:"
     TRACK7_DEMO_DB: str = ""  # Explicit durable synthetic-only development storage.
 
+    # Public/synthetic cardiovascular research corpus and owner-scoped research artifacts.
+    # Clinical records remain in their existing stores; this workspace is not a patient import path.
+    CARDIOTWIN_GLOBAL_DB: str = str(_REPO_ROOT / "backend" / "data" / "cardiotwin_global.sqlite3")
+    # Explicit opt-in to authoritative public search adapters. Empty keeps the labelled offline corpus.
+    CARDIOTWIN_GLOBAL_LIVE_SOURCES: str = ""
+    # Shared public taxonomy curation is opt-in for designated organizations.
+    CARDIOTWIN_GLOBAL_CURATOR_ORGS: str = ""
+
     # Evidence Passport signing: base64 of a 32-byte Ed25519 seed. Empty = exports are marked UNSIGNED.
     # Generate: python -c "import base64,secrets;print(base64.b64encode(secrets.token_bytes(32)).decode())"
     # This is a CLINI-CASE demo-system signature, not a laboratory, clinician or third-party attestation.

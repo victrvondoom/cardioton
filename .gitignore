@@ -73,3 +73,6 @@ ops/aws/function.zip
 
 # Local verification logs, screenshots, process files and generated demo artifacts
 /output/
+
+# Local public research corpus and owner-scoped query artifacts
+backend/data/cardiotwin_global.sqlite3*

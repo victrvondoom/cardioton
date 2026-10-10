@@ -201,6 +201,7 @@ class CardioModel:
             "borderline_above": round(p95, 2),
             "outside_above": round(p99, 2),
             "out_of_range_features": out_of_range,
+            "interpretation": "Empirical training-distance indicator, not a calibrated out-of-distribution probability or proof of clinical applicability.",
         }
 
     # ---- attribution ------------------------------------------------------
@@ -324,6 +325,12 @@ class CardioModel:
                 "total": len(FEATURES),
                 "fraction": round(completeness, 3),
                 "imputed": rec.imputed,
+            },
+            "uncertainty_semantics": {
+                "interval_80": "10th to 90th percentile of bootstrap model predictions; no calibrated outcome coverage is established.",
+                "confidence": "Heuristic display category based on ensemble width, training distance and feature completeness; not a clinical reliability probability.",
+                "missingness": "Training-median imputation is disclosed in feature_completeness.imputed; ensemble spread does not establish missing-data sensitivity bounds.",
+                "clinical_validation": "Not established by these uncertainty indicators.",
             },
             "warnings": warnings,
             "visualization": self._visualization(cad, vessels),

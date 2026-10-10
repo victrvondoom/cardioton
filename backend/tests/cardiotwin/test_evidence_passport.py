@@ -246,7 +246,9 @@ class TestRepository:
             approver_name="Dr. Smith",
             approver_role="cardiologist",
         )
-        assert signed["governance"]["status"] == "CLINICALLY_APPROVED"
+        assert signed["governance"]["status"] == "RESEARCH_REVIEWED"
+        assert signed["governance"]["clinical_approval"] is False
+        assert verify_evidence_passport(signed)["is_valid"] is True
         assert signed["governance"]["reviewed_content_sha256"] == p["integrity"]["content_sha256"]
 
     def test_signed_passport_verifies(self):

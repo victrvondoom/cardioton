@@ -10,14 +10,24 @@ from __future__ import annotations
 from typing import Any
 
 import numpy as np
-from sklearn.metrics import (
-    average_precision_score,
-    brier_score_loss,
-    log_loss,
-    precision_recall_curve,
-    roc_auc_score,
-    roc_curve,
-)
+
+try:
+    from sklearn.metrics import (
+        average_precision_score,
+        brier_score_loss,
+        log_loss,
+        precision_recall_curve,
+        roc_auc_score,
+        roc_curve,
+    )
+    HAS_SKLEARN = True
+except ImportError:
+    HAS_SKLEARN = False
+
+    def _unavailable_metric(*args: Any, **kwargs: Any) -> Any:
+        raise ImportError("Scientific evaluation requires the optional scikit-learn dependency; no substitute metric is computed")
+
+    roc_auc_score = average_precision_score = brier_score_loss = log_loss = precision_recall_curve = roc_curve = _unavailable_metric
 
 from app.oncotwin._typing import FloatArray
 

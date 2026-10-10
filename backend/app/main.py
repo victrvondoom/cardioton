@@ -361,6 +361,7 @@ from app.api import (  # noqa: E402
     auth,
     cardio_anatomy,
     cardio_environment,
+    cardio_global,
     cases,
     demo,
     fhir_interop,
@@ -556,6 +557,8 @@ app.include_router(oncotwin_intel_api.router, prefix="/api/v1")  # OncoTwin 2.0 
 app.include_router(cardiotwin_api.router, prefix="/api/v1")  # CardioTwin (additive)
 app.include_router(cardio_anatomy.router, prefix="/api/v1")
 app.include_router(cardio_environment.router, prefix="/api/v1")
+app.include_router(cardio_global.router, prefix="/api/v1")
+app.include_router(cardio_global.router, prefix="/api")
 app.include_router(cohorts_api.router, prefix="/api/v1")
 app.include_router(reviewer_queue_api.router, prefix="/api/v1")
 app.include_router(policy_catalog_api.router, prefix="/api/v1")

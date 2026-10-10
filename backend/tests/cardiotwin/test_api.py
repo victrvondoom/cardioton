@@ -26,6 +26,10 @@ def _user(role: str = "coordinator") -> dict:
 
 @pytest.fixture()
 def client():
+    from app import rate_limit
+
+    if isinstance(rate_limit._store, rate_limit._InMemoryBucketStore):
+        rate_limit._store._buckets.clear()
     app.dependency_overrides[get_current_user] = lambda: _user()
     yield TestClient(app)
     app.dependency_overrides.pop(get_current_user, None)
@@ -33,6 +37,10 @@ def client():
 
 @pytest.fixture()
 def anon():
+    from app import rate_limit
+
+    if isinstance(rate_limit._store, rate_limit._InMemoryBucketStore):
+        rate_limit._store._buckets.clear()
     app.dependency_overrides.pop(get_current_user, None)
     return TestClient(app)
 
@@ -89,6 +97,8 @@ def test_predict_response_schema(client, df):
         "claims",
     }
     assert set(p["vessels"]) == {"LAD", "LCX", "RCA"}
+    assert "no calibrated outcome coverage" in p["uncertainty_semantics"]["interval_80"]
+    assert "not a clinical reliability probability" in p["uncertainty_semantics"]["confidence"]
     for k in (
         "probability",
         "model_probability",
@@ -227,7 +237,69 @@ def test_guidelines_verify_endpoint(client, scenarios):
     res = client.post(f'{BASE}/guidelines/verify', json={'features': mixed['patient']})
     assert res.status_code == 200
     data = res.json()
-    assert data['verification_status'] == 'FORMAL_GUIDELINE_VERIFIED'
+    assert data['verification_status'] == 'RESEARCH_SCREENING_REQUIRES_REVIEW'
+    assert data['human_governance']['ai_autonomous_prescribing'] is False
+    assert data['primary_recommendation']['class_of_recommendation'] is None
     assert 'passport_sha256' in data
     assert len(data['passport_sha256']) == 64
     assert 'primary_recommendation' in data
+
+
+@pytest.mark.parametrize("scenario_id", ["A", "B", "C", "D", "E"])
+def test_telemetry_does_not_invent_physiology_or_select_treatment(client, scenarios, scenario_id):
+    patient = next(s["patient"] for s in scenarios if s["id"] == scenario_id)
+    data = client.post(f"{BASE}/telemetry", json={"features": patient}).json()
+    assert data["classification"] == "ILLUSTRATIVE_RESEARCH_SCENARIO"
+    review = data["heart_team_consensus"]
+    assert review["status"] == "RESEARCH_REVIEW_REQUIRED"
+    assert review["clinical_approval"] is False
+    assert review["guideline"] is None
+    assert review["syntax_tier"] is None
+    assert review["primary_indication"] is None
+    assert "no treatment selected" in review["strategy"]
+    for vessel in data["vessels"].values():
+        assert vessel["ffr_ct"] is None
+        assert vessel["is_ischemic"] is None
+        assert vessel["area_stenosis_pct"] is None
+        assert vessel["min_lumen_area_mm2"] is None
+        assert vessel["wall_shear_stress_pa"] is None
+        assert vessel["remodeling"] == "UNASSESSED"
+
+
+def test_telemetry_uses_actual_model_bp_pr_and_preserves_classifier_probabilities(client):
+    features = {"Age": 64, "BP": "150", "PR": "80"}
+    base = client.post(f"{BASE}/telemetry", json={"features": features}).json()
+    stress = client.post(f"{BASE}/telemetry", json={"features": features, "stress_mode": True}).json()
+    assert base["vitals"]["systolic_bp_mmhg"] == 150
+    assert base["vitals"]["heart_rate_bpm"] == 80
+    assert stress["vitals"]["heart_rate_bpm"] == round(80 * 1.42)
+    assert stress["vessels"] == base["vessels"]
+    assert any("illustrative assumptions" in item for item in base["assumptions"])
+
+
+def test_physics_adapter_uses_bp_and_labels_unmeasured_geometry(client):
+    response = client.post(f"{BASE}/hemodynamics/physics", json={"features": {"BP": 150}})
+    assert response.status_code == 200
+    result = response.json()
+    expected_map = 150 * .65 + (150 - 150 * .65) / 3
+    assert result["vessels"]["LAD"]["mean_aortic_pressure_mmhg"] == round(expected_map, 1)
+    assert result["classification"] == "ILLUSTRATIVE_RESEARCH_SCENARIO"
+    assert any("not measured stenosis" in item for item in result["assumptions"])
+
+
+def test_guideline_adapter_does_not_convert_probability_to_ffr(client):
+    result = client.post(f"{BASE}/guidelines/verify", json={"features": {"Age": 85, "BP": 160}}).json()
+    assert result["flagged_vessels"] == []
+    assert len(result["missing_information"]) == 3
+    assert all(rule["execution_outcome"] == "NOT_EVALUABLE" for rule in result["all_rules_evaluated"])
+    assert all(rule["relevant_inputs"]["ffr"] is None for rule in result["all_rules_evaluated"])
+
+
+def test_prediction_qualifies_bootstrap_confidence_and_ood_semantics(client):
+    result = client.post(f"{BASE}/predict", json={"features": {"Age": 64}}).json()
+    semantics = result["uncertainty_semantics"]
+    assert "bootstrap" in semantics["interval_80"]
+    assert "no calibrated outcome coverage" in semantics["interval_80"]
+    assert "Heuristic display category" in semantics["confidence"]
+    assert "not a calibrated out-of-distribution probability" in result["representativeness"]["interpretation"]
+    assert result["feature_completeness"]["imputed"]

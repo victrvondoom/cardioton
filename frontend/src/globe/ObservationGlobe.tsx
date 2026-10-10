@@ -224,9 +224,10 @@ function Scene({
       {zones?.map((zone) => <ZoneOutline key={zone.id} zone={zone} />)}
       {weather && <WeatherGlyph weather={weather} />}
       {pulsing && <PulseRing latitude={pulsing.latitude} longitude={pulsing.longitude} color={pulsing.color} />}
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       <OrbitControls
         ref={controlsRef as never}
-        enablePan={false}
+        {...{enablePan:false} as any}
         enableDamping
         dampingFactor={0.08}
         minDistance={MIN_D}

@@ -200,14 +200,16 @@ class TestSemanticRoundTrip:
         assert len(hash_result) == 1
         assert hash_result[0]["status"] == "PRESERVED"
 
-    def test_unmapped_features_counted_as_dropped(self):
-        """Features without LOINC codes should appear as NO_LOINC_MAPPING."""
+    def test_unmapped_features_retained_locally_and_semantics_unresolved(self):
+        """Preserve values without inventing standard clinical codes."""
         passport = _make_passport()
         bundle = export_to_fhir_bundle(passport)
         score = compute_semantic_round_trip_score(passport, bundle)
         statuses = {f["field"]: f["status"] for f in score["field_results"]}
         # 'cp' has no LOINC mapping
-        assert statuses.get("cp") in ("NO_LOINC_MAPPING", "DROPPED")
+        assert statuses.get("cp") == "PRESERVED"
+        assert "cp" in score["transformed_fields"]
+        assert any(item["field"] == "cp" for item in score["unresolved_fields"])
 
     def test_non_bundle_returns_error(self):
         extracted = import_from_fhir_bundle({"resourceType": "Patient"})

@@ -63,6 +63,12 @@ def _invalid(e: Exception) -> HTTPException:
     return HTTPException(422, {"error": type(e).__name__, "problems": problems})
 
 
+def _scenario_input(features: dict[str, Any], name: str, default: float) -> float:
+    """Read an already model-validated numeric feature; blanks are scenario defaults."""
+    value = features.get(name)
+    return default if value is None or (isinstance(value, str) and not value.strip()) else float(value)
+
+
 @router.get("/overview")
 async def overview(_: dict[str, Any] = Depends(get_current_user)) -> dict[str, Any]:
     m = _model_or_503()
@@ -183,11 +189,8 @@ async def telemetry_assessment(
         raise _invalid(e) from e
 
     stress = req.stress_mode
-    raw_thalach = req.features.get("thalach")
-    raw_trestbps = req.features.get("trestbps")
-
-    base_hr = float(raw_thalach) if isinstance(raw_thalach, int | float) else 72.0
-    base_sbp = float(raw_trestbps) if isinstance(raw_trestbps, int | float) else 124.0
+    base_hr = _scenario_input(req.features, "PR", 72.0)
+    base_sbp = _scenario_input(req.features, "BP", 124.0)
 
     hr = round(base_hr * 1.42 if stress else base_hr)
     sbp = round(base_sbp * 1.25 if stress else base_sbp)
@@ -198,63 +201,44 @@ async def telemetry_assessment(
     rpp = round((hr * sbp) / 100)
     cpp = max(25, dbp - 12)
 
-    mvo2_status = "High Demand" if rpp > 220 else ("Elevated" if rpp > 140 else "Optimal")
-
-    # Vessel Hemodynamics & FFR-CT proxy
+    # A classifier probability does not measure FFR, geometry or wall shear.
     vessels_hemo: dict[str, Any] = {}
-    stenotic_count = 0
     for v in ("LAD", "LCX", "RCA"):
         p = pred["vessels"][v]["probability"]
-        eff_p = min(0.99, p * 1.25) if stress else p
-        ffr = round(max(0.55, min(0.98, 0.94 - eff_p * 0.32)), 2)
-        area_stenosis = round(eff_p * 78)
-        mla = round(4.2 * (1 - eff_p * 0.7), 1)
-        shear = round(1.2 + eff_p * 3.8, 1)
-        if eff_p >= 0.5:
-            stenotic_count += 1
         vessels_hemo[v] = {
-            "probability": eff_p,
-            "ffr_ct": ffr,
-            "is_ischemic": ffr <= 0.80,
-            "area_stenosis_pct": area_stenosis,
-            "min_lumen_area_mm2": mla,
-            "wall_shear_stress_pa": shear,
-            "remodeling": "Positive" if eff_p > 0.6 else "Negative",
+            "probability": p,
+            "ffr_ct": None,
+            "is_ischemic": None,
+            "area_stenosis_pct": None,
+            "min_lumen_area_mm2": None,
+            "wall_shear_stress_pa": None,
+            "remodeling": "UNASSESSED",
+            "measurement_status": "UNAVAILABLE",
         }
 
     cad_p = pred["cad"]["probability"]
-    is_lad_stenotic = vessels_hemo["LAD"]["probability"] >= 0.5
-
-    # Heart Team Multidisciplinary Consensus
-    if cad_p < 0.35:
-        heart_team = {
-            "strategy": "Guideline-Directed Medical Therapy (GDMT)",
-            "risk_tier": "Low Risk",
-            "syntax_tier": "SYNTAX-II Score: < 22",
-            "guideline": "Class I, Level A (ESC/ACC Guidelines)",
-            "primary_indication": "Non-invasive optimal medical therapy and risk factor modification",
-        }
-    elif stenotic_count >= 2 or (is_lad_stenotic and cad_p >= 0.7):
-        heart_team = {
-            "strategy": "CABG Consult vs Multi-vessel PCI" if stenotic_count >= 3 else "Percutaneous Coronary Intervention (PCI)",
-            "risk_tier": "Elevated Complexity / Revascularization Indicated",
-            "syntax_tier": "SYNTAX-II Score: > 32" if stenotic_count >= 3 else "SYNTAX-II Score: 23-32",
-            "guideline": "Class I, Level B (ESC/EACTS Revascularization Guidelines)",
-            "primary_indication": "Prognostic revascularization for proximal LAD and multivessel ischemia",
-        }
-    else:
-        heart_team = {
-            "strategy": "Targeted PCI with GDMT Optimization",
-            "risk_tier": "Intermediate Risk / Single Vessel CAD",
-            "syntax_tier": "SYNTAX-II Score: < 22",
-            "guideline": "Class I, Level A (ACC/AHA Guidelines)",
-            "primary_indication": "Targeted Drug-Eluting Stent (DES) for ischemic symptomatic relief",
-        }
+    heart_team = {
+        "strategy": "Human research review required; no treatment selected",
+        "risk_tier": "UNASSESSED",
+        "syntax_tier": None,
+        "guideline": None,
+        "primary_indication": None,
+        "status": "RESEARCH_REVIEW_REQUIRED",
+        "clinical_approval": False,
+    }
 
     METRICS.inc("cardiotwin_predictions_total", outcome="telemetry_ok")
 
     return {
         "stress_mode": stress,
+        "classification": "ILLUSTRATIVE_RESEARCH_SCENARIO",
+        "assumptions": [
+            "Pulse rate uses supplied PR; if unavailable the scenario default is 72 bpm.",
+            "Systolic pressure uses supplied BP; if unavailable the scenario default is 124 mmHg.",
+            "Diastolic pressure, stroke volume, stress multipliers and derived quantities are illustrative assumptions, not observed measurements or validated patient physiology.",
+            "Model probabilities do not provide FFR-CT, vessel geometry, ischemia, SYNTAX scores or treatment indications.",
+            "Stress mode changes illustrative vital signs; vessel classifier probabilities are unchanged.",
+        ],
         "vitals": {
             "heart_rate_bpm": hr,
             "systolic_bp_mmhg": sbp,
@@ -264,7 +248,7 @@ async def telemetry_assessment(
             "stroke_volume_ml": sv,
             "rate_pressure_product": rpp,
             "coronary_perfusion_pressure_mmhg": cpp,
-            "myocardial_o2_demand": mvo2_status,
+            "myocardial_o2_demand": "UNASSESSED",
         },
         "vessels": vessels_hemo,
         "heart_team_consensus": heart_team,
@@ -280,7 +264,7 @@ async def telemetry_assessment(
 async def hemodynamics_physics(
     req: TelemetryAssessmentRequest, _: dict[str, Any] = Depends(get_current_user)
 ) -> dict[str, Any]:
-    """Solve 0D/1D Navier-Stokes Windkessel hemodynamic network."""
+    """Run a labelled illustrative steady 0D resistance-circuit scenario."""
     m = _model_or_503()
     try:
         pred = m.predict(req.features)
@@ -290,23 +274,29 @@ async def hemodynamics_physics(
     vessel_stenoses = {
         v: round(pred["vessels"][v]["probability"] * 85.0, 1) for v in ("LAD", "LCX", "RCA")
     }
-    raw_trestbps = req.features.get("trestbps")
-    sbp = float(raw_trestbps) if isinstance(raw_trestbps, int | float) else 124.0
+    sbp = _scenario_input(req.features, "BP", 124.0)
     dbp = sbp * 0.65
     map_val = dbp + (sbp - dbp) / 3.0
 
-    return solve_coronary_tree_physics(
+    result = solve_coronary_tree_physics(
         vessel_stenoses=vessel_stenoses,
         mean_aortic_pressure_mmhg=map_val,
         stress_mode=req.stress_mode,
     )
+    result["classification"] = "ILLUSTRATIVE_RESEARCH_SCENARIO"
+    result["assumptions"].extend([
+        "Geometry is an illustrative scenario using model probability multiplied by 85, not measured stenosis.",
+        "Diastolic pressure is assumed to be 0.65 times supplied BP; MAP is illustrative.",
+        "If BP is unavailable, the scenario uses 124 mmHg; this is not an imputed clinical measurement.",
+    ])
+    return result
 
 
 @router.post("/conformal")
 async def conformal_risk_bounds(
     req: PatientInput, _: dict[str, Any] = Depends(get_current_user)
 ) -> dict[str, Any]:
-    """Compute distributionally robust conformal prediction intervals & missingness bounds."""
+    """Expose calibration availability and explicit missingness limitations."""
     m = _model_or_503()
     try:
         pred = m.predict(req.features)
@@ -331,21 +321,15 @@ async def conformal_risk_bounds(
 async def verify_clinical_guidelines(
     req: PatientInput, _: dict[str, Any] = Depends(get_current_user)
 ) -> dict[str, Any]:
-    """Execute deterministic ESC 2024 / ACC 2023 guideline verification with SHA-256 state seal."""
+    """Report missing physiology for deterministic research screening and review."""
     m = _model_or_503()
     try:
-        pred = m.predict(req.features)
+        m.predict(req.features)
     except (RecordValidationError, LeakageError) as e:
         raise _invalid(e) from e
 
-    vessel_stenoses = {v: pred["vessels"][v]["probability"] for v in ("LAD", "LCX", "RCA")}
-    ffr_values = {
-        v: round(max(0.55, min(0.98, 0.94 - pred["vessels"][v]["probability"] * 0.32)), 2)
-        for v in ("LAD", "LCX", "RCA")
-    }
-
     return evaluate_guidelines(
         patient_features=req.features,
-        vessel_stenoses=vessel_stenoses,
-        ffr_values=ffr_values,
+        vessel_stenoses={},
+        ffr_values={},
     )

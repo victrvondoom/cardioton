@@ -29,19 +29,24 @@ from pathlib import Path
 from typing import Any, cast
 
 import numpy as np
-from sklearn.covariance import LedoitWolf
-from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
-from sklearn.impute import SimpleImputer
-from sklearn.isotonic import IsotonicRegression
-from sklearn.linear_model import LogisticRegression, LogisticRegressionCV
-from sklearn.metrics import roc_auc_score
-from sklearn.model_selection import (
-    RepeatedStratifiedKFold,
-    StratifiedKFold,
-    cross_val_predict,
-)
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
+
+try:
+    from sklearn.covariance import LedoitWolf
+    from sklearn.ensemble import GradientBoostingClassifier, RandomForestClassifier
+    from sklearn.impute import SimpleImputer
+    from sklearn.isotonic import IsotonicRegression
+    from sklearn.linear_model import LogisticRegression, LogisticRegressionCV
+    from sklearn.metrics import roc_auc_score
+    from sklearn.model_selection import (
+        RepeatedStratifiedKFold,
+        StratifiedKFold,
+        cross_val_predict,
+    )
+    from sklearn.pipeline import make_pipeline
+    from sklearn.preprocessing import StandardScaler
+    HAS_SKLEARN = True
+except ImportError:
+    HAS_SKLEARN = False
 
 from app.cardiotwin import CARDIOTWIN_VERSION
 from app.cardiotwin.data import (
@@ -281,6 +286,8 @@ def train(
     challengers: bool = True,
     seed: int = 42,
 ) -> dict[str, Any]:
+    if not HAS_SKLEARN:
+        raise RuntimeError("scikit-learn is required for training CardioTwin models")
     warnings.filterwarnings("ignore")
     out = Path(out_dir) if out_dir else ARTIFACT_PATH.parent
     out.mkdir(parents=True, exist_ok=True)

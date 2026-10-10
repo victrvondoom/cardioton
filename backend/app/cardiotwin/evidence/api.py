@@ -11,6 +11,7 @@ from app.auth import get_current_user
 from app.cardiotwin.conformal import analyze_missingness_bounds
 from app.cardiotwin.evidence.passport import (
     build_evidence_passport,
+    seal_passport,
     verify_evidence_passport,
 )
 from app.cardiotwin.evidence.repository import (
@@ -18,8 +19,8 @@ from app.cardiotwin.evidence.repository import (
     list_passports_for_case,
     save_passport,
     sign_off_passport,
-    tamper_passport_for_testing,
 )
+from app.cardiotwin.features import LeakageError, RecordValidationError
 from app.cardiotwin.guideline_engine import evaluate_guidelines
 from app.cardiotwin.hemodynamics.physics import solve_coronary_tree_physics
 from app.cardiotwin.interop.fhir_exchange import (
@@ -27,7 +28,7 @@ from app.cardiotwin.interop.fhir_exchange import (
     export_to_fhir_bundle,
     import_from_fhir_bundle,
 )
-from app.cardiotwin.model import load_model
+from app.cardiotwin.model import ModelArtifactError, load_model
 from app.cardiotwin.schema import FEATURES
 
 router = APIRouter(prefix="/evidence", tags=["cardiotwin-evidence"])
@@ -42,7 +43,7 @@ class CreatePassportRequest(BaseModel):
 
 
 class SignOffRequest(BaseModel):
-    scope: str = Field(default="ESC/ACC Guideline Team Clinical Review", max_length=200)
+    scope: str = Field(default="Authenticated workspace research review", max_length=200)
     notes: str | None = Field(default=None, max_length=1000)
 
 
@@ -51,25 +52,47 @@ class TamperTestRequest(BaseModel):
     new_value: Any = Field(default={"completeness_score_pct": 100.0, "tampered": True})
 
 
+def owned_passport(passport_id: str, user: dict[str, Any]) -> dict[str, Any]:
+    passport = get_passport(passport_id)
+    access = passport.get("access_context", {}) if passport else {}
+    if not passport or not user.get("organization_id") or access.get("organization_id") != str(user["organization_id"]):
+        raise HTTPException(404, "Evidence passport not found")
+    if access.get("owner_user_id") != str(user.get("id")) and user.get("role") not in {"reviewer", "admin"}:
+        raise HTTPException(404, "Evidence passport not found")
+    return passport
+
+
 @router.post("/passports")
 async def create_passport_endpoint(
     req: CreatePassportRequest,
     current_user: dict[str, Any] = Depends(get_current_user),
 ) -> dict[str, Any]:
     """Generate, cryptographically seal, and store an evidence passport."""
-    model = load_model()
-    predictions = model.predict(req.features)
+    if not current_user.get("id") or not current_user.get("organization_id"):
+        raise HTTPException(403, "Authenticated case owner and organization are required")
+    try:
+        model = load_model()
+        predictions = model.predict(req.features)
+    except ModelArtifactError as exc:
+        raise HTTPException(503, "CardioTwin model artifact is unavailable") from exc
+    except (LeakageError, RecordValidationError) as exc:
+        raise HTTPException(422, {"error": type(exc).__name__, "problems": exc.problems}) from exc
 
     # 1. Hemodynamics
     vessel_stenoses = {
         v: round(predictions["vessels"][v]["probability"] * 85.0, 1)
         for v in ("LAD", "LCX", "RCA")
     }
-    raw_trestbps = req.features.get("trestbps")
-    sbp = float(raw_trestbps) if isinstance(raw_trestbps, int | float) else 124.0
+    raw_trestbps = req.features.get("BP")
+    sbp = 124.0 if raw_trestbps is None or (isinstance(raw_trestbps, str) and not raw_trestbps.strip()) else float(raw_trestbps)
     dbp = sbp * 0.65
     map_val = dbp + (sbp - dbp) / 3.0
     hemo = solve_coronary_tree_physics(vessel_stenoses, mean_aortic_pressure_mmhg=map_val)
+    hemo["assumptions"].extend([
+        "Illustrative geometry uses model probability multiplied by 85; this is not measured stenosis.",
+        "Diastolic pressure is assumed to be 0.65 times supplied systolic pressure; MAP is illustrative.",
+        "Systolic pressure uses the served model's BP field. When unavailable, 124 mmHg is a labelled scenario assumption, not an imputed clinical measurement.",
+    ])
 
     # 2. Guidelines
     ffr_values = {v: hemo["vessels"][v]["ffr_physics"] for v in ("LAD", "LCX", "RCA")}
@@ -96,9 +119,8 @@ async def create_passport_endpoint(
     # Parent passport linking for hash chain
     prev_hash = None
     if req.parent_passport_id:
-        parent = get_passport(req.parent_passport_id)
-        if parent:
-            prev_hash = parent["integrity"]["content_sha256"]
+        parent = owned_passport(req.parent_passport_id, current_user)
+        prev_hash = parent["integrity"]["content_sha256"]
 
     passport = build_evidence_passport(
         case_id=req.case_id,
@@ -113,6 +135,8 @@ async def create_passport_endpoint(
         reviewer_notes=req.reviewer_notes,
     )
 
+    passport["access_context"] = {"organization_id": str(current_user["organization_id"]), "owner_user_id": str(current_user["id"])}
+    seal_passport(passport)
     save_passport(passport)
     return passport
 
@@ -120,47 +144,44 @@ async def create_passport_endpoint(
 @router.get("/passports/{passport_id}")
 async def get_passport_endpoint(
     passport_id: str,
-    _: dict[str, Any] = Depends(get_current_user),
+    current_user: dict[str, Any] = Depends(get_current_user),
 ) -> dict[str, Any]:
     """Retrieve an evidence passport by ID."""
-    p = get_passport(passport_id)
-    if not p:
-        raise HTTPException(404, f"Passport '{passport_id}' not found")
+    p = owned_passport(passport_id, current_user)
     return p
 
 
 @router.post("/passports/{passport_id}/verify")
 async def verify_passport_endpoint(
     passport_id: str,
-    _: dict[str, Any] = Depends(get_current_user),
+    current_user: dict[str, Any] = Depends(get_current_user),
 ) -> dict[str, Any]:
     """Independently verify canonical serialization, SHA-256 hash, and Ed25519 signature."""
-    p = get_passport(passport_id)
-    if not p:
-        raise HTTPException(404, f"Passport '{passport_id}' not found")
+    p = owned_passport(passport_id, current_user)
     return verify_evidence_passport(p)
 
 
 @router.get("/passports/{passport_id}/history")
 async def passport_history_endpoint(
     passport_id: str,
-    _: dict[str, Any] = Depends(get_current_user),
+    current_user: dict[str, Any] = Depends(get_current_user),
 ) -> dict[str, Any]:
     """Retrieve the lineage and audit chain for this passport."""
-    p = get_passport(passport_id)
-    if not p:
-        raise HTTPException(404, f"Passport '{passport_id}' not found")
+    p = owned_passport(passport_id, current_user)
 
     chain = [p]
     curr = p
     while curr.get("parent_passport_id"):
-        parent = get_passport(curr["parent_passport_id"])
-        if not parent:
-            break
+        parent = owned_passport(curr["parent_passport_id"], current_user)
         chain.insert(0, parent)
         curr = parent
 
-    case_passports = list_passports_for_case(p["case_id"])
+    case_passports = [
+        item for item in list_passports_for_case(p["case_id"])
+        if item.get("access_context", {}).get("organization_id") == str(current_user["organization_id"])
+        and (item.get("access_context", {}).get("owner_user_id") == str(current_user["id"])
+             or current_user.get("role") in {"reviewer", "admin"})
+    ]
     return {
         "case_id": p["case_id"],
         "target_passport_id": passport_id,
@@ -177,9 +198,14 @@ async def sign_off_passport_endpoint(
     current_user: dict[str, Any] = Depends(get_current_user),
 ) -> dict[str, Any]:
     """Execute authenticated clinician sign-off on an evidence passport."""
-    approver_id = str(current_user.get("id", "user-clinician-1"))
-    approver_name = str(current_user.get("email", "Dr. A. Vance, MD (Cardiology)"))
-    approver_role = str(current_user.get("role", "reviewer"))
+    owned_passport(passport_id, current_user)
+    approver_id = str(current_user.get("id") or "")
+    approver_name = str(current_user.get("email") or current_user.get("full_name") or "")
+    approver_role = str(current_user.get("role") or "")
+    if not approver_id or not approver_name:
+        raise HTTPException(403, "Authenticated reviewer identity is required")
+    if approver_role not in {"reviewer", "admin"}:
+        raise HTTPException(403, "Reviewer permission is required")
 
     return sign_off_passport(
         passport_id=passport_id,
@@ -195,10 +221,14 @@ async def sign_off_passport_endpoint(
 async def tamper_test_endpoint(
     passport_id: str,
     req: TamperTestRequest,
-    _: dict[str, Any] = Depends(get_current_user),
+    current_user: dict[str, Any] = Depends(get_current_user),
 ) -> dict[str, Any]:
     """Test utility: injects deliberate tampering into a passport to prove detection."""
-    tampered = tamper_passport_for_testing(passport_id, req.modified_field, req.new_value)
+    import copy
+    tampered = copy.deepcopy(owned_passport(passport_id, current_user))
+    if not tampered.get("clinical_facts", {}).get("data_quality", {}).get("synthetic_demonstration", True):
+        raise HTTPException(403, "Tamper demonstration supports synthetic passports only")
+    tampered["clinical_facts"][req.modified_field] = req.new_value
     verification = verify_evidence_passport(tampered)
     return {
         "tampered_passport": tampered,
@@ -215,12 +245,10 @@ class FhirImportRequest(BaseModel):
 @router.post("/passports/{passport_id}/export-fhir")
 async def export_passport_fhir(
     passport_id: str,
-    _: dict[str, Any] = Depends(get_current_user),
+    current_user: dict[str, Any] = Depends(get_current_user),
 ) -> dict[str, Any]:
     """Export an evidence passport as a FHIR R4 collection Bundle."""
-    p = get_passport(passport_id)
-    if not p:
-        raise HTTPException(404, f"Passport '{passport_id}' not found")
+    p = owned_passport(passport_id, current_user)
     bundle = export_to_fhir_bundle(p)
     return {
         "fhir_bundle": bundle,
@@ -236,18 +264,18 @@ async def import_fhir_bundle_endpoint(
 ) -> dict[str, Any]:
     """Import a FHIR R4 Bundle and reconstruct CardioTwin assessment fields."""
     extracted = import_from_fhir_bundle(req.bundle)
+    if "error" in extracted:
+        raise HTTPException(422, extracted["error"])
     return {"extracted_assessment": extracted}
 
 
 @router.post("/passports/{passport_id}/roundtrip")
 async def fhir_round_trip_endpoint(
     passport_id: str,
-    _: dict[str, Any] = Depends(get_current_user),
+    current_user: dict[str, Any] = Depends(get_current_user),
 ) -> dict[str, Any]:
     """Execute full FHIR export -> re-import -> semantic comparison and return integrity score."""
-    p = get_passport(passport_id)
-    if not p:
-        raise HTTPException(404, f"Passport '{passport_id}' not found")
+    p = owned_passport(passport_id, current_user)
 
     bundle = export_to_fhir_bundle(p)
     score = compute_semantic_round_trip_score(p, bundle)

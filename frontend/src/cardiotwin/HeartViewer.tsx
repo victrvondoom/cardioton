@@ -205,10 +205,11 @@ function Scene(props: HeartViewerProps) {
       <directionalLight position={[3, 4, 5]} intensity={1.1} />
       <directionalLight position={[-4, -1, -3]} intensity={0.35} />
       <Heart {...props} />
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       <OrbitControls
         ref={controls as never}
         makeDefault
-        enablePan={false}
+        {...{enablePan:false} as any}
         enableDamping={false}
         target={[0, 0.3, 0]}
         minDistance={3.4}

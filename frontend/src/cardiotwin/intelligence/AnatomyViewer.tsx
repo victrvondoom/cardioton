@@ -225,7 +225,8 @@ function ReferenceScene({ findings, onSelect, mode, options }: AnatomyViewerProp
         </Html>;
       })}
     </group>
-    <OrbitControls ref={controls} makeDefault target={[0, .15, 0]} enablePan enableZoom enableDamping={!options.reduced} dampingFactor={.12} minDistance={2.3} maxDistance={11} rotateSpeed={.65} regress />
+    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+    <OrbitControls ref={controls} makeDefault target={[0, .15, 0]} {...{enablePan:true,enableZoom:true} as any} enableDamping={!options.reduced} dampingFactor={.12} minDistance={2.3} maxDistance={11} rotateSpeed={.65} regress />
     <AdaptiveDpr pixelated />
   </>;
 }

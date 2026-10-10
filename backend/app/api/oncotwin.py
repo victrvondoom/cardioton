@@ -9,24 +9,33 @@ same roles ClinCase uses for its HITL resume endpoint.
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Literal
+from typing import Any, Literal, overload
 
 import numpy as np
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 
 from app.auth import get_current_user, require_role
+from app.json_contract import json_object
 from app.oncotwin import ONCOTWIN_VERSION, runtime
 from app.oncotwin.agents import oncotwin_manifest
 from app.oncotwin.engine.simulate import SCENARIOS
 from app.oncotwin.fhir.mapping import build_bundle, signal_catalog
-from app.oncotwin.ml.model import ModelArtifactError, load_model
+from app.oncotwin.ml.model import DeteriorationModel, ModelArtifactError, load_model
 from app.oncotwin.outcome import OUTCOME_DEFINITION, QUALIFYING_CONDITIONS
 from app.oncotwin.service import compute_twin, twin_card
-from app.oncotwin.store import OrgTwinStore, get_store
+from app.oncotwin.store import OrgTwinStore, PatientState, get_store
 
 router = APIRouter(prefix="/oncotwin", tags=["oncotwin"])
 Clinician = require_role("reviewer", "admin")
+
+
+@overload
+def clean(obj: dict[str, Any]) -> dict[str, Any]: ...
+
+
+@overload
+def clean(obj: Any) -> Any: ...
 
 
 def clean(obj: Any) -> Any:
@@ -49,6 +58,10 @@ def clean(obj: Any) -> Any:
     return obj
 
 
+def clean_object(obj: object) -> dict[str, Any]:
+    return json_object(clean(obj), "OncoTwin response")
+
+
 async def org_store(user: dict[str, Any] = Depends(get_current_user)) -> OrgTwinStore:
     store = await asyncio.to_thread(get_store, user["organization_id"])
     await store.ledger.load_tip()
@@ -66,14 +79,14 @@ def _actor(user: dict[str, Any]) -> str:
     return f"{user.get('email', user.get('id'))} ({user.get('role')})"
 
 
-def _patient_or_404(store: OrgTwinStore, pid: str):
+def _patient_or_404(store: OrgTwinStore, pid: str) -> PatientState:
     try:
         return store.patient(pid)
     except KeyError as e:
         raise HTTPException(404, f"Twin patient {pid!r} not found") from e
 
 
-def _model_or_503():
+def _model_or_503() -> DeteriorationModel:
     try:
         return load_model()
     except ModelArtifactError as e:
@@ -88,7 +101,7 @@ def _model_or_503():
 @router.get("/overview")
 async def overview(store: OrgTwinStore = Depends(org_store)) -> dict[str, Any]:
     model = _model_or_503()
-    return clean(
+    return clean_object(
         {
             "name": "OncoTwin",
             "tagline": (
@@ -125,7 +138,7 @@ async def outcome(_: dict[str, Any] = Depends(get_current_user)) -> dict[str, An
 
 @router.get("/model")
 async def model_card(_: dict[str, Any] = Depends(get_current_user)) -> dict[str, Any]:
-    return clean(_model_or_503().card())
+    return clean_object(_model_or_503().card())
 
 
 @router.get("/signals")
@@ -138,7 +151,7 @@ async def signals(_: dict[str, Any] = Depends(get_current_user)) -> dict[str, An
 
 @router.get("/agents/manifest")
 async def agents_manifest(_: dict[str, Any] = Depends(get_current_user)) -> dict[str, Any]:
-    return clean(oncotwin_manifest())
+    return clean_object(oncotwin_manifest())
 
 
 @router.get("/scenarios")
@@ -157,7 +170,7 @@ async def list_patients(store: OrgTwinStore = Depends(org_store)) -> dict[str, A
     rows = await asyncio.to_thread(
         lambda: [runtime.patient_summary(store, pid) for pid in store.patients]
     )
-    return clean({"patients": rows, "synthetic": True})
+    return clean_object({"patients": rows, "synthetic": True})
 
 
 @router.get("/patients/{pid}")
@@ -169,7 +182,7 @@ async def patient_dashboard(
 ) -> dict[str, Any]:
     _patient_or_404(store, pid)
     _model_or_503()
-    return clean(
+    return clean_object(
         await asyncio.to_thread(runtime.dashboard, store, pid, as_of_day, simulate=simulate)
     )
 
@@ -177,7 +190,7 @@ async def patient_dashboard(
 @router.get("/patients/{pid}/replay")
 async def patient_replay(pid: str, store: OrgTwinStore = Depends(org_store)) -> dict[str, Any]:
     _patient_or_404(store, pid)
-    return clean(await asyncio.to_thread(runtime.replay, store, pid))
+    return clean_object(await asyncio.to_thread(runtime.replay, store, pid))
 
 
 @router.get("/patients/{pid}/timeline")
@@ -187,7 +200,7 @@ async def patient_timeline(
     store: OrgTwinStore = Depends(org_store),
 ) -> dict[str, Any]:
     _patient_or_404(store, pid)
-    return clean(await asyncio.to_thread(runtime.timeline, store, pid, as_of_day))
+    return clean_object(await asyncio.to_thread(runtime.timeline, store, pid, as_of_day))
 
 
 @router.get("/patients/{pid}/fhir")
@@ -199,7 +212,7 @@ async def patient_fhir(
 ) -> dict[str, Any]:
     st = _patient_or_404(store, pid)
     day = min(as_of_day or st.live_day, st.live_day)
-    return clean(build_bundle(st.record(), day, include_daily=include_daily))
+    return clean_object(build_bundle(st.record(), day, include_daily=include_daily))
 
 
 class SimulateRequest(BaseModel):
@@ -243,7 +256,7 @@ async def patient_simulate(
             "simulation": comp.simulation,
         }
 
-    return clean(await asyncio.to_thread(run))
+    return clean_object(await asyncio.to_thread(run))
 
 
 class AdvanceRequest(BaseModel):
@@ -261,7 +274,7 @@ async def patient_advance(
     _model_or_503()
     res = await asyncio.to_thread(runtime.advance, store, pid, req.days, actor=_actor(user))
     await _persist(store, res.pop("entries"))
-    return clean(res)
+    return clean_object(res)
 
 
 @router.post("/patients/{pid}/evaluate")
@@ -281,7 +294,7 @@ async def patient_evaluate(
         force_simulation=True,
     )
     await _persist(store, [res["evaluation"], res["alert_entry"]])
-    return clean(
+    return clean_object(
         {k: res[k] for k in ("evaluation", "alert", "agent_trace", "tier", "risk", "as_of_day")}
     )
 
@@ -303,7 +316,7 @@ async def patient_inject(
     except ValueError as e:
         raise HTTPException(409, str(e)) from e
     await _persist(store, [res["entry"]])
-    return clean(res)
+    return clean_object(res)
 
 
 class IngestRequest(BaseModel):
@@ -321,7 +334,7 @@ async def patient_ingest(
     _patient_or_404(store, pid)
     res = await asyncio.to_thread(runtime.ingest, store, pid, req.model_dump(), actor=_actor(user))
     await _persist(store, [res["entry"], *res.pop("extra_entries", [])])
-    return clean(res)
+    return clean_object(res)
 
 
 # =============================================================================
@@ -342,7 +355,7 @@ async def list_alerts(
         and (status is None or a["status"] == status)
     ]
     rows.sort(key=lambda a: a["created_at"], reverse=True)
-    return clean({"alerts": rows})
+    return clean_object({"alerts": rows})
 
 
 @router.get("/alerts/{alert_id}")
@@ -350,13 +363,13 @@ async def get_alert(alert_id: str, store: OrgTwinStore = Depends(org_store)) -> 
     alert = store.alerts.get(alert_id)
     if alert is None:
         raise HTTPException(404, f"Alert {alert_id!r} not found")
-    return clean(alert)
+    return clean_object(alert)
 
 
 @router.get("/alerts/{alert_id}/why")
 async def alert_why(alert_id: str, store: OrgTwinStore = Depends(org_store)) -> dict[str, Any]:
     try:
-        return clean(runtime.why(store, alert_id))
+        return clean_object(runtime.why(store, alert_id))
     except KeyError as e:
         raise HTTPException(404, f"Alert {alert_id!r} not found") from e
 
@@ -380,7 +393,7 @@ async def alert_action(
     except ValueError as e:
         raise HTTPException(409, str(e)) from e
     await _persist(store, [res["entry"]])
-    return clean(res)
+    return clean_object(res)
 
 
 class RequestedTreatment(BaseModel):
@@ -411,7 +424,7 @@ async def alert_handoff(
     except ValueError as e:
         raise HTTPException(409, str(e)) from e
     await _persist(store, [res.get("entry")])
-    return clean({k: v for k, v in res.items() if k != "entry"})
+    return clean_object({k: v for k, v in res.items() if k != "entry"})
 
 
 # =============================================================================
@@ -425,7 +438,7 @@ async def audit(
     limit: int = Query(default=200, ge=1, le=2000),
     store: OrgTwinStore = Depends(org_store),
 ) -> dict[str, Any]:
-    return clean(runtime.audit(store, patient_id, limit))
+    return clean_object(runtime.audit(store, patient_id, limit))
 
 
 @router.post("/demo/reset")
@@ -442,4 +455,4 @@ async def demo_reset(
         },
     )
     await _persist(store, [entry])
-    return clean({"reset": True, "entry": entry})
+    return clean_object({"reset": True, "entry": entry})

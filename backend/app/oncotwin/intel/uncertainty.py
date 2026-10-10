@@ -20,13 +20,28 @@ It is not a health score and carries no clinical meaning.
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, TypedDict
 
 import numpy as np
 
-from app.oncotwin.engine.features import FEATURE_NAMES, feature_tensor, signal_matrix
+from app.oncotwin._typing import FloatArray
+from app.oncotwin.engine.baseline import Baseline
+from app.oncotwin.engine.features import (
+    FEATURE_NAMES,
+    FeatureContext,
+    feature_tensor,
+    signal_matrix,
+)
 from app.oncotwin.engine.series import PatientSeries
+from app.oncotwin.ml.model import DeteriorationModel
 from app.oncotwin.signals import MODEL_SIGNALS, SIGNALS
+
+
+class OODFeature(TypedDict):
+    feature: str
+    z_vs_training: float
+    value: float
+
 
 N_DRAWS = 64
 WINDOW = 3
@@ -35,21 +50,21 @@ OOD_FEATURE_Z = 4.0
 OOD_SCORE_WARN = 2.5
 
 
-def _risk_draws(model, values: np.ndarray, baseline, ctx: dict[str, Any]) -> np.ndarray:
+def _risk_draws(model: DeteriorationModel, values: FloatArray, baseline: Baseline, ctx: FeatureContext) -> FloatArray:
     F = feature_tensor(values, baseline, **ctx)
     return model.predict(F[:, -1, :])
 
 
-def _band(r: np.ndarray) -> tuple[float, list[float]]:
+def _band(r: FloatArray) -> tuple[float, list[float]]:
     lo, hi = float(np.percentile(r, 10)), float(np.percentile(r, 90))
     return round(hi - lo, 4), [round(lo, 4), round(hi, 4)]
 
 
 def decompose(
     series: PatientSeries,
-    baseline,
-    ctx: dict[str, Any],
-    model,
+    baseline: Baseline,
+    ctx: FeatureContext,
+    model: DeteriorationModel,
     prediction: dict[str, Any],
     *,
     population_drift: dict[str, Any] | None = None,
@@ -90,7 +105,7 @@ def decompose(
     zt = (x - model.lr.mean) / model.lr.std
     ood_feats = sorted(
         (
-            {"feature": f, "z_vs_training": round(float(zt[i]), 2), "value": round(float(x[i]), 3)}
+            OODFeature(feature=f, z_vs_training=round(float(zt[i]), 2), value=round(float(x[i]), 3))
             for i, f in enumerate(FEATURE_NAMES)
             if abs(zt[i]) > OOD_FEATURE_Z
         ),
@@ -175,7 +190,7 @@ def readiness(
     facts: dict[str, Any],
     series: PatientSeries,
     prediction: dict[str, Any],
-    model,
+    model: DeteriorationModel,
     uncertainty: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     t = series.as_of_day

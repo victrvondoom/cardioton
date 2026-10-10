@@ -10,6 +10,7 @@ it must not be treated as a database security boundary today.
 from __future__ import annotations
 
 import contextvars
+from collections.abc import Iterable
 from typing import Any
 
 from starlette.types import ASGIApp, Receive, Scope, Send
@@ -27,7 +28,7 @@ def _decode_jwt_unsafe(token: str) -> dict[str, Any] | None:
     return decode_access_token(token)
 
 
-def _bearer(headers) -> str | None:
+def _bearer(headers: Iterable[tuple[bytes, bytes]]) -> str | None:
     for name, value in headers:
         if name.lower() == b"authorization":
             v = value.decode("latin-1", errors="replace")

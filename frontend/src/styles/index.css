@@ -1,4 +1,4 @@
-﻿@tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -16,146 +16,137 @@
 
 :root {
   /* Surfaces */
-  --surface-bg:        248 250 252;  /* #fafafa — near-white, faint cool tint */
+  --surface-bg:        248 250 252;  /* clean clinical canvas */
   --surface-raised:    255 255 255;  /* #ffffff */
-  --surface-raised-hi: 245 245 245;  /* #f5f5f5 */
-  --surface-border:    178 183 190;  /* slate-navy hairline (~32% on white) */
-  --surface-border-hi: 157 157 157;  /* slate-navy hairline, stronger (~45%) */
-  --surface-panel:     241 245 249;  /* #f5f5f5 — sidebar / muted strips */
+  --surface-raised-hi: 241 245 249;  /* subtle elevation */
+  --surface-border:    226 232 240;  /* clean slate hairline */
+  --surface-border-hi: 203 213 225;  /* high-contrast hairline */
+  --surface-panel:     248 250 252;  /* sidebar / telemetry strips */
 
   /* Ink */
-  --ink-primary: 13 13 13;      /* #0d0d0d — near-black navy, headings */
-  --ink-body:    38 52 73;     /* body copy (ink-primary @ ~80%) */
-  --ink-muted:   100 116 139;  /* #757575 — labels */
-  --ink-faint:   148 163 184;  /* #a1a1a1 — placeholders */
-  --ink-invert:  255 255 255;  /* on accent backgrounds */
+  --ink-primary: 15 23 42;       /* slate-900, sharp medical headlines */
+  --ink-body:    51 65 85;       /* slate-700, high readability body */
+  --ink-muted:   100 116 139;    /* slate-500, clinical labels */
+  --ink-faint:   148 163 184;    /* slate-400 */
+  --ink-invert:  255 255 255;
 
-  /* Accent — strict monochrome. All "accent" tokens are grayscale weights,
-     not hues. Distinctions between semantic states (approve/deny/refer,
-     citation types, decorative washes) are carried by weight + icon/label,
-     never by color. */
-  --accent-brand:      17 24 39;     /* #121212 — near-black, primary accent */
-  --accent-brand-soft: 244 244 244;  /* #f4f4f4 — accent-soft wash */
-  --accent-brand-glow: 82 82 82;     /* #525252 — hover/secondary weight */
-  --accent-cyan:       107 114 128;  /* #737373 — mid-gray (status use only) */
-  --accent-green:      55 65 81;     /* #404040 — APPROVE (dark gray) */
-  --accent-red:        17 24 39;     /* #121212 — DENY (near-black) */
-  --accent-amber:      107 114 128;  /* #737373 — REFER (mid gray) */
-  --accent-blue:       55 65 81;     /* #404040 — clinical citations */
-  --accent-violet:     156 163 175;  /* #9e9e9e — light gray, decorative only */
+  /* Curated Cardiovascular Clinical Color Palette */
+  --accent-brand:      225 29 72;    /* #e11d48 — vibrant arterial crimson / coronary rose */
+  --accent-brand-soft: 255 241 242;  /* #fff1f2 — arterial soft wash */
+  --accent-brand-glow: 244 63 94;    /* #f43f5e — pulsatile glow */
+  --accent-cyan:       14 165 233;   /* #0ea5e9 — vascular oxygenation / hemodynamics */
+  --accent-green:      16 185 129;   /* #10b981 — optimal / euvolemic / low stenosis */
+  --accent-red:        225 29 72;    /* #e11d48 — high stenosis / acute ischemia */
+  --accent-amber:      245 158 11;   /* #f59e0b — intermediate risk / caution */
+  --accent-blue:       37 99 235;    /* #2563eb — venous / clinical evidence */
+  --accent-violet:     147 51 234;   /* #9333ea — multiomics / spatial twin */
 
-  /* Brand ramp — neutral navy scale (monochrome system; orange is the only chroma) */
-  --brand-50:  248 250 252;  /* #fafafa */
-  --brand-100: 245 245 245;  /* #f5f5f5 */
-  --brand-200: 232 232 232;  /* #e8e8e8 */
-  --brand-300: 214 214 214;  /* #d6d6d6 */
-  --brand-400: 161 161 161;  /* #a1a1a1 */
-  --brand-500: 117 117 117;  /* #757575 */
-  --brand-600: 71 85 105;    /* #565656 */
-  --brand-700: 51 65 85;     /* #424242 */
-  --brand-800: 30 41 59;     /* #2a2a2a */
-  --brand-900: 13 13 13;      /* #0d0d0d */
+  /* Brand ramp — arterial coronary scale */
+  --brand-50:  255 241 242;
+  --brand-100: 255 228 230;
+  --brand-200: 254 205 211;
+  --brand-300: 253 164 175;
+  --brand-400: 251 113 133;
+  --brand-500: 244 63 94;
+  --brand-600: 225 29 72;
+  --brand-700: 190 18 60;
+  --brand-800: 159 18 57;
+  --brand-900: 136 19 55;
 
-  /* Aurora / mesh tints — very low-opacity ambient wash only, grayscale */
-  --aurora-a: rgba(18, 18, 18, 0.05);
-  --aurora-b: rgba(115, 115, 115, 0.08);
-  --aurora-c: rgba(115, 115, 115, 0.05);
-  --aurora-blur: 120px;
+  /* Ambient clinical auroras */
+  --aurora-a: rgba(225, 29, 72, 0.08);
+  --aurora-b: rgba(14, 165, 233, 0.06);
+  --aurora-c: rgba(147, 51, 234, 0.05);
+  --aurora-blur: 140px;
 
   /* Grid background lines */
-  --grid-line: rgba(13, 13, 13, 0.05);
-  --grid-dot:  rgba(13, 13, 13, 0.10);
+  --grid-line: rgba(15, 23, 42, 0.04);
+  --grid-dot:  rgba(15, 23, 42, 0.08);
 
   /* Evidence flash (citation hover) */
-  --evidence-flash-bg:   rgba(18, 18, 18, 0.06);
-  --evidence-flash-ring: rgba(18, 18, 18, 0.45);
-  --selection-bg:        rgba(18, 18, 18, 0.18);
+  --evidence-flash-bg:   rgba(225, 29, 72, 0.08);
+  --evidence-flash-ring: rgba(225, 29, 72, 0.45);
+  --selection-bg:        rgba(225, 29, 72, 0.16);
 
-  /* Citation tints — differentiated by weight, not hue */
-  --citation-clinical: #121212;
-  --citation-policy:   #525252;
+  /* Citation tints */
+  --citation-clinical: #2563eb;
+  --citation-policy:   #e11d48;
 
   /* Scrollbar */
-  --scrollbar-thumb:       #b8b8b8;
-  --scrollbar-thumb-hover: #9a9a9a;
+  --scrollbar-thumb:       #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
   --scrollbar-track:       transparent;
 
   /* Top bar */
-  --topbar-bg-plain:   rgba(250, 250, 250, 0.5);
-  --topbar-bg-frosted: rgba(250, 250, 250, 0.7);
+  --topbar-bg-plain:   rgba(255, 255, 255, 0.8);
+  --topbar-bg-frosted: rgba(255, 255, 255, 0.92);
 
-  /* Restrained shadows — hairline borders carry most of the depth, not shadow */
-  --shadow-card:  0 1px 2px rgba(13, 13, 13, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  --shadow-raise: 0 1px 2px rgba(13, 13, 13, 0.06), 0 2px 8px -4px rgba(13, 13, 13, 0.10);
-  --shadow-pop:   0 1px 2px rgba(13, 13, 13, 0.07), 0 4px 14px -6px rgba(13, 13, 13, 0.14);
+  /* Shadows with subtle depth */
+  --shadow-card:  0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-raise: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
+  --shadow-pop:   0 10px 15px -3px rgba(15, 23, 42, 0.1), 0 4px 6px -4px rgba(15, 23, 42, 0.08);
 }
 
-/* Dark mode = genuine black + white. Every value below is a pure neutral
-   (R == G == B): no navy surfaces, no blue-gray text, no cool borders, no
-   tinted glows. Semantic states stay differentiated by weight and by their
-   icon/label, exactly as in light mode -- never by hue. */
+/* Dark mode — deep bio-telemetry obsidian and arterial luminesce */
 .dark {
-  --surface-bg:        10 10 10;   /* #0a0a0a — near-black */
-  --surface-raised:    20 20 20;   /* #141414 — cards */
-  --surface-raised-hi: 28 28 28;   /* #1c1c1c — hover / elevated */
-  --surface-border:    48 48 48;   /* hairline on dark */
-  --surface-border-hi: 72 72 72;
-  --surface-panel:     18 18 18;   /* #121212 — sidebar / muted strips */
+  --surface-bg:        11 15 25;    /* deep bio-telemetry obsidian */
+  --surface-raised:    17 24 39;    /* slate-900 / dark card surface */
+  --surface-raised-hi: 24 33 53;    /* elevated card surface */
+  --surface-border:    30 41 59;    /* slate-800 hairline */
+  --surface-border-hi: 51 65 85;    /* slate-700 hairline */
+  --surface-panel:     13 19 33;    /* deep telemetry panels */
 
-  --ink-primary: 245 245 245;  /* near-white */
-  --ink-body:    209 209 209;
-  --ink-muted:   153 153 153;
-  --ink-faint:   107 107 107;
-  --ink-invert:  10 10 10;
+  --ink-primary: 248 250 252;  /* slate-50 */
+  --ink-body:    203 213 225;  /* slate-300 */
+  --ink-muted:   148 163 184;  /* slate-400 */
+  --ink-faint:   100 116 139;  /* slate-500 */
+  --ink-invert:  11 15 25;
 
-  --accent-brand:      235 235 235;  /* near-white, lightened for dark bg */
-  --accent-brand-soft: 38 38 38;     /* accent tint on dark */
-  --accent-brand-glow: 158 158 158;
-  --accent-cyan:       158 158 158;
-  --accent-green:      212 212 212;  /* APPROVE (light neutral) */
-  --accent-red:        235 235 235;  /* DENY (near-white) */
-  --accent-amber:      158 158 158;  /* REFER (mid neutral) */
-  --accent-blue:       212 212 212;  /* clinical citations */
-  --accent-violet:     115 115 115;  /* decorative only */
+  --accent-brand:      244 63 94;    /* vibrant glowing arterial rose */
+  --accent-brand-soft: 50 14 26;     /* soft rose aura */
+  --accent-brand-glow: 251 113 133;  /* luminous pulse */
+  --accent-cyan:       56 189 248;   /* electric oxygenation cyan */
+  --accent-green:      52 211 153;   /* emerald stable */
+  --accent-red:        244 63 94;    /* ischemia alert */
+  --accent-amber:      251 191 36;   /* stenosis warning */
+  --accent-blue:       96 165 250;   /* clinical venous */
+  --accent-violet:     192 132 252;  /* spatial twin */
 
-  /* Brand ramp — the light ramp inverted, in pure neutrals. */
-  --brand-50:  10 10 10;
-  --brand-100: 23 23 23;
-  --brand-200: 38 38 38;
-  --brand-300: 64 64 64;
-  --brand-400: 82 82 82;
-  --brand-500: 115 115 115;
-  --brand-600: 163 163 163;
-  --brand-700: 212 212 212;
-  --brand-800: 229 229 229;
-  --brand-900: 250 250 250;
+  --brand-50:  19 24 43;
+  --brand-100: 30 41 59;
+  --brand-200: 51 65 85;
+  --brand-300: 71 85 105;
+  --brand-400: 100 116 139;
+  --brand-500: 244 63 94;
+  --brand-600: 225 29 72;
+  --brand-700: 190 18 60;
+  --brand-800: 248 250 252;
+  --brand-900: 255 255 255;
 
-  --aurora-a: rgba(235, 235, 235, 0.10);
-  --aurora-b: rgba(158, 158, 158, 0.12);
-  --aurora-c: rgba(158, 158, 158, 0.08);
-  --aurora-blur: 120px;
+  --aurora-a: rgba(244, 63, 94, 0.16);
+  --aurora-b: rgba(56, 189, 248, 0.12);
+  --aurora-c: rgba(192, 132, 252, 0.10);
+  --aurora-blur: 140px;
 
-  --grid-line: rgba(160, 160, 160, 0.07);
-  --grid-dot:  rgba(160, 160, 160, 0.16);
+  --grid-line: rgba(248, 250, 252, 0.04);
+  --grid-dot:  rgba(248, 250, 252, 0.08);
 
-  --evidence-flash-bg:   rgba(235, 235, 235, 0.16);
-  --evidence-flash-ring: rgba(235, 235, 235, 0.5);
-  --selection-bg:        rgba(235, 235, 235, 0.28);
+  --evidence-flash-bg:   rgba(244, 63, 94, 0.20);
+  --evidence-flash-ring: rgba(244, 63, 94, 0.6);
+  --selection-bg:        rgba(244, 63, 94, 0.32);
 
-  --citation-clinical: #ebebeb;
-  --citation-policy:   #9e9e9e;
+  --citation-clinical: #60a5fa;
+  --citation-policy:   #f43f5e;
 
-  --scrollbar-thumb:       #333333;
-  --scrollbar-thumb-hover: #4a4a4a;
+  --scrollbar-thumb:       #334155;
+  --scrollbar-thumb-hover: #475569;
 
-  --topbar-bg-plain:   rgba(10, 10, 10, 0.55);
-  --topbar-bg-frosted: rgba(10, 10, 10, 0.85);
+  --topbar-bg-plain:   rgba(11, 15, 25, 0.75);
+  --topbar-bg-frosted: rgba(11, 15, 25, 0.88);
 
-  /* Pure black shadows — on a near-black surface, depth comes from the
-     hairline border, not from a tinted glow. */
-  --shadow-card:  0 1px 2px rgba(0, 0, 0, 0.5);
-  --shadow-raise: 0 1px 2px rgba(0, 0, 0, 0.55), 0 4px 14px -6px rgba(0, 0, 0, 0.6);
-  --shadow-pop:   0 1px 2px rgba(0, 0, 0, 0.6), 0 6px 20px -8px rgba(0, 0, 0, 0.7);
+  --shadow-card:  0 1px 3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --shadow-raise: 0 4px 6px -1px rgba(0, 0, 0, 0.6), 0 2px 4px -2px rgba(0, 0, 0, 0.5);
+  --shadow-pop:   0 10px 20px -3px rgba(0, 0, 0, 0.7), 0 4px 8px -4px rgba(0, 0, 0, 0.6);
 }
 
 /* =============================================================================
@@ -240,6 +231,37 @@
 @property --conic-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
 @keyframes conic-spin   { to { --conic-angle: 360deg; } }
 @keyframes chart-draw-in { 0% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+@keyframes cardiac-pulse {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.08); filter: drop-shadow(0 0 8px rgba(225, 29, 72, 0.6)); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.04); filter: drop-shadow(0 0 4px rgba(225, 29, 72, 0.4)); }
+  70% { transform: scale(1); }
+}
+@keyframes ecg-sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+@keyframes vessel-glow {
+  0%, 100% { box-shadow: 0 0 10px -2px rgba(225, 29, 72, 0.35); }
+  50% { box-shadow: 0 0 22px 2px rgba(225, 29, 72, 0.65); }
+}
+@keyframes telemetry-tick {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.cardiac-pulse { animation: cardiac-pulse 1.25s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+.cardio-glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); background: rgb(var(--surface-raised) / 0.88); border: 1px solid rgb(var(--surface-border) / 0.8); }
+.cardio-card-glow { box-shadow: 0 4px 20px -4px rgba(225, 29, 72, 0.16); }
+.vessel-glow { animation: vessel-glow 2.5s ease-in-out infinite; }
+.telemetry-live { animation: telemetry-tick 1.5s ease-in-out infinite; }
+.ecg-grid {
+  background-size: 20px 20px;
+  background-image:
+    linear-gradient(to right, rgb(var(--surface-border) / 0.35) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(var(--surface-border) / 0.35) 1px, transparent 1px);
+}
 
 /* =============================================================================
    Typography system — 9 semantic roles, each mapped to one Google Font.
@@ -690,7 +712,7 @@
   aside[aria-label="Primary navigation"] { width: 64px; }
   aside[aria-label="Primary navigation"] nav a > span { display: none; }
   aside[aria-label="Primary navigation"] > div > div { display: none; }
-  aside[aria-label="Primary navigation"] button[aria-label="Sign out of CLINI-CASE"] > span { display: none; }
+  aside[aria-label="Primary navigation"] button[aria-label="Sign out of CARDIOTON"] > span { display: none; }
 }
 
 /* =============================================================================

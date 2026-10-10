@@ -36,6 +36,7 @@ from typing import Any
 from fastapi import APIRouter
 
 from app.config import settings
+from app.json_contract import json_object
 
 router = APIRouter(prefix="/architecture", tags=["architecture"])
 
@@ -654,9 +655,9 @@ async def get_layer(layer_id: str) -> dict[str, Any]:
     full = await get_layers()
     layers_by_id = {layer["id"]: layer for layer in full["layers"]}
     if layer_id == "aws-foundation":
-        return full["aws_foundation"]
+        return json_object(full["aws_foundation"], "AWS architecture")
     if layer_id not in layers_by_id:
         from fastapi import HTTPException
 
         raise HTTPException(status_code=404, detail=f"Layer {layer_id!r} not found")
-    return layers_by_id[layer_id]
+    return json_object(layers_by_id[layer_id], "Architecture layer")

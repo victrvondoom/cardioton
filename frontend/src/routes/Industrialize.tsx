@@ -29,25 +29,21 @@ import {
   Sparkles,
   Workflow,
 } from "lucide-react";
-import { useEffect, useState } from "react";
-
-import { api, type FoundryManifest, type ResponsibleAIModelCard } from "../lib/api";
+import { api } from "../lib/api";
+import { useLive } from "../lib/useLive";
 
 export default function Industrialize() {
-  const [foundry, setFoundry] = useState<FoundryManifest | null>(null);
-  const [card, setCard] = useState<ResponsibleAIModelCard | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    api.getFoundryManifest().then(setFoundry).catch((e) => setError(String(e)));
-    api.getModelCard().then(setCard).catch(() => {});
-  }, []);
+  const foundryLive = useLive(() => api.getFoundryManifest());
+  const cardLive = useLive(() => api.getModelCard());
+  const foundry = foundryLive.data;
+  const card = cardLive.data;
+  const error = [foundryLive.error, cardLive.error].filter(Boolean).join(" · ");
 
   return (
     <div className="px-6 py-6 space-y-6">
       <header>
         <div className="text-[10px] text-compact text-accent-brand mb-1">
-          CLINCASE · INDUSTRIALIZATION
+          CARDIOTON · INDUSTRIALIZATION
         </div>
         <h1 className="text-2xl font-semibold text-ink-primary leading-tight">
           Production-readiness for Agent Foundry
@@ -178,7 +174,7 @@ export default function Industrialize() {
               Responsible AI — live model card
             </h2>
             <span className="ml-2 text-[10px] text-mono-tech px-2 py-1 rounded bg-accent-green/15 text-accent-green">
-              v{card.schema} · clincase {card.clincase_version}
+              v{card.schema} · CARDIOTON {card.clincase_version}
             </span>
           </div>
 

@@ -166,7 +166,7 @@ async def explain(
     model_integrity: bool,
     use_llm: bool | None = None,
     client: Any = None,
-    traces: list | None = None,
+    traces: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     ctx = gate_context(record, intel, model_integrity)
     det = deterministic(intel)

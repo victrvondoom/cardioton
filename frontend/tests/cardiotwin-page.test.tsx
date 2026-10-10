@@ -82,6 +82,8 @@ const SCENARIOS: Scenario[] = [
 const MIXED = prediction({ CAD: 0.99, LAD: 0.88, LCX: 0.41, RCA: 0.21 });
 
 beforeEach(() => {
+  // jsdom has no canvas implementation; exercise the HUD's no-canvas fallback.
+  vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(null);
   vi.mocked(cardio.features).mockResolvedValue(CATALOG);
   vi.mocked(cardio.scenarios).mockResolvedValue({ note: "n", scenarios: SCENARIOS });
   vi.mocked(cardio.predict).mockResolvedValue(MIXED);

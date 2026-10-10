@@ -153,7 +153,7 @@ export default function Runtime() {
     <div className="mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6">
       <header className="flex flex-wrap items-end gap-3">
         <div className="flex-1">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-cyan">CLINI-CASE runtime</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-cyan">CARDIOTON runtime</p>
           <h1 className="text-2xl font-semibold text-ink-primary">{data?.label ?? "Deployment topology"}</h1>
           <p className="mt-1 text-sm text-ink-muted">
             One application: frontend, API, independent System B receiver and evidence store.

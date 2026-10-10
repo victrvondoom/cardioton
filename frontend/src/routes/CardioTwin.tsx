@@ -7,6 +7,7 @@ import { Activity, ArrowRight } from "lucide-react";
 import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ExposureContext } from "../onehealth/ContextPanel";
+import { useLive } from "../lib/useLive";
 
 import { cardio } from "../cardiotwin/api";
 import { PatientPanel } from "../cardiotwin/PatientPanel";
@@ -25,7 +26,6 @@ import {
 import {
   VESSELS,
   type CounterfactualResult,
-  type FeatureCatalog,
   type PatientValues,
   type Prediction,
   type Scenario,
@@ -33,14 +33,20 @@ import {
   type VesselId,
 } from "../cardiotwin/types";
 import { pct } from "../cardiotwin/vesselMapping";
+import { coronaryContextFromPrediction } from "../cardiotwin/intelligence/coronaryContext";
+import { CardioTelemetryHUD } from "../cardiotwin/CardioTelemetryHUD";
+import { VesselCrossSectionInspector } from "../cardiotwin/VesselCrossSectionInspector";
+import { HeartTeamConsensus } from "../cardiotwin/HeartTeamConsensus";
 
 const HeartViewer = lazy(() => import("../cardiotwin/HeartViewer"));
 
 export default function CardioTwin() {
   const [searchParams] = useSearchParams();
-  const [catalog, setCatalog] = useState<FeatureCatalog | null>(null);
-  const [scenarios, setScenarios] = useState<Scenario[]>([]);
-  const [scenarioNote, setScenarioNote] = useState("");
+  const catalogFeed = useLive(cardio.features);
+  const scenarioFeed = useLive(cardio.scenarios);
+  const catalog = catalogFeed.data;
+  const scenarios = useMemo(() => scenarioFeed.data?.scenarios ?? [], [scenarioFeed.data]);
+  const scenarioNote = scenarioFeed.data?.note ?? "";
   const [patient, setPatient] = useState<PatientValues>({});
   const [scenarioId, setScenarioId] = useState<string | null>(null);
   const [pred, setPred] = useState<Prediction | null>(null);
@@ -51,25 +57,11 @@ export default function CardioTwin() {
   const [cf, setCf] = useState<CounterfactualResult | null>(null);
   const [view, setView] = useState<"baseline" | "perturbed">("perturbed");
   const [preset, setPreset] = useState<Record<string, number | string> | null>(null);
+  const [stressMode, setStressMode] = useState(false);
+  const [renderPipeline, setRenderPipeline] = useState<"webgl" | "vector">("webgl");
   const seq = useRef(0);
   const firstLoad = useRef(true);
   const pickTop = useRef(true); // after a scenario loads, select its highest-probability vessel
-
-  // ---- bootstrap: feature catalog + demo scenarios ------------------------------------------
-  useEffect(() => {
-    let live = true;
-    Promise.all([cardio.features(), cardio.scenarios()])
-      .then(([f, s]) => {
-        if (!live) return;
-        setCatalog(f);
-        setScenarios(s.scenarios);
-        setScenarioNote(s.note);
-      })
-      .catch((e) => live && setErr((e as Error).message));
-    return () => {
-      live = false;
-    };
-  }, []);
 
   const loadScenario = useCallback((s: Scenario) => {
     setScenarioId(s.id);
@@ -147,13 +139,25 @@ export default function CardioTwin() {
           </Link>
         </div>
         <SafetyBanner />
+        <Link to="/cardiotwin/intelligence" state={shown && !busy ? { coronaryContext: coronaryContextFromPrediction(shown, cfActive && !!cf && view === "perturbed") } : undefined} className={`${CARD} flex items-center justify-between gap-3 p-3 text-ink-primary hover:border-accent-brand`}>
+          <span><b className="text-sm">3D Cardiovascular Intelligence</b><span className="block text-xs text-ink-muted">Upload Cardiovascular Report · reviewed anatomy, environmental context and evidence replay</span></span>
+          <ArrowRight size={18} aria-hidden />
+        </Link>
+        <Link to="/cardiotwin/atlas" className={`${CARD} flex items-center justify-between gap-3 p-3 text-ink-primary hover:border-accent-brand`}>
+          <span><b className="text-sm">CardioTwin Atlas</b><span className="block text-xs text-ink-muted">Multimodal evidence graph, synchronized spatial replay and isolated research scenarios</span></span>
+          <ArrowRight size={18} aria-hidden />
+        </Link>
+        <Link to="/cardiotwin/hemo" className={`${CARD} flex items-center justify-between gap-3 p-3 text-ink-primary hover:border-accent-brand`}>
+          <span><b className="text-sm">CARDIO-HEMO TWIN</b><span className="block text-xs text-ink-muted">Longitudinal heart-failure evidence, hemodynamic transitions and as-of replay</span></span>
+          <ArrowRight size={18} aria-hidden />
+        </Link>
       </header>
 
       <ExposureContext exposureId={searchParams.get("exposure") ?? undefined} independentCardio />
 
-      {err && (
+      {(err || catalogFeed.error || scenarioFeed.error) && (
         <div role="alert" data-testid="cardiotwin-error" className="rounded-lg border border-accent-red/50 bg-accent-red/10 px-3 py-2 text-[12.5px]">
-          {err}
+          {err || catalogFeed.error || scenarioFeed.error}
         </div>
       )}
 
@@ -175,6 +179,16 @@ export default function CardioTwin() {
         />
       )}
 
+      {shown && (
+        <CardioTelemetryHUD
+          patient={patient}
+          prediction={shown}
+          selectedTarget={selected}
+          stressMode={stressMode}
+          onToggleStress={setStressMode}
+        />
+      )}
+
       <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] gap-4">
         {/* ---------------- left: 3D ---------------- */}
         <div className="space-y-3 min-w-0">
@@ -185,10 +199,82 @@ export default function CardioTwin() {
             >
               Schematic anatomy · estimated probability per vessel · <b>not a lesion location</b> · not diagnostic imaging
             </div>
+            <div className="absolute z-10 right-2 top-2 flex items-center gap-1 bg-surface-bg/90 p-0.5 rounded-md border border-surface-border text-[10px]">
+              <button
+                type="button"
+                onClick={() => setRenderPipeline("webgl")}
+                className={`px-2 py-0.5 rounded font-medium ${renderPipeline === "webgl" ? "bg-surface-raised text-ink-primary shadow-xs border border-surface-border" : "text-ink-muted hover:text-ink-primary"}`}
+              >
+                3D GPU WebGL
+              </button>
+              <button
+                type="button"
+                onClick={() => setRenderPipeline("vector")}
+                className={`px-2 py-0.5 rounded font-medium ${renderPipeline === "vector" ? "bg-accent-brand text-white shadow-xs" : "text-ink-muted hover:text-ink-primary"}`}
+              >
+                Zero-GPU Ward Mode
+              </button>
+            </div>
+
             <div className="h-[420px] sm:h-[540px]">
-              <Suspense fallback={<div className="h-full grid place-items-center text-[12px] text-ink-muted">Loading 3D view…</div>}>
-                <HeartViewer viz={viz} selected={selectedVessel} onSelect={(id) => setSelected(id ?? "CAD")} />
-              </Suspense>
+              {renderPipeline === "webgl" ? (
+                <Suspense fallback={<div className="h-full grid place-items-center text-[12px] text-ink-muted">Loading 3D view…</div>}>
+                  <HeartViewer viz={viz} selected={selectedVessel} onSelect={(id) => setSelected(id ?? "CAD")} />
+                </Suspense>
+              ) : (
+                <div className="h-full w-full flex flex-col items-center justify-center bg-surface-panel p-6 space-y-3">
+                  <div className="text-center space-y-1">
+                    <span className="text-xs font-semibold text-accent-green px-2 py-0.5 rounded-full bg-accent-green/10 border border-accent-green/30">
+                      Zero-GPU Pure Vector Mode Active
+                    </span>
+                    <p className="text-[11.5px] text-ink-muted">
+                      Optimized for thin-client hospital wards & Citrix virtualization · Zero WebGL GPU overhead
+                    </p>
+                  </div>
+                  <svg width="260" height="260" viewBox="0 0 260 260" className="overflow-visible">
+                    {/* Aortic Arch */}
+                    <path d="M 100 60 C 100 20, 160 20, 160 60" fill="none" stroke="#b98a92" strokeWidth="18" strokeLinecap="round" />
+                    {/* Left Main */}
+                    <path d="M 125 55 L 105 85" fill="none" stroke="#9c6470" strokeWidth="10" strokeLinecap="round" />
+                    {/* LAD Branch */}
+                    <path
+                      d="M 105 85 Q 90 140 120 220"
+                      fill="none"
+                      stroke={selected === "LAD" ? "#e11d48" : (viz?.LAD ? (viz.LAD.probability > 0.5 ? "#f43f5e" : "#38bdf8") : "#94a3b8")}
+                      strokeWidth={selected === "LAD" ? "8" : "6"}
+                      strokeLinecap="round"
+                      className="cursor-pointer hover:opacity-80 transition-all"
+                      onClick={() => setSelected("LAD")}
+                    />
+                    {/* LCX Branch */}
+                    <path
+                      d="M 105 85 Q 70 110 50 160"
+                      fill="none"
+                      stroke={selected === "LCX" ? "#e11d48" : (viz?.LCX ? (viz.LCX.probability > 0.5 ? "#f43f5e" : "#38bdf8") : "#94a3b8")}
+                      strokeWidth={selected === "LCX" ? "8" : "6"}
+                      strokeLinecap="round"
+                      className="cursor-pointer hover:opacity-80 transition-all"
+                      onClick={() => setSelected("LCX")}
+                    />
+                    {/* RCA Branch */}
+                    <path
+                      d="M 135 60 Q 180 100 160 190"
+                      fill="none"
+                      stroke={selected === "RCA" ? "#e11d48" : (viz?.RCA ? (viz.RCA.probability > 0.5 ? "#f43f5e" : "#38bdf8") : "#94a3b8")}
+                      strokeWidth={selected === "RCA" ? "8" : "6"}
+                      strokeLinecap="round"
+                      className="cursor-pointer hover:opacity-80 transition-all"
+                      onClick={() => setSelected("RCA")}
+                    />
+                    <text x="125" y="235" fill="currentColor" fontSize="10" textAnchor="middle" className="font-mono font-semibold">LAD (Click)</text>
+                    <text x="40" y="175" fill="currentColor" fontSize="10" textAnchor="middle" className="font-mono font-semibold">LCX (Click)</text>
+                    <text x="175" y="205" fill="currentColor" fontSize="10" textAnchor="middle" className="font-mono font-semibold">RCA (Click)</text>
+                  </svg>
+                  <p className="text-[11px] font-mono text-ink-muted">
+                    Active Target: <b className="text-accent-brand">{selected}</b>
+                  </p>
+                </div>
+              )}
             </div>
             {busy && <div className="absolute right-2 bottom-2 text-[11px] text-ink-muted" role="status">updating…</div>}
             {cfActive && cf && (
@@ -258,6 +344,20 @@ export default function CardioTwin() {
             selectedTarget={selected}
           />
           {shown && <TrustPanel pred={shown} />}
+        </div>
+      )}
+
+      {shown && (
+        <div className="space-y-4">
+          <VesselCrossSectionInspector
+            prediction={shown}
+            selectedTarget={selected}
+            stressMode={stressMode}
+          />
+          <HeartTeamConsensus
+            prediction={shown}
+            patient={patient}
+          />
         </div>
       )}
     </div>

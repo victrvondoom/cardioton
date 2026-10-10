@@ -262,9 +262,9 @@ def to_fhir_observation(obs: Observation) -> dict[str, Any]:
         (CONTEXT_FIELDS, obs.context),
     ):
         for field, _label in fields:
-            value = getattr(section, field, None)
-            if isinstance(value, Presence) and value.is_informative:
-                components.append(_presence_component(field, value))
+            presence = getattr(section, field, None)
+            if isinstance(presence, Presence) and presence.is_informative:
+                components.append(_presence_component(field, presence))
 
     resource: dict[str, Any] = {
         "resourceType": "Observation",

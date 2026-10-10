@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -123,7 +124,7 @@ def get_cell(cell_id: str) -> Cell | None:
 # ---------------------------------------------------------------------------
 
 
-def cell_snapshot() -> dict:
+def cell_snapshot() -> dict[str, Any]:
     """Snapshot for /capabilities + /architecture/layers."""
     return {
         "deployed_cells": [

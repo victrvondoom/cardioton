@@ -659,6 +659,7 @@ def advance(store: OrgTwinStore, pid: str, days: int, *, actor: str) -> dict[str
                     else f"twin clock advanced to Day {st.live_day}: no new data (staleness counts)"
                 ),
             )
+            assert res is not None  # force=True always produces an evaluation
             results.append(res)
     return {
         "patient_id": pid,

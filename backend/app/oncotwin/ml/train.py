@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -31,6 +32,7 @@ from typing import Any
 import numpy as np
 
 from app.oncotwin import ONCOTWIN_VERSION
+from app.oncotwin._typing import BoolArray, FloatArray
 from app.oncotwin.engine.baseline import Baseline, SignalBaseline, compute_baseline
 from app.oncotwin.engine.features import (
     FEATURE_NAMES,
@@ -55,6 +57,7 @@ from app.oncotwin.ml.logistic import (
 from app.oncotwin.outcome import HORIZON_DAYS, OUTCOME_DEFINITION, OUTCOME_ID
 from app.oncotwin.signals import MODEL_SIGNALS, SIGNALS
 from app.oncotwin.simulator.cohort import generate_cohort
+from app.oncotwin.simulator.patients import SimulationResult
 
 ARTIFACT_DIR = Path(__file__).resolve().parent / "artifacts"
 ARTIFACT_PATH = ARTIFACT_DIR / "deterioration_lr_v1.json"
@@ -71,17 +74,17 @@ SENS_FALLBACK = {"watch": 0.85, "early_warning": 0.60, "high_priority": 0.30}
 class PatientData:
     patient_id: str
     series: PatientSeries
-    F: np.ndarray
-    y: np.ndarray
-    eligible: np.ndarray
+    F: FloatArray
+    y: FloatArray
+    eligible: BoolArray
     onsets: list[int]
-    acute: np.ndarray
-    nadir: np.ndarray  # expected-nadir timing weight (model feature + FN rule input)
+    acute: BoolArray
+    nadir: FloatArray  # expected-nadir timing weight (model feature + FN rule input)
 
 
 def labels_from_record(
     series: PatientSeries, n_days: int
-) -> tuple[np.ndarray, np.ndarray, list[int]]:
+) -> tuple[FloatArray, BoolArray, list[int]]:
     """y[t]=1 if a qualifying Encounter starts on t+1..t+7; eligibility mask."""
     onsets = sorted(a["day"] for a in series.admissions)
     n = series.n
@@ -101,7 +104,7 @@ def labels_from_record(
     return y, eligible, onsets
 
 
-def build_patient_dataset(sim) -> PatientData:
+def build_patient_dataset(sim: SimulationResult) -> PatientData:
     rec = sim.record
     series = build_series(rec, rec.n_days)
     baseline = compute_baseline(series)
@@ -120,13 +123,13 @@ def build_patient_dataset(sim) -> PatientData:
     )
 
 
-def _stack(data: list[PatientData]) -> tuple[np.ndarray, np.ndarray]:
+def _stack(data: list[PatientData]) -> tuple[FloatArray, FloatArray]:
     X = np.concatenate([d.F[d.eligible] for d in data])
     y = np.concatenate([d.y[d.eligible] for d in data])
     return X, y
 
 
-def tier_sequence(d: PatientData, p: np.ndarray, thresholds: dict[str, float]) -> list[str]:
+def tier_sequence(d: PatientData, p: FloatArray, thresholds: dict[str, float]) -> list[str]:
     """Exactly the deployed tiering: probability tier ∨ rule tier, then hysteresis."""
     rtiers, _ = rule_tiers(d.series, d.F, d.nadir, p, thresholds["watch"])
     raw = []
@@ -136,7 +139,7 @@ def tier_sequence(d: PatientData, p: np.ndarray, thresholds: dict[str, float]) -
     return apply_hysteresis(raw, d.acute)
 
 
-def event_level(data: list[PatientData], alert_fn, min_rank: int) -> dict[str, Any]:
+def event_level(data: list[PatientData], alert_fn: Callable[[PatientData], list[int]], min_rank: int) -> dict[str, Any]:
     """Sensitivity / lead time / false-alert burden for any per-day alert function."""
     detected, leads, n_events = 0, [], 0
     false_alerts, patient_days = 0, 0
@@ -237,7 +240,7 @@ def train(
     for l2 in L2_GRID:
         m = fit_logistic(Xtr, ytr, l2)
         scores[l2] = log_loss(yva, m.predict_proba(Xva))
-    best_l2 = min(scores, key=scores.get)
+    best_l2 = min(scores, key=lambda l2: scores[l2])
     model = fit_logistic(Xtr, ytr, best_l2)
 
     # Bootstrap (resample training PATIENTS) for prediction intervals

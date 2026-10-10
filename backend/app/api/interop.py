@@ -115,7 +115,7 @@ async def current(c: Command, user: dict[str, Any]) -> Job:
 @router.get("/meta")
 async def meta(user: dict[str, Any] = Depends(reviewer)) -> dict[str, Any]:
     return {
-        "product": "CLINI-CASE One Health Interoperability Gateway",
+        "product": "CARDIOTON One Health Interoperability Gateway",
         "standards": fhir.STANDARDS,
         "targets": TARGETS,
         "persistence": mode(),
@@ -697,7 +697,7 @@ async def from_evidence(
         raise HTTPException(409, "Exchange disabled after consent withdrawal")
     # Existing normalized record is the source; no fabricated AI mapping decisions.
     source = Source(
-        source_system="CLINI-CASE One Health reviewed evidence",
+        source_system="CARDIOTON One Health reviewed evidence",
         original_record_id=record.id,
         payload={**record.sample.model_dump(mode="json"), "waterbody_name": record.waterbody_name},
         synthetic=record.synthetic,

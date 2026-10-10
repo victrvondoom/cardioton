@@ -27,13 +27,15 @@ import argparse
 import hashlib
 import json
 import time
+from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
 
 import numpy as np
 
 from app.oncotwin import ONCOTWIN_VERSION
+from app.oncotwin._typing import BoolArray
 from app.oncotwin.engine.baseline import adverse_z, cusum
 from app.oncotwin.engine.features import signal_matrix
 from app.oncotwin.engine.neutrophil import POPULATION_ANC, NeutrophilTwin
@@ -42,9 +44,11 @@ from app.oncotwin.engine.warning import RANK
 from app.oncotwin.intel.changepoint import detect
 from app.oncotwin.ml.model import load_model
 from app.oncotwin.ml.train import tier_sequence
-from app.oncotwin.research.dataset import load_cohort
+from app.oncotwin.records import SimulationTruth
+from app.oncotwin.research.dataset import Cohort, load_cohort
 from app.oncotwin.research.lab import (
     ALL_GROUPS,
+    ArmResult,
     ExperimentConfig,
     paired_delta,
     population_base,
@@ -102,7 +106,7 @@ HORIZONS = [
 ]
 
 
-def _arm_row(arm, ref) -> dict[str, Any]:
+def _arm_row(arm: ArmResult, ref: ArmResult | None) -> dict[str, Any]:
     keep = (
         "auroc",
         "auroc_95ci",
@@ -135,7 +139,7 @@ def _arm_row(arm, ref) -> dict[str, Any]:
     }
 
 
-def deployed_system_leads(cohort) -> dict[str, Any]:
+def deployed_system_leads(cohort: Cohort) -> dict[str, Any]:
     """The DEPLOYED alerting system (probability tiers ∨ clinical rules, then hysteresis): ≥ EARLY WARNING."""
     model = load_model()
     leads, n_events, detected = [], 0, 0
@@ -164,7 +168,7 @@ def deployed_system_leads(cohort) -> dict[str, Any]:
     }
 
 
-def _truth_onsets(truth, first_dose: int | None, acute: np.ndarray) -> list[int]:
+def _truth_onsets(truth: SimulationTruth, first_dose: int | None, acute: BoolArray) -> list[int]:
     inf, deh = np.array(truth.infection), np.array(truth.dehydration)
     hot = (inf >= INF_ONSET) | (deh >= DEH_ONSET)
     return [
@@ -178,8 +182,14 @@ def _truth_onsets(truth, first_dose: int | None, acute: np.ndarray) -> list[int]
     ]
 
 
-def changepoint_study(cohort) -> dict[str, Any]:
-    stats = {
+class DetectionStats(TypedDict):
+    hits: int
+    delays: list[int]
+    false: int
+
+
+def changepoint_study(cohort: Cohort) -> dict[str, Any]:
+    stats: dict[str, DetectionStats] = {
         "bocpd": {"hits": 0, "delays": [], "false": 0},
         "cusum": {"hits": 0, "delays": [], "false": 0},
     }
@@ -255,7 +265,7 @@ def changepoint_study(cohort) -> dict[str, Any]:
     return out
 
 
-def neutrophil_study(cohort) -> dict[str, Any]:
+def neutrophil_study(cohort: Cohort) -> dict[str, Any]:
     err: dict[str, list[float]] = {"twin": [], "carry_forward": [], "population_prior": []}
     cover = cover_pred = n = 0
     for p in cohort.part("test"):
@@ -295,7 +305,7 @@ def neutrophil_study(cohort) -> dict[str, Any]:
     }
 
 
-def latent_study(cohort) -> dict[str, Any]:
+def latent_study(cohort: Cohort) -> dict[str, Any]:
     est: dict[str, list[float]] = {k: [] for k in P.LATENT}
     tru: dict[str, list[float]] = {k: [] for k in P.LATENT}
     for p in cohort.part("test"):
@@ -320,12 +330,12 @@ def latent_study(cohort) -> dict[str, Any]:
     }
 
 
-def run_benchmark(n: int = 1000, *, write: bool = True, progress=print) -> dict[str, Any]:
+def run_benchmark(n: int = 1000, *, write: bool = True, progress: Callable[[str], None] = print) -> dict[str, Any]:
     t0 = time.time()
     cohort = load_cohort(n)
     pb = population_base(cohort)
 
-    def go(cfg):
+    def go(cfg: ExperimentConfig) -> ArmResult:
         progress(f"  · {cfg.name}")
         return run_experiment(cohort, cfg, pop_base=pb)
 
@@ -348,7 +358,7 @@ def run_benchmark(n: int = 1000, *, write: bool = True, progress=print) -> dict[
     hpath = Path(__file__).resolve().parents[1] / "ml" / "artifacts" / "horizon_survival_v1.json"
     surv = json.loads(hpath.read_text(encoding="utf-8"))["metrics"] if hpath.exists() else None
 
-    def hist(leads):
+    def hist(leads: Sequence[int]) -> list[int]:
         return [sum(1 for x in leads if x == k) for k in range(0, 8)]
 
     results: dict[str, Any] = {

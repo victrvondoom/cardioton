@@ -313,7 +313,7 @@ export default function Sandbox() {
                 <h2 className="text-sm font-semibold text-ink-primary">Results — {run.params.label}</h2>
                 <span
                   className="text-[10px] text-compact px-1.5 py-0.5 rounded bg-accent-brand/10 text-accent-brand"
-                  title="Verdicts come from a documentation heuristic, not the ClinCase agent pipeline. Use Compare on a real case for recorded outcomes."
+                  title="Verdicts come from a documentation heuristic, not the CARDIOTON agent pipeline. Use Compare on a real case for recorded outcomes."
                 >
                   SIMULATED · heuristic
                 </span>

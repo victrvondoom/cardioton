@@ -27,7 +27,7 @@ export default function Footer() {
         }}
       >
         <div>
-          <div style={{ marginBottom: "0.6rem", letterSpacing: "0.08em" }}>CLINCASE</div>
+          <div style={{ marginBottom: "0.6rem", letterSpacing: "0.08em" }}>CARDIOTON</div>
           <div style={{ opacity: 0.6, maxWidth: "280px", lineHeight: 1.6 }}>
             You treat patients. We&rsquo;ll take the calls &mdash; prior authorization
             across {DOMAINS.length} cancer programs.
@@ -48,7 +48,7 @@ export default function Footer() {
         </div>
       </div>
       <div style={{ maxWidth: "1100px", margin: "2rem auto 0", opacity: 0.4 }}>
-        &copy; {new Date().getFullYear()} ClinCase.
+        &copy; {new Date().getFullYear()} CARDIOTON.
       </div>
     </footer>
   );

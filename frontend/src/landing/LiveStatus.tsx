@@ -8,7 +8,7 @@ import { HEALTH_URL, useSystemHealth } from "./useSystemHealth";
  * landing page's one claim a visitor can verify without an account.
  */
 export default function LiveStatus() {
-  const { health, capabilities, latencyMs, loading, error, checkedAt, refresh } =
+  const { health, capabilities, latencyMs, loading, error, checkedAt, updatedAt, refresh } =
     useSystemHealth();
 
   return (
@@ -85,7 +85,7 @@ export default function LiveStatus() {
               ) : (
                 <RotateCw size={12} />
               )}
-              run again
+              Refresh status
             </button>
           </div>
 
@@ -94,9 +94,9 @@ export default function LiveStatus() {
           {error && !loading && (
             <div style={{ color: "var(--ember)" }}>
               request failed: {error}
+              {updatedAt && <div style={{ marginTop: "0.5rem", fontSize: "0.78rem" }}>Last successful reading: {new Date(updatedAt).toLocaleString()}. Previously: API {health?.status}, database {health?.db}.</div>}
               <div style={{ opacity: 0.5, marginTop: "0.5rem", fontSize: "0.78rem" }}>
-                the backend isn&rsquo;t reachable from here -- start the API and hit
-                &ldquo;run again&rdquo;.
+                Refresh to retry the running service.
               </div>
             </div>
           )}

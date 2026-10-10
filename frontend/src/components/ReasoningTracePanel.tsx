@@ -133,7 +133,7 @@ export function ReasoningTracePanel({ events, isRunning }: Props) {
       <div ref={scrollRef} className="flex-1 overflow-auto p-4 space-y-3">
         {!isRunning && agents.every((a) => a.status === "pending") && (
           <div className="text-center py-12 text-neutral-400">
-            <p className="text-sm">Click "Run ClinCase" to start the agent pipeline.</p>
+            <p className="text-sm">Click "Run CARDIOTON" to start the agent pipeline.</p>
           </div>
         )}
 

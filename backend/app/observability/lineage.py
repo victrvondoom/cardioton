@@ -50,7 +50,7 @@ async def _post(event: dict[str, Any]) -> None:
     if not _OPENLINEAGE_URL:
         return
     try:
-        import httpx  # type: ignore[import-not-found]
+        import httpx
 
         async with httpx.AsyncClient(timeout=2.0) as client:
             resp = await client.post(

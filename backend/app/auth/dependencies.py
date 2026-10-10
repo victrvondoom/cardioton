@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Awaitable, Callable
 from typing import Any
 
 from fastapi import Depends, HTTPException, Request, status
@@ -86,7 +87,7 @@ async def get_optional_user(
         return None
 
 
-def require_role(*allowed_roles: str):
+def require_role(*allowed_roles: str) -> Callable[[dict[str, Any]], Awaitable[dict[str, Any]]]:
     """Dependency factory: 403 if current user's role is not in allowed_roles."""
 
     async def _check(user: dict[str, Any] = Depends(get_current_user)) -> dict[str, Any]:

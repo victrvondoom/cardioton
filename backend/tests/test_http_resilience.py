@@ -163,11 +163,19 @@ async def test_idempotency_replay_does_not_execute_mutation(monkeypatch) -> None
 
 
 @pytest.mark.asyncio
-async def test_healthz_is_process_only(monkeypatch) -> None:
+@pytest.mark.parametrize("configured", [False, True])
+async def test_healthz_is_process_only(monkeypatch, configured: bool) -> None:
     fetchval = AsyncMock(side_effect=AssertionError("liveness must not query storage"))
     monkeypatch.setattr(healthz.db, "fetchval", fetchval)
+    monkeypatch.setattr(
+        healthz.db, "pool_snapshot", lambda: {"writer_pool": {"configured": configured}}
+    )
 
-    assert await healthz.healthz() == {"status": "ok", "db": "not_checked"}
+    assert await healthz.healthz() == {
+        "status": "ok",
+        "db": "not_checked",
+        "case_storage_configured": configured,
+    }
     fetchval.assert_not_awaited()
 
 

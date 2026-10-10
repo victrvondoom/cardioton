@@ -24,6 +24,7 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import LETTER
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
+from reportlab.pdfgen.canvas import Canvas
 from reportlab.platypus import (
     Flowable,
     HRFlowable,
@@ -194,7 +195,7 @@ _FOOTER_STYLE = ParagraphStyle(
 # ---------------------------------------------------------------------------
 # Letterhead — drawn on every page via SimpleDocTemplate's onFirstPage / onLaterPages
 # ---------------------------------------------------------------------------
-def _draw_letterhead(canvas, doc, *, requires_review: bool = False) -> None:
+def _draw_letterhead(canvas: Canvas, doc: SimpleDocTemplate, *, requires_review: bool = False) -> None:
     canvas.saveState()
     width, height = LETTER
 

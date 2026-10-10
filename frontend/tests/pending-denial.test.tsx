@@ -43,7 +43,7 @@ it("reloads pending evidence and draft letters without enabling patient email or
   expect(screen.getByText(/This proposed appeal has not been approved or submitted/)).toBeTruthy();
   expect((screen.getByRole("button", { name: "Email" }) as HTMLButtonElement).disabled).toBe(true);
   expect(screen.queryByText("Submit final determination")).toBeNull();
-  expect((screen.getByRole("button", { name: /Run ClinCase/ }) as HTMLButtonElement).disabled).toBe(true);
+  expect((screen.getByRole("button", { name: /Run CARDIOTON/ }) as HTMLButtonElement).disabled).toBe(true);
 });
 
 it("marks downloaded pending appeal contents as a draft", async () => {

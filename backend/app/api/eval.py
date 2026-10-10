@@ -25,6 +25,7 @@ from fastapi import APIRouter, Depends
 
 from app.auth.dependencies import get_current_user
 from app.db import db
+from app.json_contract import json_object
 
 router = APIRouter(prefix="/eval", tags=["eval"])
 
@@ -34,7 +35,7 @@ _GOLD_LABELS_PATH = Path(__file__).parent.parent / "data" / "gold_labels.json"
 def _load_gold_labels() -> dict[str, Any]:
     if not _GOLD_LABELS_PATH.exists():
         return {"labels": [], "labeled_at": None, "method": "missing"}
-    return json.loads(_GOLD_LABELS_PATH.read_text(encoding="utf-8"))
+    return json_object(json.loads(_GOLD_LABELS_PATH.read_text(encoding="utf-8")), "Gold labels")
 
 
 VERDICTS = ["APPROVE", "DENY", "REFER"]

@@ -12,7 +12,7 @@
 import { Activity, AlertCircle, CheckCircle, Heart, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-import { EMPTY_SNAPSHOT, buildTickerItems, fetchSnapshot, type TickerIcon, type Tone } from "../lib/liveFeed";
+import { EMPTY_SNAPSHOT, buildTickerItems, fetchSnapshot, isHealthDegraded, type TickerIcon, type Tone } from "../lib/liveFeed";
 import { useLive } from "../lib/useLive";
 
 const ICONS: Record<TickerIcon, LucideIcon> = {
@@ -33,7 +33,7 @@ export function ActivityTicker({ oneHealth = false }: { oneHealth?: boolean }) {
   const { data, error, loading } = useLive(fetchSnapshot, [], REFRESH_MS);
   const snapshot = data ?? EMPTY_SNAPSHOT;
   const items = buildTickerItems(oneHealth ? { ...EMPTY_SNAPSHOT, health: snapshot.health } : snapshot);
-  const degraded = !!data && !!data.health && data.health.status !== "ok";
+  const degraded = isHealthDegraded(snapshot.health);
   // Duplicate so the marquee loop is seamless.
   const all = items.length ? [...items, ...items] : [];
 

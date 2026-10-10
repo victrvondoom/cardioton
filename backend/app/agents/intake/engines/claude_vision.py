@@ -125,7 +125,7 @@ class ClaudeVisionEngine(OCREngine):
         extracted = [ExtractedField(**f) for f in parsed.get("extracted_fields", [])]
 
         return OCRResult(
-            engine=self.name,
+            engine="claude_vision_bedrock",
             full_text=parsed.get("full_text", ""),
             extracted_fields=extracted,
             overall_confidence=float(parsed.get("overall_confidence", 0.0)),

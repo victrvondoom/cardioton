@@ -27,6 +27,7 @@ from typing import Any
 
 import numpy as np
 
+from app.oncotwin._typing import BoolArray, FloatArray
 from app.oncotwin.engine.baseline import DEVIATION_Z, Baseline
 from app.oncotwin.engine.features import FEATURE_NAMES, IDX, N_SIG
 from app.oncotwin.engine.series import PatientSeries
@@ -79,9 +80,9 @@ def probability_tier(p: float, thresholds: dict[str, float]) -> str:
 
 def rule_tiers(
     series: PatientSeries,
-    F: np.ndarray,
-    nadir_weight: np.ndarray,
-    probs: np.ndarray | None = None,
+    F: FloatArray,
+    nadir_weight: FloatArray,
+    probs: FloatArray | None = None,
     watch_threshold: float | None = None,
 ) -> tuple[list[str], list[list[dict[str, Any]]]]:
     """Per-day rule tier and the rules that fired (with their evidence).
@@ -153,7 +154,7 @@ def rule_tiers(
     return tiers, fired
 
 
-def apply_hysteresis(raw: list[str], acute: np.ndarray, *, hold_days: int = 2) -> list[str]:
+def apply_hysteresis(raw: list[str], acute: BoolArray, *, hold_days: int = 2) -> list[str]:
     out: list[str] = []
     current = "NORMAL"
     below = 0
@@ -173,7 +174,7 @@ def apply_hysteresis(raw: list[str], acute: np.ndarray, *, hold_days: int = 2) -
     return out
 
 
-def classify_trajectory(F: np.ndarray, t: int) -> dict[str, Any]:
+def classify_trajectory(F: FloatArray, t: int) -> dict[str, Any]:
     """Name the current trajectory from the last few days of features."""
     zs = F[max(0, t - 3) : t + 1, :N_SIG]
     slopes = F[t, N_SIG : 2 * N_SIG]
@@ -207,7 +208,7 @@ def classify_trajectory(F: np.ndarray, t: int) -> dict[str, Any]:
     }
 
 
-def group_contributions(contrib: np.ndarray) -> list[dict[str, Any]]:
+def group_contributions(contrib: FloatArray) -> list[dict[str, Any]]:
     groups: dict[str, dict[str, Any]] = {}
     for i, name in enumerate(FEATURE_NAMES):
         g = FEATURE_GROUP[name]
@@ -225,7 +226,7 @@ def group_contributions(contrib: np.ndarray) -> list[dict[str, Any]]:
 
 
 def describe_signal(
-    series: PatientSeries, baseline: Baseline, key: str, t: int, F: np.ndarray
+    series: PatientSeries, baseline: Baseline, key: str, t: int, F: FloatArray
 ) -> dict[str, Any] | None:
     spec = SIGNALS[key]
     b = baseline.signals.get(key)
@@ -265,7 +266,7 @@ def describe_signal(
 def review_items(
     series: PatientSeries,
     t: int,
-    F: np.ndarray,
+    F: FloatArray,
     top_groups: list[str],
     neutro_est: dict[str, Any] | None,
 ) -> list[str]:

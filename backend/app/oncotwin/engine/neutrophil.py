@@ -15,9 +15,11 @@ history and reused for every as-of day without look-ahead.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TypedDict, cast
 
 import numpy as np
 
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.series import PatientSeries
 from app.oncotwin.simulator import physiology as P
 
@@ -28,18 +30,31 @@ OBS_LOG_SD = 0.15
 POPULATION_ANC = 4.4
 
 
+class ANCEstimate(TypedDict):
+    mean: float
+    p10: float
+    p90: float
+    source: str
+
+
+class ANCPredictiveInterval(TypedDict):
+    p_lo: float
+    p_hi: float
+    source: str
+
+
 @dataclass
 class NeutrophilFit:
     circ0: float
     circ0_source: str
     base_slope: float
-    slopes: np.ndarray  # (G,)
-    posterior: np.ndarray  # (G,) weights, sums to 1
+    slopes: FloatArray  # (G,)
+    posterior: FloatArray  # (G,) weights, sums to 1
     labs_used: list[tuple[int, float, str]]
-    traj: np.ndarray  # (G, n) morning ANC under the observed dose history
+    traj: FloatArray  # (G, n) morning ANC under the observed dose history
     as_of_day: int
 
-    def estimate(self, day: int) -> dict[str, float]:
+    def estimate(self, day: int) -> ANCEstimate:
         """Posterior mean and 10–90 % interval of ANC on `day` (≤ as_of)."""
         if not self.labs_used or day < self.labs_used[0][0]:
             return {"mean": POPULATION_ANC, "p10": 2.0, "p90": 7.5, "source": "population prior"}
@@ -52,7 +67,7 @@ class NeutrophilFit:
             "source": "fitted twin",
         }
 
-    def predictive(self, day: int, q: tuple[float, float] = (0.1, 0.9)) -> dict[str, float]:
+    def predictive(self, day: int, q: tuple[float, float] = (0.1, 0.9)) -> ANCPredictiveInterval:
         """Interval for a NEW LAB MEASUREMENT on `day`: the posterior mixture over drug
         sensitivity convolved with the likelihood's lab noise (log-SD OBS_LOG_SD).
         `estimate()` describes the true ANC and is narrower — comparing a measured
@@ -76,10 +91,10 @@ class NeutrophilFit:
             return 0.0
         return float(np.sum(self.posterior * (self.traj[:, day - 1] < threshold)))
 
-    def sample_slopes(self, rng: np.random.Generator, n: int) -> np.ndarray:
+    def sample_slopes(self, rng: np.random.Generator, n: int) -> FloatArray:
         idx = rng.choice(len(self.slopes), size=n, p=self.posterior)
         jitter = np.exp(rng.normal(0.0, 0.04, size=n))
-        return self.slopes[idx] * jitter
+        return cast(FloatArray, self.slopes[idx] * jitter)
 
     def sensitivity_summary(self) -> dict[str, float]:
         rel = self.slopes / self.base_slope
@@ -90,17 +105,17 @@ class NeutrophilFit:
         }
 
 
-def _norm_cdf(x: np.ndarray) -> np.ndarray:
+def _norm_cdf(x: FloatArray) -> FloatArray:
     """Standard normal CDF (Abramowitz & Stegun 7.1.26 erf approximation, |error| < 1.5e-7)."""
     z = np.abs(x) / np.sqrt(2.0)
     t = 1.0 / (1.0 + 0.3275911 * z)
     erf = 1.0 - (
         ((((1.061405429 * t - 1.453152027) * t) + 1.421413741) * t - 0.284496736) * t + 0.254829592
     ) * t * np.exp(-z * z)
-    return 0.5 * (1.0 + np.sign(x) * erf)
+    return cast(FloatArray, 0.5 * (1.0 + np.sign(x) * erf))
 
 
-def _wq(values: np.ndarray, weights: np.ndarray, q: float) -> float:
+def _wq(values: FloatArray, weights: FloatArray, q: float) -> float:
     order = np.argsort(values)
     cw = np.cumsum(weights[order])
     return float(values[order][min(len(values) - 1, int(np.searchsorted(cw, q)))])
@@ -152,7 +167,7 @@ class NeutrophilTwin:
         self._fits[key] = fit
         return fit
 
-    def daily_features(self) -> tuple[np.ndarray, np.ndarray]:
+    def daily_features(self) -> tuple[FloatArray, FloatArray]:
         """(log ANC estimate, P(ANC<1.0)) for every day, each using only labs ≤ that day."""
         n = self.series.n
         log_anc = np.full(n, np.log(POPULATION_ANC))

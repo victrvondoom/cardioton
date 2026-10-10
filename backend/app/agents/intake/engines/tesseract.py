@@ -12,7 +12,7 @@ it. ClinCase never crashes because tesseract isn't installed.
 from __future__ import annotations
 
 import asyncio
-from typing import ClassVar
+from typing import ClassVar, Literal
 
 from app.agents.intake.engines.base import EngineCapabilities, OCREngine
 from app.agents.intake.errors import EngineUnavailableError
@@ -22,7 +22,7 @@ from app.models.intake import DocumentClassification, OCRResult
 class TesseractEngine(OCREngine):
     """Local Tesseract OCR — last-resort fallback."""
 
-    name: ClassVar[str] = "tesseract_local"
+    name: ClassVar[Literal["tesseract_local"]] = "tesseract_local"
     capabilities: ClassVar[EngineCapabilities] = EngineCapabilities(
         handles_handwriting=False,  # Tesseract on handwriting is poor
         handles_typed_print=True,

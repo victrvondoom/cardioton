@@ -7,7 +7,8 @@
  * checked it.
  */
 import { Filter, Plus } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
+import { useLive } from "../lib/useLive";
 import { Link } from "react-router-dom";
 
 import { aqua } from "../aquahealth/api";
@@ -25,9 +26,7 @@ import {
 } from "../aquahealth/panels";
 import type {
   EcosystemStatus,
-  ObservationSummary,
   ReviewStatus,
-  WaterbodyRow,
 } from "../aquahealth/types";
 
 const selectClass =
@@ -50,49 +49,25 @@ const REVIEW_FILTERS: Array<{ value: ReviewStatus | "all"; label: string }> = [
 ];
 
 export default function AquaObservations() {
-  const [rows, setRows] = useState<ObservationSummary[]>([]);
-  const [waterbodies, setWaterbodies] = useState<WaterbodyRow[]>([]);
-  const [total, setTotal] = useState(0);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const waterbodyFeed = useLive(aqua.waterbodies);
+  const waterbodies = waterbodyFeed.data?.waterbodies ?? [];
 
   const [status, setStatus] = useState<EcosystemStatus | "all">("all");
   const [reviewStatus, setReviewStatus] = useState<ReviewStatus | "all">("all");
   const [waterbodyId, setWaterbodyId] = useState<string>("all");
   const [includeDemo, setIncludeDemo] = useState(true);
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    try {
-      setError(null);
-      const res = await aqua.listObservations({
-        status: status === "all" ? undefined : status,
-        reviewStatus: reviewStatus === "all" ? undefined : reviewStatus,
-        waterbodyId: waterbodyId === "all" ? undefined : waterbodyId,
-        includeDemo,
-        limit: 200,
-      });
-      setRows(res.observations);
-      setTotal(res.total);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load observations");
-    } finally {
-      setLoading(false);
-    }
-  }, [status, reviewStatus, waterbodyId, includeDemo]);
-
-  useEffect(() => {
-    void load();
-  }, [load]);
-
-  useEffect(() => {
-    aqua
-      .waterbodies()
-      .then((r) => setWaterbodies(r.waterbodies))
-      .catch(() => {
-        /* filter stays on "all" — not worth surfacing an error for */
-      });
-  }, []);
+  const observations = useLive(() => aqua.listObservations({
+    status: status === "all" ? undefined : status,
+    reviewStatus: reviewStatus === "all" ? undefined : reviewStatus,
+    waterbodyId: waterbodyId === "all" ? undefined : waterbodyId,
+    includeDemo,
+    limit: 200,
+  }), [status, reviewStatus, waterbodyId, includeDemo]);
+  const rows = observations.data?.observations ?? [];
+  const total = observations.data?.total ?? 0;
+  const error = observations.error;
+  const loading = observations.loading && !observations.data;
 
   return (
     <div className="p-6 lg:p-8 max-w-[1400px]">
@@ -177,6 +152,7 @@ export default function AquaObservations() {
 
         {error && <ErrorNote message={error} />}
         {loading && <LoadingNote label="Loading observations…" />}
+        {observations.loading && observations.data && <p role="status" className="text-xs text-ink-muted">Updating observations…</p>}
 
         {!loading && rows.length === 0 && !error && (
           <EmptyState

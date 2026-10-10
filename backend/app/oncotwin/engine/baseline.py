@@ -21,10 +21,11 @@ can run them on Monte Carlo futures with exactly the same code.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.series import PatientSeries
 from app.oncotwin.signals import DAILY_SIGNALS, MODEL_SIGNALS, SIGNALS, adverse_sign
 
@@ -88,14 +89,14 @@ class Baseline:
     window: tuple[int, int]
     kind: str
     adequacy: float
-    corr_inv: np.ndarray  # inverse shrunk correlation over MODEL_SIGNALS
+    corr_inv: FloatArray  # inverse shrunk correlation over MODEL_SIGNALS
 
     @property
-    def median_vec(self) -> np.ndarray:
+    def median_vec(self) -> FloatArray:
         return np.array([self.signals[k].median_t for k in MODEL_SIGNALS])
 
     @property
-    def spread_vec(self) -> np.ndarray:
+    def spread_vec(self) -> FloatArray:
         return np.array([self.signals[k].spread_t for k in MODEL_SIGNALS])
 
     def to_dict(self) -> dict[str, Any]:
@@ -149,7 +150,7 @@ def compute_baseline(series: PatientSeries) -> Baseline:
     return Baseline(signals, (start, end), kind, adequacy, np.linalg.inv(corr))
 
 
-def _shrunk_corr(Z: np.ndarray) -> np.ndarray:
+def _shrunk_corr(Z: FloatArray) -> FloatArray:
     S = Z.shape[1]
     R = np.eye(S)
     n_eff = 0
@@ -171,15 +172,15 @@ def _shrunk_corr(Z: np.ndarray) -> np.ndarray:
 
 
 def adverse_z(
-    values_t: np.ndarray, baseline: Baseline, keys: tuple[str, ...] = MODEL_SIGNALS
-) -> np.ndarray:
+    values_t: FloatArray, baseline: Baseline, keys: tuple[str, ...] = MODEL_SIGNALS
+) -> FloatArray:
     med = np.array([baseline.signals[k].median_t for k in keys])
     spread = np.array([baseline.signals[k].spread_t for k in keys])
     signs = np.array([adverse_sign(k) for k in keys])
-    return signs * (values_t - med) / spread
+    return cast(FloatArray, signs * (values_t - med) / spread)
 
 
-def carry_forward(z: np.ndarray, max_gap: int = 1) -> np.ndarray:
+def carry_forward(z: FloatArray, max_gap: int = 1) -> FloatArray:
     """Fill a missing day with the previous day's value (at most `max_gap` days)."""
     out = z.copy()
     for lag in range(1, max_gap + 1):
@@ -188,7 +189,7 @@ def carry_forward(z: np.ndarray, max_gap: int = 1) -> np.ndarray:
     return out
 
 
-def rolling_slope(z: np.ndarray, window: int) -> np.ndarray:
+def rolling_slope(z: FloatArray, window: int) -> FloatArray:
     """OLS slope (per day) over the trailing `window` days, NaN-aware; needs ≥2 points."""
     B, T, S = z.shape
     stack = np.full((window, B, T, S), np.nan)
@@ -207,7 +208,7 @@ def rolling_slope(z: np.ndarray, window: int) -> np.ndarray:
     return np.where((n >= 2) & (den > 0), slope, np.nan)
 
 
-def persistence(z: np.ndarray, thr: float = DEVIATION_Z) -> np.ndarray:
+def persistence(z: FloatArray, thr: float = DEVIATION_Z) -> FloatArray:
     """Consecutive days ending at t with z ≥ thr (missing days neither count nor break)."""
     B, T, S = z.shape
     out = np.zeros((B, T, S))
@@ -219,7 +220,7 @@ def persistence(z: np.ndarray, thr: float = DEVIATION_Z) -> np.ndarray:
     return out
 
 
-def cusum(z: np.ndarray, k: float = CUSUM_K) -> np.ndarray:
+def cusum(z: FloatArray, k: float = CUSUM_K) -> FloatArray:
     B, T, S = z.shape
     out = np.zeros((B, T, S))
     s = np.zeros((B, S))
@@ -230,13 +231,13 @@ def cusum(z: np.ndarray, k: float = CUSUM_K) -> np.ndarray:
     return out
 
 
-def jumps(z: np.ndarray) -> np.ndarray:
+def jumps(z: FloatArray) -> FloatArray:
     prev = np.concatenate([np.full_like(z[:, :1], np.nan), z[:, :-1]], axis=1)
-    return z - prev
+    return cast(FloatArray, z - prev)
 
 
-def anomaly_score(z_signed: np.ndarray, corr_inv: np.ndarray) -> np.ndarray:
+def anomaly_score(z_signed: FloatArray, corr_inv: FloatArray) -> FloatArray:
     """RMS-normalised Mahalanobis distance of the daily deviation vector."""
     zz = np.nan_to_num(z_signed, nan=0.0)
     d2 = np.einsum("bts,sr,btr->bt", zz, corr_inv, zz)
-    return np.sqrt(np.maximum(d2, 0.0) / z_signed.shape[-1])
+    return cast(FloatArray, np.sqrt(np.maximum(d2, 0.0) / z_signed.shape[-1]))

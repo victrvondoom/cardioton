@@ -18,9 +18,10 @@ mis-cell traffic to the cell's own ALB.
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from typing import Any
 
-from starlette.types import ASGIApp, Receive, Scope, Send
+from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from app.cells import cell_for_organization
 
@@ -32,7 +33,7 @@ def _decode_jwt_unsafe(token: str) -> dict[str, Any] | None:
     return decode_access_token(token)
 
 
-def _bearer(headers) -> str | None:
+def _bearer(headers: Iterable[tuple[bytes, bytes]]) -> str | None:
     for name, value in headers:
         if name.lower() == b"authorization":
             v = value.decode("latin-1", errors="replace")
@@ -66,7 +67,7 @@ class CellRouterMiddleware:
                     )
                     cell_id_bytes = cell.cell_id.encode("ascii")
 
-        async def _send_with_cell_header(message: dict) -> None:
+        async def _send_with_cell_header(message: Message) -> None:
             if message["type"] == "http.response.start" and cell_id_bytes:
                 headers = list(message.get("headers", []))
                 headers.append((b"x-clincase-cell-id", cell_id_bytes))

@@ -4,7 +4,7 @@
  * clinical-healthcare showcase (components.jsx TopBar, lines 379-450).
  *
  * Layout (left → right):
- *   - Logo + brand lockup ("ClinCase." with cyan dot · "Clinical AI Platform")
+ *   - Logo + brand lockup ("ClinCase." with cyan dot · "World Cardiology Clinic")
  *   - Cmd+K search (md+ block, mobile icon-only)
  *   - Status link (opens the live system status panel)
  *   - NotificationsBell (with unread count)
@@ -62,7 +62,7 @@ export function TopBar({ onOpenSearch, oneHealth = false }: Props) {
         <Link
           to={oneHealth ? "/journey" : "/dashboard"}
           className="flex items-center gap-2 sm:gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand rounded-md min-w-0 lg:w-[228px] lg:shrink-0"
-          aria-label="CLINI-CASE home"
+          aria-label="CARDIOTON home — open Dashboard"
         >
           <img
             src="/clincase-mark.svg"
@@ -74,10 +74,10 @@ export function TopBar({ onOpenSearch, oneHealth = false }: Props) {
           />
           <div className="leading-tight min-w-0">
             <div className="text-ui-primary tracking-[0.01em] text-ink-primary text-[15px] truncate">
-              CLINI-CASE<span className="text-accent-cyan">.</span>
+              CARDIOTON<span className="text-accent-cyan">.</span>
             </div>
             <div className="text-compact hidden sm:block text-[9px] text-ink-muted">
-              One Health Interoperability Gateway
+              World Cardiology Clinic
             </div>
           </div>
         </Link>
@@ -269,7 +269,7 @@ function UserChip() {
 
   // Use name/email initials when available, falling back to "CC" (ClinCase)
   const initials =
-    (user?.full_name ?? user?.email ?? "ClinCase")
+    (user?.full_name ?? user?.email ?? "CARDIOTON")
       .split(/[@.\s]/)
       .filter(Boolean)
       .slice(0, 2)

@@ -21,7 +21,7 @@ import json
 from datetime import UTC, datetime
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 
@@ -39,7 +39,9 @@ from app.cardiotwin.schema import (
     TARGET_ORDER,
     VESSEL_NAMES,
     VESSELS,
+    FeatureSpec,
 )
+from app.oncotwin._typing import FloatArray
 
 ARTIFACT_DIR = Path(__file__).resolve().parent / "artifacts"
 ARTIFACT_PATH = ARTIFACT_DIR / "cardiotwin_lr_v1.json"
@@ -61,8 +63,8 @@ class ModelArtifactError(RuntimeError):
     pass
 
 
-def _sigmoid(z: np.ndarray | float) -> np.ndarray:
-    return 1.0 / (1.0 + np.exp(-np.clip(z, -35, 35)))
+def _sigmoid(z: FloatArray | float) -> FloatArray:
+    return cast(FloatArray, 1.0 / (1.0 + np.exp(-np.clip(z, -35, 35))))
 
 
 def canonical_sha256(artifact: dict[str, Any]) -> str:
@@ -87,6 +89,11 @@ class CardioModel:
                 "CardioTwin artifact feature layout does not match the running encoder — retrain with "
                 "`python -m app.cardiotwin.training`."
             )
+        for field in ("model_id", "version"):
+            if not isinstance(artifact.get(field), str):
+                raise ModelArtifactError(f"CardioTwin artifact requires string {field}")
+        if "sha256" in artifact and not isinstance(artifact["sha256"], str):
+            raise ModelArtifactError("CardioTwin artifact requires string sha256")
         self.artifact = artifact
         self.impute = np.array(artifact["impute"], dtype=float)
         self.mean = np.array(artifact["mean"], dtype=float)
@@ -102,15 +109,15 @@ class CardioModel:
     # ---- identity ---------------------------------------------------------
     @property
     def model_id(self) -> str:
-        return self.artifact["model_id"]
+        return cast(str, self.artifact["model_id"])
 
     @property
     def version(self) -> str:
-        return self.artifact["version"]
+        return cast(str, self.artifact["version"])
 
     @property
     def sha256(self) -> str:
-        return self.artifact.get("sha256", "")
+        return cast(str, self.artifact.get("sha256", ""))
 
     def version_info(self) -> dict[str, Any]:
         return {
@@ -124,10 +131,10 @@ class CardioModel:
         }
 
     # ---- core math --------------------------------------------------------
-    def _z(self, vec: np.ndarray) -> np.ndarray:
-        return (vec - self.mean) / self.std
+    def _z(self, vec: FloatArray) -> FloatArray:
+        return cast(FloatArray, (vec - self.mean) / self.std)
 
-    def _target_outputs(self, t: str, z: np.ndarray) -> dict[str, Any]:
+    def _target_outputs(self, t: str, z: FloatArray) -> dict[str, Any]:
         m = self.targets[t]
         w = self.coef[t]
         cal = m["calibration"]
@@ -146,7 +153,7 @@ class CardioModel:
             "threshold": float(m["threshold"]),
         }
 
-    def _probabilities(self, vec: np.ndarray) -> dict[str, float]:
+    def _probabilities(self, vec: FloatArray) -> dict[str, float]:
         """Fast path used by counterfactual / sensitivity sweeps (calibrated + consistent)."""
         z = self._z(vec)
         p = {t: self._target_outputs(t, z)["probability"] for t in TARGET_ORDER}
@@ -154,7 +161,7 @@ class CardioModel:
         return p
 
     # ---- representativeness (out-of-distribution) --------------------------
-    def representativeness(self, vec: np.ndarray, raw: dict[str, Any]) -> dict[str, Any]:
+    def representativeness(self, vec: FloatArray, raw: dict[str, Any]) -> dict[str, Any]:
         ood = self.artifact["ood"]
         zc = self._z(vec) - self._z(self.ood_mean)
         d2 = float(zc @ self.ood_prec @ zc)
@@ -197,7 +204,7 @@ class CardioModel:
         }
 
     # ---- attribution ------------------------------------------------------
-    def contributions(self, t: str, vec: np.ndarray, rec: Any) -> dict[str, Any]:
+    def contributions(self, t: str, vec: FloatArray, rec: Any) -> dict[str, Any]:
         m = self.targets[t]
         a = m["calibration"]["a"]
         z = self._z(vec)
@@ -247,7 +254,7 @@ class CardioModel:
         }
 
     @staticmethod
-    def _display_value(spec: Any, vec: np.ndarray, idx: list[int]) -> float | str:
+    def _display_value(spec: FeatureSpec, vec: FloatArray, idx: list[int]) -> float | str:
         if spec.kind == "categorical":
             hot = [k for k, i in enumerate(idx) if vec[i] >= 0.5]
             return spec.options[hot[0] + 1] if hot else spec.options[0]
@@ -481,6 +488,7 @@ class CardioModel:
         rec = encode_record(values, self.impute)
         vec0 = np.array(rec.vector)
         idx = RAW_TO_ENCODED_IDX[feature]
+        labels: list[float | str]
         if spec.kind == "numeric":
             r = self.artifact["ood"]["feature_ranges"][feature]
             grid = np.linspace(r["p5"], r["p95"], points)

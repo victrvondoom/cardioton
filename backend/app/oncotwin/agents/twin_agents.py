@@ -145,7 +145,10 @@ WM_LLM_TRACES = "oncotwin_llm_traces"
 
 
 def _twin(ctx: AgentContext) -> TwinComputation:
-    return ctx.working_memory[WM_KEY]
+    comp = ctx.working_memory[WM_KEY]
+    if not isinstance(comp, TwinComputation):
+        raise TypeError("Twin agent requires a TwinComputation in working memory")
+    return comp
 
 
 class _TwinAgent:

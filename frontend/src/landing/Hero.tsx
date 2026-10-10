@@ -25,7 +25,7 @@ const secondaryCta = {
 } as const;
 
 export default function Hero() {
-  const { health, capabilities, latencyMs, loading } = useSystemHealth();
+  const { health, capabilities, latencyMs, loading, error, updatedAt } = useSystemHealth();
   const { user } = useAuth();
 
   return (
@@ -51,7 +51,7 @@ export default function Hero() {
             marginBottom: "1.25rem",
           }}
         >
-          CLINI-CASE / ONE CONNECTED EVIDENCE JOURNEY
+          CARDIOTON / ONE CONNECTED EVIDENCE JOURNEY
         </Reveal>
 
         <Reveal
@@ -96,7 +96,7 @@ export default function Hero() {
             marginBottom: "2.25rem",
           }}
         >
-          CLINI-CASE connects intake, evidence, interoperability, review, clinical context and follow-up in one traceable workflow.
+          CARDIOTON connects intake, evidence, interoperability, review, clinical context and follow-up in one traceable workflow.
         </Reveal>
 
         <Reveal
@@ -137,11 +137,16 @@ export default function Hero() {
           opacity: 0.55,
         }}
       >
-        {loading ? (
+        {error ? (
+          `Live status unavailable${updatedAt ? ` · last successful check ${new Date(updatedAt).toLocaleTimeString()}` : ""}`
+        ) : loading && !health ? (
           "checking this deployment..."
         ) : health ? (
           <>
             api {health.status} &middot; database {health.db} &middot; {latencyMs}ms
+            {health.case_storage_configured === false ? " · case storage disconnected" : ""}
+            {updatedAt ? ` · checked ${new Date(updatedAt).toLocaleTimeString()}` : ""}
+            {loading ? " · refreshing…" : ""}
             {capabilities?.deployment?.llm_provider
               ? ` · reasoning on ${capabilities.deployment.llm_provider}`
               : ""}

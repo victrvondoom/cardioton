@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 import { Link } from "react-router-dom";
 
 import { aqua } from "../aquahealth/api";
@@ -72,21 +73,26 @@ export default function AquaDashboard() {
   const [meta, setMeta] = useState<AquaMeta | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const readSequence = useRef(0);
 
   const load = useCallback(async () => {
+    const generation = ++readSequence.current;
     try {
       setError(null);
       const [overview, m] = await Promise.all([aqua.overview(), aqua.meta()]);
+      if (generation !== readSequence.current) return;
       setData(overview);
       setMeta(m);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load AquaHealth overview");
+      if (generation === readSequence.current) setError(e instanceof Error ? e.message : "Failed to load AquaHealth overview");
     }
   }, []);
 
   useEffect(() => {
     void load();
+    return () => { readSequence.current++; };
   }, [load]);
+  useAutoRefresh(load, 30_000, !busy);
 
   async function seed() {
     setBusy(true);
@@ -457,7 +463,6 @@ function EnvironmentalFollowup() {
       setError("");
     } catch (e) {
       if (generation === sequence.current) {
-        setTasks([]);
         setError(e instanceof Error ? e.message : "Environmental follow-up is unavailable");
       }
     } finally {
@@ -469,15 +474,11 @@ function EnvironmentalFollowup() {
   }, []);
   useEffect(() => {
     void load();
-    const timer = window.setInterval(() => void load(), 30_000);
-    const onFocus = () => void load();
-    window.addEventListener("focus", onFocus);
     return () => {
       sequence.current++;
-      window.clearInterval(timer);
-      window.removeEventListener("focus", onFocus);
     };
   }, [load]);
+  useAutoRefresh(load);
   const open = tasks.filter((task) => task.status !== "completed");
   return (
     <section className="rounded-2xl border border-surface-border bg-surface-raised p-5" aria-label="Environmental follow-up loop">

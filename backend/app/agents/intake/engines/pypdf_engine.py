@@ -14,7 +14,7 @@ Limitations vs Textract:
 from __future__ import annotations
 
 import io
-from typing import ClassVar
+from typing import ClassVar, Literal
 
 from app.agents.intake.engines.base import EngineCapabilities, OCREngine
 from app.agents.intake.errors import EngineUnavailableError
@@ -24,7 +24,7 @@ from app.models.intake import DocumentClassification, OCRResult
 class PyPDFEngine(OCREngine):
     """pypdf text-layer extractor — handles PDFs that have a text layer."""
 
-    name: ClassVar[str] = "pypdf_text"
+    name: ClassVar[Literal["pypdf_text"]] = "pypdf_text"
     capabilities: ClassVar[EngineCapabilities] = EngineCapabilities(
         handles_handwriting=False,
         handles_typed_print=True,

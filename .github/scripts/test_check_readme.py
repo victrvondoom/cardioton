@@ -22,7 +22,7 @@ class ReadmeContractTests(unittest.TestCase):
         )
 
     def test_headings_inside_code_fences_do_not_satisfy_contract(self):
-        content = "# CLINI-CASE\n```markdown\n" + README.read_text(encoding="utf-8") + "\n```"
+        content = "# CARDIOTON\n```markdown\n" + README.read_text(encoding="utf-8") + "\n```"
         self.assertTrue(check_readme(content))
 
     def test_empty_section_is_rejected(self):

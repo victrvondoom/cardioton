@@ -23,6 +23,7 @@ import { ReasoningTracePanel } from "../components/ReasoningTracePanel";
 import { TrizettoSubmitPanel } from "../components/TrizettoSubmitPanel";
 import { api } from "../lib/api";
 import { getStoredUser } from "../lib/auth";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 import { ExposureContext } from "../onehealth/ContextPanel";
 import { openTraceStream, type StreamHandle } from "../lib/sse";
 import type { Citation, RunResult, TraceEvent } from "../lib/types";
@@ -50,25 +51,37 @@ export default function CaseDetail() {
   const [citationOpen, setCitationOpen] = useState<Citation | null>(null);
   const streamRef = useRef<StreamHandle | null>(null);
   const [retryingLetters, setRetryingLetters] = useState(false);
+  const loadSeq = useRef(0);
+
+  const loadCase = useCallback(async () => {
+    if (!caseId) return;
+    const sequence = ++loadSeq.current;
+    try {
+      const info = await api.getCase(caseId);
+      if (sequence !== loadSeq.current) return;
+      setCaseInfo(info);
+      setResult(info.pending_review ?? info.latest_result ?? null);
+      setError(null);
+    } catch (e) {
+      if (sequence === loadSeq.current) setError(String(e));
+    }
+  }, [caseId]);
 
   useEffect(() => {
     if (!caseId) return;
-    let cancelled = false;
     setCaseInfo(null);
     setResult(null);
-    api.getCase(caseId).then((info) => {
-      if (cancelled) return;
-      setCaseInfo(info);
-      setResult(info.pending_review ?? info.latest_result ?? null);
-    }).catch((e) => { if (!cancelled) setError(String(e)); });
+    void loadCase();
     return () => {
-      cancelled = true;
+      loadSeq.current++;
       streamRef.current?.close();
     };
-  }, [caseId]);
+  }, [caseId, loadCase]);
+  useAutoRefresh(loadCase, 30_000, !running && !retryingLetters);
 
   const runClinCase = useCallback(async () => {
     if (!caseId || running) return;
+    loadSeq.current++;
     setRunning(true);
     setEvents([]);
     setResult(null);
@@ -105,6 +118,7 @@ export default function CaseDetail() {
   const role = getStoredUser()?.role;
 
   async function retryLetters() {
+    loadSeq.current++;
     setRetryingLetters(true);
     setError(null);
     try {
@@ -199,7 +213,7 @@ export default function CaseDetail() {
             ) : (
               <>
                 <Play size={16} />
-                Run ClinCase
+                Run CARDIOTON
                 <kbd className="text-[9px] text-mono-tech px-1 py-0.5 rounded bg-white/20">R</kbd>
               </>
             )}
@@ -327,7 +341,7 @@ export default function CaseDetail() {
           {!result && !running && (
             <div className="bg-surface-raised border border-dashed border-surface-border rounded-2xl p-8 text-center text-ink-muted">
               <p className="text-sm">
-                Click <strong className="text-ink-primary">Run ClinCase</strong> (or press R) to start the 7-agent pipeline.
+                Click <strong className="text-ink-primary">Run CARDIOTON</strong> (or press R) to start the 7-agent pipeline.
                 <br />
                 You'll see the clinical snapshot, decision, and (if denied) appeal letter appear here.
               </p>

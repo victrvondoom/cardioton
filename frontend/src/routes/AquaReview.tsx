@@ -7,7 +7,8 @@
  * without losing their place in the queue.
  */
 import { Check, ClipboardCheck, Loader2 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 import { Link } from "react-router-dom";
 
 import { aqua } from "../aquahealth/api";
@@ -46,19 +47,24 @@ export default function AquaReview() {
   const [decision, setDecision] = useState<ReviewDecision>("accepted");
   const [comment, setComment] = useState("");
   const [corrected, setCorrected] = useState<EcosystemStatus>("watch");
+  const readSequence = useRef(0);
 
   const load = useCallback(async () => {
+    const generation = ++readSequence.current;
     try {
       setError(null);
-      setQueue(await aqua.reviewQueue());
+      const next = await aqua.reviewQueue();
+      if (generation === readSequence.current) setQueue(next);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load the review queue");
+      if (generation === readSequence.current) setError(e instanceof Error ? e.message : "Failed to load the review queue");
     }
   }, []);
 
   useEffect(() => {
     void load();
+    return () => { readSequence.current++; };
   }, [load]);
+  useAutoRefresh(load, 30_000, openId === null && busyId === null);
 
   function openFor(id: string) {
     setOpenId((prev) => (prev === id ? null : id));
@@ -68,6 +74,7 @@ export default function AquaReview() {
   }
 
   async function submit(observationId: string) {
+    readSequence.current++;
     setBusyId(observationId);
     setError(null);
     try {

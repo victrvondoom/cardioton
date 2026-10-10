@@ -102,7 +102,7 @@ class AssembleStage(IntakeStage):
             _store_in_cache(ctx.sha256, result.model_dump(), ctx.tenant_id)
 
 
-def _engines_from_attempts(payload: dict) -> list[str]:
+def _engines_from_attempts(payload: dict[str, Any]) -> list[str]:
     """Build the engines_used list from extract attempts + classifier."""
     out = ["pil_classifier"]
     for a in payload.get("extract.attempts", []):

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useLive } from "../lib/useLive";
 import { onehealth, type ExposureRecord } from "./api";
 
 /** Shared evidence, never an extra feature in the existing disease classifiers. */
@@ -14,40 +14,19 @@ export function ExposureContext({
   exposureId?: string;
   independentCardio?: boolean;
 }) {
-  const [records, setRecords] = useState<ExposureRecord[]>([]);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    let active = true;
-    setRecords([]);
-    setError("");
-    if (!patientId && !caseId && !exposureId) return;
-    setLoading(true);
-    const load = exposureId
-      ? onehealth.get(exposureId).then((r) => [r])
-      : onehealth
-          .list({
-            ...(patientId ? { patient_id: patientId } : {}),
-            ...(caseId ? { case_id: caseId } : {}),
-          })
-          .then((r) => r.records);
-    load
-      .then((r) => {
-        if (active) setRecords(r.filter((row) => !row.consent_withdrawn));
-      })
-      .catch((e) => {
-        if (active)
-          setError(
-            e instanceof Error ? e.message : "Exposure context unavailable",
-          );
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [patientId, caseId, exposureId]);
+  const identity = JSON.stringify([patientId, caseId, exposureId]);
+  const context = useLive(async () => {
+    const rows: ExposureRecord[] = !patientId && !caseId && !exposureId ? [] : exposureId
+      ? [await onehealth.get(exposureId)]
+      : (await onehealth.list({
+          ...(patientId ? { patient_id: patientId } : {}),
+          ...(caseId ? { case_id: caseId } : {}),
+        })).records;
+    return { identity, records: rows.filter(row => !row.consent_withdrawn) };
+  }, [identity]);
+  const error = context.error;
+  const records = !error && context.data?.identity === identity ? context.data.records : [];
+  const loading = context.loading;
   return (
     <section
       className="rounded-xl border border-accent-cyan/30 bg-accent-cyan/5 p-4 my-4"

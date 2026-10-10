@@ -11,9 +11,9 @@
  * dollar figure they can take to procurement.
  */
 import { Citrus, Clock, DollarSign, TrendingUp } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useLive } from "../lib/useLive";
 
-import { api, type CaseROI } from "../lib/api";
+import { api } from "../lib/api";
 
 interface BusinessValuePanelProps {
   caseId: string;
@@ -21,47 +21,10 @@ interface BusinessValuePanelProps {
 }
 
 export function BusinessValuePanel({ caseId, refreshKey = 0 }: BusinessValuePanelProps) {
-  const [roi, setRoi] = useState<CaseROI | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    api
-      .getCaseValue(caseId)
-      .then((r) => {
-        if (!cancelled) {
-          setRoi(r);
-          setError(null);
-        }
-      })
-      .catch(() => {
-        // DB-less / endpoint-unavailable demo fallback. Show realistic figures
-        // derived from the AMA $1,500 baseline + ClinCase's measured per-case
-        // cost so the CFO panel renders something useful end-to-end.
-        if (!cancelled) {
-          setRoi({
-            case_id: caseId,
-            manual_cost_usd: 1500,
-            clincase_cost_usd: 0.10,
-            savings_usd: 1499.90,
-            minutes_saved: 16.7,
-            decision_seconds: 76.5,
-            speedup_factor: 14.2,
-            annual_extrapolation_usd: 14_999_000,
-            citations: ["AMA 2024 PA Survey", "Sahni et al. Health Affairs 2023"],
-          } as CaseROI);
-          setError(null);
-        }
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [caseId, refreshKey]);
+  const value = useLive(() => api.getCaseValue(caseId), [caseId, refreshKey]);
+  const roi = value.data?.case_id === caseId ? value.data : null;
+  const loading = value.loading && !roi;
+  const error = value.error;
 
   return (
     <div className="bg-surface-raised border border-surface-border rounded-2xl p-5">
@@ -71,7 +34,7 @@ export function BusinessValuePanel({ caseId, refreshKey = 0 }: BusinessValuePane
             Business value
           </div>
           <div className="text-sm font-semibold text-ink-primary">
-            Live ROI vs AMA $1,500 manual baseline
+            Live ROI vs {roi ? `$${roi.manual_cost_usd.toLocaleString()} manual baseline` : "configured manual baseline"}
           </div>
         </div>
         <div className="text-[10px] text-mono-tech text-ink-faint">
@@ -83,7 +46,7 @@ export function BusinessValuePanel({ caseId, refreshKey = 0 }: BusinessValuePane
         <div className="text-xs text-ink-muted">Computing live ROI…</div>
       )}
       {error && (
-        <div className="text-xs text-accent-red">Could not compute ROI: {error}</div>
+        <div role="status" className="text-xs text-accent-red">Could not compute ROI: {error}{roi ? " Showing the last successful result." : ""}</div>
       )}
 
       {roi && (
@@ -94,7 +57,7 @@ export function BusinessValuePanel({ caseId, refreshKey = 0 }: BusinessValuePane
               label="Saved this case"
               value={`$${roi.savings_usd.toLocaleString(undefined, { maximumFractionDigits: 2 })}`}
               accent="green"
-              footer={`ClinCase $${roi.clincase_cost_usd.toFixed(2)} vs $${roi.manual_cost_usd.toLocaleString()} manual`}
+              footer={`CARDIOTON $${roi.clincase_cost_usd.toFixed(2)} vs $${roi.manual_cost_usd.toLocaleString()} manual`}
             />
             <Tile
               icon={<Clock size={14} />}
@@ -112,7 +75,7 @@ export function BusinessValuePanel({ caseId, refreshKey = 0 }: BusinessValuePane
               label="Speedup factor"
               value={roi.speedup_factor != null ? `${roi.speedup_factor.toFixed(1)}×` : "—"}
               accent="brand"
-              footer="vs 18-min AMA median"
+              footer={`vs ${roi.manual_minutes ?? "—"}-min manual baseline`}
             />
             <Tile
               icon={<Citrus size={14} />}

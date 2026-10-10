@@ -16,6 +16,7 @@ Reference:
 from __future__ import annotations
 
 import json
+from collections.abc import Awaitable, Callable
 from typing import Any
 
 from app.agents.policy_retriever import _candidate_sections
@@ -411,7 +412,7 @@ TOOL_DEFINITIONS = [
 
 
 # Map tool name -> implementation
-TOOL_IMPLS = {
+TOOL_IMPLS: dict[str, Callable[..., Awaitable[dict[str, Any]]]] = {
     "policy_lookup": policy_lookup,
     "clinical_extract": clinical_extract,
     "decision_check": decision_check,

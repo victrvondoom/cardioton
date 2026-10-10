@@ -39,6 +39,7 @@ import {
 } from "../lib/agentsModel";
 import { getJson } from "../lib/agentsApi";
 import { useLive } from "../lib/useLive";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 
 interface AgentRun {
   id: string;
@@ -81,9 +82,9 @@ const POLL_MS = 30_000;
 
 export default function Agents() {
   const [hours, setHours] = useState(24);
-  const manifest = useLive<AgentsManifest>(() => getJson("/api/v1/agents/manifest", false), [], 0);
+  const manifest = useLive<AgentsManifest>(() => getJson("/api/v1/agents/manifest", false), [], 60_000);
   const metrics = useLive<MetricsReport>(() => getJson(`/api/v1/agents/metrics?hours=${hours}`), [hours], POLL_MS);
-  const mcp = useLive<{ tools: McpTool[]; endpoint: string; spec_version: string }>(() => getJson("/mcp/manifest", false), [], 0);
+  const mcp = useLive<{ tools: McpTool[]; endpoint: string; spec_version: string }>(() => getJson("/mcp/manifest", false), [], 60_000);
   const agents = useMemo(() => (manifest.data ? buildAgents(manifest.data, metrics.data) : []), [manifest.data, metrics.data]);
   const winLabel = WINDOWS.find((w) => w.hours === hours)?.label ?? `${hours} h`;
   const models = useMemo(() => [...new Set(Object.values(metrics.data?.agents ?? {}).map((a) => a.model_id).filter((m): m is string => !!m))], [metrics.data]);
@@ -121,7 +122,7 @@ export default function Agents() {
               </button>
             ))}
           </div>
-          <button type="button" onClick={() => { manifest.reload(); metrics.reload(); }} aria-label="Refresh agent data"
+          <button type="button" onClick={() => { manifest.reload(); metrics.reload(); mcp.reload(); }} aria-label="Refresh agent data"
             className="inline-flex items-center gap-1 px-2 py-1 rounded-md border border-surface-border text-ink-muted hover:text-ink-primary">
             {metrics.loading ? <Loader2 size={12} className="animate-spin" /> : null}
             {metrics.updatedAt ? metrics.updatedAt.toLocaleTimeString() : "Refresh"}
@@ -212,7 +213,7 @@ function MCPSection({ tools, endpoint, spec }: { tools: McpTool[]; endpoint: str
         <div className="flex items-start gap-2 text-xs text-ink-body leading-relaxed">
           <Shield size={14} className="text-accent-cyan shrink-0 mt-0.5" />
           <div>
-            ClinCase is an{" "}
+            CARDIOTON is an{" "}
             <strong className="text-ink-primary">MCP-compliant tool server</strong>.
             Claude Desktop, Cursor, and the{" "}
             <span className="text-accent-cyan text-mono-tech">
@@ -469,10 +470,7 @@ function AgentMetaCard({ agent, windowLabel }: { agent: AgentView; windowLabel: 
   const [contractResult, setContractResult] = useState<ContractResult | null>(null);
   const [contractError, setContractError] = useState<string | null>(null);
 
-  const loadRuns = useCallback(async () => {
-    if (runsOpen) { setRunsOpen(false); return; }
-    setRunsOpen(true);
-    if (runs !== null) return; // already loaded
+  const refreshRuns = useCallback(async () => {
     setRunsLoading(true);
     setRunsError(null);
     try {
@@ -487,11 +485,16 @@ function AgentMetaCard({ agent, windowLabel }: { agent: AgentView; windowLabel: 
     } finally {
       setRunsLoading(false);
     }
-  }, [agent.id, runsOpen, runs]);
+  }, [agent.id]);
+  useAutoRefresh(refreshRuns, 30_000, runsOpen && !contractRunning);
+  const loadRuns = () => {
+    if (runsOpen) { setRunsOpen(false); return; }
+    setRunsOpen(true);
+    void refreshRuns();
+  };
 
   const openPrompt = useCallback(async () => {
     setPromptOpen(true);
-    if (prompt !== null) return; // already loaded
     setPromptLoading(true);
     setPromptError(null);
     try {
@@ -506,7 +509,8 @@ function AgentMetaCard({ agent, windowLabel }: { agent: AgentView; windowLabel: 
     } finally {
       setPromptLoading(false);
     }
-  }, [agent.id, prompt]);
+  }, [agent.id]);
+  useAutoRefresh(openPrompt, 60_000, promptOpen && !contractRunning);
 
   const runContractTest = useCallback(async () => {
     if (contractRunning) return;

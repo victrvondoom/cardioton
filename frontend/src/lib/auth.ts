@@ -83,7 +83,7 @@ export async function login(
       body: JSON.stringify({ email, password }),
     });
   } catch {
-    throw new Error("Cannot reach the ClinCase API. Check that the backend is running on port 8000.");
+    throw new Error("Cannot reach the CARDIOTON API. Check that the backend is running on port 8000.");
   }
   if (!res.ok) {
     const body = await res.json().catch(() => null);
@@ -108,7 +108,7 @@ export async function demoLogin(email: string): Promise<{ token: string; user: A
       body: JSON.stringify({ email }),
     });
   } catch {
-    throw new Error("Cannot reach the ClinCase API.");
+    throw new Error("Cannot reach the CARDIOTON API.");
   }
   if (!res.ok) {
     const body = await res.json().catch(() => null);

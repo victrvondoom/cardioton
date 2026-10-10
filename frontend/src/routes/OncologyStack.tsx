@@ -26,6 +26,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { authHeader } from "../lib/auth";
+import { useLive } from "../lib/useLive";
 
 type USPKey =
   | "guidelines" | "genomic" | "denial" | "davinci" | "p2p"
@@ -590,11 +591,8 @@ function RegimenTab() {
   const [resp, setResp] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const [templates, setTemplates] = useState<any | null>(null);
-
-  useEffect(() => {
-    api("GET", "/onco/regimen/templates").then(setTemplates).catch(() => {});
-  }, []);
+  const templatesLive = useLive(() => api<{ regimens: Record<string, unknown> }>("GET", "/onco/regimen/templates"));
+  const templates = templatesLive.data;
 
   const run = useCallback(async () => {
     setLoading(true); setErr(null);
@@ -624,6 +622,7 @@ function RegimenTab() {
         <RunButton onClick={run} loading={loading} label="Build bundled PA" />
       </div>
       {err && <ErrBox text={err} />}
+      {templatesLive.error && <ErrBox text={templatesLive.error} />}
       {resp && (
         <div className="space-y-3">
           <div className="text-sm text-ink-body">
@@ -660,8 +659,6 @@ function SiteOfCareTab() {
     } catch (e) { setErr(String(e)); }
     finally { setLoading(false); }
   }, [drugKey, oop]);
-
-  useEffect(() => { void run(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>
@@ -716,17 +713,8 @@ function SiteOfCareTab() {
 // =============================================================================
 
 function PolicyDiffTab() {
-  const [diffs, setDiffs] = useState<any[] | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
-
-  useEffect(() => {
-    setLoading(true);
-    api<{ diffs: any[] }>("GET", "/onco/policies/diffs")
-      .then((j) => setDiffs(j.diffs))
-      .catch((e) => setErr(String(e)))
-      .finally(() => setLoading(false));
-  }, []);
+  const { data, loading, error: err } = useLive(() => api<{ diffs: any[] }>("GET", "/onco/policies/diffs"));
+  const diffs = data?.diffs;
 
   return (
     <div>
@@ -772,20 +760,11 @@ function PolicyDiffTab() {
 // =============================================================================
 
 function AuditTab() {
-  const [chain, setChain] = useState<any | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
-
-  const refresh = useCallback(async () => {
-    setLoading(true); setErr(null);
-    try {
-      const j = await api("GET", "/onco/audit/trail?limit=20");
-      setChain(j);
-    } catch (e) { setErr(String(e)); }
-    finally { setLoading(false); }
-  }, []);
-
-  useEffect(() => { void refresh(); }, [refresh]);
+  const { data: chain, loading, error: err, reload: refresh } = useLive(() => api<{
+    integrity: { chain_valid: boolean; n_total_records: number };
+    records: { id: string; timestamp: string; kind: string; agent: string; confidence: number | null; hash: string; prev_hash: string; inputs_sha256: string; output_sha256: string }[];
+    anchor_note: string;
+  }>("GET", "/onco/audit/trail?limit=20"));
 
   return (
     <div>

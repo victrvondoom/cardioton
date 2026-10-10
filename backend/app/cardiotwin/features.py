@@ -24,6 +24,7 @@ from app.cardiotwin.schema import (
     EncodedRecord,
     FeatureSpec,
 )
+from app.oncotwin._typing import FloatArray
 
 
 class LeakageError(ValueError):
@@ -160,7 +161,7 @@ def _coerce(spec: FeatureSpec, value: Any) -> float | tuple[float, ...]:
 # ---------------------------------------------------------------------------
 
 
-def encode_record(values: dict[str, Any], impute: np.ndarray) -> EncodedRecord:
+def encode_record(values: dict[str, Any], impute: FloatArray) -> EncodedRecord:
     """Validate + encode one patient. Missing/None features take `impute` (training medians)."""
     problems: list[str] = []
     unknown = sorted(set(values) - set(FEATURE_INDEX))
@@ -187,8 +188,8 @@ def encode_record(values: dict[str, Any], impute: np.ndarray) -> EncodedRecord:
             problems.append(str(e))
             continue
         enc_t = enc if isinstance(enc, tuple) else (enc,)
-        for i, e in zip(idxs, enc_t, strict=True):
-            vec[i] = e
+        for i, encoded in zip(idxs, enc_t, strict=True):
+            vec[i] = encoded
         provided.append(spec.name)
     if problems:
         raise RecordValidationError(problems)

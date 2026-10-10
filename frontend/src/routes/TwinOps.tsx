@@ -6,10 +6,11 @@
  */
 import clsx from "clsx";
 import { ArrowLeft, Gauge, Loader2, Play, RefreshCw, ShieldAlert } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../components/AuthContext";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 import { ot } from "../oncotwin/api";
 import { Chip, KV, Note, SevMark } from "../oncotwin/intel";
 import { Section, pct } from "../oncotwin/panels";
@@ -41,22 +42,28 @@ export default function TwinOps() {
   const [drift, setDrift] = useState<Json | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
+  const readSequence = useRef(0);
 
   const load = useCallback(async () => {
+    const generation = ++readSequence.current;
     setErr(null);
     try {
       const [o, h, p, e, r, f, a, s] = await Promise.all([ot.observability(), ot.health(), ot.predictions(), ot.events({ limit: 40 }),
         ot.modelRegistry(), ot.featureRegistry(), ot.architecture(), ot.stressLatest()]);
+      if (generation !== readSequence.current) return;
       setObs(o); setHealth(h); setPreds(p); setEvents(e); setReg(r); setFeat(f); setArch(a.components); setStress(s); setDrift(o.drift);
-    } catch (e) { setErr((e as Error).message); }
+    } catch (e) { if (generation === readSequence.current) setErr((e as Error).message); }
   }, []);
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => { void load(); return () => { readSequence.current++; }; }, [load]);
+  useAutoRefresh(load, 30_000, busy === null);
 
   const refreshDrift = async () => {
+    readSequence.current++;
     setBusy("drift");
     try { setDrift(await ot.drift(true)); } catch (e) { setErr((e as Error).message); } finally { setBusy(null); }
   };
   const runStress = async () => {
+    readSequence.current++;
     setBusy("stress");
     try { setStress(await ot.stressTest()); } catch (e) { setErr((e as Error).message); } finally { setBusy(null); }
   };
@@ -147,7 +154,7 @@ export default function TwinOps() {
 
           <div className="grid gap-4 xl:grid-cols-2">
             {events && (
-              <Section eyebrow="Event-driven infrastructure" title="Twin event stream (CloudEvents, bridged to the ClinCase outbox)">
+              <Section eyebrow="Event-driven infrastructure" title="Twin event stream (CloudEvents, bridged to the CARDIOTON outbox)">
                 <div className="flex flex-wrap gap-1.5 mb-2">{Object.entries(events.stats.by_type as Record<string, number>).map(([k, v]) => <Chip key={k}>{k} × {v}</Chip>)}</div>
                 <div className="text-[11px] text-ink-muted mb-1">{events.stats.events_in_log} events · bridged {events.stats.bridged_to_outbox} · not bridged {events.stats.not_bridged} · pending {events.stats.pending_bridge} · subscribers: {events.stats.subscribers.join(", ")}</div>
                 <div className="max-h-64 overflow-auto border border-surface-border rounded-md">

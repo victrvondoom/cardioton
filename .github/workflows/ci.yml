@@ -68,7 +68,7 @@ jobs:
       - name: Vite production build
         working-directory: frontend
         env:
-          VITE_API_BASE: http://clincase-alb-729293716.us-east-1.elb.amazonaws.com
+          VITE_API_BASE: ""
         run: npm run build
 
       - name: Upload dist as build artifact
@@ -102,6 +102,10 @@ jobs:
       - name: Ruff lint (blocking)
         working-directory: backend
         run: ruff check app tests --output-format=github
+
+      - name: Strict backend type-check
+        working-directory: backend
+        run: mypy app
 
       - name: Offline core tests
         working-directory: backend

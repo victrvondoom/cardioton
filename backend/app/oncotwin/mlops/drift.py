@@ -30,12 +30,14 @@ import json
 from datetime import UTC, datetime
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.features import FEATURE_NAMES
 from app.oncotwin.signals import MODEL_SIGNALS
+from app.oncotwin.store import OrgTwinStore
 
 REFERENCE_PATH = (
     Path(__file__).resolve().parents[1] / "ml" / "artifacts" / "reference_profile_v1.json"
@@ -60,16 +62,16 @@ LIVE_WINDOW_DAYS = 14
 MISSING_ABS_DIFF = 0.15
 
 
-def _edges(x: np.ndarray) -> list[float]:
+def _edges(x: FloatArray) -> list[float]:
     return [float(v) for v in np.unique(np.round(np.quantile(x, np.linspace(0.1, 0.9, 9)), 6))]
 
 
-def _props(x: np.ndarray, edges: list[float]) -> np.ndarray:
+def _props(x: FloatArray, edges: list[float]) -> FloatArray:
     counts = np.bincount(np.digitize(x, edges, right=True), minlength=len(edges) + 1).astype(float)
-    return counts / max(1.0, counts.sum())
+    return cast(FloatArray, counts / max(1.0, counts.sum()))
 
 
-def psi(ref: np.ndarray, live: np.ndarray, eps: float = 1e-4) -> float:
+def psi(ref: FloatArray, live: FloatArray, eps: float = 1e-4) -> float:
     a, e = np.maximum(live, eps), np.maximum(ref, eps)
     return float(np.sum((a - e) * np.log(a / e)))
 
@@ -79,7 +81,7 @@ def noise_threshold(k_bins: int, n_eff: float) -> float:
     return CHI2_95[min(df, len(CHI2_95)) - 1] / max(1.0, n_eff)
 
 
-def effective_n(x: np.ndarray, groups: np.ndarray) -> tuple[float, float]:
+def effective_n(x: FloatArray, groups: FloatArray) -> tuple[float, float]:
     """Design-effect-adjusted sample size for clustered rows: (n_eff, ICC) — one-way ANOVA ICC estimator."""
     x = np.asarray(x, dtype=float)
     N = len(x)
@@ -159,11 +161,11 @@ def load_reference() -> dict[str, Any] | None:
 
 
 def evaluate(
-    rows: np.ndarray,
-    preds: np.ndarray,
+    rows: FloatArray,
+    preds: FloatArray,
     missing: dict[str, list[bool]],
     n_patients: int,
-    groups: np.ndarray | None = None,
+    groups: FloatArray | None = None,
 ) -> dict[str, Any]:
     ref = load_reference()
     if ref is None:
@@ -294,7 +296,7 @@ def evaluate(
     }
 
 
-def live_window(store, *, window: int = LIVE_WINDOW_DAYS) -> dict[str, Any]:
+def live_window(store: OrgTwinStore, *, window: int = LIVE_WINDOW_DAYS) -> dict[str, Any]:
     """The live scoring population from every twin's cached as-of facts (last `window` twin days)."""
     from app.oncotwin import runtime
 
@@ -322,7 +324,7 @@ def live_window(store, *, window: int = LIVE_WINDOW_DAYS) -> dict[str, Any]:
     }
 
 
-def monitor(store) -> dict[str, Any]:
+def monitor(store: OrgTwinStore) -> dict[str, Any]:
     w = live_window(store)
     return evaluate(w["rows"], w["preds"], w["missing"], w["n_patients"], w["groups"])
 

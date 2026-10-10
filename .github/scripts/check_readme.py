@@ -6,6 +6,8 @@ import re
 import sys
 from pathlib import Path
 
+PRODUCT_NAME = "CARDIOTON"
+
 REQUIRED_SECTIONS = (
     "Start here",
     "One connected evidence journey",
@@ -50,8 +52,8 @@ def check_readme(content: str) -> list[str]:
                 headings.append((len(heading[1]), heading[2], line_number))
 
     errors = []
-    if not headings or headings[0][:2] != (1, "CLINI-CASE"):
-        errors.append("README must begin with the '# CLINI-CASE' product heading")
+    if not headings or headings[0][:2] != (1, PRODUCT_NAME):
+        errors.append(f"README must begin with the '# {PRODUCT_NAME}' product heading")
     for required in REQUIRED_SECTIONS:
         matching = [(level, name, start) for level, name, start in headings if name == required]
         if len(matching) != 1:

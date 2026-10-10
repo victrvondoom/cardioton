@@ -5,7 +5,7 @@ import Reveal from "./Reveal";
 import { useSystemHealth } from "./useSystemHealth";
 
 export default function Metrics() {
-  const { health, capabilities, latencyMs, loading } = useSystemHealth();
+  const { health, capabilities, latencyMs, loading, error, updatedAt, refresh } = useSystemHealth();
 
   // Every number is read from this deployment (/capabilities + /healthz); an unavailable value shows "--".
   const sys = capabilities?.system;
@@ -33,7 +33,7 @@ export default function Metrics() {
             textAlign: "center",
           }}
         >
-          LIVE, NOT ROUNDED
+          DEPLOYMENT METRICS
         </p>
         <h2
           style={{
@@ -54,11 +54,14 @@ export default function Metrics() {
             fontSize: "0.92rem",
           }}
         >
-          {loading
+          {error
+            ? `Refresh unavailable.${updatedAt ? ` Showing the last successful reading from ${new Date(updatedAt).toLocaleTimeString()}.` : " No successful reading yet."}`
+            : loading
             ? "fetching..."
             : health
-              ? "read from this deployment just now -- refresh to see them change."
+              ? `Checked ${updatedAt ? new Date(updatedAt).toLocaleTimeString() : "this session"}. Updates follow your live update preference.`
               : "backend unreachable right now."}
+          {" "}<button type="button" onClick={refresh} disabled={loading} style={{ color: "var(--cyan)", textDecoration: "underline", textUnderlineOffset: "3px", cursor: loading ? "default" : "pointer" }}>{loading ? "Refreshing…" : "Refresh metrics"}</button>
         </p>
 
         <div

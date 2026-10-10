@@ -19,7 +19,8 @@ import {
   RefreshCw,
 } from "lucide-react";
 import type { ReactNode } from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 import { Link, useParams } from "react-router-dom";
 
 import { aqua } from "../aquahealth/api";
@@ -72,23 +73,29 @@ export default function AquaObservationDetail() {
   const [decision, setDecision] = useState<ReviewDecision>("accepted");
   const [comment, setComment] = useState("");
   const [corrected, setCorrected] = useState<EcosystemStatus>("watch");
+  const readSequence = useRef(0);
 
   const load = useCallback(async () => {
     if (!observationId) return;
+    const generation = ++readSequence.current;
     try {
       setError(null);
-      setObs(await aqua.getObservation(observationId));
+      const next = await aqua.getObservation(observationId);
+      if (generation === readSequence.current) setObs(next);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load the observation");
+      if (generation === readSequence.current) setError(e instanceof Error ? e.message : "Failed to load the observation");
     }
   }, [observationId]);
 
   useEffect(() => {
     void load();
+    return () => { readSequence.current++; };
   }, [load]);
+  useAutoRefresh(load, 30_000, !busy && !comment.trim() && decision === "accepted" && corrected === "watch");
 
   async function submitReview() {
     if (!observationId) return;
+    readSequence.current++;
     setBusy(true);
     setError(null);
     try {
@@ -108,6 +115,7 @@ export default function AquaObservationDetail() {
 
   async function reassess() {
     if (!observationId) return;
+    readSequence.current++;
     setBusy(true);
     try {
       setObs(await aqua.reassess(observationId));

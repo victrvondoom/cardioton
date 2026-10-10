@@ -21,8 +21,9 @@ consumes the same number of variates, so changing a FUTURE event (e.g. the
 from __future__ import annotations
 
 import math
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import Any, Literal
 
 import numpy as np
 
@@ -30,6 +31,7 @@ from app.oncotwin.outcome import QUALIFYING_CONDITIONS
 from app.oncotwin.records import (
     ANCHOR_DATE,
     ClinicalEvent,
+    EventKind,
     Observation,
     PatientProfile,
     PatientRecord,
@@ -38,7 +40,7 @@ from app.oncotwin.records import (
 )
 from app.oncotwin.signals import DAILY_SIGNALS, SIGNALS
 from app.oncotwin.simulator import physiology as P
-from app.oncotwin.simulator.regimens import REGIMENS, RXNORM, SUPPORTIVE
+from app.oncotwin.simulator.regimens import REGIMENS, RXNORM, SUPPORTIVE, Regimen
 
 ICD10 = "http://hl7.org/fhir/sid/icd-10-cm"
 SNOMED = "http://snomed.info/sct"
@@ -189,7 +191,7 @@ def simulate(script: SimScript) -> SimulationResult:
     ev_counter = [0]
 
     def add_event(
-        day: int, kind: str, display: str, fhir_type: str, *, code=None, hour=9, **detail
+        day: int, kind: EventKind, display: str, fhir_type: str, *, code: dict[str, str] | None = None, hour: int = 9, **detail: Any
     ) -> None:
         ev_counter[0] += 1
         events.append(
@@ -197,7 +199,7 @@ def simulate(script: SimScript) -> SimulationResult:
                 id=f"{pid}-ev{ev_counter[0]:03d}",
                 day=day,
                 kind=kind,
-                display=display,  # type: ignore[arg-type]
+                display=display,
                 effective=day_to_iso(day, hour),
                 fhir_type=fhir_type,
                 code=code,
@@ -240,7 +242,7 @@ def simulate(script: SimScript) -> SimulationResult:
     abx_until = 0
     activity_until = 0
     admitted_until = 0
-    event_onsets: list[dict] = []
+    event_onsets: list[dict[str, Any]] = []
     admitted_days: list[int] = []
     truth_I, truth_D, truth_F, truth_anc = [], [], [], []
     stuck_values: dict[str, float] = {}
@@ -450,7 +452,7 @@ def simulate(script: SimScript) -> SimulationResult:
             )
             if u_seed[0] < hazard:
                 seed_size = 0.06 + 0.26 * u_seed[1]
-                virulence = P.seed_virulence(float(u_seed[2]))
+                virulence = float(P.seed_virulence(float(u_seed[2])))
                 pneumonia = u_seed[3] < 0.3
         if inf[0] < 0.02 and seed_size == 0.0:
             virulence = 0.0
@@ -684,7 +686,7 @@ def simulate(script: SimScript) -> SimulationResult:
     return SimulationResult(record=record, truth=truth, script=script)
 
 
-def _pre_treatment_history(script: SimScript, reg, add_event) -> None:
+def _pre_treatment_history(script: SimScript, reg: Regimen, add_event: Callable[..., None]) -> None:
     """Diagnosis, pathology, genomics, staging, plan — the static EHR world."""
     t0 = script.treatment_start
     add_event(

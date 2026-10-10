@@ -9,13 +9,13 @@ export default function Track7Overview() {
           <p className="text-accent-cyan tracking-widest text-xs">
             ONEAQUAHEALTH · TRACK 7 · DIGITAL HEALTH STANDARDS
           </p>
-          <h1 className="text-4xl sm:text-6xl">CLINI-CASE</h1>
+          <h1 className="text-4xl sm:text-6xl">CARDIOTON</h1>
           <p className="text-xl max-w-3xl">
             One Health Interoperability Gateway
           </p>
           <p className="text-ink-muted max-w-3xl">
             From Evidence to Action, Through One Connected Clinical Journey.
-            CLINI-CASE connects intake, evidence, interoperability, review, clinical context and follow-up in one traceable workflow.
+            CARDIOTON connects intake, evidence, interoperability, review, clinical context and follow-up in one traceable workflow.
           </p>
           <div className="flex flex-wrap gap-4">
             <Link
@@ -87,7 +87,7 @@ export default function Track7Overview() {
           <summary className="cursor-pointer">Shared platform context</summary>
           <p className="text-sm text-ink-muted mt-3">
             AquaHealth provides citizen observations. One Health governs
-            evidence and sharing. CLINI-CASE, OncoTwin and CardioTwin retain their
+            evidence and sharing. CARDIOTON, OncoTwin and CardioTwin retain their
             existing clinical workflows and can display consented evidence
             context; environmental measurements do not alter clinical
             conclusions.

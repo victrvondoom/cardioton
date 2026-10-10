@@ -28,14 +28,23 @@ cohort by the research benchmark (never assumed).
 from __future__ import annotations
 
 import warnings
-from typing import Any
+from typing import Any, TypedDict, cast
 
 import numpy as np
 
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.baseline import Baseline, adverse_z
 from app.oncotwin.engine.features import signal_matrix
 from app.oncotwin.engine.series import PatientSeries
 from app.oncotwin.signals import MODEL_SIGNALS, SIGNALS
+
+
+class ShiftContributor(TypedDict):
+    signal: str
+    label: str
+    shift_sd: float
+    direction: str
+
 
 HAZARD_LAMBDA_DAYS = 40.0
 PRIOR_MEAN_VAR = 2.0**2
@@ -61,7 +70,7 @@ ALGORITHM = {
 }
 
 
-def _noise_sd(z: np.ndarray, baseline: Baseline) -> np.ndarray:
+def _noise_sd(z: FloatArray, baseline: Baseline) -> FloatArray:
     lo, hi = baseline.window
     zb = z[lo - 1 : hi]
     out = []
@@ -78,12 +87,12 @@ def _noise_sd(z: np.ndarray, baseline: Baseline) -> np.ndarray:
 
 
 def run_bocpd(
-    z: np.ndarray,
-    sigma: np.ndarray,
+    z: FloatArray,
+    sigma: FloatArray,
     *,
     hazard_lambda: float = HAZARD_LAMBDA_DAYS,
     prior_var: float = PRIOR_MEAN_VAR,
-) -> np.ndarray:
+) -> FloatArray:
     """Run-length posteriors. `z` is (T, S) with NaN = missing. Returns R (T, T+1):
     R[t, r] = P(run length r on day t+1 | x_1..x_{t+1}); every row sums to 1."""
     T, S = z.shape
@@ -118,13 +127,14 @@ def run_bocpd(
 
 
 def _context(series: PatientSeries, day: int) -> list[dict[str, Any]]:
-    out, seen = [], set()
+    out: list[dict[str, Any]] = []
+    seen: set[tuple[str, int, str]] = set()
     for e in series.events:
         # ±3 days: BOCPD localises a regime start to within a couple of days.
         if not (day - 3 <= e.day <= day + 3) or e.day < 1:
             continue
         if e.kind == "chemo_dose":
-            item = {
+            item: dict[str, Any] = {
                 "kind": "treatment",
                 "day": e.day,
                 "id": e.id,
@@ -152,17 +162,17 @@ def _context(series: PatientSeries, day: int) -> list[dict[str, Any]]:
                 {
                     "kind": "data_quality",
                     "day": f.days[0],
-                    "id": (f.observation_ids or [None])[0],
+                    "id": f.observation_ids[0] if f.observation_ids else None,
                     "text": f"data-quality issue near this day: {f.kind} ({SIGNALS[f.signal].label})",
                 }
             )
     return out
 
 
-def _nanmean0(a: np.ndarray) -> np.ndarray:
+def _nanmean0(a: FloatArray) -> FloatArray:
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", RuntimeWarning)
-        return np.nanmean(a, axis=0)
+        return cast(FloatArray, np.nanmean(a, axis=0))
 
 
 def detect(series: PatientSeries, baseline: Baseline) -> dict[str, Any]:
@@ -206,7 +216,7 @@ def detect(series: PatientSeries, baseline: Baseline) -> dict[str, Any]:
         joint = float(np.sqrt(np.nansum(dm**2)))
         if joint < MIN_JOINT_SHIFT:
             continue
-        contrib = [
+        contrib: list[ShiftContributor] = [
             {
                 "signal": k,
                 "label": SIGNALS[k].label,

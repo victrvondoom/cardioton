@@ -36,7 +36,7 @@ INTERVAL = re.compile(r"interval|confidence|±|\d\s*%?\s*[–-]\s*\d", re.I)
 CONFIDENT = re.compile(
     r"\b(clearly|strongly (?:indicates|suggests)|high confidence|definitely|certain(?:ly)?)\b", re.I
 )
-PROHIBITED: list[tuple[re.Pattern, str]] = [
+PROHIBITED: list[tuple[re.Pattern[str], str]] = [
     (
         re.compile(
             r"\b(?:is|are|was)\s+diagnosed\b|\bdiagnos(?:is|ed)\s+(?:of|with)\b|\bthe patient has (?:sepsis|pneumonia|"

@@ -19,10 +19,12 @@ from sklearn.metrics import (
     roc_curve,
 )
 
+from app.oncotwin._typing import FloatArray
+
 EPS = 1e-6
 
 
-def ece(y: np.ndarray, p: np.ndarray, bins: int = 10) -> float:
+def ece(y: FloatArray, p: FloatArray, bins: int = 10) -> float:
     """Expected calibration error with equal-width bins."""
     edges = np.linspace(0, 1, bins + 1)
     idx = np.clip(np.digitize(p, edges[1:-1]), 0, bins - 1)
@@ -34,7 +36,7 @@ def ece(y: np.ndarray, p: np.ndarray, bins: int = 10) -> float:
     return float(total)
 
 
-def calibration_curve(y: np.ndarray, p: np.ndarray, bins: int = 8) -> list[dict[str, float]]:
+def calibration_curve(y: FloatArray, p: FloatArray, bins: int = 8) -> list[dict[str, float]]:
     """Quantile-binned reliability points (equal counts, so sparse bins stay readable)."""
     order = np.argsort(p)
     out = []
@@ -50,7 +52,7 @@ def calibration_curve(y: np.ndarray, p: np.ndarray, bins: int = 8) -> list[dict[
     return out
 
 
-def threshold_metrics(y: np.ndarray, p: np.ndarray, thr: float) -> dict[str, float | int]:
+def threshold_metrics(y: FloatArray, p: FloatArray, thr: float) -> dict[str, float | int]:
     pred = (p >= thr).astype(int)
     tp = int(((pred == 1) & (y == 1)).sum())
     fp = int(((pred == 1) & (y == 0)).sum())
@@ -74,7 +76,7 @@ def threshold_metrics(y: np.ndarray, p: np.ndarray, thr: float) -> dict[str, flo
     }
 
 
-def youden_threshold(y: np.ndarray, p: np.ndarray) -> float:
+def youden_threshold(y: FloatArray, p: FloatArray) -> float:
     """Threshold maximising sensitivity + specificity - 1 (chosen on TRAINING predictions only)."""
     fpr, tpr, thr = roc_curve(y, p)
     j = tpr - fpr
@@ -83,7 +85,7 @@ def youden_threshold(y: np.ndarray, p: np.ndarray) -> float:
     return float(np.clip(t, 0.0, 1.0))
 
 
-def point_metrics(y: np.ndarray, p: np.ndarray) -> dict[str, float]:
+def point_metrics(y: FloatArray, p: FloatArray) -> dict[str, float]:
     pc = np.clip(p, EPS, 1 - EPS)
     return {
         "roc_auc": float(roc_auc_score(y, p)),
@@ -95,7 +97,7 @@ def point_metrics(y: np.ndarray, p: np.ndarray) -> dict[str, float]:
 
 
 def bootstrap_ci(
-    y: np.ndarray, p: np.ndarray, *, n_boot: int = 1000, seed: int = 0
+    y: FloatArray, p: FloatArray, *, n_boot: int = 1000, seed: int = 0
 ) -> dict[str, dict[str, float]]:
     """Patient-level percentile bootstrap 95% CIs for the headline metrics."""
     rng = np.random.default_rng(seed)
@@ -121,12 +123,12 @@ def bootstrap_ci(
 
 
 def curve_points(
-    y: np.ndarray, p: np.ndarray, max_points: int = 60
+    y: FloatArray, p: FloatArray, max_points: int = 60
 ) -> dict[str, list[list[float]]]:
     fpr, tpr, _ = roc_curve(y, p)
     prec, rec, _ = precision_recall_curve(y, p)
 
-    def thin(a: np.ndarray, b: np.ndarray) -> list[list[float]]:
+    def thin(a: FloatArray, b: FloatArray) -> list[list[float]]:
         step = max(1, len(a) // max_points)
         pts = [[round(float(a[i]), 4), round(float(b[i]), 4)] for i in range(0, len(a), step)]
         pts.append([round(float(a[-1]), 4), round(float(b[-1]), 4)])
@@ -135,7 +137,7 @@ def curve_points(
     return {"roc": thin(fpr, tpr), "pr": thin(rec, prec)}
 
 
-def corrected_paired_t(diffs: np.ndarray, n_train: int, n_test: int) -> dict[str, float]:
+def corrected_paired_t(diffs: FloatArray, n_train: int, n_test: int) -> dict[str, float]:
     """Nadeau & Bengio (2003) corrected resampled t-test on per-fold metric differences.
 
     Repeated CV folds overlap, so the naive variance is too small; the correction
@@ -164,7 +166,7 @@ def summarize_folds(values: list[float]) -> dict[str, float]:
     }
 
 
-def spearman(a: np.ndarray, b: np.ndarray) -> float:
+def spearman(a: FloatArray, b: FloatArray) -> float:
     from scipy import stats
 
     if np.std(a) == 0 or np.std(b) == 0:

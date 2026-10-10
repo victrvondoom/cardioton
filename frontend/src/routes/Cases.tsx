@@ -8,7 +8,7 @@ import { JourneyCases } from "../workflow/JourneyCases";
  */
 import clsx from "clsx";
 import { ArrowRight, ChevronDown, Inbox, Loader2, Play, Plus, Search, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { authHeader } from "../lib/auth";
@@ -18,6 +18,7 @@ import { PayerCell } from "../components/PayerCell";
 import { SLABadge } from "../components/SLABadge";
 import { StatusPill } from "../components/StatusPill";
 import { api, type CaseListItem } from "../lib/api";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 import {
   PAYERS,
   STATUSES,
@@ -74,32 +75,31 @@ export default function Cases() {
   const [loadingLive, setLoadingLive] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [showNewCase, setShowNewCase] = useState(false);
+  const loadSeq = useRef(0);
 
   // Fetch real backend cases on mount. 200 is a generous single-page cap —
   // this org is expected to run in the low hundreds of cases at most; a true
   // paginated table is a follow-up once volume outgrows this.
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      setLoadingLive(true);
-      try {
-        const d = await api.listCases({ limit: 200 });
-        if (cancelled) return;
-        setLiveCases((d.cases || []).map(liveToCase));
-        setTotalCases(d.total ?? d.cases?.length ?? 0);
-        setLoadError(null);
-      } catch (e) {
-        if (cancelled) return;
-        console.warn("Cases: list endpoint failed", e);
-        setLoadError(e instanceof Error ? e.message : "Failed to load cases");
-      } finally {
-        if (!cancelled) setLoadingLive(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
+  const loadCases = useCallback(async () => {
+    const sequence = ++loadSeq.current;
+    setLoadingLive(true);
+    try {
+      const d = await api.listCases({ limit: 200 });
+      if (sequence !== loadSeq.current) return;
+      setLiveCases((d.cases || []).map(liveToCase));
+      setTotalCases(d.total ?? d.cases?.length ?? 0);
+      setLoadError(null);
+    } catch (e) {
+      if (sequence === loadSeq.current) setLoadError(e instanceof Error ? e.message : "Failed to load cases");
+    } finally {
+      if (sequence === loadSeq.current) setLoadingLive(false);
+    }
   }, []);
+  useEffect(() => {
+    void loadCases();
+    return () => { loadSeq.current++; };
+  }, [loadCases]);
+  useAutoRefresh(loadCases, 30_000, !showNewCase);
 
   const allCases = liveCases;
 

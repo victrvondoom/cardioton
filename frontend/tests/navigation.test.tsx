@@ -66,10 +66,15 @@ describe("one platform, nothing removed", () => {
       .getAllByRole("link")
       .map((link) => link.getAttribute("href"));
     expect(hrefs.slice(0, 3)).toEqual(["/dashboard", "/cases", "/journey"]);
-    const contextual = areas.flatMap(a => a.links.map(([,href]) => href));
-    for (const href of LEGACY_NAV) expect([...hrefs, ...contextual], href).toContain(href);
     expect(hrefs.length).toBeLessThanOrEqual(13);
     expect(new Set(hrefs).size).toBe(hrefs.length);
+    for (const button of within(nav).getAllByRole("button")) {
+      if (button.getAttribute("aria-expanded") === "false") fireEvent.click(button);
+    }
+    const allHrefs = within(nav).getAllByRole("link").map((link) => link.getAttribute("href"));
+    const contextual = areas.flatMap(a => a.links.map(([,href]) => href));
+    for (const href of LEGACY_NAV) expect([...allHrefs, ...contextual], href).toContain(href);
+    expect(new Set(allHrefs).size).toBe(allHrefs.length);
   });
 });
 
@@ -78,12 +83,14 @@ it("keeps sidebar DOM, scroll and expanded state across navigation and remembers
   const nav = screen.getByRole("navigation", { name: "Sections" });
   nav.scrollTop = 125;
   fireEvent.scroll(nav);
-  fireEvent.click(screen.getByRole("button", { name: "Workflow" }));
+  fireEvent.click(screen.getByRole("button", { name: "Evidence & Review" }));
   fireEvent.click(screen.getByRole("link", { name: "Open architecture" }));
   expect(screen.getByRole("navigation", { name: "Sections" })).toBe(nav);
   expect(nav.scrollTop).toBe(125);
-  expect(screen.getByRole("button", { name: "Workflow" }).getAttribute("aria-expanded")).toBe("false");
+  expect(screen.getByRole("button", { name: "Evidence & Review" }).getAttribute("aria-expanded")).toBe("false");
+  fireEvent.click(screen.getByRole("button", { name: "Administration" }));
   fireEvent.click(screen.getByRole("button", { name: "Collapse navigation" }));
   expect(localStorage.getItem("clini-nav-collapsed")).toBe("true");
   expect(screen.getByRole("link", { name: "Architecture" }).getAttribute("title")).toBe("Architecture");
+  expect(screen.getByRole("link", { name: "CardioTwin 3D Heart" }).getAttribute("title")).toBe("CardioTwin 3D Heart: Live vessel-level CAD prediction and 3D heart");
 });

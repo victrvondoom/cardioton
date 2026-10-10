@@ -12,7 +12,7 @@ the assemble stage emits a HITL-routed empty result.
 from __future__ import annotations
 
 import time
-from typing import ClassVar
+from typing import Any, ClassVar
 
 from app.agents.intake.errors import (
     SOFT_FLAG_ENGINE_FALLBACK,
@@ -42,7 +42,7 @@ class ExtractStage(IntakeStage):
             return
 
         last_error: IntakeError | None = None
-        attempts: list[dict] = []
+        attempts: list[dict[str, Any]] = []
 
         for i, engine in enumerate(ctx.fallback_chain):
             t0 = time.monotonic()

@@ -17,24 +17,27 @@ from __future__ import annotations
 import threading
 import time
 from collections import defaultdict, deque
+from collections.abc import Iterator
 from contextlib import contextmanager
 from typing import Any
 
 import numpy as np
 
 WINDOW = 2000
+MetricLabels = tuple[tuple[str, str], ...]
+MetricKey = tuple[str, MetricLabels]
 
 
 class Metrics:
     def __init__(self) -> None:
         self._lock = threading.Lock()
-        self.counters: dict[tuple[str, tuple], float] = defaultdict(float)
-        self.latency: dict[tuple[str, tuple], deque] = defaultdict(lambda: deque(maxlen=WINDOW))
-        self.gauges: dict[tuple[str, tuple], float] = {}
+        self.counters: dict[MetricKey, float] = defaultdict(float)
+        self.latency: dict[MetricKey, deque[float]] = defaultdict(lambda: deque(maxlen=WINDOW))
+        self.gauges: dict[MetricKey, float] = {}
         self.started = time.time()
 
     @staticmethod
-    def _key(name: str, labels: dict[str, Any]) -> tuple[str, tuple]:
+    def _key(name: str, labels: dict[str, Any]) -> MetricKey:
         return name, tuple(sorted((k, str(v)) for k, v in labels.items()))
 
     def inc(self, name: str, value: float = 1.0, **labels: Any) -> None:
@@ -50,7 +53,7 @@ class Metrics:
             self.gauges[self._key(name, labels)] = float(value)
 
     @contextmanager
-    def timed(self, name: str, **labels: Any):
+    def timed(self, name: str, **labels: Any) -> Iterator[None]:
         t0 = time.perf_counter()
         ok = True
         try:

@@ -255,6 +255,12 @@ class SensitivityRequest(PatientInput):
     points: int = Field(default=15, ge=3, le=41)
 
 
+class TelemetryAssessmentRequest(PatientInput):
+    stress_mode: bool = Field(
+        default=False, description="Simulate inotropic dobutamine stress state"
+    )
+
+
 @dataclass
 class EncodedRecord:
     """A validated record: raw values, encoded vector, and bookkeeping."""

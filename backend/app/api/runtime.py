@@ -20,7 +20,6 @@ from urllib.parse import urlsplit
 
 import httpx
 from fastapi import APIRouter, Depends, Request
-from fastapi.routing import APIRoute
 
 from app.auth import require_role
 from app.config import settings
@@ -141,13 +140,26 @@ async def _static(result: dict[str, Any]) -> dict[str, Any]:
 def _routes(request: Request) -> list[dict[str, Any]]:
     counts: dict[str, int] = {}
     methods: dict[str, set[str]] = {}
-    for route in request.app.routes:
-        if not isinstance(route, APIRoute):
+    app_routes = getattr(request.app, "routes", [])
+
+    flattened: list[tuple[str, set[str]]] = []
+    for item in app_routes:
+        if type(item).__name__ == "_IncludedRouter":
+            pfx = getattr(item.include_context, "prefix", "") or ""
+            for sub in item.original_router.routes:
+                sub_path = getattr(sub, "path", "")
+                sub_methods = getattr(sub, "methods", None) or set()
+                flattened.append((pfx + sub_path, set(sub_methods)))
+        elif hasattr(item, "path"):
+            flattened.append((item.path, set(getattr(item, "methods", None) or set())))
+
+    for path, route_methods in flattened:
+        if not path:
             continue
-        parts = route.path.split("/")
-        prefix = "/".join(parts[:4]) if route.path.startswith("/api/v1/") else "/".join(parts[:2]) or "/"
+        parts = path.split("/")
+        prefix = "/".join(parts[:4]) if path.startswith("/api/v1/") else "/".join(parts[:2]) or "/"
         counts[prefix] = counts.get(prefix, 0) + 1
-        methods.setdefault(prefix, set()).update(route.methods or ())
+        methods.setdefault(prefix, set()).update(route_methods)
     return [
         {"prefix": prefix, "routes": counts[prefix], "methods": sorted(methods[prefix] - {"HEAD"})}
         for prefix in sorted(counts)

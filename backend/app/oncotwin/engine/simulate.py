@@ -29,10 +29,12 @@ from typing import Any
 
 import numpy as np
 
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.baseline import Baseline
-from app.oncotwin.engine.features import feature_tensor, nadir_risk, signal_matrix
+from app.oncotwin.engine.features import FeatureContext, feature_tensor, nadir_risk, signal_matrix
 from app.oncotwin.engine.neutrophil import NeutrophilFit
 from app.oncotwin.engine.series import PatientSeries
+from app.oncotwin.ml.model import DeteriorationModel
 from app.oncotwin.signals import MODEL_SIGNALS, SIGNALS
 from app.oncotwin.simulator import physiology as P
 
@@ -200,9 +202,9 @@ def simulate_scenarios(
     series: PatientSeries,
     baseline: Baseline,
     fit: NeutrophilFit,
-    latent_now: np.ndarray,
-    history_ctx: dict[str, Any],
-    model,
+    latent_now: FloatArray,
+    history_ctx: FeatureContext,
+    model: DeteriorationModel,
     *,
     scenarios: list[str] | None = None,
     custom: dict[str, Any] | None = None,

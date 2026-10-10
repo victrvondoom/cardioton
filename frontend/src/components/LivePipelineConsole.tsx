@@ -293,9 +293,8 @@ export function LivePipelineConsole({ run, fixtures }: Props) {
                 {f.expected_verdict}
               </button>
             ))}
-            {(!fixtures || fixtures.length === 0) && (
-              <span className="text-[10.5px] text-ink-faint">loading fixtures…</span>
-            )}
+            {fixtures === null && <span className="text-[10.5px] text-ink-faint" role="status">loading fixtures…</span>}
+            {fixtures !== null && fixtures.length === 0 && <span className="text-[10.5px] text-ink-faint" role="status">No runnable fixtures are available.</span>}
           </div>
         ) : (
           <div className="flex items-center gap-3">

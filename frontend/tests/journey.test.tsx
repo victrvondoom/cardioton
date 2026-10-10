@@ -258,8 +258,8 @@ describe("unified evidence journey", () => {
                   enabled: true,
                   algorithm: "Ed25519",
                   key_id: "abc123",
-                  signer: "CLINI-CASE demo signer",
-                  scope: "A CLINI-CASE demo-system signature. Not a laboratory, clinician, government or third-party attestation.",
+                  signer: "CARDIOTON demo signer",
+                  scope: "A CARDIOTON demo-system signature. Not a laboratory, clinician, government or third-party attestation.",
                 },
               },
             }

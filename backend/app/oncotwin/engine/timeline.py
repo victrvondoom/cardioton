@@ -14,7 +14,7 @@ import numpy as np
 
 from app.oncotwin.engine.baseline import Baseline, adverse_z
 from app.oncotwin.engine.series import PatientSeries
-from app.oncotwin.records import PatientRecord, day_to_iso
+from app.oncotwin.records import ClinicalEvent, PatientRecord, day_to_iso
 from app.oncotwin.signals import MODEL_SIGNALS, SIGNALS
 
 LANE = {
@@ -48,7 +48,7 @@ def build_timeline(
     items: list[dict[str, Any]] = []
 
     # --- EHR / treatment events (supportive doses aggregated per day) ------
-    adherence_days: dict[int, list] = {}
+    adherence_days: dict[int, list[ClinicalEvent]] = {}
     for e in record.events_until(t):
         if e.kind == "supportive_dose":
             adherence_days.setdefault(e.day, []).append(e)
@@ -84,8 +84,8 @@ def build_timeline(
 
     # --- Labs (one entry per draw) ------------------------------------------
     by_day: dict[int, list[tuple[str, float, str]]] = {}
-    for key, rows in series.labs.items():
-        for d, v, oid in rows:
+    for key, lab_rows in series.labs.items():
+        for d, v, oid in lab_rows:
             by_day.setdefault(d, []).append((key, v, oid))
     for d, rows in sorted(by_day.items()):
         parts = [f"{SIGNALS[k].label} {v:g} {SIGNALS[k].unit_display}" for k, v, _ in sorted(rows)]

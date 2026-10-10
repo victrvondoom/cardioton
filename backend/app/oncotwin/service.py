@@ -23,6 +23,7 @@ from typing import Any
 import numpy as np
 
 from app.oncotwin import ONCOTWIN_VERSION
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.baseline import (
     DEVIATION_Z,
     Baseline,
@@ -36,6 +37,7 @@ from app.oncotwin.engine.baseline import (
 from app.oncotwin.engine.features import (
     FEATURE_NAMES,
     IDX,
+    FeatureContext,
     feature_tensor,
     series_context,
     signal_matrix,
@@ -79,8 +81,8 @@ class TwinComputation:
     baseline: Baseline | None = None
     neutro: NeutrophilTwin | None = None
     fit: NeutrophilFit | None = None
-    ctx: dict[str, Any] | None = None
-    F: np.ndarray | None = None
+    ctx: FeatureContext | None = None
+    F: FloatArray | None = None
     latent: dict[str, Any] | None = None
     state: dict[str, Any] = field(default_factory=dict)
     trajectory: dict[str, Any] = field(default_factory=dict)
@@ -421,7 +423,7 @@ def stage_state(c: TwinComputation) -> dict[str, Any]:
 def stage_trajectory(c: TwinComputation) -> dict[str, Any]:
     s, b = c.series, c.baseline
     assert s is not None and b is not None and c.ctx is not None
-    c.F = feature_tensor(signal_matrix(s), b, **c.ctx)[0]
+    F = c.F = feature_tensor(signal_matrix(s), b, **c.ctx)[0]
     idx = c.as_of_day - 1
     z = adverse_z(signal_matrix(s), b)
     sl3 = rolling_slope(z, 3)[0]
@@ -447,9 +449,9 @@ def stage_trajectory(c: TwinComputation) -> dict[str, Any]:
             ],
         }
     c.trajectory = {
-        **classify_trajectory(c.F, idx),
+        **classify_trajectory(F, idx),
         "analysed_as": "one multivariate trajectory, not independent per-signal alarms",
-        "anomaly_score": round(float(c.F[idx, IDX["anomaly"]]), 2),
+        "anomaly_score": round(float(F[idx, IDX["anomaly"]]), 2),
         "signals": signals,
         "sudden_changes": [k for k, v in signals.items() if v["sudden_jump"]],
         "drift_alarms": [k for k, v in signals.items() if v["cusum_alarm"]],
@@ -460,7 +462,7 @@ def stage_trajectory(c: TwinComputation) -> dict[str, Any]:
 
 
 def stage_prediction(c: TwinComputation) -> dict[str, Any]:
-    assert c.F is not None and c.series is not None and c.baseline is not None
+    assert c.F is not None and c.series is not None and c.baseline is not None and c.ctx is not None
     t = c.as_of_day
     idx = t - 1
     x = c.F[idx]
@@ -515,6 +517,7 @@ def stage_simulation(
         and c.baseline is not None
         and c.fit is not None
         and c.latent is not None
+        and c.ctx is not None
     )
     # Start from today's DIRECT (unsmoothed) latent estimate: the EWMA used for
     # display lags a rising load, which would bias every scenario optimistic.
@@ -832,14 +835,14 @@ def _seed(pid: str) -> int:
     return zlib.crc32(pid.encode())
 
 
-def _last_valid(arr: np.ndarray, idx: int) -> float | None:
+def _last_valid(arr: FloatArray, idx: int) -> float | None:
     for j in range(idx, max(-1, idx - 3), -1):
         if j >= 0 and not np.isnan(arr[j]):
             return float(arr[j])
     return None
 
 
-def _recovery_index(latent_series: np.ndarray, idx: int) -> float | None:
+def _recovery_index(latent_series: FloatArray, idx: int) -> float | None:
     """Fraction of the recent peak latent load that has resolved (None if no recent peak)."""
     window = latent_series[max(0, idx - 10) : idx + 1].sum(axis=1)
     peak = float(window.max())

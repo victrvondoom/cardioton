@@ -1,7 +1,7 @@
 [project]
-name = "clincase-backend"
+name = "cardioton-backend"
 version = "0.1.0"
-description = "ClinCase prior-authorisation copilot backend"
+description = "CARDIOTON clinical and One Health workflow backend"
 requires-python = ">=3.11"
 
 dependencies = [
@@ -59,7 +59,7 @@ cardiotwin = [
   "openpyxl==3.1.5",        # only for `python -m app.cardiotwin.data --import`
 ]
 dev = [
-  "clincase-backend[cardiotwin]",
+  "cardioton-backend[cardiotwin]",
   "pytest==8.3.3",
   "pytest-asyncio==0.24.0",
   "pytest-cov==5.0.0",
@@ -101,6 +101,8 @@ ignore = ["E501"]  # ruff formatter handles line length
 "app/api/**/*.py" = ["B008"]
 "app/auth/**/*.py" = ["B008"]
 "app/integrations/**/*.py" = ["B008"]
+# This additional router uses the same required FastAPI dependency defaults.
+"app/cardiotwin/evidence/api.py" = ["B008"]
 # N806/N803/N812 ("should be lowercase") false-positive on the OncoTwin
 # simulator's linear-algebra / matrix code, which deliberately follows
 # NumPy/stats convention: capitals for matrices (Z, R, B) and short module

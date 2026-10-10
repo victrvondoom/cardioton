@@ -20,7 +20,7 @@ import {
   Scale,
   Target,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useLive } from "../lib/useLive";
 
 import { api } from "../lib/api";
 import type { EvalReport } from "../lib/api";
@@ -33,23 +33,9 @@ const VERDICT_TINT: Record<string, string> = {
 };
 
 export default function Eval() {
-  const [report, setReport] = useState<EvalReport | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: report, loading, error, reload } = useLive<EvalReport>(() => api.getCohortEval());
 
-  useEffect(() => {
-    void (async () => {
-      try {
-        setReport(await api.getCohortEval());
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Failed to load eval report");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
-
-  if (loading) {
+  if (loading && !report) {
     return (
       <div className="px-6 py-12 text-center text-ink-muted text-sm">
         <Loader2 size={16} className="animate-spin inline-block mr-2" />
@@ -58,20 +44,22 @@ export default function Eval() {
     );
   }
 
-  if (error || !report) {
+  if (!report) {
     return (
       <div className="px-6 py-12 text-center text-accent-red text-sm">
         {error ?? "No data"}
+        <button type="button" className="ml-3 underline" onClick={reload}>Retry</button>
       </div>
     );
   }
 
   return (
     <div className="px-6 py-6">
+      {error && <p role="status" className="mb-3 text-xs text-accent-amber">{error} · Showing the last successful report.</p>}
       <header className="mb-6">
         <h1 className="text-2xl font-semibold text-ink-primary leading-tight flex items-center gap-2">
           <Microscope size={22} className="text-accent-brand" />
-          Cohort eval — ClinCase vs. gold-standard verdicts
+          Cohort eval — CARDIOTON vs. gold-standard verdicts
         </h1>
         <p className="text-sm text-ink-muted mt-1 leading-relaxed">
           {report.n_evaluated.toLocaleString()} of {report.n_cohort_total.toLocaleString()} cases evaluated against
@@ -169,7 +157,7 @@ export default function Eval() {
           <div className="px-5 py-3 border-b border-surface-border">
             <h2 className="text-sm font-semibold text-ink-primary">Confusion matrix</h2>
             <p className="text-[10px] text-compact text-ink-muted mt-0.5">
-              gold (rows) × ClinCase (cols)
+              gold (rows) × CARDIOTON (cols)
             </p>
           </div>
           <div className="px-5 py-4">
@@ -220,25 +208,25 @@ export default function Eval() {
           <div className="px-5 py-3 border-b border-surface-border">
             <h2 className="text-sm font-semibold text-ink-primary">Disagreement taxonomy</h2>
             <p className="text-[10px] text-compact text-ink-muted mt-0.5">
-              what kind of errors does ClinCase make?
+              what kind of errors does CARDIOTON make?
             </p>
           </div>
           <div className="divide-y divide-surface-border">
             <DisagreementRow
-              label="Conservative — ClinCase was more decisive"
-              detail="Gold said REFER (defer to human); ClinCase said APPROVE or DENY."
+              label="Conservative — CARDIOTON was more decisive"
+              detail="Gold said REFER (defer to human); CARDIOTON said APPROVE or DENY."
               count={report.disagreement_taxonomy.conservative_clincase_more_decisive}
               tone="amber"
             />
             <DisagreementRow
-              label="Conservative — ClinCase was more cautious"
-              detail="Gold made a call; ClinCase referred to human reviewer instead."
+              label="Conservative — CARDIOTON was more cautious"
+              detail="Gold made a call; CARDIOTON referred to human reviewer instead."
               count={report.disagreement_taxonomy.conservative_clincase_more_cautious}
               tone="green"
             />
             <DisagreementRow
               label="Aggressive — opposite verdict"
-              detail="Gold said APPROVE; ClinCase said DENY (or vice versa). The dangerous category."
+              detail="Gold said APPROVE; CARDIOTON said DENY (or vice versa). The dangerous category."
               count={report.disagreement_taxonomy.aggressive_opposite_verdict}
               tone="red"
             />
@@ -263,7 +251,7 @@ export default function Eval() {
         <strong className="text-ink-body">Methodology.</strong>{" "}
         Gold labels are produced by an NCCN-derived deterministic clinical
         ruleset designed to mimic a calibrated second-judge oncologist.
-        Disagreements skew conservative by design — i.e. ClinCase prefers to
+        Disagreements skew conservative by design — i.e. CARDIOTON prefers to
         refer ambiguous cases to a human rather than make a borderline call.
         In production, gold labels are replaced by a panel of board-certified
         oncologists (or a second LLM judge for high-volume regression testing).

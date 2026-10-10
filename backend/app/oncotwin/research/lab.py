@@ -30,10 +30,11 @@ from __future__ import annotations
 
 import time
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, TypedDict
 
 import numpy as np
 
+from app.oncotwin._typing import BoolArray, FloatArray, IntArray
 from app.oncotwin.engine.baseline import (
     DEVIATION_Z,
     Baseline,
@@ -54,7 +55,14 @@ from app.oncotwin.ml.logistic import (
     threshold_for_ppv,
     threshold_for_sensitivity,
 )
+from app.oncotwin.research.dataset import Cohort, CohortPatient
 from app.oncotwin.signals import MODEL_SIGNALS, adverse_sign
+
+
+class Coefficient(TypedDict):
+    feature: str
+    coef_standardised: float
+
 
 SIGNAL_GROUPS = {
     "wearables": ("resting_hr", "hrv_sdnn", "temperature", "spo2", "steps", "sleep_hours"),
@@ -118,11 +126,17 @@ def _signals_for(groups: tuple[str, ...]) -> tuple[str, ...]:
     )
 
 
-def subset_features(p, groups: tuple[str, ...], baseline: Baseline) -> tuple[np.ndarray, list[str]]:
+def subset_features(p: CohortPatient, groups: tuple[str, ...], baseline: Baseline) -> tuple[FloatArray, list[str]]:
     """(T, F) features for one cohort patient restricted to `groups` (mirrors engine.features)."""
     series, ctx = p.data.series, p.ctx
+    context_fields: dict[str, FloatArray | float] = {
+        "anc_twin_log": ctx["anc_twin_log"], "anc_twin_low": ctx["anc_twin_low"],
+        "anc_lab_low": ctx["anc_lab_low"], "on_treatment": ctx["on_treatment"],
+        "myelotox": ctx["myelotox"], "adherence_7d": ctx["adherence_7d"],
+        "age65": ctx["age65"],
+    }
     keys = _signals_for(groups)
-    cols: list[np.ndarray] = []
+    cols: list[FloatArray] = []
     names: list[str] = []
     T = series.n
     if keys:
@@ -150,6 +164,7 @@ def subset_features(p, groups: tuple[str, ...], baseline: Baseline) -> tuple[np.
             names += ["n_concordant", "anomaly", "persist_max"]
     for g in groups:
         for f in CONTEXT_GROUPS.get(g, ()):
+            v: FloatArray | float
             if f == "adherence_gap":
                 v = (1.0 - np.asarray(ctx["adherence_7d"])) * (
                     np.asarray(ctx["adherence_sched"]) > 0
@@ -157,13 +172,13 @@ def subset_features(p, groups: tuple[str, ...], baseline: Baseline) -> tuple[np.
             elif f == "nadir_risk":
                 v = np.asarray(ctx["nadir"])
             else:
-                v = ctx[f]
+                v = context_fields[f]
             cols.append(np.broadcast_to(np.asarray(v, dtype=float), (T,)).astype(float))
             names.append(f)
     return (np.stack(cols, axis=1) if cols else np.zeros((T, 0))), names
 
 
-def labels(p, h: int) -> tuple[np.ndarray, np.ndarray]:
+def labels(p: CohortPatient, h: int) -> tuple[FloatArray, BoolArray]:
     """y[t] = qualifying onset on day t+1..t+h; eligibility as in ml/train.py (h = 7 reproduces it)."""
     d = p.data
     n = d.series.n
@@ -178,15 +193,15 @@ def labels(p, h: int) -> tuple[np.ndarray, np.ndarray]:
 
 
 def _stack(
-    parts: list[tuple[np.ndarray, np.ndarray, np.ndarray]],
-) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    parts: list[tuple[FloatArray, FloatArray, BoolArray]],
+) -> tuple[FloatArray, FloatArray, IntArray]:
     X = np.concatenate([F[ok] for F, _, ok in parts])
     y = np.concatenate([y[ok] for _, y, ok in parts])
     pid = np.concatenate([np.full(int(ok.sum()), i) for i, (_, _, ok) in enumerate(parts)])
     return X, y, pid
 
 
-def ece(y: np.ndarray, p: np.ndarray, bins: int = 10) -> float:
+def ece(y: FloatArray, p: FloatArray, bins: int = 10) -> float:
     order = np.argsort(p)
     tot = sum(
         len(c) * abs(float(np.mean(p[c])) - float(np.mean(y[c])))
@@ -196,7 +211,7 @@ def ece(y: np.ndarray, p: np.ndarray, bins: int = 10) -> float:
     return round(tot / max(1, len(p)), 5)
 
 
-def event_metrics(test, scores: list[np.ndarray], thr: float, h: int) -> dict[str, Any]:
+def event_metrics(test: list[CohortPatient], scores: list[FloatArray], thr: float, h: int) -> dict[str, Any]:
     """Events caught within the horizon before onset, lead time, and false alert onsets."""
     detected, leads, n_events, false_on, pdays = 0, [], 0, 0, 0
     for p, s in zip(test, scores, strict=True):
@@ -241,15 +256,15 @@ def event_metrics(test, scores: list[np.ndarray], thr: float, h: int) -> dict[st
 class ArmResult:
     config: ExperimentConfig
     metrics: dict[str, Any]
-    test_scores: np.ndarray
-    test_y: np.ndarray
-    test_pid: np.ndarray
+    test_scores: FloatArray
+    test_y: FloatArray
+    test_pid: IntArray
     seconds: float
 
 
 def _boot_ci(
-    y: np.ndarray, s: np.ndarray, pid: np.ndarray, reps: int = BOOT_REPS, seed: int = 17
-) -> list:
+    y: FloatArray, s: FloatArray, pid: IntArray, reps: int = BOOT_REPS, seed: int = 17
+) -> list[float | None]:
     rng = np.random.default_rng(seed)
     ids = np.unique(pid)
     groups = [np.nonzero(pid == i)[0] for i in ids]
@@ -266,7 +281,7 @@ def _boot_ci(
     )
 
 
-def run_experiment(cohort, cfg: ExperimentConfig, *, pop_base: Baseline | None = None) -> ArmResult:
+def run_experiment(cohort: Cohort, cfg: ExperimentConfig, *, pop_base: Baseline | None = None) -> ArmResult:
     t0 = time.time()
     tr, va, te = cohort.part("train"), cohort.part("valid"), cohort.part("test")
 
@@ -316,10 +331,16 @@ def run_experiment(cohort, cfg: ExperimentConfig, *, pop_base: Baseline | None =
             time.time() - t0,
         )
 
-    base_of = (lambda p: p.baseline) if cfg.baseline == "personal" else (lambda p: pop_base)
+    def base_of(p: CohortPatient) -> Baseline:
+        if cfg.baseline == "personal":
+            return p.baseline
+        if pop_base is None:
+            raise ValueError("Population-baseline experiments require a pooled baseline")
+        return pop_base
 
-    def part(ps):
-        out, names = [], []
+    def part(ps: list[CohortPatient]) -> tuple[list[tuple[FloatArray, FloatArray, BoolArray]], list[str]]:
+        out: list[tuple[FloatArray, FloatArray, BoolArray]] = []
+        names: list[str] = []
         for p in ps:
             F, names = subset_features(p, cfg.groups, base_of(p))
             out.append((F, *labels(p, cfg.horizon)))
@@ -340,12 +361,12 @@ def run_experiment(cohort, cfg: ExperimentConfig, *, pop_base: Baseline | None =
         scores = {
             l2: log_loss(yva, fit_logistic(Xtr, ytr, l2).predict_proba(Xva)) for l2 in L2_GRID
         }
-        chosen = min(scores, key=scores.get)
+        chosen = min(scores, key=lambda l2: scores[l2])
         m = fit_logistic(Xtr, ytr, chosen)
         pva, pte = m.predict_proba(Xva), m.predict_proba(Xte)
         coefs = sorted(
             (
-                {"feature": n, "coef_standardised": round(float(c), 4)}
+                Coefficient(feature=n, coef_standardised=round(float(c), 4))
                 for n, c in zip(names, m.coef, strict=True)
             ),
             key=lambda d: -abs(d["coef_standardised"]),
@@ -424,7 +445,7 @@ def paired_delta(
 _POP_BASE: dict[tuple[int, int], Baseline] = {}
 
 
-def pooled_baseline(train) -> Baseline:
+def pooled_baseline(train: list[CohortPatient]) -> Baseline:
     """Same math as ml.train.population_baseline, but from the cohort's cached per-patient
     baselines instead of recomputing each patient's baseline once per signal (a test pins
     equality)."""
@@ -450,14 +471,14 @@ def pooled_baseline(train) -> Baseline:
     return Baseline(sigs, (1, 13), "population", 1.0, np.eye(len(MODEL_SIGNALS)))
 
 
-def population_base(cohort) -> Baseline:
+def population_base(cohort: Cohort) -> Baseline:
     key = (cohort.seed, cohort.n)
     if key not in _POP_BASE:
         _POP_BASE[key] = pooled_baseline(cohort.part("train"))
     return _POP_BASE[key]
 
 
-def run(cohort, cfg: ExperimentConfig, reference: ExperimentConfig | None = None) -> dict[str, Any]:
+def run(cohort: Cohort, cfg: ExperimentConfig, reference: ExperimentConfig | None = None) -> dict[str, Any]:
     pb = population_base(cohort)
     arm = run_experiment(cohort, cfg, pop_base=pb)
     out = {

@@ -46,7 +46,7 @@ export default function Nav() {
         }}
       >
         <img src="/clincase-mark.svg" alt="" width={20} height={20} aria-hidden="true" />
-        CLINCASE
+        CARDIOTON
       </Link>
 
       <nav style={{ display: "flex", alignItems: "center", gap: "1.5rem", flexWrap: "wrap" }}>

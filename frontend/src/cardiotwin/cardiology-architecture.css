@@ -1,0 +1,163 @@
+.cardio-architecture {
+  --cardio-ink: #edf4f6;
+  --cardio-muted: #95a9b5;
+  --cardio-line: rgba(163, 192, 205, .13);
+  container: cardiology / inline-size;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(91, 125, 145, .42);
+  border-radius: 20px;
+  color: var(--cardio-ink);
+  background: #08121e;
+  box-shadow: 0 24px 58px -30px rgba(3, 11, 23, .55), inset 0 1px rgba(219, 242, 249, .05);
+  font-feature-settings: "ss01" on;
+  text-align: left;
+}
+.cardio-architecture * { box-sizing: border-box; }
+.cardio-architecture__header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 26px 28px 23px; border-bottom: 1px solid var(--cardio-line); background: linear-gradient(105deg, rgba(35, 65, 82, .22), transparent 65%); }
+.cardio-architecture__eyebrow { display: flex; align-items: center; gap: 8px; margin: 0 0 8px; font-size: 10px; font-weight: 600; letter-spacing: .17em; text-transform: uppercase; color: #8bbdc7; }
+.cardio-architecture__header h2 { margin: 0; color: #f1f5f7; font-size: clamp(20px, 2vw, 25px); font-weight: 560; letter-spacing: -.04em; line-height: 1.2; }
+.cardio-architecture__subtitle { margin: 8px 0 0; color: var(--cardio-muted); font-size: 12px; line-height: 1.6; }
+.cardio-review-badge { display: inline-flex; align-items: center; gap: 8px; flex: 0 0 auto; padding: 8px 11px; border: 1px solid rgba(214, 177, 112, .22); border-radius: 7px; color: #d7c29b; background: rgba(130, 104, 54, .08); font-size: 10px; font-weight: 500; }
+.cardio-architecture__stage { position: relative; display: grid; grid-template-columns: minmax(172px, 210px) minmax(260px, 1fr) minmax(172px, 210px); gap: 15px; padding: 20px 24px 16px; isolation: isolate; background: radial-gradient(ellipse at 52% 40%, rgba(43, 66, 79, .43), transparent 49%), linear-gradient(180deg, #0b1622, #091420 75%, #0a1521); }
+.cardio-stage-grid { pointer-events: none; position: absolute; z-index: -1; inset: 0; overflow: hidden; }
+.cardio-stage-grid::before { content: ""; position: absolute; left: 15%; right: 15%; top: 58%; height: 54%; opacity: .11; background-image: linear-gradient(rgba(155, 192, 207, .3) 1px, transparent 1px), linear-gradient(90deg, rgba(155, 192, 207, .3) 1px, transparent 1px); background-size: 60px 60px; transform: perspective(260px) rotateX(58deg); transform-origin: top center; mask-image: linear-gradient(transparent, black 40%, transparent); }
+.cardio-component-rail { z-index: 2; display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 24px 0 32px; }
+.cardio-rail-label { margin: 0 0 1px; color: #7c98a8; text-transform: uppercase; letter-spacing: .15em; font-size: 9px; font-weight: 600; }
+.cardio-component { position: relative; display: flex; flex-direction: column; width: 100%; min-height: 128px; padding: 14px 15px 12px; border: 1px solid rgba(140, 173, 191, .15); border-radius: 10px; text-align: left; color: var(--cardio-ink); background: linear-gradient(120deg, rgba(26, 43, 59, .68), rgba(13, 24, 36, .89)); box-shadow: 0 5px 15px rgba(0, 0, 0, .08), inset 0 1px rgba(206, 226, 238, .035); transition: border-color .2s ease, background .2s ease, transform .2s ease; cursor: pointer; }
+.cardio-component:hover { border-color: color-mix(in srgb, var(--component-accent) 45%, transparent); background: linear-gradient(120deg, rgba(37, 58, 77, .76), rgba(17, 31, 45, .94)); transform: translateY(-2px); }
+.cardio-component:focus-visible, .cardio-anatomy-stage__buttons button:focus-visible { outline: 2px solid #a9dce2; outline-offset: 4px; }
+.cardio-component.is-selected { border-color: color-mix(in srgb, var(--component-accent) 54%, #183044); background: linear-gradient(120deg, color-mix(in srgb, var(--component-accent) 9%, #142131), #101d2b); box-shadow: inset 3px 0 var(--component-accent), 0 8px 18px rgba(0, 0, 0, .12); }
+.cardio-component__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.cardio-component__icon { color: var(--component-accent); opacity: .93; }
+.cardio-component__number { font-family: ui-monospace, SFMono-Regular, monospace; color: #718b9e; font-size: 9px; letter-spacing: .08em; }
+.cardio-component__name { font-size: 13px; font-weight: 600; letter-spacing: -.01em; line-height: 1.4; }
+.cardio-component__detail { display: block; margin-top: 5px; color: #a6b9c6; font-size: 11px; line-height: 1.5; }
+.cardio-component__status { display: flex; align-items: center; gap: 5px; margin-top: 12px; font-size: 9px; color: #91a9b6; letter-spacing: .04em; }
+.cardio-component__status > span { width: 4px; height: 4px; border-radius: 50%; background: #63818e; }
+.cardio-component.is-selected .cardio-component__status { color: color-mix(in srgb, var(--component-accent) 68%, #d4e1e7); }
+.cardio-component.is-selected .cardio-component__status > span { background: var(--component-accent); }
+.cardio-stage-note { display: flex; align-items: flex-start; gap: 10px; margin: 13px 2px 0; color: #7899a9; }
+.cardio-stage-note > svg { flex: 0 0 auto; margin-top: 2px; }
+.cardio-stage-note p { margin: 0; color: #a7bbc5; font-size: 10px; line-height: 1.7; }
+.cardio-stage-note span { color: #718e9e; font-size: 9px; }
+.cardio-anatomy-stage { position: relative; min-width: 0; min-height: 522px; display: flex; flex-direction: column; }
+.cardio-anatomy-stage__caption { z-index: 1; position: absolute; top: 4px; left: 10px; right: 10px; display: flex; align-items: center; gap: 7px; color: #8ba5b5; font-size: 8px; text-transform: uppercase; letter-spacing: .12em; }
+.cardio-anatomy-stage__mark { width: 5px; height: 5px; border: 1px solid #8bb1bb; border-radius: 50%; }
+.cardio-anatomy-stage__code { margin-left: auto; font-family: ui-monospace, SFMono-Regular, monospace; color: #59788b; font-size: 8px; letter-spacing: .06em; }
+.cardio-anatomy-stage__reticle { position: absolute; top: 65px; left: 11%; right: 11%; bottom: 77px; pointer-events: none; border: 1px solid rgba(148, 190, 207, .045); border-radius: 50%; }
+.cardio-anatomy-stage__reticle::before, .cardio-anatomy-stage__reticle::after { content: ""; position: absolute; left: 50%; width: 1px; height: 8px; background: rgba(162, 197, 211, .17); }
+.cardio-anatomy-stage__reticle::before { top: -4px; }
+.cardio-anatomy-stage__reticle::after { bottom: -4px; }
+.cardio-anatomy-stage__canvas { position: relative; height: 456px; min-width: 0; margin: 17px -15px 0; cursor: grab; touch-action: pan-y; }
+.cardio-anatomy-stage__canvas canvas:focus-visible { outline: 2px solid #a9dce2; outline-offset: -3px; border-radius: 12px; }
+.cardio-anatomy-stage__canvas:active { cursor: grabbing; }
+.cardio-anatomy-stage__canvas > div { height: 100%; }
+.cardio-anatomy-stage__controls { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: -5px; z-index: 1; }
+.cardio-anatomy-stage__gestures { display: flex; gap: 16px; color: #91adbe; font-size: 10px; }
+.cardio-anatomy-stage__gestures > span { display: inline-flex; align-items: center; gap: 5px; }
+.cardio-anatomy-stage__keyboard { margin: -7px 0 0; font-size: 9px; color: #95afbf; }
+.cardio-touch-toggle { display: none; min-height: 40px; padding: 7px 12px; border: 1px solid rgba(142, 177, 196, .24); border-radius: 6px; color: #b5c6d0; background: #122331; font-size: 11px; cursor: pointer; }
+.cardio-touch-toggle:focus-visible { outline: 2px solid #a9dce2; outline-offset: 3px; }
+.cardio-touch-toggle[aria-pressed="true"] { border-color: #8bbdc7; }
+.cardio-touch-toggle:disabled { opacity: .45; cursor: default; }
+.cardio-anatomy-stage__buttons { display: flex; align-items: center; gap: 8px; }
+.cardio-anatomy-stage__buttons button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 36px; padding: 8px 11px; border: 1px solid rgba(142, 177, 196, .19); border-radius: 6px; color: #b5c6d0; background: rgba(18, 35, 49, .74); font-size: 11px; cursor: pointer; transition: background .2s, border-color .2s; }
+.cardio-anatomy-stage__buttons button:hover { border-color: rgba(147, 196, 208, .45); background: #1c3344; }
+.cardio-anatomy-stage__buttons button:disabled { opacity: .45; cursor: default; }
+.cardio-anatomy-stage__disclaimer { margin: 11px 0 0; text-align: center; font-size: 8px; color: #648293; letter-spacing: .02em; }
+.cardio-anatomy-fallback { display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; height: 100%; }
+.cardio-anatomy-fallback__organ { display: block; width: 100%; height: 100%; object-fit: cover; }
+.cardio-anatomy-fallback__message { position: absolute; bottom: 9px; margin: 0; color: #a3b4be; font-size: 9px; text-align: center; }
+.cardio-anatomy-loading { position: absolute; inset: 0; pointer-events: none; background: #101e2b; }
+.cardio-anatomy-loading .cardio-anatomy-fallback { opacity: .48; }
+.cardio-anatomy-loading > p { position: absolute; bottom: 16px; left: 0; right: 0; margin: 0; text-align: center; color: #a4bac7; font-size: 10px; }
+.cardio-architecture__details { display: grid; grid-template-columns: 1.05fr 1fr; gap: 28px; padding: 24px 28px 26px; border-top: 1px solid var(--cardio-line); background: linear-gradient(120deg, rgba(22, 38, 53, .47), rgba(9, 21, 33, .84)); }
+.cardio-section-label { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; color: #7895a7; font-size: 9px; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
+.cardio-section-label > span { width: 5px; height: 5px; border-radius: 50%; }
+.cardio-selected h3 { color: #e9f0f4; margin: 0; font-size: 16px; font-weight: 550; letter-spacing: -.02em; }
+.cardio-selected__detail { margin: 5px 0 0; font-size: 11px; color: #b3c4cf; line-height: 1.5; }
+.cardio-selected__description { max-width: 450px; margin: 12px 0 0; color: #94acba; font-size: 11px; line-height: 1.75; }
+.cardio-clinical-limitation { display: flex; align-items: flex-start; gap: 8px; margin: 17px 0 0; padding-top: 13px; border-top: 1px solid rgba(123, 155, 173, .12); color: #829dab; font-size: 9px; line-height: 1.7; }
+.cardio-clinical-limitation > svg { flex: 0 0 auto; color: #98adad; margin-top: 1px; }
+.cardio-connections { padding-left: 27px; border-left: 1px solid rgba(123, 155, 173, .12); }
+.cardio-connections ul { display: flex; flex-direction: column; gap: 0; list-style: none; margin: 0; padding: 0; }
+.cardio-connections li { position: relative; display: flex; align-items: flex-start; gap: 9px; padding: 10px 0; border-radius: 4px; transition: background .2s; }
+.cardio-connections li + li { border-top: 1px solid rgba(123, 155, 173, .08); }
+.cardio-connections li.is-related { background: rgba(114, 160, 184, .06); }
+.cardio-connection-dot { flex: 0 0 auto; width: 5px; height: 5px; border-radius: 50%; margin-top: 5px; }
+.cardio-connections li p { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin: 0; font-size: 10px; font-weight: 500; color: #c2d2dc; line-height: 1.5; }
+.cardio-connections li p > span { color: #6f91a4; }
+.cardio-connection-detail { display: block; margin-top: 3px; font-size: 9px; color: #85a1b2; line-height: 1.5; }
+.cardio-architecture__attribution { display: flex; flex-wrap: wrap; gap: 4px; padding: 12px 28px; border-top: 1px solid rgba(123, 155, 173, .08); color: #6d8a9b; font-size: 8px; line-height: 1.5; }
+.cardio-architecture__attribution a { color: #91adb9; text-decoration: underline; text-underline-offset: 2px; }
+.cardio-architecture__attribution a:hover { color: #c4dde4; }
+.cardio-architecture__attribution > span { margin-left: auto; }
+@container cardiology (max-width: 850px) {
+  .cardio-architecture__header { padding: 22px; gap: 16px; }
+  .cardio-architecture__stage { grid-template-columns: 1fr 1fr; gap: 18px; padding: 16px 22px 22px; }
+  .cardio-anatomy-stage { grid-column: 1 / -1; grid-row: 1; min-height: 500px; max-width: 550px; width: 100%; margin: 0 auto; }
+  .cardio-anatomy-stage__canvas { height: 435px; }
+  .cardio-component-rail { justify-content: flex-start; padding: 0; }
+  .cardio-component { min-height: 118px; }
+  .cardio-stage-note { margin-top: 9px; }
+  .cardio-architecture__details { gap: 20px; padding: 22px; }
+  .cardio-connections { padding-left: 20px; }
+}
+@container cardiology (max-width: 560px) {
+  .cardio-architecture__header { align-items: flex-start; flex-direction: column; gap: 14px; padding: 21px 18px; }
+  .cardio-architecture__eyebrow { font-size: 8px; letter-spacing: .13em; }
+  .cardio-architecture__header h2 { font-size: 22px; }
+  .cardio-architecture__subtitle { font-size: 11px; }
+  .cardio-review-badge { font-size: 9px; padding: 6px 9px; }
+  .cardio-architecture__stage { gap: 12px; padding: 17px 14px 20px; }
+  .cardio-anatomy-stage { min-height: 460px; }
+  .cardio-touch-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  .cardio-anatomy-stage__keyboard { display: none; }
+  .cardio-anatomy-stage__canvas { height: 390px; margin-left: -8px; margin-right: -8px; }
+  .cardio-component { min-height: 132px; padding: 12px; }
+  .cardio-component__name { font-size: 12px; }
+  .cardio-component__detail { font-size: 10px; }
+  .cardio-component__status { font-size: 9px; letter-spacing: 0; }
+  .cardio-rail-label { font-size: 8px; letter-spacing: .09em; }
+  .cardio-stage-note { gap: 7px; }
+  .cardio-stage-note p { font-size: 9px; }
+  .cardio-stage-note span { font-size: 8px; }
+  .cardio-architecture__details { grid-template-columns: 1fr; padding: 21px 18px; gap: 23px; }
+  .cardio-connections { padding: 19px 0 0; border-left: 0; border-top: 1px solid var(--cardio-line); }
+  .cardio-architecture__attribution { padding: 12px 18px; }
+  .cardio-architecture__attribution > span { margin-left: 0; width: 100%; }
+}
+@media (pointer: coarse) {
+  .cardio-touch-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  .cardio-anatomy-stage__keyboard { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cardio-architecture *, .cardio-architecture *::before, .cardio-architecture *::after { transition: none !important; animation: none !important; }
+  .cardio-component:hover { transform: none; }
+}
+.cardio-live-toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 28px; border-bottom: 1px solid var(--cardio-line); background: #0d1b29; color: #a3bac9; font-size: 11px; }
+.cardio-live-toolbar > span, .cardio-live-toolbar button { display: inline-flex; gap: 7px; align-items: center; }
+.cardio-live-toolbar__dot { width: 5px; height: 5px; border-radius: 50%; background: #7eb5c1; box-shadow: 0 0 7px #7eb5c155; }
+.cardio-live-toolbar button { min-height: 30px; padding: 4px 9px; border: 1px solid #334b5f; border-radius: 6px; color: #bfd3df; background: #142636; }
+.cardio-live-toolbar button:disabled { opacity: .5; }
+.cardio-live-toolbar button:focus-visible { outline: 2px solid #9bdae6; outline-offset: 3px; }
+.cardio-live-error { margin: 0; padding: 9px 28px; color: #d0b787; font-size: 11px; border-bottom: 1px solid var(--cardio-line); }
+.cardio-live-connections { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: visible; }
+.cardio-live-connections path { fill: none; stroke: var(--connection-color); stroke-width: 1; opacity: .09; }
+.cardio-live-connections g.is-related path { opacity: .32; }
+.cardio-live-connections .cardio-live-connections__flow { stroke-width: 2; stroke-dasharray: 8 110; opacity: 0; }
+.cardio-live-connections.is-animated g.is-related .cardio-live-connections__flow { opacity: .7; animation: cardio-connection-flow 6s linear infinite; }
+@keyframes cardio-connection-flow { to { stroke-dashoffset: -236; } }
+.cardio-selected__live { margin-top: 15px; padding: 12px; border: 1px solid #2b4153; border-radius: 9px; background: #13233188; font-size: 11px; color: #bdceda; }
+.cardio-selected__live p { margin: 7px 0; line-height: 1.7; color: #a5bdcd; }
+.cardio-selected__live > span { color: #8ca5b5; font-size: 10px; }
+.cardio-selected__live a { display: flex; width: fit-content; align-items: center; gap: 5px; margin-top: 10px; color: #a9dce6; text-decoration: underline; text-underline-offset: 3px; }
+.cardio-status--up { color: #94d2be !important; }
+.cardio-status--embedded { color: #8ec3e3 !important; }
+.cardio-status--degraded { color: #dec493 !important; }
+.cardio-status--down { color: #ee9daa !important; }
+.cardio-component__status.cardio-status--up > span { background: #94d2be; }
+.cardio-component__status.cardio-status--degraded > span { background: #dec493; }
+.cardio-component__status.cardio-status--down > span { background: #ee9daa; }
+@container cardiology (max-width: 850px) { .cardio-live-connections { display: none; } }

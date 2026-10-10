@@ -122,13 +122,7 @@ def _encrypt(value: str) -> bytes:
 
 
 def _decrypt(blob: bytes) -> str:
-    return _encrypt(
-        blob.decode("utf-8", errors="replace")
-        if isinstance(blob, str)
-        else blob.decode(errors="replace")
-        if False
-        else _encrypt_inverse(blob)
-    )  # noqa
+    return _encrypt_inverse(blob)
 
 
 def _encrypt_inverse(blob: bytes) -> str:

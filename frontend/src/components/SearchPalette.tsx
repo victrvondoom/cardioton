@@ -13,10 +13,14 @@ import type { DemoFixture } from "../lib/types";
 
 const SECTIONS: { label: string; items: { label: string; href: string; mono?: boolean }[] }[] = [
   {
-    label: "CLINI-CASE",
+    label: "CARDIOTON",
     items: [
       { label: "Evidence journey", href: "/journey" },
-      { label: "Runtime topology", href: "/runtime" },
+      { label: "Cardiology 3D architecture", href: "/architecture" },
+      { label: "CardioTwin risk assessment", href: "/cardiotwin" },
+      { label: "CardioTwin Atlas command center", href: "/cardiotwin/atlas" },
+      { label: "Interoperability and review", href: "/interop" },
+      { label: "System health and runtime", href: "/runtime" },
     ],
   },
   {
@@ -24,6 +28,7 @@ const SECTIONS: { label: string; items: { label: string; href: string; mono?: bo
     items: [
       { label: "Dashboard",    href: "/dashboard" },
       { label: "All cases",    href: "/cases" },
+      { label: "Start intake", href: "/intake-tools" },
       { label: "Bulk import",  href: "/cases/bulk-import" },
       { label: "Sandbox — PA decision simulator", href: "/sandbox" },
     ],

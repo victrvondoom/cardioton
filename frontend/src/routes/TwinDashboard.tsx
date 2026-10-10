@@ -12,6 +12,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { useAuth } from "../components/AuthContext";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 import { type InjectionKind, ot } from "../oncotwin/api";
 import {
   AlertPanel,
@@ -71,6 +72,7 @@ export default function TwinDashboard({ demo = false }: { demo?: boolean }) {
 
   useEffect(() => { void load(asOf); }, [load, asOf]);
   useEffect(() => { setAsOf(undefined); setSelectedAlert(null); }, [pid]);
+  useAutoRefresh(() => load(), 30_000, asOf === undefined && !busy && !playing);
 
   // Replay animation: step the twin-clock view forward one day at a time.
   useEffect(() => {
@@ -237,7 +239,7 @@ export default function TwinDashboard({ demo = false }: { demo?: boolean }) {
         <ScenarioPanel pid={pid} asOf={d.as_of_day} autoRun={simTrigger} />
       </Section>
 
-      <Section id="ot-alerts" eyebrow="Clinician in the loop" title="Alerts, review & ClinCase handoff">
+      <Section id="ot-alerts" eyebrow="Clinician in the loop" title="Alerts, review & CARDIOTON handoff">
         <AlertPanel alerts={alerts} canAct={canAct} selected={selectedAlert} onSelect={setSelectedAlert}
           onChanged={() => { void load(asOf); setRefreshKey((k) => k + 1); }} />
       </Section>
@@ -347,8 +349,8 @@ function DemoGuide({ actions, canAct }: { actions: DemoActions; canAct: boolean 
     { title: "Clinician HITL decision",
       say: canAct ? "The clinician accepts the alert — recorded with identity and note." : "Sign in as a reviewer to accept.",
       go: async () => { if (canAct) await actions.accept(); scrollTo("ot-alerts"); } },
-    { title: "Connect to ClinCase",
-      say: "Accepted alert → FHIR bundle + RiskAssessment → ClinCase case for pegfilgrastim → 7-agent PA pipeline.",
+    { title: "Connect to CARDIOTON",
+      say: "Accepted alert → FHIR bundle + RiskAssessment → CARDIOTON case for pegfilgrastim → 7-agent PA pipeline.",
       go: async () => { if (canAct) await actions.handoff(); scrollTo("ot-alerts"); } },
     { title: "Complete audit trail",
       say: "Every evaluation, alert, decision and handoff: hash-chained, model-versioned, input-hashed.", go: () => scrollTo("ot-audit") },

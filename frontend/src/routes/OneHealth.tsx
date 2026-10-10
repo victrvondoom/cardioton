@@ -27,6 +27,7 @@ import {
 } from "../onehealth/api";
 import { BUTTON, Field, HistoryForm, INPUT, LabForm } from "../onehealth/Forms";
 import { EvidenceJourney } from "../onehealth/Journey";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 
 const CARD = "rounded-2xl border border-surface-border bg-surface-raised p-5";
 const pretty = (s: string) => s.replaceAll("_", " ");
@@ -38,7 +39,7 @@ export default function OneHealth() {
     <Workbench />
   ) : (
     <div className="p-8 max-w-4xl">
-      <h1 className="text-2xl text-ink-primary">CLINI-CASE / One Health</h1>
+      <h1 className="text-2xl text-ink-primary">CARDIOTON / One Health</h1>
       <p className="mt-3 text-ink-muted">
         Track 7 · Digital Health Standards. Patient-linked exposure evidence is
         restricted to reviewers and administrators.
@@ -65,8 +66,13 @@ function Workbench() {
   const [loading, setLoading] = useState(true);
   const [showLab, setShowLab] = useState(false);
   const [tab, setTab] = useState("connection");
+  const [selectedUpdate, setSelectedUpdate] = useState<{ id: string; version: number | null; consentWithdrawn: boolean } | null>(null);
   const seq = useRef(0);
-  const load = useCallback(async () => {
+  const selectedIdRef = useRef(selectedId);
+  const recordsRef = useRef(records);
+  selectedIdRef.current = selectedId;
+  recordsRef.current = records;
+  const load = useCallback(async (preserveSelected = false) => {
     const generation = ++seq.current;
     setError("");
     try {
@@ -78,7 +84,22 @@ function Workbench() {
       ]);
       if (generation !== seq.current) return;
       setMeta(m);
-      setRecords(rows.records);
+      const selectedKey = selectedIdRef.current ?? recordsRef.current[0]?.id;
+      const selectedRecord = recordsRef.current.find((record) => record.id === selectedKey);
+      const latestSelected = rows.records.find((record) => record.id === selectedKey);
+      setSelectedUpdate(preserveSelected && selectedRecord && (!latestSelected || latestSelected.version > selectedRecord.version)
+        ? { id: selectedRecord.id, version: latestSelected?.version ?? null, consentWithdrawn: latestSelected?.consent_withdrawn ?? false }
+        : null);
+      setRecords(() => {
+        if (!preserveSelected) return rows.records;
+        // Version-keyed review/exchange forms must keep their current record while
+        // background requests update the surrounding list and source selectors.
+        if (!selectedRecord) return rows.records;
+        const next = rows.records.map((record) => record.id === selectedKey ? selectedRecord : record);
+        if (!next.some((record) => record.id === selectedKey)) next.push(selectedRecord);
+        if (!selectedIdRef.current) next.sort((a, b) => Number(b.id === selectedKey) - Number(a.id === selectedKey));
+        return next;
+      });
       setPatients(people.patients);
       setObservations(obs.observations);
     } catch (e) {
@@ -104,10 +125,14 @@ function Workbench() {
       seq.current++;
     };
   }, [load]);
+  useAutoRefresh(() => load(true), 30_000, !busy && !showLab);
   const selected =
     records.find((r) => r.id === selectedId) ??
     (selectedId ? null : records[0]);
+  const selectedIsStale = Boolean(selectedUpdate && selectedUpdate.id === selected?.id);
+  const recordBusy = busy || selectedIsStale;
   async function mutate(fn: () => Promise<ExposureRecord>) {
+    seq.current++;
     setBusy(true);
     setError("");
     try {
@@ -130,14 +155,14 @@ function Workbench() {
               PRIMARY TRACK 7 · DIGITAL HEALTH STANDARDS
             </div>
             <h1 className="text-display text-3xl text-ink-primary mt-2">
-              CLINI-CASE / One Health
+              CARDIOTON / One Health
             </h1>
             <p className="text-sm text-ink-body mt-2">
               Evidence-aware One Health interoperability.
             </p>
             <p className="text-xs text-ink-muted mt-2 max-w-2xl">
               One traceable connection across AquaHealth, OncoTwin, CardioTwin
-              and CLINI-CASE. Evidence and consent travel with the record;
+              and CARDIOTON. Evidence and consent travel with the record;
               clinical judgment stays with the reviewer.
             </p>
           </div>
@@ -276,10 +301,22 @@ function Workbench() {
             )}
             {selected && (
               <>
+                {selectedIsStale && selectedUpdate && (
+                  <div role="status" className="rounded-xl border border-accent-amber/40 bg-accent-amber/10 p-4 text-xs text-ink-body">
+                    <p className="font-semibold text-accent-amber">
+                      {selectedUpdate.version === null ? "The selected record is no longer available on the server." : `A newer record version (v${selectedUpdate.version}) is available.`}
+                      {selectedUpdate.consentWithdrawn && " Consent has been withdrawn in the latest version."}
+                    </p>
+                    <p className="mt-1">Your current review uses v{selected.version}. Actions are paused until you refresh. Refreshing loads the latest version and resets versioned review and exchange drafts.</p>
+                    <button type="button" disabled={busy} className={`${BUTTON} mt-3`} onClick={() => void load().catch((e) => setError(e instanceof Error ? e.message : "Failed to refresh selected record"))}>
+                      Refresh selected record
+                    </button>
+                  </div>
+                )}
                 <EvidenceJourney
                   key={`${selected.id}-${selected.version}`}
                   record={selected}
-                  busy={busy}
+                  busy={recordBusy}
                   mutate={mutate}
                 />
                 <div
@@ -308,7 +345,7 @@ function Workbench() {
                     record={selected}
                     patients={patients}
                     observations={observations}
-                    busy={busy}
+                    busy={recordBusy}
                     mutate={mutate}
                   />
                 )}
@@ -316,7 +353,7 @@ function Workbench() {
                   <Exchange
                     key={`${selected.id}-${selected.version}`}
                     record={selected}
-                    busy={busy}
+                    busy={recordBusy}
                     mutate={mutate}
                   />
                 )}
@@ -400,7 +437,7 @@ function Connection({
       .catch((e) => {
         if (active)
           setCaseCandidatesError(
-            e instanceof Error ? e.message : "CLINI-CASE cases unavailable",
+            e instanceof Error ? e.message : "CARDIOTON cases unavailable",
           );
       });
     return () => {
@@ -436,7 +473,7 @@ function Connection({
               "Human review",
               r.assessment.state === "reviewed_exposure_context",
             ],
-            ["05 · CLINCASE", "Case linked", !!r.case_id],
+            ["05 · CARDIOTON", "Case linked", !!r.case_id],
             [
               "06 · AQUAHEALTH",
               "Retest completed",
@@ -685,7 +722,7 @@ function Connection({
             }
           />
           <ContextCard
-            title="CLINI-CASE"
+            title="CARDIOTON"
             text="Attach reviewed evidence to an existing case for the same patient. No treatment decision or authorization score changes."
             href={r.case_id ? `/cases/${r.case_id}` : undefined}
           />
@@ -695,10 +732,10 @@ function Connection({
         </p>
         <details className="mt-4">
           <summary className="text-xs cursor-pointer text-accent-cyan">
-            Link reviewed evidence to an existing CLINI-CASE case
+            Link reviewed evidence to an existing CARDIOTON case
           </summary>
           <div className="mt-3 space-y-3">
-            <Field label="Existing CLINI-CASE case (same organisation)">
+            <Field label="Existing CARDIOTON case (same organisation)">
               <select
                 className={INPUT}
                 value={caseId}
@@ -755,7 +792,7 @@ function Connection({
             <p className="text-xs text-ink-muted">
               {r.persistence === "postgresql"
                 ? "Requires an existing case in this organisation and reviewer confirmation of patient identity."
-                : "Case linking is unavailable in volatile demo mode; connect PostgreSQL to enable persistent CLINI-CASE linkage."}
+                : "Case linking is unavailable in volatile demo mode; connect PostgreSQL to enable persistent CARDIOTON linkage."}
               Nothing is submitted to a payer.
             </p>
           </div>

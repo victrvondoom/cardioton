@@ -3,12 +3,12 @@
  * model card (synthetic-validation metrics next to honest comparators).
  */
 import { ArrowRight, HeartPulse, PlayCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useLive } from "../lib/useLive";
 import { Link } from "react-router-dom";
 
 import { ot } from "../oncotwin/api";
 import { RiskSpark, Section, TierBadge, pct } from "../oncotwin/panels";
-import type { EventLevel, ModelCard, Overview, PatientSummary } from "../oncotwin/types";
+import type { EventLevel } from "../oncotwin/types";
 
 const ARCHETYPE: Record<string, string> = {
   recovery: "Recovery", gradual_deterioration: "Gradual deterioration", sudden_deterioration: "Sudden deterioration", stable: "Stable",
@@ -25,21 +25,18 @@ const FLOW = [
   "What-if simulator",
   "Explainable alert",
   "Clinician review (HITL)",
-  "ClinCase 7-agent prior-auth",
+  "CARDIOTON 7-agent prior-auth",
   "Hash-chained audit trail",
 ];
 
 export default function TwinHub() {
-  const [ov, setOv] = useState<Overview | null>(null);
-  const [card, setCard] = useState<ModelCard | null>(null);
-  const [patients, setPatients] = useState<PatientSummary[] | null>(null);
-  const [err, setErr] = useState<string | null>(null);
-
-  useEffect(() => {
-    ot.overview().then(setOv).catch((e) => setErr((e as Error).message));
-    ot.model().then(setCard).catch(() => undefined);
-    ot.patients().then((r) => setPatients(r.patients)).catch((e) => setErr((e as Error).message));
-  }, []);
+  const overviewFeed = useLive(ot.overview);
+  const modelFeed = useLive(ot.model);
+  const patientFeed = useLive(ot.patients);
+  const ov = overviewFeed.data;
+  const card = modelFeed.data;
+  const patients = patientFeed.data?.patients ?? null;
+  const err = overviewFeed.error || patientFeed.error || modelFeed.error;
 
   const ew = card?.metrics.event_level.early_warning_or_higher;
   const cmp = card?.comparators;
@@ -55,7 +52,7 @@ export default function TwinHub() {
             {ov?.tagline ?? "A dynamic digital twin for predicting treatment-related deterioration in cancer patients."}
           </p>
           <p className="text-[11.5px] text-ink-muted mt-1">
-            Runs on top of ClinCase: a clinician-accepted twin alert becomes a ClinCase prior-authorisation case.
+            Runs on top of CARDIOTON: a clinician-accepted twin alert becomes a CARDIOTON prior-authorisation case.
             All patients here are synthetic. Clinical decision support only.
           </p>
         </div>
@@ -143,7 +140,7 @@ export default function TwinHub() {
         </Section>
       )}
 
-      <Section eyebrow="Architecture" title="From data to decision — ClinCase is extended, not replaced">
+      <Section eyebrow="Architecture" title="From data to decision — CARDIOTON is extended, not replaced">
         <ol className="flex flex-wrap items-center gap-1.5 text-[11.5px]">
           {FLOW.map((f, i) => (
             <li key={f} className="inline-flex items-center gap-1.5">

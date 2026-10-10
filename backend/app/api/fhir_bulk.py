@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import json
 import uuid
+from collections.abc import AsyncIterator
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
@@ -145,6 +146,8 @@ async def export_status(
         response.headers["Expires"] = (datetime.now(UTC) + timedelta(hours=24)).strftime(
             "%a, %d %b %Y %H:%M:%S GMT"
         )
+        if not isinstance(manifest, dict):
+            raise HTTPException(500, "Invalid export manifest")
         return manifest
 
     if row["status"] == "failed":
@@ -169,7 +172,7 @@ async def export_result(
     if row["organization_id"] != user["organization_id"]:
         raise HTTPException(status_code=403, detail="cross-tenant export forbidden")
 
-    async def gen():
+    async def gen() -> AsyncIterator[bytes]:
         async for line in _ndjson_stream(
             organization_id=user["organization_id"],
             resource_type=resource_type,
@@ -223,7 +226,7 @@ async def _run_export(job_id: str) -> None:
     )
 
 
-async def _ndjson_stream(*, organization_id: str, resource_type: str):
+async def _ndjson_stream(*, organization_id: str, resource_type: str) -> AsyncIterator[str]:
     """Stream NDJSON FHIR resources. Today: maps ClinCase `cases` /
     `decisions` to a *minimal* FHIR Claim shape; deeper FHIR mapping lands
     in round-14 once we have customer-specific FHIR profile requirements."""

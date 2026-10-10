@@ -63,9 +63,9 @@ export function Section({ id, eyebrow, title, right, children, className }: {
   id?: string; eyebrow?: string; title: string; right?: React.ReactNode; children: React.ReactNode; className?: string;
 }) {
   return (
-    <section id={id} className={clsx("bg-surface-raised border border-surface-border rounded-2xl p-4 scroll-mt-24 animate-fade-in", className)}>
+    <section id={id} className={clsx("min-w-0 bg-surface-raised border border-surface-border rounded-2xl p-4 scroll-mt-24 animate-fade-in", className)}>
       <header className="flex items-start justify-between gap-3 mb-3">
-        <div>
+        <div className="min-w-0">
           {eyebrow && <div className="text-[10px] text-compact text-ink-muted">{eyebrow}</div>}
           <h2 className="text-[15px] font-semibold text-ink-primary leading-tight">{title}</h2>
         </div>
@@ -343,13 +343,13 @@ export function SignalGrid({ d }: { d: Dashboard }) {
   const adverse = new Set(d.trajectory.signals_adverse);
   return (
     <div>
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {entries.map(([k, p]) => {
           const b = p.baseline;
           const decimals = k === "temperature" ? 2 : ["steps", "resting_hr", "hrv_sdnn", "sbp", "glucose_cgm"].includes(k) ? 0 : 1;
           const z = d.trajectory.signals[k];
           return (
-            <div key={k} className={clsx("rounded-xl border p-2.5", adverse.has(k) ? "border-accent-brand" : "border-surface-border")}>
+            <div key={k} className={clsx("min-w-0 rounded-xl border p-2.5", adverse.has(k) ? "border-accent-brand" : "border-surface-border")}>
               <div className="flex items-start justify-between gap-2 mb-1">
                 <div className="min-w-0">
                   <div className="text-[12px] font-medium text-ink-primary truncate">{p.label}</div>
@@ -670,7 +670,7 @@ export function AlertPanel({ alerts, canAct, onChanged, selected, onSelect }: {
             ) : <p className="text-[11px] text-ink-muted mt-1">Sign in as a reviewer or admin to accept, dismiss or investigate.</p>}
           </div>
           <div className="rounded-lg border border-surface-border p-2.5">
-            <div className="text-[10px] text-compact text-ink-faint mb-1">Connect to ClinCase (prior-authorisation workflow)</div>
+            <div className="text-[10px] text-compact text-ink-faint mb-1">Connect to CARDIOTON (prior-authorisation workflow)</div>
             {a.handoff ? (
               <div className="space-y-1.5">
                 <div>
@@ -699,10 +699,10 @@ export function AlertPanel({ alerts, canAct, onChanged, selected, onSelect }: {
                 <button type="button" onClick={handoff}
                   disabled={!canAct || busy !== null || !["accepted", "investigating"].includes(a.status)}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-accent-brand text-[12px] font-medium disabled:opacity-40">
-                  {busy === "handoff" ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} aria-hidden />} Hand off to ClinCase
+                  {busy === "handoff" ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} aria-hidden />} Hand off to CARDIOTON
                 </button>
                 <span className="text-[11px] text-ink-muted">
-                  Requires a clinician to accept or investigate first. Creates a ClinCase case; the 7-agent pipeline runs from the case page.
+                  Requires a clinician to accept or investigate first. Creates a CARDIOTON case; the 7-agent pipeline runs from the case page.
                 </span>
               </div>
             )}
@@ -760,7 +760,7 @@ function summarise(e: LedgerEntry): string {
       return `Day ${p.as_of_day}: ${p.tier} (risk ${pct(p.risk as number, 1)}) · model ${(p.model as { version: string }).version} · inputs ${String(p.input_sha256).slice(0, 10)}… · ${p.trigger}`;
     case "alert": return `ALERT ${p.alert_id}: ${p.previous_tier} → ${p.tier} (${pct(p.risk as number, 1)})`;
     case "alert_action": return `${p.action} on ${p.alert_id}${p.note ? ` — “${p.note}”` : ""}`;
-    case "handoff": return `ClinCase case ${p.case_id} for ${p.requested_treatment} (${p.policy_sections_matched} policy sections matched)`;
+    case "handoff": return `CARDIOTON case ${p.case_id} for ${p.requested_treatment} (${p.policy_sections_matched} policy sections matched)`;
     case "demo_injection": return `DEMO CONTROL: ${p.label} (from Day ${p.effective_from_day}; past data unchanged: ${p.past_data_unchanged})`;
     case "ingest": return `Ingested ${p.accepted} observation(s), rejected ${p.rejected}`;
     default: return String(p.notice ?? e.kind);

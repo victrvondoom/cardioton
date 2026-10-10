@@ -24,10 +24,12 @@ import numpy as np
 from app.oncotwin.ml.logistic import auroc, brier
 from app.oncotwin.mlops.versions import feature_version, training_dataset_version
 from app.oncotwin.outcome import HORIZON_DAYS
+from app.oncotwin.service import TwinComputation
+from app.oncotwin.store import OrgTwinStore
 
 
 def log_prediction(
-    store, pid: str, comp, prov: dict[str, Any], entry: dict[str, Any]
+    store: OrgTwinStore, pid: str, comp: TwinComputation, prov: dict[str, Any], entry: dict[str, Any]
 ) -> dict[str, Any]:
     p = comp.prediction
     row = {
@@ -55,7 +57,7 @@ def log_prediction(
     return row
 
 
-def resolve(store) -> int:
+def resolve(store: OrgTwinStore) -> int:
     """Attach ground truth to predictions whose outcome window is now observable. Returns rows resolved."""
     n = 0
     for row in store.predictions:
@@ -93,7 +95,7 @@ def resolve(store) -> int:
     return n
 
 
-def live_metrics(store) -> dict[str, Any]:
+def live_metrics(store: OrgTwinStore) -> dict[str, Any]:
     resolve(store)
     rows = store.predictions
     done = [r for r in rows if r["label_status"] == "resolved"]

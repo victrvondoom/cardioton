@@ -948,7 +948,7 @@ def _pdfium_tesseract_extract(raw: bytes) -> OCRResult:
     )
 
 
-def _resolve_text(block: dict | None, by_id: dict) -> str:
+def _resolve_text(block: dict[str, Any] | None, by_id: dict[str, dict[str, Any]]) -> str:
     if not block:
         return ""
     pieces: list[str] = []
@@ -969,7 +969,7 @@ def _resolve_text(block: dict | None, by_id: dict) -> str:
     return " ".join(pieces)
 
 
-def _find_value_for_key(key_block: dict, by_id: dict) -> dict | None:
+def _find_value_for_key(key_block: dict[str, Any], by_id: dict[str, dict[str, Any]]) -> dict[str, Any] | None:
     for rel in key_block.get("Relationships", []) or []:
         if rel.get("Type") == "VALUE":
             for vid in rel.get("Ids", []) or []:

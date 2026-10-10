@@ -156,6 +156,7 @@ def run_journey(*, verbose: bool = True, with_handoff: bool = True) -> dict[str,
             "gcsf_tomorrow": True,
         },
     )
+    assert comp.simulation is not None
     sc = comp.simulation["scenarios"]
     step(
         "WHAT IF? (simulation — not a recommendation)",

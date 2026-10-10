@@ -18,7 +18,7 @@ Notes on the mapping:
 from __future__ import annotations
 
 import asyncio
-from typing import Any, ClassVar
+from typing import Any, ClassVar, Literal, cast
 
 from app.agents.intake.engines.base import EngineCapabilities, OCREngine
 from app.agents.intake.errors import (
@@ -42,7 +42,7 @@ _MIN_CONFIDENCE_FOR_FIELD = 0.7
 class AWSTextractEngine(OCREngine):
     """AWS Textract — printed-text path with table support."""
 
-    name: ClassVar[str] = "aws_textract"
+    name: ClassVar[Literal["aws_textract"]] = "aws_textract"
     capabilities: ClassVar[EngineCapabilities] = EngineCapabilities(
         handles_handwriting=True,  # Textract has a HANDWRITING feature, but accuracy is lower than Claude
         handles_typed_print=True,
@@ -93,12 +93,12 @@ class AWSTextractEngine(OCREngine):
         client = self._ensure_client()
 
         def _call() -> dict[str, Any]:
-            return client.analyze_document(
+            return cast(dict[str, Any], client.analyze_document(
                 Document={"Bytes": image_bytes},
                 # FORMS pulls KEY_VALUE_SETs (e.g. "Patient name: ___");
                 # TABLES pulls structured tabular data (lab panels).
                 FeatureTypes=["FORMS", "TABLES"],
-            )
+            ))
 
         try:
             response = await asyncio.to_thread(_call)
@@ -131,7 +131,7 @@ class AWSTextractEngine(OCREngine):
             return False
 
 
-def _map_textract_response(response: dict[str, Any], *, engine_name: str) -> OCRResult:
+def _map_textract_response(response: dict[str, Any], *, engine_name: Literal["aws_textract"]) -> OCRResult:
     """Translate Textract's block tree into our OCRResult shape."""
     blocks = response.get("Blocks", [])
     word_confidences: list[float] = []
@@ -185,7 +185,7 @@ def _map_textract_response(response: dict[str, Any], *, engine_name: str) -> OCR
     )
 
 
-def _resolve_text(block: dict | None, by_id: dict) -> str:
+def _resolve_text(block: dict[str, Any] | None, by_id: dict[str, dict[str, Any]]) -> str:
     """Walk a block's CHILD relationships and concatenate WORD/SELECTION_ELEMENT text."""
     if not block:
         return ""
@@ -207,7 +207,7 @@ def _resolve_text(block: dict | None, by_id: dict) -> str:
     return " ".join(pieces)
 
 
-def _find_value_for_key(key_block: dict, by_id: dict) -> dict | None:
+def _find_value_for_key(key_block: dict[str, Any], by_id: dict[str, dict[str, Any]]) -> dict[str, Any] | None:
     for rel in key_block.get("Relationships", []) or []:
         if rel.get("Type") == "VALUE":
             for vid in rel.get("Ids", []) or []:

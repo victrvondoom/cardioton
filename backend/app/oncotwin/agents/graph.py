@@ -23,12 +23,13 @@ from __future__ import annotations
 
 import asyncio
 import uuid
-from typing import Any, Literal
+from typing import Any, Literal, TypeVar
 
 from langgraph.graph import END, StateGraph
+from langgraph.graph.state import CompiledStateGraph
 from pydantic import BaseModel
 
-from app.agents.framework import InMemoryTraceSink, new_agent_context
+from app.agents.framework import Agent, AgentContext, InMemoryTraceSink, new_agent_context
 from app.oncotwin.agents.twin_agents import (
     WM_BUNDLE,
     WM_DRIFT,
@@ -89,7 +90,9 @@ TOPOLOGY = {
 
 # In-flight runs: LangGraph state stays JSON-serialisable; heavy numpy objects
 # live here, keyed by run_id, for the duration of one graph invocation.
-_RUNS: dict[str, tuple[Any, TwinComputation]] = {}
+OutputT = TypeVar("OutputT", bound=BaseModel)
+TwinHistory = tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]
+_RUNS: dict[str, tuple[AgentContext, TwinComputation]] = {}
 
 
 class TwinGraphState(BaseModel):
@@ -109,7 +112,7 @@ class TwinGraphState(BaseModel):
     explanation_summary: dict[str, Any] | None = None
 
 
-async def _invoke(agent, state: TwinGraphState) -> dict[str, Any]:
+async def _invoke(agent: Agent[TwinAgentInput, OutputT], state: TwinGraphState) -> dict[str, Any]:
     ctx, _ = _RUNS[state.run_id]
     res = await agent.invoke(
         TwinAgentInput(
@@ -178,7 +181,7 @@ def _route_after_evidence(
     return "clinical_context_agent" if tier in _ELEVATED else "explanation_agent"
 
 
-def build_twin_graph():
+def build_twin_graph() -> CompiledStateGraph:
     g = StateGraph(TwinGraphState)
     g.add_node("data_quality_agent", _quality_node)
     g.add_node("twin_state_agent", _state_node)
@@ -226,16 +229,17 @@ async def _run(
     history: list[dict[str, Any]],
     force_simulation: bool,
     model: DeteriorationModel,
-    bundle: tuple | None,
-    drift: dict | None,
-    llm_traces: list | None,
+    bundle: TwinHistory | None,
+    drift: dict[str, Any] | None,
+    llm_traces: list[dict[str, Any]] | None,
 ) -> tuple[TwinComputation, dict[str, Any]]:
     run_id = uuid.uuid4().hex
     comp = TwinComputation(record=record, as_of_day=as_of_day, model=model, history=history)
+    trace_sink = InMemoryTraceSink()
     ctx = new_agent_context(
         case_id=f"oncotwin:{record.profile.patient_id}:d{as_of_day}",
         organization_id=organization_id,
-        trace_sink=InMemoryTraceSink(),
+        trace_sink=trace_sink,
     )
     if bundle is None:
         # Direct callers (tests, CLI) may pass only the history: derive the per-day facts + states.
@@ -264,7 +268,7 @@ async def _run(
         _RUNS.pop(run_id, None)
     trace = [
         {"agent": s.agent_name, "status": s.status, "latency_ms": s.latency_ms, "error": s.error}
-        for s in ctx.trace_sink.spans
+        for s in trace_sink.spans
     ]
     for sp in trace:
         METRICS.observe_ms(
@@ -281,9 +285,9 @@ def run_twin_graph(
     history: list[dict[str, Any]],
     force_simulation: bool = False,
     model: DeteriorationModel | None = None,
-    bundle: tuple | None = None,
-    drift: dict | None = None,
-    llm_traces: list | None = None,
+    bundle: TwinHistory | None = None,
+    drift: dict[str, Any] | None = None,
+    llm_traces: list[dict[str, Any]] | None = None,
 ) -> tuple[TwinComputation, dict[str, Any]]:
     """Synchronous entry point (call from a worker thread; owns its own event loop)."""
     return asyncio.run(

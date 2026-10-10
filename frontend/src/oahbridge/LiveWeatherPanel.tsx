@@ -8,7 +8,8 @@
  * day/night terminator for that hour. Weather is context, never evidence of a hazard.
  */
 import { CloudRain, Pause, Play, RefreshCw, RotateCcw } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 
 import { formatInZone } from "../globe/geo";
 import type { GlobeWeather } from "../globe/weatherLayers";
@@ -64,6 +65,7 @@ export default function LiveWeatherPanel({ point, onGlobeWeather }: Props) {
   const [playing, setPlaying] = useState(false);
   const [now, setNow] = useState(() => new Date());
   const [reloadKey, setReloadKey] = useState(0);
+  const sequence = useRef(0);
 
   const lat = point?.latitude;
   const lon = point?.longitude;
@@ -75,6 +77,7 @@ export default function LiveWeatherPanel({ point, onGlobeWeather }: Props) {
 
   useEffect(() => {
     if (lat == null || lon == null) return;
+    const generation = ++sequence.current;
     const controller = new AbortController();
     setLoading(true);
     setError(null);
@@ -83,18 +86,36 @@ export default function LiveWeatherPanel({ point, onGlobeWeather }: Props) {
     oahBridge
       .weather(lat, lon, controller.signal)
       .then((w) => {
-        if (!controller.signal.aborted) setWeather(w);
+        if (!controller.signal.aborted && generation === sequence.current) setWeather(w);
       })
       .catch((e: unknown) => {
-        if (controller.signal.aborted) return;
+        if (controller.signal.aborted || generation !== sequence.current) return;
         setWeather(null);
         setError(e instanceof Error ? e.message : "Weather lookup failed");
       })
       .finally(() => {
-        if (!controller.signal.aborted) setLoading(false);
+        if (!controller.signal.aborted && generation === sequence.current) setLoading(false);
       });
-    return () => controller.abort();
+    return () => { sequence.current++; controller.abort(); };
   }, [lat, lon, reloadKey]);
+
+  useAutoRefresh(async () => {
+    if (lat == null || lon == null) return;
+    const generation = ++sequence.current;
+    setLoading(true);
+    try {
+      const latest = await oahBridge.weather(lat, lon);
+      if (generation !== sequence.current) return;
+      setWeather(latest);
+      setError(null);
+    } catch (e) {
+      if (generation !== sequence.current) return;
+      setWeather(null);
+      setError(e instanceof Error ? e.message : "Weather refresh failed");
+    } finally {
+      if (generation === sequence.current) setLoading(false);
+    }
+  }, 300_000, lat != null && lon != null && !loading && !playing && hour === null);
 
   const hours: WeatherHour[] = useMemo(() => weather?.forecast_hourly ?? [], [weather]);
 

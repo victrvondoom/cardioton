@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../components/AuthContext";
+import { SpatialBackdrop } from "../components/SpatialBackdrop";
 
 export default function Signup() {
   const { signup } = useAuth();
@@ -38,21 +39,22 @@ export default function Signup() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-surface-bg">
+    <div className="spatial-auth min-h-screen flex items-center justify-center px-4 py-12 bg-surface-bg">
+      <SpatialBackdrop />
       <div className="w-full max-w-md">
         <Link to="/" className="flex items-center justify-center gap-3 mb-8">
           <div className="w-12 h-12 rounded-xl bg-accent-brand text-ink-invert flex items-center justify-center shadow-md">
             <Activity size={22} strokeWidth={2.5} />
           </div>
           <div>
-            <div className="font-semibold text-xl text-ink-primary">CLINI-CASE</div>
+            <div className="font-semibold text-xl text-ink-primary">CARDIOTON</div>
             <div className="text-[11px] text-ink-muted text-mono-tech">
               Prior Authorisation Copilot
             </div>
           </div>
         </Link>
 
-        <div className="bg-surface-raised border border-surface-border rounded-2xl p-6 shadow-sm">
+        <div className="spatial-card bg-surface-raised border border-surface-border rounded-2xl p-6 shadow-sm">
           <h1 className="text-xl font-semibold text-ink-primary mb-1">
             Create your organization
           </h1>

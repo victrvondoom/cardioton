@@ -10,7 +10,8 @@
  * Selecting a marker shows that observation's summary beside the plot.
  */
 import { MapPin, Maximize2 } from "lucide-react";
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useMemo, useState } from "react";
+import { useLive } from "../lib/useLive";
 import { Link } from "react-router-dom";
 
 import { aqua } from "../aquahealth/api";
@@ -25,7 +26,7 @@ import {
   StatusBadge,
   formatDate,
 } from "../aquahealth/panels";
-import type { EcosystemStatus, MapPoint, MapView } from "../aquahealth/types";
+import type { EcosystemStatus, MapPoint } from "../aquahealth/types";
 
 /** Marker fills. Mirrors the status ramp used everywhere else. */
 const STATUS_FILL: Record<EcosystemStatus, string> = {
@@ -50,18 +51,14 @@ const ObservationGlobe = lazy(() => import("../globe/ObservationGlobe"));
 const AquaHealthMapLibre = lazy(() => import("../globe/AquaHealthMapLibre"));
 
 export default function AquaMap() {
-  const [data, setData] = useState<MapView | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<MapPoint | null>(null);
+  const mapFeed = useLive(aqua.map);
+  const data = mapFeed.data;
+  const error = mapFeed.error;
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selected = data?.points.find((point) => point.observation_id === selectedId) ?? null;
+  const setSelected = useCallback((point: MapPoint | null) => setSelectedId(point?.observation_id ?? null), []);
   const [statusFilter, setStatusFilter] = useState<EcosystemStatus | "all">("all");
   const [mapMode, setMapMode] = useState<"street" | "globe">("street");
-
-  useEffect(() => {
-    aqua
-      .map()
-      .then(setData)
-      .catch((e) => setError(e instanceof Error ? e.message : "Failed to load the map"));
-  }, []);
 
   const points = useMemo(() => {
     const all = data?.points ?? [];

@@ -109,7 +109,7 @@ function simulatePayer(
   let confidence = 0.92;
   const criteria_met: string[] = [];
   const criteria_missing: string[] = [];
-  let auth_code_or_reason = `AUTH-${payer_id.toUpperCase()}-${Math.floor(Math.random() * 90000 + 10000)}`;
+  let auth_code_or_reason = "SIMULATION ONLY - no authorization issued";
   let recommended_next = "Submit immediately";
   let reasoning_summary = "";
 
@@ -182,7 +182,7 @@ function simulatePayer(
 
   // Compose reasoning
   if (verdict === "APPROVE") {
-    confidence = 0.92 + Math.random() * 0.06;
+    confidence = 0.92; // Fixed illustrative assumption; not a calibrated model result.
     reasoning_summary = `All ${criteria_met.length} required criteria met. Treatment aligns with policy; preferred regimen documented.`;
   } else if (verdict === "REFER") {
     reasoning_summary = `Documentation gap detected; auto-routing to human reviewer. ${criteria_missing.length} item(s) unresolved.`;
@@ -203,14 +203,14 @@ function finalize(
   auth_code_or_reason: string,
   recommended_next: string,
   reasoning_summary: string,
-  livePayer: PayerId,
+  _livePayer: PayerId,
 ): PayerVerdict {
   // Add deterministic jitter so the demo isn't identical run-to-run
   const jitter = (payer_id.charCodeAt(0) % 5) * 1500;
   return {
     payer_id,
     payer_name: PAYER_NAMES[payer_id],
-    data_mode: payer_id === livePayer ? "LIVE" : "SIMULATED",
+    data_mode: "SIMULATED",
     verdict,
     confidence: Math.round(confidence * 100) / 100,
     reasoning_summary,

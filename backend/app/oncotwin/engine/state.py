@@ -15,6 +15,7 @@ from typing import Any
 
 import numpy as np
 
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.baseline import Baseline
 from app.oncotwin.engine.neutrophil import NeutrophilFit
 from app.oncotwin.engine.series import PatientSeries
@@ -30,7 +31,7 @@ EWMA_ALPHA = 0.6
 _SUBSETS = [s for r in range(1, 4) for s in itertools.combinations(range(3), r)]
 
 
-def _nnls3(y: np.ndarray, L: np.ndarray, w: np.ndarray) -> tuple[np.ndarray, float]:
+def _nnls3(y: FloatArray, L: FloatArray, w: FloatArray) -> tuple[FloatArray, float]:
     """Exact NNLS for 3 unknowns by enumerating active sets. Returns (θ, weighted R²)."""
     m = ~np.isnan(y)
     if m.sum() < 3:

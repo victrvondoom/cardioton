@@ -23,10 +23,12 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
+from app.json_contract import json_object
+
 from . import weather
 from .composer import compose_scenario_bundle
-from .models import EvidenceSubScores, ScenarioDefinition
-from .scenarios import SCENARIOS
+from .models import CompositeEvidenceResult, EvidenceSubScores, ScenarioDefinition
+from .scenarios import SCENARIOS as SCENARIOS
 from .scoring import (
     calculate_citizen_agreement,
     calculate_sensor_corroboration,
@@ -87,7 +89,7 @@ def _load(scenario_id: str) -> ScenarioDefinition:
     return factory()
 
 
-def _corroborate(scenario: ScenarioDefinition):
+def _corroborate(scenario: ScenarioDefinition) -> CompositeEvidenceResult:
     """Same result as scenarios.load_scenario_and_compute, split so each stage can be timed."""
     sub_scores = EvidenceSubScores(
         sensor_corroboration=calculate_sensor_corroboration(scenario.sensor_readings),
@@ -261,7 +263,7 @@ CLINICAL_PROFILES: dict[str, dict[str, str]] = {
 }
 
 
-def _steps(scenario, evidence, report: dict[str, Any], all_passed: bool) -> list[dict[str, Any]]:
+def _steps(scenario: ScenarioDefinition, evidence: CompositeEvidenceResult, report: dict[str, Any], all_passed: bool) -> list[dict[str, Any]]:
     """The 8 audit steps from OAH-Bridge's Judge Mode, each tagged with the timed stage it ran in."""
     sub = evidence.sub_scores
     summary = report["summary"]
@@ -325,7 +327,7 @@ def _steps(scenario, evidence, report: dict[str, Any], all_passed: bool) -> list
     ]
 
 
-def _scenario_detail(scenario, evidence) -> dict[str, Any]:
+def _scenario_detail(scenario: ScenarioDefinition, evidence: CompositeEvidenceResult) -> dict[str, Any]:
     zone = scenario.spatial_zone
     encounter: dict[str, Any] = dict(
         CLINICAL_PROFILES.get(scenario.scenario_id, CLINICAL_PROFILES[DEFAULT_SCENARIO])
@@ -443,7 +445,7 @@ def run_pipeline(scenario_id: str, *, fhir_base: str) -> dict[str, Any]:
     timings["validate"] = _ms(t)
 
     total_ms = _ms(started)
-    run = {
+    run: dict[str, Any] = {
         "id": f"run-{uuid.uuid4().hex[:12]}",
         "ran_at": _now_iso(),
         "engine": ENGINE_VERSION,
@@ -624,7 +626,7 @@ def conformance_items() -> dict[str, Any]:
 
 @lru_cache(maxsize=4)
 def _json_file(name: str) -> dict[str, Any]:
-    return json.loads((CONFORMANCE_DIR / name).read_text(encoding="utf-8"))
+    return json_object(json.loads((CONFORMANCE_DIR / name).read_text(encoding="utf-8")), name)
 
 
 def terminology_manifest() -> dict[str, Any]:
@@ -656,7 +658,7 @@ class _Metrics:
         self.cds_cards = 0
         self.recent_runs: deque[dict[str, Any]] = deque(maxlen=12)
 
-    def record_run(self, *, run_id, scenario_id, ran_at, total_ms, passed, checks) -> None:
+    def record_run(self, *, run_id: str, scenario_id: str, ran_at: str, total_ms: float, passed: bool, checks: dict[str, int]) -> None:
         with self._lock:
             self.runs += 1
             if passed:

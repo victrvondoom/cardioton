@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import uuid
 from datetime import UTC, datetime
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -90,19 +90,15 @@ class Measurements(BaseModel):
         return {k: v for k, v in self.model_dump().items() if v is not None}
 
 
-def _presence_field(description: str):
-    return Field(default=Presence.NOT_AVAILABLE, description=description)
-
-
 class WaterAppearance(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    floating_waste: Presence = _presence_field("Floating waste or litter")
-    foam: Presence = _presence_field("Foam or froth")
-    algae: Presence = _presence_field("Algal bloom or green scum")
-    oily_film: Presence = _presence_field("Oil-like film or sheen")
-    unusual_colour: Presence = _presence_field("Unusual water colour")
-    unusual_odour: Presence = _presence_field("Unusual or strong odour")
+    floating_waste: Annotated[Presence, Field(description="Floating waste or litter")] = Presence.NOT_AVAILABLE
+    foam: Annotated[Presence, Field(description="Foam or froth")] = Presence.NOT_AVAILABLE
+    algae: Annotated[Presence, Field(description="Algal bloom or green scum")] = Presence.NOT_AVAILABLE
+    oily_film: Annotated[Presence, Field(description="Oil-like film or sheen")] = Presence.NOT_AVAILABLE
+    unusual_colour: Annotated[Presence, Field(description="Unusual water colour")] = Presence.NOT_AVAILABLE
+    unusual_odour: Annotated[Presence, Field(description="Unusual or strong odour")] = Presence.NOT_AVAILABLE
 
     #: Free-text descriptor the citizen picked from a simple list.
     colour_note: str | None = Field(default=None, max_length=120)
@@ -112,26 +108,26 @@ class WaterAppearance(BaseModel):
 class Biodiversity(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    fish: Presence = _presence_field("Fish")
-    birds: Presence = _presence_field("Water birds")
-    insects: Presence = _presence_field("Insects above the water")
-    aquatic_plants: Presence = _presence_field("Aquatic plants")
-    macroinvertebrates: Presence = _presence_field("Macroinvertebrates")
-    dead_organisms: Presence = _presence_field("Dead fish or other dead organisms")
-    unusual_organisms: Presence = _presence_field("Unusual or unfamiliar organisms")
+    fish: Annotated[Presence, Field(description="Fish")] = Presence.NOT_AVAILABLE
+    birds: Annotated[Presence, Field(description="Water birds")] = Presence.NOT_AVAILABLE
+    insects: Annotated[Presence, Field(description="Insects above the water")] = Presence.NOT_AVAILABLE
+    aquatic_plants: Annotated[Presence, Field(description="Aquatic plants")] = Presence.NOT_AVAILABLE
+    macroinvertebrates: Annotated[Presence, Field(description="Macroinvertebrates")] = Presence.NOT_AVAILABLE
+    dead_organisms: Annotated[Presence, Field(description="Dead fish or other dead organisms")] = Presence.NOT_AVAILABLE
+    unusual_organisms: Annotated[Presence, Field(description="Unusual or unfamiliar organisms")] = Presence.NOT_AVAILABLE
     note: str | None = Field(default=None, max_length=500)
 
 
 class EnvironmentalContext(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    recent_rainfall: Presence = _presence_field("Heavy rainfall in the last 48h")
-    flooding: Presence = _presence_field("Flooding")
-    drought: Presence = _presence_field("Drought or unusually low water")
-    construction: Presence = _presence_field("Construction work nearby")
-    waste_accumulation: Presence = _presence_field("Waste accumulation on the bank")
-    suspected_discharge: Presence = _presence_field("Suspected discharge or outflow")
-    unusual_activity: Presence = _presence_field("Other unusual human activity")
+    recent_rainfall: Annotated[Presence, Field(description="Heavy rainfall in the last 48h")] = Presence.NOT_AVAILABLE
+    flooding: Annotated[Presence, Field(description="Flooding")] = Presence.NOT_AVAILABLE
+    drought: Annotated[Presence, Field(description="Drought or unusually low water")] = Presence.NOT_AVAILABLE
+    construction: Annotated[Presence, Field(description="Construction work nearby")] = Presence.NOT_AVAILABLE
+    waste_accumulation: Annotated[Presence, Field(description="Waste accumulation on the bank")] = Presence.NOT_AVAILABLE
+    suspected_discharge: Annotated[Presence, Field(description="Suspected discharge or outflow")] = Presence.NOT_AVAILABLE
+    unusual_activity: Annotated[Presence, Field(description="Other unusual human activity")] = Presence.NOT_AVAILABLE
     note: str | None = Field(default=None, max_length=500)
 
 

@@ -115,11 +115,11 @@ def conflicts(
             (
                 "Trajectory conflict detected — review underlying data: the clinical record appears stable (no encounter, "
                 "intervention or abnormal lab in 7 days) but the physiological trajectory changed"
-                + (f" (change point Day {cp['day']})" if recent_cp else "")
+                + (f" (change point Day {cp['day']})" if recent_cp and cp is not None else "")
                 + f", with {facts['multi']['n_concordant']} signal(s) deviating together."
             ),
             {
-                "change_point": cp if recent_cp else None,
+                "change_point": cp if recent_cp and cp is not None else None,
                 "n_concordant": facts["multi"]["n_concordant"],
             },
         )
@@ -266,7 +266,7 @@ def consistency(record: PatientRecord, series: PatientSeries) -> dict[str, Any]:
         )
     )
 
-    kin = []
+    kin: list[dict[str, Any]] = []
     rows = series.labs.get("hemoglobin", [])
     for (d0, v0, _), (d1, v1, oid) in zip(rows, rows[1:], strict=False):
         if d1 - d0 <= 3 and abs(v1 - v0) > 2.5:

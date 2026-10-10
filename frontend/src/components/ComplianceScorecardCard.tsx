@@ -15,9 +15,9 @@ import {
   ScrollText,
   XCircle,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useLive } from "../lib/useLive";
 
-import { api, type CaseComplianceScorecard, type ClauseResult } from "../lib/api";
+import { api, type ClauseResult } from "../lib/api";
 
 interface Props {
   caseId: string;
@@ -25,35 +25,10 @@ interface Props {
 }
 
 export function ComplianceScorecardCard({ caseId, refreshKey = 0 }: Props) {
-  const [data, setData] = useState<CaseComplianceScorecard | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    api
-      .getCaseCompliance(caseId)
-      .then((r) => {
-        if (!cancelled) {
-          setData(r);
-          setError(null);
-        }
-      })
-      .catch((e) => {
-        // No fallback data: a compliance scorecard must never show clauses as "satisfied" that were not computed.
-        if (!cancelled) {
-          setData(null);
-          setError(e instanceof Error ? e.message : String(e));
-        }
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [caseId, refreshKey]);
+  const scorecard = useLive(() => api.getCaseCompliance(caseId), [caseId, refreshKey]);
+  const data = scorecard.data?.case_id === caseId ? scorecard.data : null;
+  const loading = scorecard.loading && !data;
+  const error = scorecard.error;
 
   return (
     <div className="bg-surface-raised border border-surface-border rounded-2xl p-5">
@@ -66,7 +41,7 @@ export function ComplianceScorecardCard({ caseId, refreshKey = 0 }: Props) {
           <div className="text-sm font-semibold text-ink-primary">
             {data
               ? `${data.n_satisfied_in_force} of ${data.n_clauses_in_force} in-force clauses satisfied`
-              : "Computing…"}
+              : error ? "Scorecard unavailable" : "Computing…"}
           </div>
         </div>
         {data && (
@@ -81,7 +56,7 @@ export function ComplianceScorecardCard({ caseId, refreshKey = 0 }: Props) {
         <div className="text-xs text-ink-muted">Computing live scorecard…</div>
       )}
       {error && (
-        <div className="text-xs text-accent-red">Could not compute scorecard: {error}</div>
+        <div role="status" className="text-xs text-accent-red">Could not compute scorecard: {error}{data ? " Showing the last successful scorecard." : ""}</div>
       )}
 
       {data && (

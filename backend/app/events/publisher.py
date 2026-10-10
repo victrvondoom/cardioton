@@ -27,6 +27,7 @@ import json
 import os
 import signal
 import sys
+from io import TextIOWrapper
 from typing import Any
 
 import structlog
@@ -65,7 +66,7 @@ async def _publish_eventbridge(envelope: dict[str, Any]) -> None:
       EVENTBRIDGE_BUS_NAME=clincase-domain-events
       EVENTBRIDGE_SOURCE=clincase
     """
-    import aioboto3  # type: ignore[import-not-found]
+    import aioboto3
 
     bus_name = os.getenv("EVENTBRIDGE_BUS_NAME", "clincase-domain-events")
     source = os.getenv("EVENTBRIDGE_SOURCE", "clincase")
@@ -90,7 +91,7 @@ async def _publish_kinesis(envelope: dict[str, Any]) -> None:
     Requires:
       KINESIS_STREAM_NAME=clincase-domain-events
     """
-    import aioboto3  # type: ignore[import-not-found]
+    import aioboto3
 
     stream = os.getenv("KINESIS_STREAM_NAME", "clincase-domain-events")
     region = os.getenv("AWS_REGION", "ap-south-1")
@@ -182,5 +183,6 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-    sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[attr-defined]
+    if isinstance(sys.stdout, TextIOWrapper):
+        sys.stdout.reconfigure(encoding="utf-8")
     asyncio.run(main())

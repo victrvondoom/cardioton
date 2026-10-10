@@ -38,9 +38,10 @@ import json
 import logging
 import re
 import uuid
+from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol, cast
 
 import boto3
 from botocore.exceptions import BotoCoreError, ClientError
@@ -50,6 +51,7 @@ from pydantic import BaseModel
 from app.auth import get_current_user
 from app.auth.dependencies import require_platform_admin
 from app.config import settings
+from app.json_contract import json_object
 
 log = logging.getLogger(__name__)
 router = APIRouter(prefix="/policies", tags=["policies"])
@@ -154,12 +156,29 @@ def _now() -> str:
 # --------------------------------------------------------------------------- #
 
 
-def _s3():
-    return boto3.client("s3", region_name=settings.AWS_REGION)
+class _Paginator(Protocol):
+    def paginate(self, **kwargs: Any) -> Iterator[dict[str, Any]]: ...
 
 
-def _bedrock_agent():
-    return boto3.client("bedrock-agent", region_name=settings.AWS_REGION)
+class _S3Client(Protocol):
+    def put_object(self, **kwargs: Any) -> dict[str, Any]: ...
+    def get_object(self, **kwargs: Any) -> dict[str, Any]: ...
+    def copy_object(self, **kwargs: Any) -> dict[str, Any]: ...
+    def delete_object(self, **kwargs: Any) -> dict[str, Any]: ...
+    def get_paginator(self, name: str) -> _Paginator: ...
+
+
+class _BedrockAgentClient(Protocol):
+    def start_ingestion_job(self, **kwargs: Any) -> dict[str, Any]: ...
+    def get_ingestion_job(self, **kwargs: Any) -> dict[str, Any]: ...
+
+
+def _s3() -> _S3Client:
+    return cast(_S3Client, boto3.client("s3", region_name=settings.AWS_REGION))
+
+
+def _bedrock_agent() -> _BedrockAgentClient:
+    return cast(_BedrockAgentClient, boto3.client("bedrock-agent", region_name=settings.AWS_REGION))
 
 
 def _build_metadata_body(
@@ -187,7 +206,7 @@ def _build_metadata_body(
 
 def _parse_metadata_body(body: bytes) -> dict[str, Any]:
     try:
-        return json.loads(body).get("metadataAttributes", {})
+        return json_object(json_object(json.loads(body), "Policy sidecar").get("metadataAttributes", {}), "Policy metadata")
     except (ValueError, AttributeError):
         return {}
 
@@ -296,7 +315,8 @@ def _start_ingestion_safe() -> str | None:
             knowledgeBaseId=settings.BEDROCK_KB_ID,
             dataSourceId=settings.BEDROCK_KB_DATA_SOURCE_ID,
         )
-        return resp["ingestionJob"]["ingestionJobId"]
+        job_id = resp["ingestionJob"]["ingestionJobId"]
+        return job_id if isinstance(job_id, str) else None
     except (BotoCoreError, ClientError) as exc:
         log.warning("KB ingestion job failed to start: %s", exc)
         return None

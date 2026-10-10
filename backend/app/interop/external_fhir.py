@@ -16,7 +16,7 @@ import asyncio
 import ssl
 import time
 from datetime import UTC, datetime
-from typing import Any
+from typing import Any, cast
 
 import httpx
 
@@ -38,7 +38,7 @@ def _ssl_context(system_trust: bool) -> ssl.SSLContext | bool:
         import truststore
     except ImportError:
         return True  # fall back to the default store; verification stays on
-    return truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    return cast(ssl.SSLContext, truststore.SSLContext(ssl.PROTOCOL_TLS_CLIENT))
 
 
 def make_client(timeout: float, system_trust: bool) -> httpx.AsyncClient:

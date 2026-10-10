@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../components/AuthContext";
+import { useLive } from "../lib/useLive";
 import { ot } from "../oncotwin/api";
 import { Chip, KV, Note } from "../oncotwin/intel";
 import { Section, pct } from "../oncotwin/panels";
@@ -27,9 +28,7 @@ const ci = (c?: (number | null)[] | null) =>
 interface Arm { config: Json; metrics: Json; paired_vs_multimodal?: Json; paired_vs_reference?: Json }
 
 export default function TwinLab() {
-  const [r, setR] = useState<Json | null>(null);
-  const [err, setErr] = useState<string | null>(null);
-  useEffect(() => { ot.researchResults().then(setR).catch((e) => setErr((e as Error).message)); }, []);
+  const { data: r, error: err } = useLive(() => ot.researchResults());
   const refArm: Arm | undefined = r?.modality_benchmark?.find((a: Arm) => a.config.name === r.reference_arm);
 
   return (

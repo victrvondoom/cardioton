@@ -12,6 +12,8 @@ group on `code` for cohort analysis.
 
 from __future__ import annotations
 
+from typing import Any
+
 
 class IntakeError(Exception):
     """Base class for all Document Intake errors."""
@@ -20,12 +22,12 @@ class IntakeError(Exception):
     status_code: int = 500
     safe_to_show_user: bool = False
 
-    def __init__(self, message: str, *, detail: dict | None = None) -> None:
+    def __init__(self, message: str, *, detail: dict[str, Any] | None = None) -> None:
         super().__init__(message)
         self.message = message
         self.detail = detail or {}
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "code": self.code,
             "message": self.message

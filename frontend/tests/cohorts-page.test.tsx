@@ -25,7 +25,7 @@ describe("Cohorts page is driven by the API, not fixtures", () => {
   it("renders the real counts, insights and per-payer numbers it is given", async () => {
     vi.mocked(api.getCohorts).mockResolvedValue(report());
     mount();
-    expect((await screen.findByTestId("cohorts-summary")).textContent).toMatch(/12.*cases.*last 90 days.*9.*decided.*3.*pending/);
+    await waitFor(() => expect(screen.getByTestId("cohorts-summary").textContent).toMatch(/12.*cases.*last 90 days.*9.*decided.*3.*pending/));
     expect(screen.getByTestId("insight-payer-approval-gap").textContent).toMatch(/aetna approves 80% vs uhc 50%/);
     expect(screen.getByText("aetna")).toBeTruthy();
     expect(screen.getByText("80%")).toBeTruthy();

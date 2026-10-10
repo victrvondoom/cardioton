@@ -76,7 +76,7 @@ def _observation(
 
 def benchmark_cases() -> list[BenchmarkCase]:
     """Return the versioned, synthetic Track 3 boundary-case benchmark."""
-    clean = {
+    clean: dict[str, Any] = {
         "floating_waste": NO,
         "foam": NO,
         "algae": NO,

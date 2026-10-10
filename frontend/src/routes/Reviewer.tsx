@@ -15,7 +15,7 @@ import {
   UserCheck,
   XCircle,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { PayerCell } from "../components/PayerCell";
@@ -23,6 +23,7 @@ import { api } from "../lib/api";
 import type { CaseListItem } from "../lib/api";
 import type { ReviewQueueItem, ReviewQueueReport } from "../lib/types";
 import { useLive } from "../lib/useLive";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 
 type Priority = "high" | "medium" | "low";
 type ReviewItem = ReviewQueueItem & { id: string };
@@ -287,44 +288,90 @@ export default function Reviewer() {
 // =============================================================================
 
 function HITLPausedPanel() {
-  const [paused, setPaused] = useState<CaseListItem[]>([]);
+  const [paused, setPaused] = useState<CaseListItem[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [resumingId, setResumingId] = useState<string | null>(null);
-  const [note, setNote] = useState("");
+  const [notes, setNotes] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [lastReview, setLastReview] = useState<{ caseId: string; message: string; warning: boolean } | null>(null);
+  const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
+  const loadSequence = useRef(0);
+  const resumeInFlight = useRef(false);
+  const hasDrafts = paused?.some((item) => notes[item.case_id]?.trim()) ?? false;
 
-  async function refresh() {
+  const refresh = useCallback(async () => {
+    const sequence = ++loadSequence.current;
+    setLoading(true);
     try {
       const r = await api.listCases({ status: "awaiting_review", limit: 50 });
-      setPaused(r.cases);
+      if (sequence !== loadSequence.current) return;
+      if (!Array.isArray(r.cases)) throw new Error("The service did not return an awaiting-review list.");
+      setPaused(r.cases); setError(null); setUpdatedAt(new Date());
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load paused cases");
+      if (sequence === loadSequence.current) setError(e instanceof Error ? e.message : "Failed to load paused cases");
     } finally {
-      setLoading(false);
+      if (sequence === loadSequence.current) setLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
     void refresh();
-  }, []);
+    return () => { loadSequence.current++; };
+  }, [refresh]);
+  useAutoRefresh(refresh, 30_000, resumingId === null && !hasDrafts);
 
   async function handleResume(caseId: string, verdict: "APPROVE" | "DENY" | "REFER") {
+    if (resumeInFlight.current) return;
+    resumeInFlight.current = true;
+    loadSequence.current++;
+    setLoading(false);
     setResumingId(caseId);
-    setError(null);
+    setActionError(null);
+    setLastReview(null);
     try {
-      const resumed = await api.resumeCase(caseId, { verdict, reviewer_note: note, continuation_mode: "inline" });
-      if (resumed.continuation?.error) throw new Error(resumed.continuation.error);
-      setNote("");
-      // Optimistic remove
-      setPaused((prev) => prev.filter((c) => c.case_id !== caseId));
+      const resumed = await api.resumeCase(caseId, { verdict, reviewer_note: notes[caseId] ?? "", continuation_mode: "inline" });
+      if (resumed.case_id !== caseId || resumed.verdict !== verdict || !resumed.status) {
+        throw new Error("The service response did not confirm this review. Check the full case before submitting again.");
+      }
+      // The human decision is committed before follow-up generation runs.
+      // A continuation failure must never invite a duplicate clinical verdict.
+      const followUp = resumed.continuation;
+      setLastReview({
+        caseId,
+        message: `Clinician ${verdict} recorded for ${caseId}. ${followUp?.error
+          ? `Follow-up generation failed: ${followUp.error}. Review the case for recovery options.`
+          : followUp?.queued
+            ? "Follow-up generation is queued."
+            : followUp?.completed
+              ? "Follow-up generation completed."
+              : "Review the full case for follow-up document status."}`,
+        warning: Boolean(followUp?.error),
+      });
+      setNotes((prev) => {
+        const next = { ...prev };
+        delete next[caseId];
+        return next;
+      });
+      // Remove only after the server confirms the recorded clinician verdict.
+      setPaused((prev) => prev?.filter((c) => c.case_id !== caseId) ?? null);
+      await refresh();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Resume failed");
+      setActionError(e instanceof Error ? e.message : "Review was not confirmed. Check the full case before submitting again.");
     } finally {
+      resumeInFlight.current = false;
       setResumingId(null);
     }
   }
 
-  if (loading) {
+  const actionNotice = <>
+    {lastReview && <div role="status" className={clsx("mb-3 rounded-xl border px-5 py-3 text-xs", lastReview.warning ? "border-accent-amber/30 bg-accent-amber/5 text-accent-amber" : "border-accent-green/30 bg-accent-green/5 text-ink-body")}>
+      {lastReview.message} <Link to={`/cases/${lastReview.caseId}`} className="underline text-accent-brand">Open case</Link>
+    </div>}
+    {actionError && <div role="alert" className="mb-3 rounded-xl border border-accent-red/30 bg-accent-red/5 px-5 py-3 text-xs text-accent-red">{actionError}</div>}
+  </>;
+
+  if (loading && paused === null) {
     return (
       <section className="mb-5 border-2 border-accent-amber/30 rounded-2xl bg-accent-amber/5 px-5 py-4 text-sm text-ink-muted">
         <Loader2 size={14} className="inline-block animate-spin mr-2" />
@@ -333,17 +380,27 @@ function HITLPausedPanel() {
     );
   }
 
+  if (paused === null || (paused.length === 0 && error)) {
+    return <>{actionNotice}<section className="mb-5 border border-accent-amber/30 rounded-2xl bg-accent-amber/5 px-5 py-4 text-sm text-ink-muted" role="status">
+      <AlertTriangle size={14} className="inline mr-2 text-accent-amber" />
+      Awaiting-review status is unknown. {error}
+      <button type="button" onClick={() => void refresh()} disabled={loading} className="ml-3 text-accent-brand underline disabled:opacity-40">Retry</button>
+    </section></>;
+  }
+
   if (paused.length === 0) {
     return (
-      <section className="mb-5 border border-accent-green/20 rounded-2xl bg-accent-green/5 px-5 py-4 text-sm text-ink-muted flex items-center gap-2">
+      <>{actionNotice}<section className="mb-5 border border-accent-green/20 rounded-2xl bg-accent-green/5 px-5 py-4 text-sm text-ink-muted flex flex-wrap items-center gap-2">
         <CheckCircle2 size={14} className="text-accent-green" />
         No cases currently awaiting clinician sign-off. Every AI DENY recommendation requires review.
-      </section>
+        {updatedAt && <span className="text-[10px]">Checked {updatedAt.toLocaleTimeString()}</span>}
+        <button type="button" onClick={() => void refresh()} disabled={loading} className="ml-auto text-xs text-accent-brand underline disabled:opacity-40">{loading ? "Refreshing…" : "Refresh"}</button>
+      </section></>
     );
   }
 
   return (
-    <section className="mb-5 border-2 border-accent-amber/40 rounded-2xl overflow-hidden">
+    <>{actionNotice}<section className="mb-5 border-2 border-accent-amber/40 rounded-2xl overflow-hidden">
       <div className="bg-accent-amber/15 px-5 py-3 border-b border-accent-amber/30 flex items-center gap-2">
         <Pause size={16} className="text-accent-amber" />
         <h2 className="text-sm font-semibold text-ink-primary">
@@ -352,7 +409,10 @@ function HITLPausedPanel() {
         <span className="ml-auto text-[10px] text-compact text-accent-amber">
           CMS-0057-F § IV.C · CA SB 1120
         </span>
+        <button type="button" onClick={() => void refresh()} disabled={loading || resumingId !== null} className="text-xs text-accent-brand underline disabled:opacity-40">{loading ? "Refreshing…" : "Refresh"}</button>
       </div>
+      {error && <p role="status" className="px-5 py-3 text-xs text-accent-amber">{error} · Showing the last successful awaiting-review list{updatedAt ? ` from ${updatedAt.toLocaleTimeString()}` : ""}.</p>}
+      {hasDrafts && <p className="px-5 py-2 text-xs text-ink-muted">Draft notes are kept locally. Automatic refresh waits while a note is being edited; Refresh only reloads the queue.</p>}
       <div className="divide-y divide-surface-border">
         {paused.map((c) => (
           <div key={c.case_id} className="px-5 py-4 bg-surface-raised">
@@ -371,19 +431,20 @@ function HITLPausedPanel() {
                 </p>
                 <Link to={`/cases/${c.case_id}`} className="inline-block mt-1 text-xs underline text-accent-brand">Review evidence and draft letters</Link>
               </div>
-              <PayerCell payer_id={(c.payer_id ?? "aetna") as "aetna" | "uhc" | "bcbs" | "anthem"} showLabel={false} />
+              {c.payer_id ? <PayerCell payer_id={c.payer_id} showLabel={false} /> : <span className="text-xs text-ink-muted">Payer unavailable</span>}
             </div>
             <div className="flex flex-wrap gap-2 items-center">
               <input
                 type="text"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
+                value={notes[c.case_id] ?? ""}
+                onChange={(e) => setNotes((prev) => ({ ...prev, [c.case_id]: e.target.value }))}
+                disabled={resumingId !== null}
                 placeholder="Reviewer note (becomes part of audit trail)"
                 className="flex-1 min-w-[240px] text-xs px-3 py-1.5 rounded-md border border-surface-border bg-surface-panel/60 text-ink-body placeholder:text-ink-faint focus:outline-none focus:border-accent-brand"
               />
               <button
                 type="button"
-                disabled={resumingId === c.case_id}
+                disabled={resumingId !== null}
                 onClick={() => handleResume(c.case_id, "APPROVE")}
                 className="text-xs font-medium px-3 py-1.5 rounded-md bg-accent-green/15 text-accent-green hover:bg-accent-green/25 disabled:opacity-50 transition-colors flex items-center gap-1"
               >
@@ -392,7 +453,7 @@ function HITLPausedPanel() {
               </button>
               <button
                 type="button"
-                disabled={resumingId === c.case_id}
+                disabled={resumingId !== null}
                 onClick={() => handleResume(c.case_id, "DENY")}
                 className="text-xs font-medium px-3 py-1.5 rounded-md bg-accent-red/15 text-accent-red hover:bg-accent-red/25 disabled:opacity-50 transition-colors flex items-center gap-1"
               >
@@ -401,7 +462,7 @@ function HITLPausedPanel() {
               </button>
               <button
                 type="button"
-                disabled={resumingId === c.case_id}
+                disabled={resumingId !== null}
                 onClick={() => handleResume(c.case_id, "REFER")}
                 className="text-xs font-medium px-3 py-1.5 rounded-md bg-accent-amber/15 text-accent-amber hover:bg-accent-amber/25 disabled:opacity-50 transition-colors flex items-center gap-1"
               >
@@ -415,11 +476,6 @@ function HITLPausedPanel() {
           </div>
         ))}
       </div>
-      {error && (
-        <div className="px-5 py-2 bg-accent-red/10 text-accent-red text-xs border-t border-accent-red/30">
-          {error}
-        </div>
-      )}
-    </section>
+    </section></>
   );
 }

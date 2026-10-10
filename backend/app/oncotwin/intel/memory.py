@@ -27,14 +27,16 @@ Recovery velocity is an analytics measure, not a clinical diagnosis.
 from __future__ import annotations
 
 import warnings
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.baseline import Baseline, adverse_z, carry_forward
 from app.oncotwin.engine.features import signal_matrix
 from app.oncotwin.engine.series import PatientSeries
 from app.oncotwin.engine.warning import RANK
+from app.oncotwin.records import ClinicalEvent
 from app.oncotwin.signals import MODEL_SIGNALS, SIGNALS
 
 PERTURBED_SD = 1.5  # per-signal peak (SD) that counts as a perturbation
@@ -42,7 +44,7 @@ PERTURBED_MSDI = 3.0  # multi-signal index peak that counts (e.g. three signals 
 MIN_OVERLAP_DAYS = 4
 
 
-def _trail3(x: np.ndarray) -> np.ndarray:
+def _trail3(x: FloatArray) -> FloatArray:
     out = np.full(len(x), np.nan)
     for i in range(len(x)):
         seg = x[max(0, i - 2) : i + 1]
@@ -52,16 +54,16 @@ def _trail3(x: np.ndarray) -> np.ndarray:
     return out
 
 
-def msdi(z: np.ndarray) -> np.ndarray:
+def msdi(z: FloatArray) -> FloatArray:
     """(T,) multi-signal deterioration index from (T, S) adverse z: the summed EXCESS adverse
     deviation beyond 1 SD across signals (NaN-aware, scaled to all S signals). Broad mild
     on-treatment shifts (~1 SD everywhere) stay near 0; marked concordant deviation scores high."""
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", RuntimeWarning)
-        return np.nanmean(np.clip(z - 1.0, 0.0, None), axis=1) * z.shape[1]
+        return cast(FloatArray, np.nanmean(np.clip(z - 1.0, 0.0, None), axis=1) * z.shape[1])
 
 
-def _recovery(curve: np.ndarray, threshold: float = PERTURBED_SD) -> dict[str, Any]:
+def _recovery(curve: FloatArray, threshold: float = PERTURBED_SD) -> dict[str, Any]:
     """Peak / half-recovery / velocity of a smoothed deviation curve indexed by day-of-cycle."""
     valid = ~np.isnan(curve)
     if not valid.any():
@@ -114,7 +116,7 @@ def _recovery(curve: np.ndarray, threshold: float = PERTURBED_SD) -> dict[str, A
     return out
 
 
-def _profile_corr(a: np.ndarray, b: np.ndarray) -> tuple[float | None, float | None, int]:
+def _profile_corr(a: FloatArray, b: FloatArray) -> tuple[float | None, float | None, int]:
     m = ~np.isnan(a) & ~np.isnan(b)
     n = int(m.sum())
     if n < 6 or np.std(a[m]) < 1e-9 or np.std(b[m]) < 1e-9:
@@ -122,7 +124,7 @@ def _profile_corr(a: np.ndarray, b: np.ndarray) -> tuple[float | None, float | N
     return float(np.corrcoef(a[m], b[m])[0, 1]), float(np.sqrt(np.mean((a[m] - b[m]) ** 2))), n
 
 
-def episodes(history: list[dict[str, Any]], t: int, events) -> list[dict[str, Any]]:
+def episodes(history: list[dict[str, Any]], t: int, events: list[ClinicalEvent]) -> list[dict[str, Any]]:
     """Previous and current deterioration episodes (WATCH-or-higher runs that reached EARLY WARNING)."""
     out, cur = [], None
     for h in [h for h in history if h["day"] <= t]:
@@ -174,7 +176,7 @@ def analyse(
     M = _trail3(msdi(Z))
     Zs = np.stack([_trail3(Z[:, i]) for i in range(Z.shape[1])], axis=1)
     doses = sorted(series.dose_days)
-    cycles = []
+    cycles: list[dict[str, Any]] = []
     for j, d0 in enumerate(doses):
         d1 = (doses[j + 1] - 1) if j + 1 < len(doses) else t
         seg = slice(d0 - 1, d1)
@@ -216,7 +218,7 @@ def analyse(
             a = Zs[cur["start_day"] - 1 : cur["start_day"] - 1 + n].ravel()
             b = Zs[prev["start_day"] - 1 : prev["start_day"] - 1 + n].ravel()
             r, rms, npairs = _profile_corr(a, b)
-            if r is None:
+            if r is None or rms is None:
                 continue
             pm = prev["msdi"]
             similarity.append(

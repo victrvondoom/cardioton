@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import io
 import math
+from typing import cast
 
 from PIL import Image, ImageFilter, ImageOps
 
@@ -45,7 +46,7 @@ def _stroke_variance(img: Image.Image) -> float:
     Higher CoV → more variable strokes → more likely handwritten.
     """
     threshold = 80
-    pixels = list(img.getdata())
+    pixels = cast(list[int], list(img.getdata()))
     dark = [p for p in pixels if p < threshold]
     if len(dark) < 100:
         return 0.0
@@ -64,7 +65,11 @@ def _quality_flags(img: Image.Image, raw_size: int) -> list[str]:
     if raw_size < 30_000:
         flags.append("small-file-size")
     # Crude tilt detection: histogram of horizontal projection
-    proj = [sum(img.crop((0, y, w, y + 1)).getdata()) for y in range(0, h, max(1, h // 50))]
+    gray = img.convert("L")
+    proj = [
+        sum(gray.crop((0, y, w, y + 1)).tobytes())
+        for y in range(0, h, max(1, h // 50))
+    ]
     if proj and (max(proj) - min(proj)) / max(1, max(proj)) > 0.95:
         flags.append("high-contrast-bands")  # likely uneven lighting / camera glare
     return flags

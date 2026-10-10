@@ -15,6 +15,10 @@ in-process copy remains authoritative for the running demo.
 
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.oncotwin.service import HistoryBundle
 import copy
 import hashlib
 import json
@@ -90,7 +94,7 @@ class AuditLedger:
                 "payload": payload,
                 "prev_hash": self.tip,
             }
-            entry = {**body, "hash": _entry_hash(body)}
+            entry: dict[str, Any] = {**body, "hash": _entry_hash(body)}
             self.entries.append(entry)
             self.tip = entry["hash"]
             return entry
@@ -167,7 +171,7 @@ class PatientState:
     injections: list[dict[str, Any]] = field(default_factory=list)
     history_cache: tuple[int, int, list[dict[str, Any]]] | None = None
     # (data_version, HistoryBundle) — extended incrementally as the twin clock advances
-    bundle_cache: tuple[int, Any] | None = None
+    bundle_cache: tuple[int, HistoryBundle] | None = None
     # (data_version, until_day, per-day Living Twin State list)
     states_cache: tuple[int, int, list[dict[str, Any]]] | None = None
     # (data_version, live_day, as_of_day) → intelligence payload (bounded)
@@ -215,10 +219,10 @@ class OrgTwinStore:
         self.predictions: list[
             dict[str, Any]
         ] = []  # MLOps prediction log (ground truth resolved later)
-        self.agent_runs: deque = deque(maxlen=200)  # twin-graph traces (per-agent status + latency)
+        self.agent_runs: deque[dict[str, Any]] = deque(maxlen=200)  # twin-graph traces (per-agent status + latency)
         self.llm_traces: list[dict[str, Any]] = []  # explanation-agent LLM calls (no patient text)
-        self.drift_cache: tuple[tuple, dict[str, Any]] | None = None
-        self.stress_runs: deque = deque(maxlen=20)
+        self.drift_cache: tuple[tuple[tuple[str, int, int], ...], dict[str, Any]] | None = None
+        self.stress_runs: deque[dict[str, Any]] = deque(maxlen=20)
         self.bus.subscribe("data", self._on_data_event)
         self._seed()
 

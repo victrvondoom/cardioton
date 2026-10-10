@@ -10,7 +10,7 @@ from typing import Any
 
 
 class FHIRValidationReport:
-    def __init__(self):
+    def __init__(self) -> None:
         self.tiers: dict[str, dict[str, Any]] = {
             "tier1_structural": {"name": "Tier 1: Prototype FHIR R4 Structural & Element Assertions", "passed": True, "checks": []},
             "tier2_profiles": {"name": "Tier 2: OAH StructureDefinition & Extension Constraints", "passed": True, "checks": []},
@@ -20,7 +20,7 @@ class FHIRValidationReport:
             "tier6_scenario_logic": {"name": "Tier 6: Scenario Invariants & Deterministic Formula Assertions", "passed": True, "checks": []},
         }
 
-    def add_check(self, tier_key: str, name: str, passed: bool, message: str):
+    def add_check(self, tier_key: str, name: str, passed: bool, message: str) -> None:
         self.tiers[tier_key]["checks"].append({
             "name": name,
             "passed": passed,
@@ -46,12 +46,12 @@ class FHIRValidationReport:
 
 
 class OAHValidator:
-    def __init__(self, conformance_dir: str):
+    def __init__(self, conformance_dir: str) -> None:
         self.conformance_dir = conformance_dir
-        self.codesystems: dict[str, set] = {}
+        self.codesystems: dict[str, set[str]] = {}
         self.load_conformance_resources()
 
-    def load_conformance_resources(self):
+    def load_conformance_resources(self) -> None:
         """Loads canonical CodeSystems to validate codes."""
         cs_dir = os.path.join(self.conformance_dir, "codesystems")
         if os.path.exists(cs_dir):
@@ -270,7 +270,7 @@ class OAHValidator:
 
         return report
 
-    def _check_codings_in_obj(self, obj: Any, report: FHIRValidationReport, tier_key: str):
+    def _check_codings_in_obj(self, obj: Any, report: FHIRValidationReport, tier_key: str) -> None:
         if isinstance(obj, dict):
             if "system" in obj and "code" in obj:
                 system = obj["system"]

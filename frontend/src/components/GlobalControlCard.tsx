@@ -1,9 +1,10 @@
 import { Activity, ArrowUpRight, Globe2, Layers3, Map as MapIcon, Radio, RotateCcw, Search, ShieldCheck } from "lucide-react";
-import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useMemo, useState } from "react";
+import { useLive } from "../lib/useLive";
 import { Link } from "react-router-dom";
 
 import { aqua } from "../aquahealth/api";
-import type { EcosystemStatus, MapPoint, MapView } from "../aquahealth/types";
+import type { EcosystemStatus, MapPoint } from "../aquahealth/types";
 
 const ObservationGlobe = lazy(() => import("../globe/ObservationGlobe"));
 const AquaHealthMapLibre = lazy(() => import("../globe/AquaHealthMapLibre"));
@@ -59,20 +60,15 @@ function Metric({ label, value, icon, accent = "text-ink-primary" }: { label: st
 
 /** Data-backed regional context card for the AquaHealth overview dashboard. */
 export default function GlobalControlCard({ region: controlledRegion, onRegionChange }: GlobalControlCardProps) {
-  const [data, setData] = useState<MapView | null>(null);
-  const [error, setError] = useState(false);
+  const mapFeed = useLive(aqua.map);
+  const data = mapFeed.data;
+  const error = mapFeed.error;
   const [internalRegion, setInternalRegion] = useState<RegionId>(controlledRegion ?? "all");
   const regionId = controlledRegion ?? internalRegion;
   const [query, setQuery] = useState("");
   const [macro, setMacro] = useState<MacroRegion | null>(null);
   const [view, setView] = useState<"map" | "globe">("map");
   const [selectedId, setSelectedId] = useState<string | null>(null);
-
-  useEffect(() => {
-    let active = true;
-    aqua.map().then((result) => { if (active) setData(result); }).catch(() => { if (active) setError(true); });
-    return () => { active = false; };
-  }, []);
 
   const region = REGIONS.find((item) => item.id === regionId) ?? REGIONS[0];
   const scopeLabel = macro ? ({ amer: "Americas", emea: "Europe, Middle East & Africa", apac: "Asia-Pacific" } as const)[macro] : region.label;
@@ -88,7 +84,7 @@ export default function GlobalControlCard({ region: controlledRegion, onRegionCh
     });
     const needle = query.trim().toLocaleLowerCase();
     return needle ? regional.filter((point) => `${point.waterbody_name} ${point.reference}`.toLocaleLowerCase().includes(needle)) : regional;
-  }, [data, region, regionId, query]);
+  }, [data, region, regionId, query, macro]);
   const globeMarkers = useMemo(() => regionPoints.map((point) => ({
     id: point.observation_id,
     latitude: point.latitude,
@@ -128,8 +124,8 @@ export default function GlobalControlCard({ region: controlledRegion, onRegionCh
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-accent-cyan">AquaHealth · Network overview</span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300/20 bg-emerald-300/[0.08] px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider text-emerald-200">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-300" />{data ? "Data loaded" : error ? "Unavailable" : "Connecting"}
+            <span className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider ${error ? "border-amber-300/20 bg-amber-300/[0.08] text-amber-200" : "border-emerald-300/20 bg-emerald-300/[0.08] text-emerald-200"}`}>
+              <span className={`h-1.5 w-1.5 rounded-full ${error ? "bg-amber-300" : "bg-emerald-300"}`} />{error ? data ? "Last known data" : "Unavailable" : mapFeed.loading ? data ? "Refreshing" : "Connecting" : "Data current"}
             </span>
           </div>
           <h2 id="global-control-title" className="mt-1.5 text-xl font-semibold tracking-tight text-white sm:text-2xl">Global Control</h2>
@@ -140,6 +136,8 @@ export default function GlobalControlCard({ region: controlledRegion, onRegionCh
           <button type="button" aria-pressed={view === "globe"} onClick={() => setView("globe")} className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs text-slate-300 transition-all hover:text-white aria-pressed:bg-white/10 aria-pressed:text-white aria-pressed:shadow-sm"><Globe2 size={13} aria-hidden="true" />3D Globe</button>
         </div>
       </div>
+
+      {error && <p role="status" className="mt-3 text-xs text-amber-200">Observation refresh unavailable: {error}{data ? ". Last successful observations remain visible." : ""}</p>}
 
       <div className="mt-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap gap-2" aria-label="Regional controls">

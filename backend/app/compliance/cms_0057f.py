@@ -243,7 +243,7 @@ async def case_scorecard(case_id: str, organization_id: str | None = None) -> Ca
                 # Org-level reporting; per-case answer is "is the case eligible to be reported?".
                 ok = decision is not None
                 ev = (
-                    f"Case is reportable: verdict={decision['verdict']}, citations={citations_count}, "
+                    f"Case is reportable: verdict={decision['verdict'] if decision is not None else 'unknown'}, citations={citations_count}, "
                     f"agent_runs={n_agent_runs}."
                     if ok
                     else "No decision yet; case not reportable."

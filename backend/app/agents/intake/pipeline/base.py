@@ -18,6 +18,8 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Any, ClassVar
 
+from app.agents.intake.engines.base import OCREngine
+
 
 @dataclass
 class IntakeContext:
@@ -55,7 +57,7 @@ class IntakeContext:
     short_circuit_reason: str | None = None
 
     # Engines chosen by the classify stage; the extract stage iterates
-    fallback_chain: list = field(default_factory=list)
+    fallback_chain: list[OCREngine] = field(default_factory=list)
 
 
 class IntakeStage(ABC):

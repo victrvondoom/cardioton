@@ -19,9 +19,10 @@ from __future__ import annotations
 import asyncio
 import time
 from collections import deque
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any
+from typing import Any, TypeVar
 
 import structlog
 
@@ -175,7 +176,10 @@ def breaker_snapshot() -> dict[str, Any]:
 # =============================================================================
 
 
-async def call_with_breaker(name: str, awaitable_factory):
+_Result = TypeVar("_Result")
+
+
+async def call_with_breaker(name: str, awaitable_factory: Callable[[], Awaitable[_Result]]) -> _Result:
     """Run an async function under the named breaker.
 
         result = await call_with_breaker(

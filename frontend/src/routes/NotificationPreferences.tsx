@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { authHeader } from "../lib/auth";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 
 interface PushConfig { enabled: boolean; public_key: string | null }
 const endpoint = "/api/v1/notifications/push";
@@ -30,6 +31,10 @@ export default function NotificationPreferences() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  useAutoRefresh(async () => {
+    try { setConfig(await api<PushConfig>("/config")); setError(""); }
+    catch (e) { setError(e instanceof Error ? e.message : "Could not refresh notification settings."); }
+  }, 60_000, !busy);
 
   useEffect(() => {
     let current = true;

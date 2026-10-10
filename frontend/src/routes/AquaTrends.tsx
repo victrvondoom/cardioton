@@ -7,7 +7,8 @@
  * the brief warns against.
  */
 import { TrendingUp } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
+import { useLive } from "../lib/useLive";
 import { Link } from "react-router-dom";
 
 import { aqua } from "../aquahealth/api";
@@ -18,43 +19,20 @@ import {
   StatusBadge,
   formatDate,
 } from "../aquahealth/panels";
-import type { TrendPoint, TrendsResponse, WaterbodyRow } from "../aquahealth/types";
+import type { TrendPoint } from "../aquahealth/types";
 
 const selectClass =
   "rounded-md border border-surface-border bg-surface-bg px-2.5 py-1.5 text-[11px] text-ink-body focus:border-accent-cyan focus:outline-none transition-colors";
 
 export default function AquaTrends() {
-  const [data, setData] = useState<TrendsResponse | null>(null);
-  const [waterbodies, setWaterbodies] = useState<WaterbodyRow[]>([]);
+  const waterbodyFeed = useLive(aqua.waterbodies);
+  const waterbodies = waterbodyFeed.data?.waterbodies ?? [];
   const [waterbodyId, setWaterbodyId] = useState("all");
   const [days, setDays] = useState(90);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  const load = useCallback(async () => {
-    setLoading(true);
-    try {
-      setError(null);
-      setData(await aqua.trends(waterbodyId === "all" ? undefined : waterbodyId, days));
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Failed to load trends");
-    } finally {
-      setLoading(false);
-    }
-  }, [waterbodyId, days]);
-
-  useEffect(() => {
-    void load();
-  }, [load]);
-
-  useEffect(() => {
-    aqua
-      .waterbodies()
-      .then((r) => setWaterbodies(r.waterbodies))
-      .catch(() => {
-        /* selector stays on "all" */
-      });
-  }, []);
+  const trends = useLive(() => aqua.trends(waterbodyId === "all" ? undefined : waterbodyId, days), [waterbodyId, days]);
+  const data = trends.data;
+  const error = trends.error;
+  const loading = trends.loading && !data;
 
   return (
     <div className="p-6 lg:p-8 max-w-[1400px]">
@@ -103,6 +81,7 @@ export default function AquaTrends() {
 
         {error && <ErrorNote message={error} />}
         {loading && <LoadingNote label="Loading trends…" />}
+        {trends.loading && data && <p role="status" className="text-xs text-ink-muted">Updating trends…</p>}
 
         {/* Insufficient data — the honest path */}
         {!loading && data && !data.sufficient && (

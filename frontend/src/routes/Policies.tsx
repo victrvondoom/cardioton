@@ -30,6 +30,7 @@ import { Link } from "react-router-dom";
 import { authHeader } from "../lib/auth";
 import { api } from "../lib/api";
 import { useLive } from "../lib/useLive";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 
 const PAYER_NAMES: Record<string, string> = {
   aetna: "Aetna",
@@ -108,8 +109,10 @@ export default function Policies() {
   const [policyBackend, setPolicyBackend] = useState<string>("local");
   const [policyBucket, setPolicyBucket] = useState<string | null>(null);
   const [busyKey, setBusyKey] = useState<string | null>(null);
+  const policyLoadSeq = useRef(0);
 
   const refreshPolicies = useCallback(async () => {
+    const sequence = ++policyLoadSeq.current;
     setPoliciesLoading(true);
     setPoliciesError(null);
     try {
@@ -121,20 +124,27 @@ export default function Policies() {
       if (!trashRes.ok) throw new Error(`trash list HTTP ${trashRes.status}`);
       const act: PolicyListResponse = await actRes.json();
       const tr: PolicyListResponse = await trashRes.json();
+      if (sequence !== policyLoadSeq.current) return;
       setMyPolicies(act.policies);
       setTrashed(tr.policies);
       setPolicyBackend(act.backend);
       setPolicyBucket(act.bucket);
     } catch (e) {
-      setPoliciesError(e instanceof Error ? e.message : String(e));
+      if (sequence === policyLoadSeq.current) setPoliciesError(e instanceof Error ? e.message : String(e));
     } finally {
-      setPoliciesLoading(false);
+      if (sequence === policyLoadSeq.current) setPoliciesLoading(false);
     }
   }, []);
 
-  useEffect(() => { void refreshPolicies(); }, [refreshPolicies]);
+  useEffect(() => {
+    void refreshPolicies();
+    return () => { policyLoadSeq.current++; };
+  }, [refreshPolicies]);
+  useAutoRefresh(refreshPolicies, 30_000, !uploadBusy && busyKey === null);
 
   const handleDelete = useCallback(async (key: string) => {
+    policyLoadSeq.current++;
+    setPoliciesLoading(false);
     setBusyKey(key);
     try {
       const res = await fetch(`/api/v1/policies/${encodeURIComponent(key)}`, {
@@ -151,6 +161,8 @@ export default function Policies() {
   }, [refreshPolicies]);
 
   const handleRestore = useCallback(async (key: string) => {
+    policyLoadSeq.current++;
+    setPoliciesLoading(false);
     setBusyKey(key);
     try {
       const res = await fetch(`/api/v1/policies/trash/${encodeURIComponent(key)}/restore`, {
@@ -168,6 +180,8 @@ export default function Policies() {
 
   const handlePurge = useCallback(async (key: string) => {
     if (!confirm(`Permanently delete ${key}? This cannot be undone.`)) return;
+    policyLoadSeq.current++;
+    setPoliciesLoading(false);
     setBusyKey(key);
     try {
       const res = await fetch(`/api/v1/policies/trash/${encodeURIComponent(key)}/purge`, {
@@ -199,6 +213,8 @@ export default function Policies() {
 
   const submitUpload = useCallback(async () => {
     if (!uploadFile) return;
+    policyLoadSeq.current++;
+    setPoliciesLoading(false);
     setUploadBusy(true);
     setUploadError(null);
     try {

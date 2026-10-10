@@ -577,7 +577,7 @@ def _install_signal_handlers() -> None:
     finish in-flight jobs and stop claiming new ones."""
     loop = asyncio.get_running_loop()
 
-    def _stop():
+    def _stop() -> None:
         log.info("worker.signal.shutdown")
         _shutdown.set()
 

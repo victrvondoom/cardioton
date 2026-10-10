@@ -16,7 +16,7 @@ the orchestrator routes directly to assemble + HITL.
 from __future__ import annotations
 
 import io
-from typing import ClassVar
+from typing import Any, ClassVar
 
 from PIL import Image
 
@@ -75,7 +75,7 @@ def _strip_exif(image_bytes: bytes, mime: str) -> bytes:
         # Re-encoding without `exif` argument drops all metadata.
         out = io.BytesIO()
         save_format = "PNG" if mime == "image/png" else "JPEG" if mime == "image/jpeg" else "WEBP"
-        save_kwargs: dict = {"format": save_format}
+        save_kwargs: dict[str, Any] = {"format": save_format}
         if save_format == "JPEG":
             save_kwargs["quality"] = 92
             save_kwargs["optimize"] = True

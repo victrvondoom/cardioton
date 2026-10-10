@@ -8,9 +8,10 @@
  *   • Quick links to the live introspection endpoints
  */
 import { Layers, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
+import { getJson } from "../lib/agentsApi";
 
-import { authHeader } from "../lib/auth";
 
 interface VersionInfo {
   clincase_version: string;
@@ -42,20 +43,26 @@ export function AboutModal({ open, onClose }: Props) {
   const [version, setVersion] = useState<VersionInfo | null>(null);
   const [caps, setCaps] = useState<CapabilitiesInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const sequence = useRef(0);
+  const load = useCallback(async () => {
+    const generation = ++sequence.current;
+    try {
+      const [v, c] = await Promise.all([getJson<VersionInfo>("/api/v1/version"), getJson<CapabilitiesInfo>("/api/v1/capabilities")]);
+      if (generation !== sequence.current) return;
+      setVersion(v);
+      setCaps(c);
+      setError(null);
+    } catch (error) {
+      if (generation === sequence.current) setError(error instanceof Error ? error.message : String(error));
+    }
+  }, []);
 
   useEffect(() => {
     if (!open) return;
-    Promise.all([
-      fetch("/api/v1/version", { headers: authHeader() }).then((r) => r.json()),
-      fetch("/api/v1/capabilities", { headers: authHeader() }).then((r) => r.json()),
-    ])
-      .then(([v, c]) => {
-        setVersion(v);
-        setCaps(c);
-        setError(null);
-      })
-      .catch((e) => setError(String(e)));
-  }, [open]);
+    void load();
+    return () => { sequence.current++; };
+  }, [open, load]);
+  useAutoRefresh(load, 30_000, open);
 
   if (!open) return null;
 
@@ -77,7 +84,7 @@ export function AboutModal({ open, onClose }: Props) {
           <div className="flex items-center gap-2">
             <Layers size={20} className="text-accent-brand" />
             <h2 id="about-modal-title" className="text-lg font-semibold text-ink-primary">
-              About ClinCase
+              About CARDIOTON
             </h2>
           </div>
           <button
@@ -95,6 +102,7 @@ export function AboutModal({ open, onClose }: Props) {
             Could not load build/version data: {error}
           </div>
         )}
+        {!version && !caps && !error && <p role="status" className="mb-4 text-sm text-ink-muted">Loading deployment details…</p>}
 
         {version && (
           <section className="mb-5">
@@ -163,7 +171,7 @@ export function AboutModal({ open, onClose }: Props) {
         )}
 
         <div className="mt-6 pt-4 border-t border-surface-border text-[11px] text-ink-faint">
-          ClinCase — Built by vsrupeshkumar · Proprietary · All rights reserved
+          CARDIOTON — Built by vsrupeshkumar · Proprietary · All rights reserved
         </div>
       </div>
     </div>

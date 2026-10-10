@@ -18,11 +18,9 @@ import {
   Cpu,
   TrendingUp,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useLive } from "../lib/useLive";
 
 import { api } from "../lib/api";
-import type { CaseROI } from "../lib/api";
-import type { AgentRun } from "../lib/types";
 
 interface Props {
   caseId: string;
@@ -40,20 +38,13 @@ export function runCostUsd(r: { model_id: string | null; input_tokens: number | 
 }
 
 export function CaseEconomicsStrip({ caseId, refreshKey = 0 }: Props) {
-  const [runs, setRuns] = useState<AgentRun[] | null>(null);
-  const [roi, setRoi] = useState<CaseROI | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const audit = useLive(async () => ({ caseId, ...(await api.getAudit(caseId)) }), [caseId, refreshKey]);
+  const value = useLive(() => api.getCaseValue(caseId), [caseId, refreshKey]);
+  const runs = audit.data?.caseId === caseId ? audit.data.agent_runs : null;
+  const roi = value.data?.case_id === caseId ? value.data : null;
+  const error = audit.error || value.error;
 
-  useEffect(() => {
-    api
-      .getAudit(caseId)
-      .then((d) => setRuns(d.agent_runs))
-      .catch((e) => setError(String(e)));
-    // the manual baseline + price table come from the backend so every page quotes the same numbers
-    api.getCaseValue(caseId).then(setRoi).catch(() => setRoi(null));
-  }, [caseId, refreshKey]);
-
-  if (error || !runs || runs.length === 0) return null;
+  if (!runs || runs.length === 0) return error ? <p role="status" className="rounded-lg border border-accent-amber/30 p-3 text-xs text-ink-muted">Case economics unavailable: {error}</p> : null;
   const pricing = roi?.token_pricing_usd_per_m;
 
   const totalIn  = runs.reduce((s, r) => s + (r.input_tokens  ?? 0), 0);
@@ -79,6 +70,7 @@ export function CaseEconomicsStrip({ caseId, refreshKey = 0 }: Props) {
           live agent_runs
         </span>
       </div>
+      {error && <p role="status" className="px-5 py-2 text-xs text-accent-amber">Refresh unavailable: {error}. Showing the last successful telemetry.</p>}
 
       <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-surface-border">
         <Cell

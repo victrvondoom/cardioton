@@ -89,12 +89,14 @@ async def _fetch_discovery(discovery_url: str) -> dict[str, Any]:
     if discovery_url in _discovery_cache:
         return _discovery_cache[discovery_url]
     try:
-        import httpx  # type: ignore[import-not-found]
+        import httpx
 
         async with httpx.AsyncClient(timeout=10.0) as client:
             resp = await client.get(discovery_url)
             resp.raise_for_status()
             doc = resp.json()
+            if not isinstance(doc, dict):
+                raise ValueError("OIDC discovery must be an object")
             _discovery_cache[discovery_url] = doc
             return doc
     except Exception as e:  # noqa: BLE001
@@ -191,7 +193,7 @@ async def exchange_code(*, code: str, state: str) -> OIDCExchangeResult:
     token_endpoint = discovery["token_endpoint"]
 
     try:
-        import httpx  # type: ignore[import-not-found]
+        import httpx
 
         async with httpx.AsyncClient(timeout=10.0) as client:
             resp = await client.post(

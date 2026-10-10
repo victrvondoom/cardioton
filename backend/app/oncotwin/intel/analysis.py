@@ -30,6 +30,8 @@ from app.oncotwin.intel import (
 )
 from app.oncotwin.intel.state import transitions
 from app.oncotwin.ml.horizon import load_horizon_model
+from app.oncotwin.ml.model import DeteriorationModel
+from app.oncotwin.records import PatientRecord
 from app.oncotwin.service import TwinComputation, compute_twin, provenance
 from app.oncotwin.signals import MODEL_SIGNALS, SIGNALS
 
@@ -45,23 +47,26 @@ ASSUMPTIONS = [
 
 
 def stage_quality(c: TwinComputation) -> dict[str, Any]:
-    cs = consistency.consistency(c.record, c.series)
     s = c.series
+    assert s is not None
+    cs = consistency.consistency(c.record, s)
     c.intel["consistency_record"] = cs
-    c.intel["quality"] = {
+    quality: dict[str, Any] = {
         "completeness_7d": round(
             sum(s.quality[k].completeness_7d for k in MODEL_SIGNALS) / len(MODEL_SIGNALS), 3
         ),
         "flags": [f.to_dict() for f in s.flags if f.kind != "gap" or f.severity != "info"],
         "consistency_status": cs["status"],
     }
-    return c.intel["quality"]
+    c.intel["quality"] = quality
+    return quality
 
 
 def stage_temporal(
     c: TwinComputation, snapshots: list[dict[str, Any]], facts: list[dict[str, Any]]
 ) -> dict[str, Any]:
     t = c.as_of_day
+    assert c.series is not None and c.baseline is not None and c.latent is not None
     cp = changepoint.detect(c.series, c.baseline)
     dyn = trajectory.dynamics(snapshots, t, c.model.thresholds)
     mem = memory.analyse(c.series, c.baseline, [h for h in snapshots if h["day"] <= t])
@@ -82,6 +87,7 @@ def stage_intelligence(
 ) -> dict[str, Any]:
     t = c.as_of_day
     hist = [h for h in snapshots if h["day"] <= t]
+    assert c.series is not None and c.baseline is not None and c.ctx is not None and c.F is not None
     co = correlation.analyse(
         c.series, c.baseline, hist, c.prediction["contributors"], c.intel["change_points"]
     )
@@ -194,12 +200,12 @@ async def stage_context(c: TwinComputation, organization_id: str) -> dict[str, A
 
 
 def compute(
-    record,
+    record: PatientRecord,
     snapshots: list[dict[str, Any]],
     facts: list[dict[str, Any]],
     states: list[dict[str, Any]],
     day: int,
-    model,
+    model: DeteriorationModel,
     *,
     drift: dict[str, Any] | None = None,
     alerts: list[dict[str, Any]] | None = None,

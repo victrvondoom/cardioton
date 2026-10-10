@@ -10,9 +10,11 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field
 from datetime import datetime
+from typing import Any
 
 import numpy as np
 
+from app.oncotwin._typing import BoolArray, FloatArray
 from app.oncotwin.engine.quality import QualityFlag, SignalQuality, assess
 from app.oncotwin.outcome import POST_DISCHARGE_EXCLUSION_DAYS
 from app.oncotwin.records import ClinicalEvent, PatientProfile, PatientRecord
@@ -26,7 +28,7 @@ INTERVENTION_KINDS = ("antibiotic", "hydration", "gcsf_dose", "careplan", "clini
 class PatientSeries:
     profile: PatientProfile
     as_of_day: int
-    values: dict[str, np.ndarray]  # linear units, NaN = missing; index = day-1
+    values: dict[str, FloatArray]  # linear units, NaN = missing; index = day-1
     obs_ids: dict[str, list[str | None]]
     labs: dict[str, list[tuple[int, float, str]]]
     flags: list[QualityFlag]
@@ -34,13 +36,13 @@ class PatientSeries:
     dose_days: dict[int, float]
     gcsf_days: list[int]
     adherence: dict[int, tuple[int, int]]  # day -> (taken, scheduled)
-    admissions: list[dict]
+    admissions: list[dict[str, Any]]
     interventions: list[ClinicalEvent]
     events: list[ClinicalEvent]
     regimen: Regimen
     planned_dose_days: list[int]
     reference_time: datetime | None = None
-    _cache: dict = field(default_factory=dict, repr=False)
+    _cache: dict[tuple[str, str], FloatArray] = field(default_factory=dict, repr=False)
 
     @property
     def n(self) -> int:
@@ -61,7 +63,7 @@ class PatientSeries:
             return min(self.as_of_day, 14)
         return max(1, first - 1)
 
-    def transformed(self, key: str) -> np.ndarray:
+    def transformed(self, key: str) -> FloatArray:
         cache_key = ("t", key)
         if cache_key not in self._cache:
             v = self.values[key]
@@ -70,7 +72,7 @@ class PatientSeries:
             )
         return self._cache[cache_key]
 
-    def days_since_dose(self) -> np.ndarray:
+    def days_since_dose(self) -> FloatArray:
         """Per day: days since the most recent chemo administration (NaN before C1)."""
         out = np.full(self.n, np.nan)
         last = None
@@ -81,7 +83,7 @@ class PatientSeries:
                 out[day - 1] = day - last
         return out
 
-    def gcsf_since_last_dose(self) -> np.ndarray:
+    def gcsf_since_last_dose(self) -> FloatArray:
         """Per day: 1 if a G-CSF dose was given since the last chemo administration."""
         out = np.zeros(self.n)
         last_dose = None
@@ -96,7 +98,7 @@ class PatientSeries:
             out[day - 1] = 1.0 if given else 0.0
         return out
 
-    def adherence_7d(self) -> tuple[np.ndarray, np.ndarray]:
+    def adherence_7d(self) -> tuple[FloatArray, FloatArray]:
         """Per day: (7-day supportive-med adherence fraction, scheduled-dose count)."""
         frac = np.ones(self.n)
         count = np.zeros(self.n)
@@ -119,7 +121,7 @@ class PatientSeries:
                 best = (d, v, oid)
         return (best[1], best[0], best[2]) if best else (None, None, None)
 
-    def acute_care_mask(self) -> np.ndarray:
+    def acute_care_mask(self) -> BoolArray:
         """True on days the patient is in, or just out of, visible acute care."""
         mask = np.zeros(self.n, dtype=bool)
         for adm in self.admissions:
@@ -134,7 +136,7 @@ class PatientSeries:
                 mask[d - 1] = True
         return mask
 
-    def in_acute_care_now(self) -> dict | None:
+    def in_acute_care_now(self) -> dict[str, Any] | None:
         for adm in self.admissions:
             end = adm.get("discharge_day")
             if adm["day"] <= self.as_of_day and (end is None or end > self.as_of_day):
@@ -152,7 +154,7 @@ def build_series(
     usable, flags, quality = assess(
         obs, as_of_day, reference_time=reference_time, signals=DAILY_SIGNALS
     )
-    values: dict[str, np.ndarray] = {}
+    values: dict[str, FloatArray] = {}
     obs_ids: dict[str, list[str | None]] = {}
     for key in DAILY_SIGNALS:
         arr = np.full(as_of_day, np.nan)
@@ -175,7 +177,7 @@ def build_series(
     dose_days: dict[int, float] = {}
     gcsf_days: list[int] = []
     adherence: dict[int, tuple[int, int]] = {}
-    admissions: list[dict] = []
+    admissions: list[dict[str, Any]] = []
     interventions: list[ClinicalEvent] = []
     for e in events:
         if e.kind == "chemo_dose" and e.detail.get("status", "completed") == "completed":

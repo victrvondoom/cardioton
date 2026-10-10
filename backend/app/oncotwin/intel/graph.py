@@ -51,8 +51,8 @@ def build(
     edges: list[dict[str, Any]] = []
 
     def node(
-        nid, group, label, status, *, severity="normal", basis="fact", evidence=None, detail=None
-    ):
+        nid: str, group: str, label: str, status: str, *, severity: str = "normal", basis: str = "fact", evidence: list[dict[str, Any]] | None = None, detail: dict[str, Any] | None = None
+    ) -> None:
         nodes.append(
             {
                 "id": nid,
@@ -66,7 +66,7 @@ def build(
             }
         )
 
-    def edge(a, b, kind, label, *, weight=None, evidence=None):
+    def edge(a: str, b: str, kind: str, label: str, *, weight: float | None = None, evidence: list[dict[str, Any]] | None = None) -> None:
         edges.append(
             {
                 "source": a,

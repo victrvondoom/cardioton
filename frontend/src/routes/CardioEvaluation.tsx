@@ -3,12 +3,12 @@
  * (backend/app/cardiotwin/artifacts/evaluation.json); nothing is hand-entered.
  */
 import { ArrowLeft } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useLive } from "../lib/useLive";
 import { Link } from "react-router-dom";
 
 import { cardio } from "../cardiotwin/api";
 import { CARD, SafetyBanner } from "../cardiotwin/panels";
-import { TARGETS, type EvaluationReport, type TargetId } from "../cardiotwin/types";
+import { TARGETS, type TargetId } from "../cardiotwin/types";
 
 const f = (v: number | null | undefined, d = 3) => (v == null ? "—" : v.toFixed(d));
 const ci = (c?: number[]) => (c ? `${f(c[0])}–${f(c[1])}` : "—");
@@ -42,11 +42,9 @@ function LineChart({ series, label, diagonal = true }: { series: { name: string;
 }
 
 export default function CardioEvaluation() {
-  const [r, setR] = useState<EvaluationReport | null>(null);
-  const [err, setErr] = useState<string | null>(null);
-  useEffect(() => {
-    cardio.evaluation().then(setR).catch((e) => setErr((e as Error).message));
-  }, []);
+  const evaluation = useLive(cardio.evaluation);
+  const r = evaluation.data;
+  const err = evaluation.error;
 
   return (
     <div className="px-4 sm:px-6 py-6 space-y-4 max-w-[1300px]">

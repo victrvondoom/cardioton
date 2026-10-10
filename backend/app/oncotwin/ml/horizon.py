@@ -36,6 +36,7 @@ from typing import Any
 import numpy as np
 
 from app.oncotwin import ONCOTWIN_VERSION
+from app.oncotwin._typing import FloatArray, IntArray
 from app.oncotwin.engine.features import FEATURE_NAMES
 from app.oncotwin.ml.logistic import (
     LogisticModel,
@@ -47,6 +48,7 @@ from app.oncotwin.ml.logistic import (
     log_loss,
 )
 from app.oncotwin.outcome import OUTCOME_ID
+from app.oncotwin.research.dataset import CohortPatient
 
 ARTIFACT_PATH = Path(__file__).resolve().parent / "artifacts" / "horizon_survival_v1.json"
 MODEL_ID = "oncotwin-horizon-survival"
@@ -62,14 +64,14 @@ DATA_CADENCE_HOURS = 24
 DISPLAY = {1: "24 h", 3: "72 h", 7: "7 days"}
 
 
-def _lag_row(k: int) -> np.ndarray:
+def _lag_row(k: int) -> FloatArray:
     v = np.zeros(len(LAG_NAMES))
     if k >= 2:
         v[k - 2] = 1.0
     return v
 
 
-def person_period(patients) -> tuple[np.ndarray, np.ndarray]:
+def person_period(patients: list[CohortPatient]) -> tuple[FloatArray, FloatArray]:
     """Expand eligible patient-days into (day × lag) at-risk rows; stop at the onset (censoring-aware)."""
     X, y = [], []
     for p in patients:
@@ -93,8 +95,8 @@ def person_period(patients) -> tuple[np.ndarray, np.ndarray]:
 
 
 def _cumulative(
-    intercept: float, coef: np.ndarray, Xf: np.ndarray, mean: np.ndarray, std: np.ndarray
-) -> np.ndarray:
+    intercept: float, coef: FloatArray, Xf: FloatArray, mean: FloatArray, std: FloatArray
+) -> FloatArray:
     """(N, 7) cumulative incidence for raw feature rows `Xf`."""
     out = np.zeros((len(Xf), MAX_LAG))
     surv = np.ones(len(Xf))
@@ -106,7 +108,7 @@ def _cumulative(
     return out
 
 
-def horizon_labels(patients, h: int) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+def horizon_labels(patients: list[CohortPatient], h: int) -> tuple[FloatArray, FloatArray, IntArray]:
     """Eligible rows, labels (onset within h days) and patient index for horizon h."""
     X, y, pid = [], [], []
     for i, p in enumerate(patients):
@@ -127,8 +129,8 @@ def horizon_labels(patients, h: int) -> tuple[np.ndarray, np.ndarray, np.ndarray
 
 
 def bootstrap_auroc_ci(
-    y: np.ndarray, s: np.ndarray, pid: np.ndarray, reps: int = 200, seed: int = 7
-) -> list:
+    y: FloatArray, s: FloatArray, pid: IntArray, reps: int = 200, seed: int = 7
+) -> list[float | None]:
     """95 % CI for AUROC by resampling PATIENTS (days of one patient are not independent)."""
     rng = np.random.default_rng(seed)
     ids = np.unique(pid)
@@ -156,7 +158,7 @@ def train(n: int = 1000, *, write: bool = True, verbose: bool = True) -> dict[st
     Xtr, ytr = person_period(tr)
     Xva, yva = person_period(va)
     scores = {l2: log_loss(yva, fit_logistic(Xtr, ytr, l2).predict_proba(Xva)) for l2 in L2_GRID}
-    best = min(scores, key=scores.get)
+    best = min(scores, key=lambda l2: scores[l2])
     model = fit_logistic(Xtr, ytr, best)
     rng = np.random.default_rng(cohort.seed + 11)
     boots = []
@@ -180,7 +182,7 @@ def train(n: int = 1000, *, write: bool = True, verbose: bool = True) -> dict[st
     for h in EVAL_HORIZONS:
         Xh, yh, pid = horizon_labels(te, h)
         cum = _cumulative(model.intercept, model.coef, Xh, model.mean, model.std)[:, h - 1]
-        m = {
+        m: dict[str, Any] = {
             "horizon_days": h,
             "n_patient_days": int(len(yh)),
             "n_positive": int(yh.sum()),
@@ -297,7 +299,7 @@ class HorizonModel:
             "integrity_verified": self.integrity_verified,
         }
 
-    def curve(self, x: np.ndarray) -> dict[str, Any]:
+    def curve(self, x: FloatArray) -> dict[str, Any]:
         x = np.atleast_2d(np.asarray(x, dtype=float))
         point = _cumulative(self.lr.intercept, self.lr.coef, x, self.lr.mean, self.lr.std)[0]
         draws = np.stack(
@@ -310,7 +312,7 @@ class HorizonModel:
             "p90": [round(float(v), 4) for v in np.percentile(draws, 90, axis=0)],
         }
 
-    def horizons(self, x: np.ndarray, primary_7d: float | None = None) -> dict[str, Any]:
+    def horizons(self, x: FloatArray, primary_7d: float | None = None) -> dict[str, Any]:
         c = self.curve(x)
         sup = self.artifact["support"]
         rows = [

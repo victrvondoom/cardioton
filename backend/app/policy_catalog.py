@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 from app.db import db
+from app.json_contract import json_object, json_objects
 
 _DATA = Path(__file__).resolve().parent / "data"
 #: case statuses that are still open (a policy change can still affect them)
@@ -22,12 +23,12 @@ OPEN_STATUSES = ("pending", "running", "awaiting_review", "referred")
 
 @lru_cache(maxsize=1)
 def _corpus() -> list[dict[str, Any]]:
-    return json.loads((_DATA / "policies.json").read_text(encoding="utf-8"))["policies"]
+    return json_objects(json_object(json.loads((_DATA / "policies.json").read_text(encoding="utf-8")), "Policy corpus")["policies"], "Policies")
 
 
 @lru_cache(maxsize=1)
 def _snapshot() -> dict[str, Any]:
-    return json.loads((_DATA / "oncology" / "payer_policy_diffs.json").read_text(encoding="utf-8"))
+    return json_object(json.loads((_DATA / "oncology" / "payer_policy_diffs.json").read_text(encoding="utf-8")), "Policy snapshot")
 
 
 def payer_id_from_name(name: str) -> str:

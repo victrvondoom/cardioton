@@ -10,6 +10,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import { useAuth } from "../components/AuthContext";
 import { useTheme } from "../lib/theme";
+import { SpatialBackdrop } from "../components/SpatialBackdrop";
 
 const DEMO_ACCOUNTS = [
   { email: "admin@clincase.health", role: "Admin", desc: "Full access" },
@@ -82,7 +83,8 @@ export default function Login() {
   }
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden bg-gradient-to-br from-surface-bg via-surface-bg to-accent-brand/[0.04]">
+    <div className="spatial-auth relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden bg-gradient-to-br from-surface-bg via-surface-bg to-accent-brand/[0.04]">
+      <SpatialBackdrop />
       {/* ---- Theme toggle ---- */}
       <button
         type="button"
@@ -121,7 +123,7 @@ export default function Login() {
         <Link
           to="/"
           className="flex flex-col items-center gap-3 mb-7 group"
-          aria-label="CLINI-CASE home"
+          aria-label="CARDIOTON home"
         >
           <div className="relative">
             {/* Two-layer pulsing halo — unmissable */}
@@ -135,7 +137,7 @@ export default function Login() {
             />
             <img
               src="/clincase-mark.svg"
-              alt="CLINI-CASE"
+              alt="CARDIOTON"
               className="relative w-24 h-24 object-contain drop-shadow-[0_12px_40px_rgba(18,18,18,0.5)] group-hover:scale-110 transition-transform duration-300"
               width={96}
               height={96}
@@ -143,7 +145,7 @@ export default function Login() {
           </div>
           <div className="text-center">
             <div className="text-display-primary text-2xl tracking-tight text-ink-primary">
-              CLINI-CASE
+              CARDIOTON
             </div>
             <div className="text-compact text-[11px] text-ink-muted">
               One Health Interoperability Gateway
@@ -152,7 +154,7 @@ export default function Login() {
         </Link>
 
         {/* ---- Card ---- */}
-        <div className="relative bg-surface-raised/95 backdrop-blur-sm border border-surface-border rounded-2xl p-7 shadow-2xl shadow-accent-brand/5">
+        <div className="spatial-card relative bg-surface-raised/95 backdrop-blur-sm border border-surface-border rounded-2xl p-7 shadow-2xl shadow-accent-brand/5">
           <h1 className="text-display-secondary text-xl text-ink-primary mb-1">
             Sign in to your workspace
           </h1>

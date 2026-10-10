@@ -35,9 +35,11 @@ import numpy as np
 
 from app.oncotwin.engine.series import build_series
 from app.oncotwin.engine.simulate import DISPLAY_SIGNALS
+from app.oncotwin.ml.model import DeteriorationModel
 from app.oncotwin.records import PatientRecord
 from app.oncotwin.service import compute_twin
 from app.oncotwin.signals import SIGNALS
+from app.oncotwin.simulator.patients import SimScript, SimulationResult
 
 DISCLAIMER = "Simulation — not a clinical prediction or treatment recommendation."
 INTERVENTION_KINDS = ("antibiotic", "hydration", "gcsf_dose", "careplan", "clinician_note")
@@ -65,7 +67,7 @@ def _outcomes(record: PatientRecord, lo: int, hi: int) -> list[dict[str, Any]]:
     ]
 
 
-def synthetic_truth(script, anchor_day: int) -> dict[str, Any]:
+def synthetic_truth(script: SimScript, anchor_day: int) -> dict[str, Any]:
     """Re-run the synthetic generator without clinician interventions after the anchor (validation only)."""
     from app.oncotwin.simulator.patients import simulate
 
@@ -75,7 +77,7 @@ def synthetic_truth(script, anchor_day: int) -> dict[str, Any]:
     cf_script.interventions = [(d, k) for d, k in cf_script.interventions if d <= anchor_day]
     cf = simulate(cf_script) if removed else factual
 
-    def first_after(sim):
+    def first_after(sim: SimulationResult) -> dict[str, Any] | None:
         return next(
             (
                 {"day": o["day"], "condition": o["condition"]}
@@ -108,11 +110,11 @@ def counterfactual(
     history: list[dict[str, Any]],
     anchor_day: int,
     live_day: int,
-    model,
+    model: DeteriorationModel,
     *,
     scenario: str = "current",
     custom: dict[str, Any] | None = None,
-    script=None,
+    script: SimScript | None = None,
 ) -> dict[str, Any]:
     first_dose = min((e.day for e in record.events if e.kind == "chemo_dose"), default=1)
     anchor = int(max(first_dose + 1, min(anchor_day, live_day - 1)))
@@ -125,6 +127,7 @@ def counterfactual(
         custom_scenario=custom,
     )
     key = "custom" if custom is not None else scenario
+    assert comp.simulation is not None
     sim = comp.simulation["scenarios"][key]
     days = [d for d in sim["days"] if d <= live_day]
     obs_hist = {h["day"]: h for h in history if anchor < h["day"] <= live_day}

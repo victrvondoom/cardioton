@@ -21,17 +21,21 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from functools import lru_cache
 from typing import Any
 
 import numpy as np
 
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.baseline import adverse_z, carry_forward
 from app.oncotwin.engine.features import FEATURE_NAMES, IDX, signal_matrix
+from app.oncotwin.engine.series import PatientSeries
 from app.oncotwin.intel.memory import msdi
 from app.oncotwin.mlops.versions import feature_version
 from app.oncotwin.records import day_to_iso
+from app.oncotwin.service import TwinComputation
 from app.oncotwin.signals import LAB_SIGNALS, MODEL_SIGNALS, SIGNALS
 
 
@@ -294,24 +298,25 @@ def registry() -> dict[str, Any]:
     }
 
 
-def _slope(y: np.ndarray) -> float | None:
+def _slope(y: FloatArray) -> float | None:
     m = ~np.isnan(y)
     return None if m.sum() < 3 else round(float(np.polyfit(np.arange(len(y))[m], y[m], 1)[0]), 5)
 
 
-def _ids(series, keys, lo: int, hi: int) -> list[str]:
+def _ids(series: PatientSeries, keys: Sequence[str], lo: int, hi: int) -> list[str]:
     return [
         i for k in keys if k in series.obs_ids for i in series.obs_ids[k][max(0, lo - 1) : hi] if i
     ]
 
 
-def _mean(a: np.ndarray) -> float | None:
+def _mean(a: FloatArray) -> float | None:
     return float(np.nanmean(a)) if np.any(~np.isnan(a)) else None
 
 
-def materialize(comp) -> dict[str, Any]:
+def materialize(comp: TwinComputation) -> dict[str, Any]:
     """Feature rows for one patient-day from a TwinComputation (state + trajectory stages already run)."""
     s, b, t = comp.series, comp.baseline, comp.as_of_day
+    assert s is not None and b is not None and comp.F is not None
     x = comp.F[t - 1]
     reg = registry()
     lab_ids = {k: [oid for d, _, oid in s.labs.get(k, []) if d <= t] for k in LAB_SIGNALS}
@@ -345,8 +350,9 @@ def materialize(comp) -> dict[str, Any]:
 
     base = comp.state["baseline_state"]["signals"]
 
-    def med(k: str):
-        return (base.get(k) or {}).get("median")
+    def med(k: str) -> float | None:
+        value = (base.get(k) or {}).get("median")
+        return float(value) if value is not None else None
 
     M = msdi(carry_forward(adverse_z(signal_matrix(s), b), 1)[0])
     hrv_sl = _slope(s.values["hrv_sdnn"][max(0, t - 7) : t])
@@ -368,23 +374,24 @@ def materialize(comp) -> dict[str, Any]:
             ip = int(np.argmax(seg))
             if ip < len(seg) - 1:
                 rec_vel = float((seg[ip] - seg[-1]) / (len(seg) - 1 - ip))
+    hrv_base, sleep_base, steps_base, temp_base = (med(k) for k in ("hrv_sdnn", "sleep_hours", "steps", "temperature"))
     analytic = {
         "hrv_trend_7d_pct_per_day": None
-        if hrv_sl is None or not med("hrv_sdnn")
-        else 100 * hrv_sl / med("hrv_sdnn"),
+        if hrv_sl is None or not hrv_base
+        else 100 * hrv_sl / hrv_base,
         "resting_hr_trend_3d": _slope(s.values["resting_hr"][max(0, t - 3) : t]),
         "sleep_debt_7d": (
-            float(np.nansum(np.maximum(0.0, med("sleep_hours") - sleep7)))
-            if med("sleep_hours") is not None and np.any(~np.isnan(sleep7))
+            float(np.nansum(np.maximum(0.0, sleep_base - sleep7)))
+            if sleep_base is not None and np.any(~np.isnan(sleep7))
             else None
         ),
         "activity_deviation_pct": None
-        if steps3 is None or not med("steps")
-        else 100 * (steps3 - med("steps")) / med("steps"),
+        if steps3 is None or not steps_base
+        else 100 * (steps3 - steps_base) / steps_base,
         "weight_velocity_7d": _slope(s.values["weight"][max(0, t - 7) : t]),
         "temperature_deviation": None
-        if temp3 is None or med("temperature") is None
-        else temp3 - med("temperature"),
+        if temp3 is None or temp_base is None
+        else temp3 - temp_base,
         "symptom_acceleration": None if s_now is None or s_prev is None else s_now - s_prev,
         "anc_velocity": (
             (np.log(anc[-1][1]) - np.log(anc[-2][1])) / max(1, anc[-1][0] - anc[-2][0])

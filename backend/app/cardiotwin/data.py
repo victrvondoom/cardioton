@@ -13,7 +13,7 @@ import sys
 import urllib.request
 import zipfile
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 
@@ -28,6 +28,7 @@ from app.cardiotwin.schema import (
     SOURCE_DATASET,
     TARGETS,
 )
+from app.oncotwin._typing import FloatArray
 
 DATA_DIR = Path(__file__).resolve().parents[2] / "data" / "cardiotwin"
 DATASET_CSV = DATA_DIR / "z_alizadeh_sani_extension.csv"
@@ -104,7 +105,7 @@ def validate_dataset(df: Any) -> None:
         raise DatasetError("; ".join(problems))
 
 
-def encode_frame(df: Any) -> tuple[np.ndarray, list[str]]:
+def encode_frame(df: Any) -> tuple[FloatArray, list[str]]:
     """Encode a validated DataFrame with the same encoder used at inference."""
     X = np.zeros((len(df), len(ENCODED_NAMES)))
     for spec in FEATURES:
@@ -118,9 +119,9 @@ def encode_frame(df: Any) -> tuple[np.ndarray, list[str]]:
     return X, list(ENCODED_NAMES)
 
 
-def target_vector(df: Any, target: str) -> np.ndarray:
+def target_vector(df: Any, target: str) -> FloatArray:
     col, positive = TARGETS[target]
-    return (df[col].astype(str) == positive).to_numpy().astype(int)
+    return cast(FloatArray, (df[col].astype(str) == positive).to_numpy().astype(int))
 
 
 def label_relationships(df: Any) -> dict[str, Any]:
@@ -165,7 +166,7 @@ def import_dataset(zip_path: Path | None = None, out: Path | None = None) -> dic
     if zip_path:
         raw = Path(zip_path).read_bytes()
     else:
-        with urllib.request.urlopen(SOURCE_DATASET["download"], timeout=60) as r:  # noqa: S310
+        with urllib.request.urlopen(str(SOURCE_DATASET["download"]), timeout=60) as r:  # noqa: S310
             raw = r.read()
     if hashlib.sha256(raw).hexdigest() != SOURCE_ZIP_SHA256:
         raise DatasetError(

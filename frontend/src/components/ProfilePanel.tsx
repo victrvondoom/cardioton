@@ -7,7 +7,8 @@
  */
 import { AlertOctagon, CheckCircle2, Clock, LogIn, LogOut, StickyNote } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 
 import { useAuth } from "./AuthContext";
 import { type ActivityEvent, fetchMyActivity } from "../lib/auth";
@@ -37,9 +38,23 @@ interface ProfilePanelProps {
 export function ProfilePanel({ trigger }: ProfilePanelProps) {
   const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
-  const [events, setEvents] = useState<ActivityEvent[] | null>(null);
+  const [activity, setActivity] = useState<{ userId: string; events: ActivityEvent[] } | null>(null);
+  const events = activity?.userId === user?.id ? activity?.events ?? null : null;
   const [err, setErr] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const sequence = useRef(0);
+  const load = useCallback(async () => {
+    if (!user) return;
+    const generation = ++sequence.current;
+    try {
+      const response = await fetchMyActivity(12);
+      if (generation !== sequence.current) return;
+      setActivity({ userId: user.id, events: response.events });
+      setErr(null);
+    } catch (error) {
+      if (generation === sequence.current) setErr(error instanceof Error ? error.message : String(error));
+    }
+  }, [user?.id]);
 
   useEffect(() => {
     if (!open) return;
@@ -51,14 +66,14 @@ export function ProfilePanel({ trigger }: ProfilePanelProps) {
   }, [open]);
 
   useEffect(() => {
-    if (!open || events !== null) return;
-    fetchMyActivity(12)
-      .then((r) => setEvents(r.events))
-      .catch((e) => setErr((e as Error).message));
-  }, [open, events]);
+    if (!open) return;
+    void load();
+    return () => { sequence.current++; };
+  }, [open, load]);
+  useAutoRefresh(load, 30_000, open);
 
-  const displayName = user?.full_name ?? user?.email?.split("@")[0] ?? "ClinCase user";
-  const role = (user?.role ?? "admin").toLowerCase();
+  const displayName = user?.full_name ?? user?.email?.split("@")[0] ?? "CARDIOTON user";
+  const role = (user?.role ?? "unknown").toLowerCase();
 
   return (
     <div ref={ref} className="relative">
@@ -94,10 +109,10 @@ export function ProfilePanel({ trigger }: ProfilePanelProps) {
             {!err && events === null && (
               <div className="px-3.5 py-4 text-[11.5px] text-ink-muted">Loading…</div>
             )}
-            {!err && events !== null && events.length === 0 && (
+            {events !== null && events.length === 0 && (
               <div className="px-3.5 py-4 text-[11.5px] text-ink-muted">No activity yet.</div>
             )}
-            {!err && events !== null && events.length > 0 && (
+            {events !== null && events.length > 0 && (
               <ul className="divide-y divide-surface-border">
                 {events.map((e) => {
                   const Icon = KIND_ICON[e.kind] ?? AlertOctagon;

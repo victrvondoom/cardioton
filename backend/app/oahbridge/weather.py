@@ -318,7 +318,7 @@ def _tls() -> ssl.SSLContext:
 
 async def _fetch_upstream(lat: float, lon: float) -> dict[str, Any]:
     """One Open-Meteo call. Module-level so tests can replace it."""
-    params = {
+    params: dict[str, str | int | float] = {
         "latitude": lat,
         "longitude": lon,
         "current": CURRENT_VARS,

@@ -70,7 +70,9 @@ MAPPING_NOTES = {
 }
 
 
-def _parse_time(value: str) -> datetime:
+def _parse_time(value: object) -> datetime:
+    if not isinstance(value, str):
+        raise ValueError("Wearable sample requires an ISO timestamp")
     dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
     return dt if dt.tzinfo else dt.replace(tzinfo=UTC)
 
@@ -225,7 +227,7 @@ def event_to_fhir(e: ClinicalEvent, patient_id: str, synthetic: bool = True) -> 
         }
     if e.fhir_type == "Observation":
         val = d.get("value")
-        res = {
+        res: dict[str, Any] = {
             **base,
             "resourceType": "Observation",
             "status": "final",

@@ -28,6 +28,7 @@ import { JourneyStageCard } from "../journey/JourneyStageCard";
 import { JourneyStepper, STATUS_TEXT, STATUS_TONE, StatusIcon } from "../journey/JourneyStepper";
 import { useAuth } from "../components/AuthContext";
 import { useLive } from "../lib/useLive";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 import { downloadPassport } from "../onehealth/Journey";
 
 const PAGE = "mx-auto max-w-6xl space-y-6 px-4 py-6 sm:px-6";
@@ -43,7 +44,7 @@ export default function Journey() {
 function Header({ children }: { children?: ReactNode }) {
   return (
     <header className="space-y-1">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-cyan">CLINI-CASE</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent-cyan">CARDIOTON</p>
       <h1 className="text-2xl font-semibold text-ink-primary">One Health Interoperability Gateway</h1>
       {children}
     </header>
@@ -139,7 +140,7 @@ function JourneyHome() {
           One continuous journey: ingest external data, understand and map it, put every mapping through
           human review, standardise to OAH/FHIR, validate, exchange with an independent System B, verify the
           round trip, then open consented clinical context and follow up. Every step runs on the existing
-          CLINI-CASE capabilities.
+          CARDIOTON capabilities.
         </p>
       </Header>
 
@@ -332,17 +333,11 @@ function useJourney(jobId: string, paused: { current: boolean }) {
   }, [jobId]);
   useEffect(() => {
     void load();
-    // Another reviewer may have advanced the job. Skipped while this tab runs an action, so a refocus
-    // cannot supersede the action's own reload.
-    const onFocus = () => {
-      if (!paused.current) void load();
-    };
-    window.addEventListener("focus", onFocus);
     return () => {
       seq.current++;
-      window.removeEventListener("focus", onFocus);
     };
-  }, [load, paused]);
+  }, [load]);
+  useAutoRefresh(() => { if (!paused.current) return load(); });
   return { view, error, loading, load };
 }
 

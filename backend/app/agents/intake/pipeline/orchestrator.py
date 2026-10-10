@@ -91,4 +91,6 @@ async def run_intake_pipeline(doc: IntakeDocument, *, tenant_id: str | None = No
 
         await _A().run(ctx)
         result = ctx.payload["assemble.intake_result"]
+    if not isinstance(result, IntakeResult):
+        raise TypeError("Assemble stage must return IntakeResult")
     return result

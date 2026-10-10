@@ -56,6 +56,28 @@ def manifest(data: dict[str, Any]) -> dict[str, str]:
     return {k: digest(v) for k, v in sorted(data.items()) if k != "passport"}
 
 
+def seal_artifact(
+    data: dict[str, Any], *, actor: str, action: str, timestamp: str,
+    trust_states: dict[str, Any],
+) -> dict[str, Any]:
+    """Seal a new immutable artifact using the existing passport contract.
+
+    This is a one-revision export, not persistence or clinical approval. The
+    caller supplies explicit trust metadata; domain-specific seal() is unchanged.
+    """
+    if data.get("version") != 1 or data.get("passport") or not data.get("id"):
+        raise ValueError("A new artifact requires an id, version 1 and no prior chain")
+    result = copy.deepcopy(data)
+    body = {
+        "previous_hash": None, "record_version": 1, "timestamp": timestamp,
+        "actor": actor, "action": action, "object_id": result["id"],
+        "reason": "Deterministic research artifact; human clinical review required",
+        "artifacts": manifest(result), "trust_states": copy.deepcopy(trust_states),
+    }
+    result["passport"] = [{**body, "current_hash": digest(body)}]
+    return result
+
+
 def verify(data: dict[str, Any]) -> dict[str, Any]:
     try:
         return _verify(data)

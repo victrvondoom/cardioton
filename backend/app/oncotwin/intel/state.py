@@ -29,15 +29,17 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Callable
 from typing import Any
 
 import numpy as np
 
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.baseline import Baseline, adverse_z
-from app.oncotwin.engine.features import IDX, signal_matrix
+from app.oncotwin.engine.features import IDX, FeatureContext, signal_matrix
 from app.oncotwin.engine.series import PatientSeries
 from app.oncotwin.engine.state import LATENT_LABELS, confidence
-from app.oncotwin.records import PatientRecord, day_to_iso
+from app.oncotwin.records import ClinicalEvent, PatientRecord, day_to_iso
 from app.oncotwin.signals import LAB_SIGNALS, MODEL_SIGNALS, SIGNALS
 from app.oncotwin.simulator import physiology as P
 from app.oncotwin.simulator.regimens import REGIMENS
@@ -99,8 +101,8 @@ def _f(v: Any, nd: int = 3) -> float | None:
 def day_facts(
     s: PatientSeries,
     b: Baseline,
-    F: np.ndarray,
-    ctx: dict[str, Any],
+    F: FloatArray,
+    ctx: FeatureContext,
     p: float,
     lo: float,
     hi: float,
@@ -296,7 +298,7 @@ def _dim(
     basis: str = "observed",
     fields: dict[str, Any] | None = None,
     confidence: float | None = 1.0,
-    data_quality: str | list = "ok",
+    data_quality: str | list[str] = "ok",
     sources: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     return {
@@ -337,16 +339,16 @@ def _obs_sources(facts: dict[str, Any], keys: tuple[str, ...]) -> list[dict[str,
 class _Static:
     """Pre-indexed static EHR context (diagnosis, pathology, genomics, comorbidities)."""
 
-    def __init__(self, record: PatientRecord):
+    def __init__(self, record: PatientRecord) -> None:
         self.record = record
-        self.by_kind: dict[str, list] = {}
+        self.by_kind: dict[str, list[ClinicalEvent]] = {}
         for e in record.events:
             self.by_kind.setdefault(e.kind, []).append(e)
 
-    def first(self, kind: str, day: int, pred=lambda e: True):
+    def first(self, kind: str, day: int, pred: Callable[[ClinicalEvent], object] = lambda e: True) -> ClinicalEvent | None:
         return next((e for e in self.by_kind.get(kind, []) if e.day <= day and pred(e)), None)
 
-    def all(self, kind: str, day: int, pred=lambda e: True):
+    def all(self, kind: str, day: int, pred: Callable[[ClinicalEvent], object] = lambda e: True) -> list[ClinicalEvent]:
         return [e for e in self.by_kind.get(kind, []) if e.day <= day and pred(e)]
 
 

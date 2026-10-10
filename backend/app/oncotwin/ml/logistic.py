@@ -11,40 +11,42 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from app.oncotwin._typing import FloatArray
+
 
 @dataclass
 class LogisticModel:
     intercept: float
-    coef: np.ndarray  # on standardised features
-    mean: np.ndarray
-    std: np.ndarray
+    coef: FloatArray  # on standardised features
+    mean: FloatArray
+    std: FloatArray
     l2: float
 
-    def standardise(self, X: np.ndarray) -> np.ndarray:
+    def standardise(self, X: FloatArray) -> FloatArray:
         return (X - self.mean) / self.std
 
-    def logit(self, X: np.ndarray) -> np.ndarray:
+    def logit(self, X: FloatArray) -> FloatArray:
         return self.intercept + self.standardise(X) @ self.coef
 
-    def predict_proba(self, X: np.ndarray) -> np.ndarray:
+    def predict_proba(self, X: FloatArray) -> FloatArray:
         return _sigmoid(self.logit(X))
 
-    def contributions(self, x: np.ndarray) -> np.ndarray:
+    def contributions(self, x: FloatArray) -> FloatArray:
         """Per-feature log-odds contribution relative to the average training day."""
         return self.coef * self.standardise(x)
 
 
-def _sigmoid(z: np.ndarray) -> np.ndarray:
+def _sigmoid(z: FloatArray) -> FloatArray:
     return 1.0 / (1.0 + np.exp(-np.clip(z, -35, 35)))
 
 
 def fit_logistic(
-    X: np.ndarray,
-    y: np.ndarray,
+    X: FloatArray,
+    y: FloatArray,
     l2: float = 1.0,
     *,
-    mean=None,
-    std=None,
+    mean: FloatArray | None = None,
+    std: FloatArray | None = None,
     max_iter: int = 50,
     tol: float = 1e-8,
 ) -> LogisticModel:
@@ -69,15 +71,15 @@ def fit_logistic(
     return LogisticModel(float(w[0]), w[1:].copy(), mean, std, l2)
 
 
-def log_loss(y: np.ndarray, p: np.ndarray) -> float:
+def log_loss(y: FloatArray, p: FloatArray) -> float:
     p = np.clip(p, 1e-9, 1 - 1e-9)
     return float(-np.mean(y * np.log(p) + (1 - y) * np.log(1 - p)))
 
 
-def auroc(y: np.ndarray, s: np.ndarray) -> float:
+def auroc(y: FloatArray, s: FloatArray) -> float:
     """Mann–Whitney AUROC with average ranks for ties."""
-    y = np.asarray(y).astype(bool)
-    n_pos, n_neg = int(y.sum()), int((~y).sum())
+    labels = np.asarray(y).astype(bool)
+    n_pos, n_neg = int(labels.sum()), int((~labels).sum())
     if n_pos == 0 or n_neg == 0:
         return float("nan")
     order = np.argsort(s, kind="mergesort")
@@ -90,25 +92,25 @@ def auroc(y: np.ndarray, s: np.ndarray) -> float:
             j += 1
         ranks[order[i : j + 1]] = 0.5 * (i + j) + 1.0
         i = j + 1
-    return float((ranks[y].sum() - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg))
+    return float((ranks[labels].sum() - n_pos * (n_pos + 1) / 2) / (n_pos * n_neg))
 
 
-def average_precision(y: np.ndarray, s: np.ndarray) -> float:
-    y = np.asarray(y).astype(bool)
-    if y.sum() == 0:
+def average_precision(y: FloatArray, s: FloatArray) -> float:
+    labels = np.asarray(y).astype(bool)
+    if labels.sum() == 0:
         return float("nan")
     order = np.argsort(-np.asarray(s), kind="mergesort")
-    yt = y[order]
+    yt = labels[order]
     tp = np.cumsum(yt)
     precision = tp / np.arange(1, len(yt) + 1)
     return float(np.sum(precision[yt]) / yt.sum())
 
 
-def brier(y: np.ndarray, p: np.ndarray) -> float:
+def brier(y: FloatArray, p: FloatArray) -> float:
     return float(np.mean((np.asarray(p) - np.asarray(y)) ** 2))
 
 
-def calibration_bins(y: np.ndarray, p: np.ndarray, n_bins: int = 10) -> list[dict[str, float]]:
+def calibration_bins(y: FloatArray, p: FloatArray, n_bins: int = 10) -> list[dict[str, float]]:
     """Equal-count bins: mean predicted vs observed event rate."""
     order = np.argsort(p)
     out = []
@@ -126,7 +128,7 @@ def calibration_bins(y: np.ndarray, p: np.ndarray, n_bins: int = 10) -> list[dic
 
 
 def threshold_for_ppv(
-    y: np.ndarray, p: np.ndarray, target_ppv: float, min_sens: float = 0.0
+    y: FloatArray, p: FloatArray, target_ppv: float, min_sens: float = 0.0
 ) -> float | None:
     """Smallest threshold whose PPV ≥ target (and sensitivity ≥ min_sens)."""
     order = np.argsort(-p)
@@ -141,7 +143,7 @@ def threshold_for_ppv(
     return float(ps[ok.max()])
 
 
-def threshold_for_sensitivity(y: np.ndarray, p: np.ndarray, target_sens: float) -> float:
+def threshold_for_sensitivity(y: FloatArray, p: FloatArray, target_sens: float) -> float:
     pos = np.sort(p[y.astype(bool)])[::-1]
     if pos.size == 0:
         return 0.5

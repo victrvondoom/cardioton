@@ -613,7 +613,14 @@ def test_aquahealth_agents_are_not_in_the_clincase_manifest():
 def test_aquahealth_routes_do_not_shadow_clincase_routes():
     from app.main import app
 
-    paths = [r.path for r in app.routes if hasattr(r, "path")]
+    paths = []
+    for r in app.routes:
+        if type(r).__name__ == "_IncludedRouter":
+            pfx = getattr(r.include_context, "prefix", "") or ""
+            for sub in r.original_router.routes:
+                paths.append(pfx + getattr(sub, "path", ""))
+        elif hasattr(r, "path"):
+            paths.append(r.path)
     aqua = [p for p in paths if "/aquahealth" in p]
     assert aqua, "AquaHealth routes should be mounted"
     assert all(p.startswith("/api/v1/aquahealth") for p in aqua)

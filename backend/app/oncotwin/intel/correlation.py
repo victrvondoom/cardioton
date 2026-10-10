@@ -25,6 +25,7 @@ from typing import Any
 
 import numpy as np
 
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.baseline import DEVIATION_Z, Baseline, adverse_z
 from app.oncotwin.engine.features import signal_matrix
 from app.oncotwin.engine.series import PatientSeries
@@ -40,7 +41,7 @@ COUPLING_MIN_DAYS = 5
 COUPLING_MIN_DELTA = 0.4
 
 
-def _nanmean(a: np.ndarray) -> float | None:
+def _nanmean(a: FloatArray) -> float | None:
     if not np.any(~np.isnan(a)):
         return None
     with warnings.catch_warnings():
@@ -48,7 +49,7 @@ def _nanmean(a: np.ndarray) -> float | None:
         return float(np.nanmean(a))
 
 
-def _corr(a: np.ndarray, b: np.ndarray) -> tuple[float | None, int]:
+def _corr(a: FloatArray, b: FloatArray) -> tuple[float | None, int]:
     m = ~np.isnan(a) & ~np.isnan(b)
     n = int(m.sum())
     if n < 3 or np.std(a[m]) < 1e-9 or np.std(b[m]) < 1e-9:
@@ -89,7 +90,7 @@ def episode_window(
     return {"start_day": max(1, t - 6), "end_day": t, "basis": "last 7 days (no active episode)"}
 
 
-def _onset(z: np.ndarray, lo: int, t: int) -> int | None:
+def _onset(z: FloatArray, lo: int, t: int) -> int | None:
     """First day in [lo, t] with adverse deviation ≥ 1.5 SD that did not resolve the next observed days."""
     for d in range(max(1, lo), t + 1):
         v = z[d - 1]

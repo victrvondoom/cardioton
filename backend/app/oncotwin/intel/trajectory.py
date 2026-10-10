@@ -27,6 +27,7 @@ from typing import Any
 
 import numpy as np
 
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.warning import RANK
 
 SLOPE_RISE = 0.10  # log-odds per day
@@ -34,16 +35,16 @@ SLOPE_FLAT = 0.05
 ACCEL = 0.15
 
 
-def _logit(p: np.ndarray) -> np.ndarray:
+def _logit(p: FloatArray) -> FloatArray:
     p = np.clip(p, 1e-4, 1 - 1e-4)
     return np.log(p / (1 - p))
 
 
-def _smooth(x: np.ndarray) -> np.ndarray:
+def _smooth(x: FloatArray) -> FloatArray:
     return np.array([x[max(0, i - 2) : i + 1].mean() for i in range(len(x))])
 
 
-def _slope(y: np.ndarray, i: int, w: int = 3) -> float:
+def _slope(y: FloatArray, i: int, w: int = 3) -> float:
     if i < 1:
         return 0.0
     seg = y[max(0, i - w + 1) : i + 1]

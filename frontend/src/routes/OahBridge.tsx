@@ -10,6 +10,7 @@ import SystemMonitor from "../oahbridge/SystemMonitor";
 import { oahBridge } from "../oahbridge/api";
 import { EPISTEMIC_HEX, EPISTEMIC_LABEL, humanize, riskHex } from "../oahbridge/format";
 import type { CdsResponse, DemoRunResponse, ScenarioSummary } from "../oahbridge/types";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 
 const card = "rounded-xl border border-surface-border bg-surface-raised p-4";
 
@@ -27,6 +28,13 @@ export default function OahBridge() {
   const [focusKey, setFocusKey] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  useAutoRefresh(async () => {
+    try {
+      const items = await oahBridge.scenarios();
+      // Preserve selected scenario object when unchanged so weather focus stays put.
+      setScenarios(previous => JSON.stringify(previous) === JSON.stringify(items) ? previous : items);
+    } catch (e) { setError(e instanceof Error ? e.message : "Could not refresh scenarios"); }
+  }, 60_000, !busy && !running);
 
   useEffect(() => {
     oahBridge.scenarios().then((items) => {

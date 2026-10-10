@@ -26,7 +26,7 @@ const verdictConfig: Record<
     text: "text-gray-900",
     icon: CheckCircle2,
     label: "APPROVE",
-    headline: "ClinCase recommends APPROVE",
+    headline: "CARDIOTON recommends APPROVE",
   },
   DENY: {
     bg: "bg-gray-50",
@@ -34,7 +34,7 @@ const verdictConfig: Record<
     text: "text-gray-900",
     icon: XCircle,
     label: "DENY",
-    headline: "ClinCase recommends DENY",
+    headline: "CARDIOTON recommends DENY",
   },
   REFER: {
     bg: "bg-gray-50",
@@ -42,7 +42,7 @@ const verdictConfig: Record<
     text: "text-gray-900",
     icon: AlertCircle,
     label: "REFER TO REVIEWER",
-    headline: "ClinCase flags for human review",
+    headline: "CARDIOTON flags for human review",
   },
 };
 

@@ -21,7 +21,7 @@ describe("per-run costing by model family", () => {
 describe("Case economics strip quotes the backend's baseline", () => {
   it("shows cost from actual runs and savings against the API's manual baseline", async () => {
     vi.mocked(api.getAudit).mockResolvedValue({ agent_runs: [run("claude-sonnet", 1_000_000, 100_000, 30_000), run("claude-haiku", 500_000, 50_000, 30_000)] } as never);
-    vi.mocked(api.getCaseValue).mockResolvedValue({ manual_cost_usd: 1500, manual_minutes: 18, token_pricing_usd_per_m: pricing } as never);
+    vi.mocked(api.getCaseValue).mockResolvedValue({ case_id: "c1", manual_cost_usd: 1500, manual_minutes: 18, token_pricing_usd_per_m: pricing } as never);
     render(<CaseEconomicsStrip caseId="c1" />);
     await waitFor(() => expect(screen.getByText("$5.2500")).toBeTruthy()); // 4.5 (sonnet) + 0.75 (haiku)
     expect(screen.getByText("$1494.75 saved")).toBeTruthy();

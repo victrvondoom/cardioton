@@ -178,3 +178,56 @@ def test_end_to_end_scenario_to_selected_vessel(client, scenarios):
     top = p["explanations"]["LAD"]["features"][0]
     assert {"feature", "value", "contribution", "direction", "share"} <= set(top)
     assert p["explanations"]["LAD"]["features"] != p["explanations"]["RCA"]["features"]
+
+
+def test_telemetry_endpoint(client, scenarios):
+    mixed = next(s for s in scenarios if s['id'] == 'C')
+    res = client.post(f'{BASE}/telemetry', json={'features': mixed['patient'], 'stress_mode': False})
+    assert res.status_code == 200
+    data = res.json()
+    assert data['stress_mode'] is False
+    assert 'vitals' in data
+    assert 'vessels' in data
+    assert 'heart_team_consensus' in data
+    assert 'heart_rate_bpm' in data['vitals']
+    assert 'ffr_ct' in data['vessels']['LAD']
+    assert 'strategy' in data['heart_team_consensus']
+
+def test_telemetry_stress_mode(client, scenarios):
+    mixed = next(s for s in scenarios if s['id'] == 'C')
+    res = client.post(f'{BASE}/telemetry', json={'features': mixed['patient'], 'stress_mode': True})
+    assert res.status_code == 200
+    data = res.json()
+    assert data['stress_mode'] is True
+    assert data['vitals']['heart_rate_bpm'] > 72
+
+
+def test_hemodynamics_physics_endpoint(client, scenarios):
+    mixed = next(s for s in scenarios if s['id'] == 'C')
+    res = client.post(f'{BASE}/hemodynamics/physics', json={'features': mixed['patient'], 'stress_mode': False})
+    assert res.status_code == 200
+    data = res.json()
+    assert 'solver_type' in data
+    assert 'governing_equations' in data
+    assert 'LAD' in data['vessels']
+    assert data['vessels']['LAD']['reynolds_number'] > 0
+    assert 'viscous_resistance_mpa_s_m3' in data['vessels']['LAD']
+
+def test_conformal_endpoint(client, scenarios):
+    mixed = next(s for s in scenarios if s['id'] == 'C')
+    res = client.post(f'{BASE}/conformal', json={'features': mixed['patient']})
+    assert res.status_code == 200
+    data = res.json()
+    assert 'bounded_targets' in data
+    assert 'conformal_90_interval' in data['bounded_targets']['LAD']
+    assert 'critical_information_deficit' in data
+
+def test_guidelines_verify_endpoint(client, scenarios):
+    mixed = next(s for s in scenarios if s['id'] == 'C')
+    res = client.post(f'{BASE}/guidelines/verify', json={'features': mixed['patient']})
+    assert res.status_code == 200
+    data = res.json()
+    assert data['verification_status'] == 'FORMAL_GUIDELINE_VERIFIED'
+    assert 'passport_sha256' in data
+    assert len(data['passport_sha256']) == 64
+    assert 'primary_recommendation' in data

@@ -19,11 +19,13 @@ both paths call `app.aquahealth.assess`, the result is identical either way.
 from __future__ import annotations
 
 from collections import Counter
+from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import structlog
 
+from app.agents.framework import Agent
 from app.aquahealth import assess, store
 from app.aquahealth.agents.env_agents import (
     WM_KEY,
@@ -32,6 +34,7 @@ from app.aquahealth.agents.env_agents import (
     EnvironmentalContextAgent,
     EnvironmentalValidationAgent,
     ExplanationAgent,
+    FindingOutput,
     OneHealthAgent,
     TrendAgent,
     WaterQualityAgent,
@@ -73,7 +76,7 @@ _STAGE_AGENTS = (
 
 #: Direct fallbacks keyed by agent name, for when the traced lifecycle is
 #: unavailable. These call the same functions the agents do.
-_FALLBACKS = {
+_FALLBACKS: dict[str, Callable[[Observation, list[Observation]], AgentFinding]] = {
     "environmental_validation": lambda obs, hist: assess.validate_observation(obs),
     "water_quality": lambda obs, hist: assess.assess_water_quality(obs),
     "biodiversity": lambda obs, hist: assess.assess_biodiversity(obs),
@@ -264,7 +267,7 @@ def _new_context(obs: Observation) -> Any:
 
 
 async def _run_stage(
-    agent_cls: type,
+    agent_cls: type[Agent[EnvAgentInput, FindingOutput]],
     agent_input: EnvAgentInput,
     ctx: Any,
     obs: Observation,

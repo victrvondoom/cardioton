@@ -1,12 +1,9 @@
 ﻿/**
  * /cases/bulk-import — Bulk FHIR Import.
  *
- * Drag-drop a FHIR Bulk Data export (.ndjson / .zip / Bundle JSON) → fan out
- * N parallel graph runs → live throughput. Built for CMS-0057-F Prior
- * Authorization API mandate (effective Jan 1, 2027).
- *
- * Currently uses simulated progress (not real backend processing) to keep
- * the demo fast and credit-cheap. Production swaps to a backend job queue.
+ * Local FHIR Bulk Data review (.ndjson / .zip / Bundle JSON). Uploaded data
+ * is parsed in the browser and saved through the existing pending-case API.
+ * A separately selected synthetic simulation demonstrates the queue layout.
  */
 import clsx from "clsx";
 import { unzipSync, strFromU8 } from "fflate";
@@ -20,8 +17,10 @@ import {
   Zap,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 import { StatusPill } from "../components/StatusPill";
+import { authHeader } from "../lib/auth";
 import type { CaseStatus } from "../lib/syntheticCases";
 
 type CaseQueueRow = {
@@ -29,9 +28,12 @@ type CaseQueueRow = {
   patient: string;
   diagnosis: string;
   treatment: string;
-  status: "queued" | "in_flight" | "approved" | "denied" | "referred" | "appealed";
-  cost_usd: number;
+  status: "queued" | "in_flight" | "approved" | "denied" | "referred" | "appealed" | "created" | "failed";
+  cost_usd: number | null;
   finished_at_ms?: number;
+  source_bundle?: { resourceType: "Bundle"; type: "collection"; entry: FhirEntry[] };
+  saved_case_id?: string;
+  error?: string;
 };
 
 const SYNTHETIC_BATCH: Omit<CaseQueueRow, "status" | "cost_usd">[] = [
@@ -61,7 +63,7 @@ const SYNTHETIC_BATCH: Omit<CaseQueueRow, "status" | "cost_usd">[] = [
   { case_id: "bulk_024", patient: "W.J.", diagnosis: "C56.9 ovarian III",           treatment: "olaparib" },
 ];
 
-// Deterministic verdict assignment for variety
+// Explicit synthetic queue examples only; never applied to uploaded evidence.
 function verdictForRow(idx: number): CaseQueueRow["status"] {
   const pattern: CaseQueueRow["status"][] = [
     "approved", "approved", "approved", "referred",
@@ -81,6 +83,8 @@ const STATUS_TO_PILL: Record<CaseQueueRow["status"], CaseStatus> = {
   denied:    "denied",
   referred:  "referred",
   appealed:  "appealed",
+  created: "pending",
+  failed: "pending",
 };
 
 // =============================================================================
@@ -110,9 +114,15 @@ interface FhirResource {
   [k: string]: unknown;
 }
 
+interface FhirEntry {
+  resource: FhirResource;
+  fullUrl?: string;
+  [key: string]: unknown;
+}
+
 async function readFhirBulkFile(
   file: File,
-): Promise<{ resources: FhirResource[]; fileCount: number }> {
+): Promise<{ entries: FhirEntry[]; fileCount: number }> {
   const lower = file.name.toLowerCase();
   const isZip = lower.endsWith(".zip") || file.type === "application/zip";
 
@@ -126,33 +136,33 @@ async function readFhirBulkFile(
     if (names.length === 0) {
       throw new Error("ZIP contains no .ndjson or .json files");
     }
-    const resources: FhirResource[] = [];
+    const resources: FhirEntry[] = [];
     for (const name of names) {
       const text = strFromU8(entries[name]);
       resources.push(...parseFhirText(text, name));
     }
-    return { resources, fileCount: names.length };
+    return { entries: resources, fileCount: names.length };
   }
 
   // Plain text path — .ndjson or .json (Bundle, array, or single resource)
   const text = await file.text();
   const resources = parseFhirText(text, file.name);
-  return { resources, fileCount: 1 };
+  return { entries: resources, fileCount: 1 };
 }
 
-function parseFhirText(text: string, filename: string): FhirResource[] {
+function parseFhirText(text: string, filename: string): FhirEntry[] {
   const lower = filename.toLowerCase();
 
   // NDJSON — one JSON object per line
   if (lower.endsWith(".ndjson")) {
-    const out: FhirResource[] = [];
-    for (const line of text.split(/\r?\n/)) {
+    const out: FhirEntry[] = [];
+    for (const [index, line] of text.split(/\r?\n/).entries()) {
       const t = line.trim();
       if (!t) continue;
       try {
-        out.push(JSON.parse(t) as FhirResource);
+        out.push(...toFhirEntries(JSON.parse(t)));
       } catch {
-        // Skip malformed line — Bulk Data spec says clients tolerate partial files
+        throw new Error(`${filename}: invalid FHIR JSON on line ${index + 1}. No cases were submitted.`);
       }
     }
     return out;
@@ -166,55 +176,60 @@ function parseFhirText(text: string, filename: string): FhirResource[] {
     // Sometimes a .json file is actually NDJSON in disguise — fall back
     return parseFhirText(text, filename + ".ndjson");
   }
-  if (Array.isArray(parsed)) {
-    return parsed as FhirResource[];
-  }
+  return toFhirEntries(parsed);
+}
+
+function toFhirEntries(parsed: unknown): FhirEntry[] {
+  if (Array.isArray(parsed)) return parsed.flatMap(toFhirEntries);
   if (parsed && typeof parsed === "object") {
-    const obj = parsed as { resourceType?: string; entry?: { resource?: FhirResource }[] };
+    const obj = parsed as FhirResource & { entry?: FhirEntry[] };
     if (obj.resourceType === "Bundle" && Array.isArray(obj.entry)) {
-      return obj.entry.map((e) => e.resource).filter(Boolean) as FhirResource[];
+      return obj.entry.filter((entry) => entry.resource && typeof entry.resource.resourceType === "string");
     }
-    return [parsed as FhirResource];
+    if (typeof obj.resourceType === "string") return [{ resource: obj }];
   }
   return [];
 }
 
 function groupFhirIntoCases(
-  resources: FhirResource[],
+  entries: FhirEntry[],
 ): Omit<CaseQueueRow, "status" | "cost_usd">[] {
   // Index patients first, then attach the first Condition + MedicationRequest we
   // find for each. This mirrors how a real Da Vinci PAS payload structures cases.
-  type Acc = { patient: string; diagnosis?: string; treatment?: string };
+  type Acc = { patient: string; diagnosis?: string; treatment?: string; entry: FhirEntry };
   const byPatientId = new Map<string, Acc>();
+  const patientAliases = new Map<string, string>();
+  const resources = entries.map(entry => entry.resource);
 
   const initials = (r: FhirResource): string => {
     const name = (r as { name?: { given?: string[]; family?: string }[] }).name?.[0];
-    const g = name?.given?.[0]?.[0] ?? "?";
-    const f = name?.family?.[0] ?? "?";
-    return `${g}.${f}.`;
+    return [name?.given?.[0]?.[0], name?.family?.[0]].filter(Boolean).join(".");
   };
 
-  for (const r of resources) {
-    if (r.resourceType === "Patient" && r.id) {
-      byPatientId.set(r.id, { patient: initials(r) });
+  for (const [index, entry] of entries.entries()) {
+    const r = entry.resource;
+    if (r.resourceType === "Patient") {
+      const key = r.id || entry.fullUrl || `patient-row-${index + 1}`;
+      byPatientId.set(key, { patient: initials(r), entry });
+      for (const alias of [r.id, r.id ? `Patient/${r.id}` : undefined, entry.fullUrl]) {
+        if (alias) patientAliases.set(alias, key);
+      }
     }
   }
 
   const subjectId = (r: FhirResource): string | null => {
-    const ref = (r as { subject?: { reference?: string }; patient?: { reference?: string } });
-    const raw = ref.subject?.reference ?? ref.patient?.reference ?? null;
+    const ref = (r as { subject?: { reference?: string }; patient?: { reference?: string }; beneficiary?: { reference?: string } });
+    const raw = ref.subject?.reference ?? ref.patient?.reference ?? ref.beneficiary?.reference ?? null;
     if (!raw) return null;
-    return raw.startsWith("Patient/") ? raw.slice("Patient/".length) : raw;
+    const relative = raw.match(/(?:^|\/)Patient\/([^/]+)(?:\/_history\/[^/]+)?$/)?.[1];
+    return patientAliases.get(raw) ?? (relative ? patientAliases.get(`Patient/${relative}`) : null) ?? null;
   };
 
   for (const r of resources) {
     const pid = subjectId(r);
     if (!pid) continue;
-    let acc = byPatientId.get(pid);
-    if (!acc) {
-      acc = { patient: pid.slice(0, 6) };
-      byPatientId.set(pid, acc);
-    }
+    const acc = byPatientId.get(pid);
+    if (!acc) continue;
     if (r.resourceType === "Condition" && !acc.diagnosis) {
       const code = (r as { code?: { coding?: { code?: string; display?: string }[]; text?: string } }).code;
       const c = code?.coding?.[0];
@@ -232,15 +247,41 @@ function groupFhirIntoCases(
     }
   }
 
+  const aliases = new Map<string, FhirEntry>();
+  for (const entry of entries) {
+    if (entry.fullUrl) aliases.set(entry.fullUrl, entry);
+    if (entry.resource.id) aliases.set(`${entry.resource.resourceType}/${entry.resource.id}`, entry);
+  }
+  const references = (value: unknown): string[] => {
+    if (Array.isArray(value)) return value.flatMap(references);
+    if (!value || typeof value !== "object") return [];
+    return Object.entries(value).flatMap(([key, child]) => key === "reference" && typeof child === "string" ? [child] : references(child));
+  };
+
   const cases: Omit<CaseQueueRow, "status" | "cost_usd">[] = [];
   let i = 1;
   for (const [pid, acc] of byPatientId) {
     if (!acc.diagnosis && !acc.treatment) continue;  // skip patients with no clinical context
+    const patientEntries = new Set(entries.filter(entry => entry === acc.entry || subjectId(entry.resource) === pid));
+    // Preserve whole source entries, extensions, identifiers, and referenced
+    // supporting resources without mixing another patient's clinical records.
+    for (const entry of patientEntries) {
+      for (const reference of references(entry.resource)) {
+        const relative = reference.match(/(?:^|\/)([A-Z][A-Za-z]+\/[^/]+)(?:\/_history\/[^/]+)?$/)?.[1];
+        const linked = aliases.get(reference) ?? (relative ? aliases.get(relative) : undefined);
+        if (!linked) continue;
+        const owner = subjectId(linked.resource);
+        if (owner && owner !== pid) continue;
+        if (linked.resource.resourceType === "Patient" && linked !== acc.entry) continue;
+        patientEntries.add(linked);
+      }
+    }
     cases.push({
-      case_id: `bulk_${pid.slice(0, 12) || i.toString().padStart(3, "0")}`,
+      case_id: `preview_${i.toString().padStart(3, "0")}`,
       patient: acc.patient,
       diagnosis: acc.diagnosis ?? "—",
-      treatment: acc.treatment ?? "—",
+      treatment: acc.treatment ?? "",
+      source_bundle: { resourceType: "Bundle", type: "collection", entry: [...patientEntries] },
     });
     i++;
   }
@@ -256,12 +297,13 @@ function groupFhirIntoCases(
         patient: "—",
         diagnosis: code?.coding?.[0]?.display ?? code?.text ?? r.resourceType,
         treatment: r.resourceType === "MedicationRequest" ? "see resource" : "—",
+        error: "A linked Patient and documented diagnosis are required before this resource can create a case.",
       });
-      if (cases.length >= 200) break;
     }
   }
 
-  return cases.slice(0, 200);  // cap at 200 to keep the UI responsive
+  if (cases.length > 200) throw new Error(`This file contains ${cases.length} case groups. Split it into batches of at most 200; no cases were submitted.`);
+  return cases;
 }
 
 function tsSlug(): string {
@@ -273,7 +315,7 @@ function csvField(v: string | number): string {
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
-function downloadResultsCSV(rows: CaseQueueRow[]): void {
+function downloadResultsCSV(rows: CaseQueueRow[], demo: boolean): void {
   if (rows.length === 0) return;
   const headers = [
     "row",
@@ -281,7 +323,9 @@ function downloadResultsCSV(rows: CaseQueueRow[]): void {
     "patient_initials",
     "diagnosis",
     "treatment",
-    "verdict",
+    "source_mode",
+    "processing_status",
+    "simulated_verdict",
     "cost_usd",
     "finished_seconds",
   ];
@@ -292,18 +336,20 @@ function downloadResultsCSV(rows: CaseQueueRow[]): void {
       r.patient,
       r.diagnosis,
       r.treatment,
-      r.status,
-      r.cost_usd.toFixed(4),
+      demo ? "synthetic_ui_simulation" : "local_file_preview",
+      demo ? r.status : r.saved_case_id ? "saved_pending" : r.status === "failed" ? "save_failed" : "not_submitted",
+      demo && !["queued", "in_flight"].includes(r.status) ? r.status : "",
+      r.cost_usd?.toFixed(4) ?? "",
       r.finished_at_ms != null ? (r.finished_at_ms / 1000).toFixed(2) : "",
     ]
       .map(csvField)
       .join(","),
   );
   const csv = [headers.join(","), ...body].join("\n");
-  triggerDownload(`clincase-bulk-import-${tsSlug()}.csv`, csv, "text/csv");
+  triggerDownload(`cardioton-bulk-import-${tsSlug()}.csv`, csv, "text/csv");
 }
 
-function generateComplianceReport(rows: CaseQueueRow[], totalCost: number): void {
+function downloadSimulationReport(rows: CaseQueueRow[]): void {
   if (rows.length === 0) return;
   const counts = {
     approved: rows.filter((r) => r.status === "approved").length,
@@ -321,28 +367,22 @@ function generateComplianceReport(rows: CaseQueueRow[], totalCost: number): void
   const tableRows = rows
     .map(
       (r, i) =>
-        `| ${i + 1} | ${r.case_id} | ${r.patient} | ${r.diagnosis} | ${r.treatment} | ${r.status.toUpperCase()} | $${r.cost_usd.toFixed(4)} | ${r.finished_at_ms != null ? (r.finished_at_ms / 1000).toFixed(2) + "s" : "—"} |`,
+        `| ${i + 1} | ${r.case_id} | ${r.patient} | ${r.diagnosis} | ${r.treatment} | ${r.status.toUpperCase()} | ${r.finished_at_ms != null ? (r.finished_at_ms / 1000).toFixed(2) + "s" : "—"} |`,
     )
     .join("\n");
 
-  const md = `# ClinCase — Bulk Prior Authorization Compliance Report
+  const md = `# CARDIOTON — Synthetic Queue Simulation
 
 **Generated:** ${generatedAt}
-**Batch:** ${rows.length} cases · run id \`bulk-${Date.now().toString(36)}\`
-**Duration:** ${durationSec.toFixed(2)} s
-**Throughput:** ${throughput} cases/sec
-**Total cost:** $${totalCost.toFixed(2)}
+**Batch:** ${rows.length} synthetic examples
+**UI animation duration:** ${durationSec.toFixed(2)} s
+**UI animation rate:** ${throughput} examples/sec
 
----
+This is a user-selected interface simulation. Outcomes are predefined examples.
+No backend agent ran, no case was persisted, and no clinical decision or appeal
+was produced. Costs, actual throughput, and compliance status were not measured.
 
-## Regulatory framework
-
-- **CMS-0057-F § IV.A** (89 FR 8758) — Prior Authorization API mandate, effective **Jan 1, 2027**
-- Built to the **Da Vinci PAS Implementation Guide** (FHIR R4 · USCDI v3)
-- All decisions traceable to FHIR resource IDs and policy section pointers
-- Demonstration report · synthetic patient initials · privacy review required before real data use
-
-## Batch outcomes
+## Simulated outcomes
 
 | Outcome  | Count |
 |----------|------:|
@@ -352,55 +392,51 @@ function generateComplianceReport(rows: CaseQueueRow[], totalCost: number): void
 | Appealed | ${counts.appealed} |
 | **Total** | **${rows.length}** |
 
-## Per-case results
+## Synthetic examples
 
-| # | Case ID | Patient | Diagnosis | Treatment | Verdict | Cost | Finished |
-|--:|---------|---------|-----------|-----------|---------|------|----------|
+| # | Example ID | Patient | Diagnosis | Treatment | Simulated verdict | UI finished |
+|--:|------------|---------|-----------|-----------|-------------------|-------------|
 ${tableRows}
-
-## Audit attestation
-
-Every decision above is grounded in:
-- The originating FHIR Bundle for the patient (Coverage + Patient + Condition + MedicationRequest)
-- The payer policy version cited at run time (e.g. Anthem MCG-2026.04, UHCO-2026-04)
-- NCCN Compendium references for any appeals auto-drafted by the Appeals Drafter agent
-
-Run on ClinCase 7-agent LangGraph DAG · Bedrock + Claude Sonnet 4.6 · TriZetto AI Gateway.
-
-_ClinCase — Built by vsrupeshkumar_
 `;
-  triggerDownload(`clincase-compliance-${tsSlug()}.md`, md, "text/markdown");
+  triggerDownload(`cardioton-queue-simulation-${tsSlug()}.md`, md, "text/markdown");
 }
 
 export default function BulkImport() {
-  const [phase, setPhase] = useState<"idle" | "running" | "done">("idle");
+  const [phase, setPhase] = useState<"idle" | "preview" | "running" | "done">("idle");
+  const [demo, setDemo] = useState(false);
+  const [parsing, setParsing] = useState(false);
+  const [payer, setPayer] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const submitLock = useRef(false);
+  const mounted = useRef(true);
   const [rows, setRows] = useState<CaseQueueRow[]>([]);
   const [tickMs, setTickMs] = useState(0);
-  const [sourceFile, setSourceFile] = useState<{ name: string; size: number; n_resources: number } | null>(null);
+  const [sourceFile, setSourceFile] = useState<{ name: string; size: number; n_resources: number; unlinked?: number } | null>(null);
   const [parseError, setParseError] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const total = rows.length || SYNTHETIC_BATCH.length;
+  const total = rows.length;
   const completed = rows.filter((r) =>
     ["approved", "denied", "referred", "appealed"].includes(r.status),
   ).length;
   const inFlight = rows.filter((r) => r.status === "in_flight").length;
   const queued = rows.filter((r) => r.status === "queued").length;
-  const totalCost = rows.reduce((s, r) => s + r.cost_usd, 0);
-  const throughput = phase === "running" && tickMs > 0
+  const throughput = demo && tickMs > 0
     ? (completed / (tickMs / 1000)).toFixed(1)
     : "0.0";
 
-  // Simulate "drop" → start queue with the synthetic 24-case fixture
+  // Only this explicit action enables simulated processing.
   const startQueue = () => {
-    if (phase !== "idle") return;
+    if (phase !== "idle" || parsing) return;
     const initialRows: CaseQueueRow[] = SYNTHETIC_BATCH.map((r) => ({
       ...r,
       status: "queued",
-      cost_usd: 0,
+      cost_usd: null,
     }));
     setRows(initialRows);
+    setDemo(true);
+    setTickMs(0);
     setSourceFile({ name: "synthetic-batch (demo)", size: 0, n_resources: SYNTHETIC_BATCH.length });
     setParseError(null);
     setPhase("running");
@@ -408,32 +444,101 @@ export default function BulkImport() {
 
   // Open the OS file picker
   const openFilePicker = useCallback(() => {
-    if (phase === "idle") inputRef.current?.click();
-  }, [phase]);
+    if (phase === "idle" && !parsing) inputRef.current?.click();
+  }, [phase, parsing]);
 
   // Parse a real FHIR Bulk Data export (.ndjson / .zip / Bundle .json)
   const handleFileSelect = useCallback(async (file: File) => {
-    if (phase !== "idle") return;
+    if (phase !== "idle" || parsing) return;
+    setParsing(true);
+    setDemo(false);
     setParseError(null);
     setSourceFile({ name: file.name, size: file.size, n_resources: 0 });
     try {
-      const { resources, fileCount } = await readFhirBulkFile(file);
-      const cases = groupFhirIntoCases(resources);
+      const { entries, fileCount } = await readFhirBulkFile(file);
+      const cases = groupFhirIntoCases(entries);
       if (cases.length === 0) {
         throw new Error(
           `No FHIR Patient/Condition/MedicationRequest resources found across ${fileCount} file(s). ` +
           `Upload an .ndjson export, a .zip of .ndjson files, or a Bundle .json.`,
         );
       }
-      const initialRows: CaseQueueRow[] = cases.map((c) => ({ ...c, status: "queued", cost_usd: 0 }));
+      const initialRows: CaseQueueRow[] = cases.map((c) => ({ ...c, status: "queued", cost_usd: null }));
       setRows(initialRows);
-      setSourceFile({ name: file.name, size: file.size, n_resources: resources.length });
-      setPhase("running");
+      const groupedEntries = new Set(cases.flatMap(row => row.source_bundle?.entry ?? []));
+      setSourceFile({ name: file.name, size: file.size, n_resources: entries.length, unlinked: entries.length - groupedEntries.size });
+      setPhase("preview");
     } catch (e) {
       setParseError(e instanceof Error ? e.message : "Could not read file");
       setSourceFile(null);
+    } finally {
+      setParsing(false);
     }
-  }, [phase]);
+  }, [phase, parsing]);
+
+  const reset = () => {
+    setPhase("idle");
+    setRows([]);
+    setSourceFile(null);
+    setParseError(null);
+    setDemo(false);
+    setTickMs(0);
+    setPayer("");
+  };
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => { mounted.current = false; };
+  }, []);
+
+  const canCreate = (row: CaseQueueRow) => Boolean(
+    row.source_bundle && row.patient.trim() && row.treatment.trim()
+    && row.diagnosis !== "—" && !row.saved_case_id && row.status !== "in_flight",
+  );
+  const createCases = async (candidates: CaseQueueRow[]) => {
+    if (demo || !payer.trim() || submitLock.current) return;
+    const ready = candidates.filter(canCreate);
+    if (!ready.length) return;
+    submitLock.current = true;
+    setSubmitting(true);
+    for (const row of ready) {
+      if (!mounted.current) break;
+      const started = performance.now();
+      let serviceUnavailable = false;
+      setRows(current => current.map(item => item.case_id === row.case_id ? { ...item, status: "in_flight", error: undefined } : item));
+      try {
+        const response = await fetch("/api/v1/cases", {
+          method: "POST",
+          headers: { ...authHeader(), "Content-Type": "application/json" },
+          body: JSON.stringify({
+            payer_id: payer.trim(),
+            patient_initials: row.patient.trim(),
+            requested_treatment: { name: row.treatment.trim(), j_code: null },
+            physician_note: null,
+            fhir_bundle: row.source_bundle,
+          }),
+        });
+        serviceUnavailable = [401, 403, 429, 503].includes(response.status);
+        const text = await response.text();
+        let result: { case_id?: string; detail?: unknown } = {};
+        try { result = JSON.parse(text); } catch { /* Preserve the HTTP failure below. */ }
+        if (!response.ok || typeof result.case_id !== "string" || !result.case_id.trim()) throw new Error(typeof result.detail === "string" ? result.detail : `Case was not confirmed saved (HTTP ${response.status}). Check the case list before retrying.`);
+        if (mounted.current) setRows(current => current.map(item => item.case_id === row.case_id ? {
+          ...item, status: "created", saved_case_id: result.case_id,
+          finished_at_ms: performance.now() - started, error: undefined,
+        } : item));
+      } catch (error) {
+        if (mounted.current) setRows(current => current.map(item => item.case_id === row.case_id ? {
+          ...item, status: "failed", error: error instanceof TypeError ? "Save could not be confirmed. Check the case list before retrying." : error instanceof Error ? error.message : "Case was not confirmed saved.",
+        } : item));
+        // Stop the batch on a shared service/auth failure. Unsent source rows
+        // remain available for an explicit retry once the problem is resolved.
+        if (serviceUnavailable || error instanceof TypeError) break;
+      }
+    }
+    submitLock.current = false;
+    if (mounted.current) setSubmitting(false);
+  };
 
   // Drag-and-drop hooks
   const onDragOver = (e: React.DragEvent) => { e.preventDefault(); setDragOver(true); };
@@ -446,13 +551,13 @@ export default function BulkImport() {
   };
 
   useEffect(() => {
-    if (phase !== "running") return;
+    if (phase !== "running" || !demo) return;
     const start = Date.now();
     const interval = setInterval(() => {
       setTickMs(Date.now() - start);
       setRows((prev) => {
         const next = [...prev];
-        // Promote 1-2 queued → in_flight (cap concurrency at 2)
+        // Advance one predefined example per UI animation tick.
         const inFlightNow = next.filter((r) => r.status === "in_flight").length;
         const slots = Math.max(0, 2 - inFlightNow);
         for (let i = 0; i < next.length && slots > 0; i++) {
@@ -461,25 +566,21 @@ export default function BulkImport() {
             break;
           }
         }
-        // 60% chance per tick to complete one in_flight
-        if (Math.random() < 0.6) {
-          const idx = next.findIndex((r) => r.status === "in_flight");
-          if (idx >= 0) {
-            const verdict = verdictForRow(idx);
-            next[idx] = {
-              ...next[idx],
-              status: verdict,
-              cost_usd: 0.0889 + Math.random() * 0.02,
-              finished_at_ms: Date.now() - start,
-            };
-          }
+        const idx = next.findIndex((r) => r.status === "in_flight");
+        if (idx >= 0) {
+          next[idx] = {
+            ...next[idx],
+            status: verdictForRow(idx),
+            cost_usd: null,
+            finished_at_ms: Date.now() - start,
+          };
         }
         return next;
       });
     }, 240);
 
     return () => clearInterval(interval);
-  }, [phase]);
+  }, [phase, demo]);
 
   // Detect completion
   useEffect(() => {
@@ -495,21 +596,18 @@ export default function BulkImport() {
           <CloudUpload size={12} />
           BULK IMPORT
           <span className="text-ink-faint">·</span>
-          <span className="text-accent-cyan" title="CMS-0057-F § IV.A — Prior Authorization API operational by Jan 1 2027 (Da Vinci PAS IG reference)">
-            CMS-0057-F § IV.A · PA API mandate · Jan 1 2027
-          </span>
+          <span className="text-accent-cyan">FHIR source review</span>
         </div>
         <h1 className="text-2xl font-semibold text-ink-primary leading-tight">
-          Drop a FHIR Bulk Data export. Process the queue in parallel.
+          Review a FHIR export. Create pending cases from its evidence.
         </h1>
         <p className="text-sm text-ink-muted mt-2 max-w-2xl">
-          Built against the Da Vinci PAS Implementation Guide referenced in CMS-0057-F
-          § IV.A (89 FR 8758). Drag-drop a{" "}
+          Choose a{" "}
           <code className="text-xs text-mono-tech px-1 py-0.5 rounded bg-surface-panel">.ndjson</code>,{" "}
           <code className="text-xs text-mono-tech px-1 py-0.5 rounded bg-surface-panel">.zip</code>,
-          or FHIR Bundle export — ClinCase fans out the 7-agent graph in parallel and
-          returns a Da Vinci PAS-compatible <code className="text-xs text-mono-tech px-1 py-0.5 rounded bg-surface-panel">ClaimResponse</code>{" "}
-          per case.
+          or FHIR Bundle export. Review the patient groups, supply the payer and missing
+          request fields, then save pending cases. Source resources and their fields are
+          retained for each patient. Run and review each case from its workspace.
         </p>
       </header>
 
@@ -540,12 +638,13 @@ export default function BulkImport() {
           <button
             type="button"
             onClick={openFilePicker}
+            disabled={parsing}
             className="flex flex-col items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand rounded-xl p-2"
           >
             <CloudUpload size={48} className="text-accent-brand/60 group-hover:text-accent-brand group-hover:scale-105 transition-all" />
             <div className="text-center">
-              <div className="font-semibold text-ink-primary mb-1">
-                Drop a FHIR Bulk Data export
+              <div className="font-semibold text-ink-primary mb-1" role="status">
+                {parsing ? "Reading FHIR resources…" : "Drop a FHIR Bulk Data export"}
               </div>
               <div className="text-sm text-ink-muted">
                 or <span className="text-accent-brand underline">click to browse</span>
@@ -558,10 +657,11 @@ export default function BulkImport() {
           <button
             type="button"
             onClick={startQueue}
+            disabled={parsing}
             className="mt-4 inline-flex items-center gap-1.5 text-xs text-accent-brand bg-accent-brand-soft/50 hover:bg-accent-brand-soft px-3 py-1.5 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand"
           >
             <Zap size={12} />
-            Click to simulate a 24-case batch
+            Simulate {SYNTHETIC_BATCH.length} synthetic examples
           </button>
           {parseError && (
             <div className="mt-2 text-xs text-accent-red bg-accent-red/10 border border-accent-red/30 px-3 py-2 rounded-md max-w-xl text-center">
@@ -575,25 +675,26 @@ export default function BulkImport() {
       {/* Progress header (running) */}
       {phase !== "idle" && (
         <div className="bg-surface-raised border border-surface-border rounded-2xl p-5 mb-4">
+          <p className="mb-3 text-xs text-accent-amber" role="status">
+            {demo ? "Synthetic interface simulation · predefined outcomes · no agents run and no cases saved." : "Source preview · saved cases remain pending until you run and review them. No clinical outcomes are inferred here."}
+          </p>
           <div className="flex items-center justify-between gap-4 flex-wrap mb-3">
             <div className="flex items-center gap-3">
-              {phase === "running" ? (
+              {phase === "running" || submitting ? (
                 <Loader2 size={18} className="text-accent-brand animate-spin" />
               ) : (
-                <CheckCircle2 size={18} className="text-accent-green" />
+                <FileText size={18} className="text-accent-cyan" />
               )}
               <div>
                 <div className="text-sm font-medium text-ink-primary">
-                  {phase === "running"
-                    ? `Processing ${total} cases…`
-                    : `Batch complete · ${total} cases`}
+                  {demo ? phase === "running" ? `Simulating ${total} examples…` : `Simulation complete · ${total} examples` : `${total} patient groups · ${rows.filter(row => row.saved_case_id).length} cases saved`}
                 </div>
                 <div className="text-[11px] text-mono-tech text-ink-muted">
-                  <span className="text-accent-green">{completed}</span> complete
+                  <span className="text-accent-green">{demo ? completed : rows.filter(row => row.saved_case_id).length}</span> {demo ? "simulated" : "saved"}
                   <span className="mx-1.5 text-ink-faint">·</span>
                   <span className="text-accent-brand">{inFlight}</span> in flight
                   <span className="mx-1.5 text-ink-faint">·</span>
-                  <span>{queued}</span> queued
+                  <span>{queued}</span> {demo ? "queued examples" : "not submitted"}
                 </div>
                 {sourceFile && (
                   <div className="text-[10px] text-mono-tech text-ink-faint mt-1 flex items-center gap-1">
@@ -608,7 +709,7 @@ export default function BulkImport() {
                     {sourceFile.n_resources > 0 && (
                       <>
                         <span>·</span>
-                        <span>{sourceFile.n_resources} FHIR resources → {total} cases</span>
+                        <span>{sourceFile.n_resources} {demo ? "synthetic examples" : "source resources"}</span>
                       </>
                     )}
                   </div>
@@ -616,23 +717,33 @@ export default function BulkImport() {
               </div>
             </div>
             <div className="flex items-center gap-4 text-xs text-mono-tech text-ink-muted">
-              <span>throughput: <span className="text-accent-cyan font-semibold">{throughput} cases/sec</span></span>
-              <span>est. cost: <span className="text-accent-cyan font-semibold">${totalCost.toFixed(2)}</span></span>
-              {phase === "done" && (
+              {demo && <span>UI animation rate: <span className="text-accent-cyan font-semibold">{throughput} examples/sec</span></span>}
+              <button type="button" disabled={submitting} onClick={reset} className="text-xs px-3 py-1.5 border border-surface-border rounded-md disabled:opacity-40">{demo && phase === "running" ? "Stop simulation" : "Choose another file"}</button>
+              {phase !== "running" && (
                 <button
                   type="button"
-                  onClick={() => downloadResultsCSV(rows)}
+                  onClick={() => downloadResultsCSV(rows, demo)}
                   className="text-xs font-medium px-3 py-1.5 rounded-md border border-surface-border text-ink-body hover:bg-surface-raised-hi transition-colors flex items-center gap-1.5"
                 >
                   <Download size={11} />
-                  Download CSV
+                  {demo ? "Export simulation CSV" : "Export source summary CSV"}
                 </button>
               )}
             </div>
           </div>
 
+          {!demo && <div className="flex flex-wrap items-end gap-3 border-t border-surface-border pt-4 mt-4">
+            <label className="text-xs text-ink-muted">Payer ID for this batch
+              <input value={payer} onChange={event => setPayer(event.target.value)} disabled={submitting} placeholder="Enter the payer from the source record" className="block mt-1 border border-surface-border rounded-md bg-surface-bg text-ink-primary px-3 py-2 w-72 max-w-full" />
+            </label>
+            <button type="button" onClick={() => void createCases(rows)} disabled={submitting || !payer.trim() || !rows.some(canCreate)} className="rounded-md px-4 py-2 bg-accent-brand text-ink-invert text-xs disabled:opacity-40">{submitting ? "Saving pending cases…" : `Save ${rows.filter(canCreate).length} ready cases`}</button>
+            <p className="text-[11px] text-ink-muted max-w-xl">A patient, documented diagnosis, requested treatment, and payer are required. Missing fields stay empty for your review. Backend errors appear on their source rows.</p>
+            <Link to="/cases" className="text-xs text-accent-cyan underline">Check saved cases</Link>
+            {Boolean(sourceFile?.unlinked) && <p className="w-full text-xs text-accent-amber">{sourceFile?.unlinked} source resources are not linked to a listed clinical patient group. They are not submitted. Review the source references before treating this as a complete import.</p>}
+          </div>}
+
           {/* Segmented progress bar */}
-          <div className="flex gap-0.5">
+          {demo && <div className="flex gap-0.5">
             {rows.map((r, i) => (
               <div
                 key={r.case_id}
@@ -648,7 +759,7 @@ export default function BulkImport() {
                 title={`#${i + 1} · ${r.status}`}
               />
             ))}
-          </div>
+          </div>}
         </div>
       )}
 
@@ -656,9 +767,9 @@ export default function BulkImport() {
       {rows.length > 0 && (
         <div className="bg-surface-raised border border-surface-border rounded-2xl overflow-hidden">
           <div className="px-5 py-3 border-b border-surface-border flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-ink-primary">Queue results</h3>
+            <h3 className="text-sm font-semibold text-ink-primary">{demo ? "Simulated queue outcomes" : "Source review and case creation"}</h3>
             <span className="text-[11px] text-mono-tech text-ink-muted">
-              {completed} of {total} complete
+              {demo ? `${completed} of ${total} examples animated` : `${rows.filter(row => row.saved_case_id).length} of ${total} cases saved`}
             </span>
           </div>
           <div className="max-h-[480px] overflow-y-auto">
@@ -670,9 +781,9 @@ export default function BulkImport() {
                   <th className="text-left px-4 py-2.5">Patient</th>
                   <th className="text-left px-4 py-2.5">Diagnosis</th>
                   <th className="text-left px-4 py-2.5">Treatment</th>
-                  <th className="text-left px-4 py-2.5">Verdict</th>
-                  <th className="text-right px-4 py-2.5">Cost</th>
-                  <th className="text-right px-4 py-2.5 w-20">Finished</th>
+                  <th className="text-left px-4 py-2.5">{demo ? "Simulated verdict" : "Save status"}</th>
+                  <th className="text-right px-4 py-2.5">{demo ? "Cost" : "Action"}</th>
+                  <th className="text-right px-4 py-2.5 w-20">{demo ? "UI finished" : "Save response"}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-surface-border">
@@ -687,24 +798,28 @@ export default function BulkImport() {
                     <td className="px-4 py-2 text-[10px] text-mono-tech text-ink-faint">
                       {String(i + 1).padStart(2, "0")}
                     </td>
-                    <td className="px-4 py-2 text-mono-tech text-xs text-ink-muted">{r.case_id}</td>
-                    <td className="px-4 py-2 text-mono-tech text-xs text-ink-body">{r.patient}</td>
-                    <td className="px-4 py-2 text-xs text-ink-body">{r.diagnosis}</td>
-                    <td className="px-4 py-2 text-xs text-ink-primary">{r.treatment}</td>
+                    <td className="px-4 py-2 text-mono-tech text-xs text-ink-muted">{r.saved_case_id ? <Link to={`/cases/${r.saved_case_id}`} className="text-accent-cyan underline">{r.saved_case_id}</Link> : r.case_id}</td>
+                    <td className="px-4 py-2 text-mono-tech text-xs text-ink-body">
+                      {demo || r.saved_case_id ? r.patient || "—" : <input aria-label={`Patient initials for ${r.case_id}`} value={r.patient} onChange={event => setRows(current => current.map(row => row.case_id === r.case_id ? { ...row, patient: event.target.value } : row))} disabled={submitting} placeholder="Required initials" className="w-28 border border-surface-border bg-surface-bg rounded px-2 py-1" />}
+                    </td>
+                    <td className="px-4 py-2 text-xs text-ink-body">{r.diagnosis}{!demo && r.source_bundle && <details className="mt-2"><summary className="text-accent-cyan cursor-pointer">Review {r.source_bundle.entry.length} source resources</summary><pre className="mt-2 max-h-60 max-w-md overflow-auto whitespace-pre-wrap text-[10px] text-ink-muted">{JSON.stringify(r.source_bundle, null, 2)}</pre></details>}</td>
+                    <td className="px-4 py-2 text-xs text-ink-primary">
+                      {demo || r.saved_case_id ? r.treatment || "—" : <input aria-label={`Requested treatment for ${r.case_id}`} value={r.treatment} onChange={event => setRows(current => current.map(row => row.case_id === r.case_id ? { ...row, treatment: event.target.value } : row))} disabled={submitting} placeholder="Required requested treatment" className="w-44 border border-surface-border bg-surface-bg rounded px-2 py-1" />}
+                    </td>
                     <td className="px-4 py-2">
-                      {r.status === "queued" ? (
-                        <span className="text-[10px] text-mono-tech uppercase text-ink-faint">queued</span>
+                      {r.status === "created" ? <span className="text-xs text-accent-green">Saved · pending review</span> : r.status === "failed" ? <span className="text-xs text-accent-red" role="alert">{r.error}</span> : r.status === "queued" ? (
+                        <span className="text-[10px] text-mono-tech text-ink-faint">{demo ? "queued example" : r.error || "Not submitted"}</span>
                       ) : r.status === "in_flight" ? (
                         <span className="text-[10px] text-mono-tech uppercase text-accent-brand flex items-center gap-1">
                           <Loader2 size={10} className="animate-spin" />
-                          in flight
+                          {demo ? "animated example" : "Saving…"}
                         </span>
                       ) : (
                         <StatusPill status={STATUS_TO_PILL[r.status]} />
                       )}
                     </td>
                     <td className="px-4 py-2 text-right text-mono-tech text-xs text-ink-muted nums-tabular">
-                      {r.cost_usd > 0 ? `$${r.cost_usd.toFixed(4)}` : "—"}
+                      {demo ? "Not measured" : r.saved_case_id ? <Link to={`/cases/${r.saved_case_id}`} className="text-accent-cyan underline">Open case</Link> : <button type="button" disabled={submitting || !payer.trim() || !canCreate(r)} onClick={() => void createCases([r])} className="text-accent-cyan underline disabled:opacity-40">{r.status === "failed" ? "Retry save" : "Save pending case"}</button>}
                     </td>
                     <td className="px-4 py-2 text-right text-mono-tech text-[10px] text-ink-muted">
                       {r.finished_at_ms ? `${(r.finished_at_ms / 1000).toFixed(1)}s` : "—"}
@@ -720,7 +835,7 @@ export default function BulkImport() {
               <div className="flex items-center gap-3 mb-2">
                 <CheckCircle2 size={16} className="text-accent-green" />
                 <span className="text-sm font-medium text-ink-primary">
-                  Batch complete
+                  Synthetic simulation complete
                 </span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 text-xs">
@@ -728,28 +843,28 @@ export default function BulkImport() {
                 <BatchSummary label="Denied"     value={rows.filter((r) => r.status === "denied").length}   accent="red" />
                 <BatchSummary label="Referred"   value={rows.filter((r) => r.status === "referred").length} accent="amber" />
                 <BatchSummary label="Appealed"   value={rows.filter((r) => r.status === "appealed").length} accent="violet" />
-                <BatchSummary label="Total cost" value={`$${totalCost.toFixed(2)}`} accent="cyan" mono />
+                <BatchSummary label="Backend cases saved" value={0} accent="cyan" mono />
               </div>
               <div className="mt-3 flex items-center gap-2 text-[11px] text-ink-muted text-mono-tech">
                 <AlertCircle size={11} />
-                <span>3 appealed cases auto-drafted by Appeals Drafter agent · 0 errors</span>
+                <span>Predefined example outcomes. No clinical decision, appeal, cost, or backend throughput was produced.</span>
               </div>
               <div className="flex flex-wrap gap-2 mt-3">
                 <button
                   type="button"
-                  onClick={() => downloadResultsCSV(rows)}
+                  onClick={() => downloadResultsCSV(rows, true)}
                   className="text-xs font-medium px-3 py-1.5 rounded-md bg-accent-brand text-ink-invert hover:opacity-90 transition-opacity flex items-center gap-1.5"
                 >
                   <Download size={11} />
-                  Download results CSV
+                  Download simulation CSV
                 </button>
                 <button
                   type="button"
-                  onClick={() => generateComplianceReport(rows, totalCost)}
+                  onClick={() => downloadSimulationReport(rows)}
                   className="text-xs font-medium px-3 py-1.5 rounded-md border border-surface-border text-ink-body hover:bg-surface-raised-hi transition-colors flex items-center gap-1.5"
                 >
                   <FileText size={11} />
-                  Generate compliance report
+                  Download simulation report
                 </button>
               </div>
             </div>

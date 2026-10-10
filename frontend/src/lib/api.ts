@@ -15,133 +15,6 @@ import type {
 
 const BASE = "/api/v1";
 
-// Demo verdict routing: when /run is in fail-soft mode (no DB) it always
-// returns APPROVE. The new-case modal and intake page both stash the actual
-// clinical text under `clincase_demo_case_<id>` so the frontend can pick the
-// realistic verdict path here. Used for stage demos. Real deployments with
-// RDS bypass this entirely (the backend produces the verdict).
-type DemoVerdictPath = "APPROVE" | "DENY" | "REFER";
-interface DemoCaseRecord {
-  text: string;
-  treatment?: string;
-  payer_id?: string;
-  diagnosis?: string;
-}
-
-function pickDemoVerdict(text: string): DemoVerdictPath {
-  const s = text.toLowerCase();
-  // Explicit hints win — they are deterministic markers in the demo PDFs.
-  if (s.includes("__verdict_hint_approve__")) return "APPROVE";
-  if (s.includes("__verdict_hint_deny__"))    return "DENY";
-  if (s.includes("__verdict_hint_refer__"))   return "REFER";
-  // Heuristic fallbacks for arbitrary documents.
-  if (
-    /lvef\s*[<:=]?\s*[0-3]\d\b/.test(s) ||                // LVEF 32%, 28%, etc.
-    s.includes("anthracycline-induced cardiomyopathy") ||
-    /\bis\s+contraindicated\b/.test(s) ||                 // "is contraindicated" only
-    /her2[^a-z0-9]*neg/i.test(s) ||
-    /(her2.*ihc.*0\b|her2.*ihc.*1\+)/i.test(s)
-  ) return "DENY";
-  if (
-    /her2.*ihc.*2\+/i.test(s) ||
-    s.includes("equivocal") ||
-    s.includes("fish: not yet performed") ||
-    s.includes("not yet performed") ||
-    s.includes("pending reflex order") ||
-    s.includes("not documented")
-  ) return "REFER";
-  return "APPROVE";
-}
-
-interface VerdictBundle {
-  verdict: DemoVerdictPath;
-  rationale: string;
-  citations: { kind: string; text: string; pointer: string }[];
-  confidence: number;
-  risk_flags: string[];
-}
-
-function buildDemoVerdict(path: DemoVerdictPath, _treatment: string | undefined, isHepC: boolean): VerdictBundle {
-  if (path === "DENY") {
-    return {
-      verdict: "DENY",
-      rationale:
-        "Trastuzumab is contraindicated. LVEF 32% is below the Aetna 0048 §III.B 50% threshold and the FDA " +
-        "Herceptin Black Box warning prohibits initiation in patients with LVEF < 50% or prior anthracycline " +
-        "cardiotoxicity. Recommend cardio-oncology optimization, repeat echocardiogram in 90 days, then " +
-        "re-evaluate HER2-targeted candidacy.",
-      citations: [
-        { kind: "policy",    text: "LVEF must be ≥ 50% within 60 days of trastuzumab initiation; reduced LVEF is a contraindication", pointer: "Aetna 0048 §III.B p.5" },
-        { kind: "fda_label", text: "Black Box: cardiomyopathy. Discontinue for clinically significant decrease in LVEF", pointer: "Herceptin HPI §5.1" },
-        { kind: "guideline", text: "ACC/AHA Cardio-Oncology Statement: avoid trastuzumab when LVEF < 50%", pointer: "Circulation 2022;145(8):e635" },
-      ],
-      confidence: 0.91,
-      risk_flags: ["cardiotoxicity_risk", "lvef_below_threshold", "prior_anthracycline_exposure"],
-    };
-  }
-  if (path === "REFER") {
-    return {
-      verdict: "REFER",
-      rationale:
-        "HER2 status is equivocal (IHC 2+) and confirmatory FISH testing has not yet been performed. " +
-        "Per ASCO/CAP, HER2 IHC 2+ requires reflex FISH before HER2-targeted therapy can be authorized. " +
-        "ECOG performance status and LVEF assessments are also outstanding. Routing to the reviewer queue " +
-        "(HITL) until FISH and the ancillary workup return.",
-      citations: [
-        { kind: "guideline", text: "HER2 IHC 2+ is equivocal — reflex FISH is required for HER2-targeted therapy authorization", pointer: "ASCO/CAP HER2 Testing Guideline 2023" },
-        { kind: "policy",    text: "HER2-positivity must be confirmed (IHC 3+ or FISH-amplified) prior to trastuzumab", pointer: "Aetna 0048 §III.A p.4" },
-        { kind: "compendium",text: "NCCN BINV-N requires confirmed HER2 positivity before HER2-directed therapy", pointer: "NCCN BINV-N p.12" },
-      ],
-      confidence: 0.58,
-      risk_flags: ["her2_equivocal", "fish_pending", "lvef_pending", "ecog_undocumented"],
-    };
-  }
-  if (isHepC) {
-    return {
-      verdict: "APPROVE",
-      rationale:
-        "Sofosbuvir/velpatasvir 12 weeks is the preferred AASLD-IDSA pan-genotypic regimen for treatment-naive " +
-        "adults with chronic HCV genotype 1a and F2 fibrosis. Patient meets all Aetna CPB 0860 medical-necessity " +
-        "criteria: confirmed chronic HCV with documented genotype, FibroScan-staged liver disease, HBV/HIV " +
-        "co-infection ruled out, normal renal function, and a hepatology specialist prescriber.",
-      citations: [
-        { kind: "policy",    text: "Sofosbuvir/velpatasvir 12 weeks is medically necessary for confirmed chronic HCV with appropriate fibrosis staging and co-infection screening", pointer: "Aetna CPB 0860 §II–§III" },
-        { kind: "guideline", text: "AASLD-IDSA HCV Guidance: sofosbuvir/velpatasvir 12 wk recommended for genotype 1, treatment-naive, non-cirrhotic", pointer: "hcvguidelines.org · Treatment-Naive" },
-        { kind: "fda_label", text: "Indicated for treatment of chronic HCV genotypes 1, 2, 3, 4, 5, and 6", pointer: "Epclusa HPI §1" },
-        { kind: "guideline", text: "ASTRAL-1 trial: 99% SVR12 in genotype 1, 2, 4, 5, 6 (NEJM 2015;373:2599)", pointer: "PMID 26571066" },
-      ],
-      confidence: 0.94,
-      risk_flags: [],
-    };
-  }
-  return {
-    verdict: "APPROVE",
-    rationale:
-      "Patient meets all 6 of 6 Aetna 0048 medical-necessity criteria for HER2-positive breast cancer: HER2 IHC 3+ " +
-      "confirmed by FISH amplification, Stage IIIA pathologically confirmed, LVEF 62% within the 60-day cardiac " +
-      "assessment window, ECOG 1, no prior anthracycline contraindication, and NCCN Category 1 evidence supports " +
-      "trastuzumab in the adjuvant setting.",
-    citations: [
-      { kind: "policy",    text: "HER2-positive metastatic breast cancer eligible for HER2-directed therapy (IHC 3+ or FISH-amplified)", pointer: "Aetna 0048 §III.A p.4" },
-      { kind: "compendium",text: "Trastuzumab is preferred (Category 1) for HER2+ disease in the adjuvant setting", pointer: "NCCN BINV-N p.12" },
-      { kind: "fda_label", text: "Indicated for treatment of HER2-overexpressing breast cancer", pointer: "Herceptin HPI §1.1" },
-      { kind: "guideline", text: "Trastuzumab plus chemotherapy for adjuvant HER2+ disease", pointer: "ASCO 2022 Adjuvant HER2 Guideline §2" },
-    ],
-    confidence: 0.92,
-    risk_flags: [],
-  };
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function readDemoCase(caseId: string): DemoCaseRecord | null {
-  try {
-    const raw = localStorage.getItem(`clincase_demo_case_${caseId}`);
-    return raw ? (JSON.parse(raw) as DemoCaseRecord) : null;
-  } catch {
-    return null;
-  }
-}
-
 // Backend deployed without RDS returns a fail-soft synthetic verdict whose
 // shape predates the strict TypeScript contract. Normalize to canonical RunResult.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -150,21 +23,6 @@ export function normalizeRunResult(raw: any): RunResult {
   const looseDecision = raw?.decision;
   const looseExcerpts = raw?.policy_excerpts ?? [];
   const looseNecessity = raw?.necessity_assessment;
-
-  // Demo route: read case text stored at create time and override the
-  // hardcoded APPROVE with the realistic APPROVE / DENY / REFER path.
-  // Synthetic overrides are isolated behind two independent assertions. A
-  // normal API response can never be replaced by browser-local heuristics.
-  const allowSyntheticOverride =
-    import.meta.env.VITE_ENABLE_SYNTHETIC_RESULT_OVERRIDES === "true" &&
-    raw?.synthetic_demo === true;
-  const demoRecord = allowSyntheticOverride ? readDemoCase(raw?.case_id) : null;
-  const demoText = demoRecord?.text ?? "";
-  const treatment = demoRecord?.treatment;
-  const diagnosis = demoRecord?.diagnosis;
-  const isHepC = /hepatitis c|hcv|sofosbuvir|velpatasvir|epclusa/i.test(demoText + " " + (treatment ?? "") + " " + (diagnosis ?? ""));
-  const demoPath = demoText ? pickDemoVerdict(demoText) : null;
-  const demoVerdict = demoPath ? buildDemoVerdict(demoPath, treatment, isHepC) : null;
 
   let snapshot = raw?.clinical_snapshot;
   if (looseSnap && !looseSnap.primary_diagnosis) {
@@ -177,7 +35,7 @@ export function normalizeRunResult(raw: any): RunResult {
         description: "(diagnosis from ICD-10)",
         stage: typeof looseSnap.stage === "string" ? looseSnap.stage : null,
         onset_date: null,
-        source_resource_id: "Condition/dx-1",
+        source_resource_id: looseSnap.source_resource_id ?? "",
       },
       additional_diagnoses: [],
       prior_therapies: looseSnap.prior_treatments ?? [],
@@ -187,76 +45,15 @@ export function normalizeRunResult(raw: any): RunResult {
         ? String(looseSnap.ecog_performance_status)
         : null,
       requested_treatment: {
-        name: "trastuzumab",
+        name: looseSnap.requested_treatment?.name ?? raw.requested_treatment ?? "Not supplied",
         hcpcs_code: null,
-        j_code: "J9355",
+        j_code: looseSnap.requested_treatment?.j_code ?? null,
         dose: null,
         frequency: null,
         intent: null,
       },
-      free_text_summary: "Patient meets all medical-necessity criteria for the requested treatment.",
+      free_text_summary: looseSnap.free_text_summary ?? "No clinical summary supplied by the service.",
     };
-  }
-
-  // Demo override of clinical snapshot to reflect HepC scalability case
-  if (demoVerdict && snapshot) {
-    if (isHepC) {
-      snapshot = {
-        ...snapshot,
-        primary_diagnosis: {
-          icd10_code: "B18.2",
-          description: "Chronic viral hepatitis C",
-          stage: "F2 (mild fibrosis, non-cirrhotic)",
-          onset_date: null,
-          source_resource_id: "Condition/hcv-1",
-        },
-        biomarkers: [
-          { name: "HCV genotype", value: "1a", test_date: "2026-04-08", source_resource_id: "Observation/genotype" },
-          { name: "HCV RNA",      value: "2.4e6 IU/mL", test_date: "2026-04-08", source_resource_id: "Observation/hcvrna" },
-          { name: "FibroScan",    value: "F2 (8.4 kPa)", test_date: "2026-04-10", source_resource_id: "Observation/fibroscan" },
-          { name: "HBsAg",        value: "negative", test_date: "2026-04-08", source_resource_id: "Observation/hbsag" },
-          { name: "HIV",          value: "negative", test_date: "2026-04-08", source_resource_id: "Observation/hiv" },
-        ],
-        performance_status: null,
-        requested_treatment: {
-          name: "Sofosbuvir/Velpatasvir 400/100 mg (Epclusa)",
-          hcpcs_code: null,
-          j_code: null,
-          dose: "1 tablet PO once daily",
-          frequency: "daily",
-          intent: "curative (DAA, 12 weeks)",
-        },
-        free_text_summary:
-          "52y M with chronic HCV genotype 1a, F2 fibrosis (FibroScan 8.4 kPa), treatment-naive. " +
-          "HBV/HIV co-infection ruled out. eGFR normal. Hepatology specialist prescriber confirmed.",
-      };
-    } else if (demoVerdict.verdict === "DENY") {
-      snapshot = {
-        ...snapshot,
-        biomarkers: [
-          { name: "HER2 IHC",  value: "3+ (positive)", test_date: "2026-04-15", source_resource_id: "Observation/her2" },
-          { name: "HER2 FISH", value: "amplified, ratio 6.2", test_date: "2026-04-15", source_resource_id: "Observation/fish" },
-          { name: "LVEF",      value: "32% (REDUCED — contraindication)", test_date: "2026-04-20", source_resource_id: "Observation/lvef" },
-          { name: "Prior anthracycline", value: "doxorubicin 240 mg/m² (2018) — cardiotoxicity documented", test_date: "2018", source_resource_id: "MedicationStatement/dox" },
-        ],
-        free_text_summary:
-          "62y F with Stage IIIA HER2+ breast cancer. Prior anthracycline cardiotoxicity (doxorubicin 240 mg/m², 2018). " +
-          "Current LVEF 32% with NYHA II symptoms. Trastuzumab is contraindicated.",
-      };
-    } else if (demoVerdict.verdict === "REFER") {
-      snapshot = {
-        ...snapshot,
-        biomarkers: [
-          { name: "HER2 IHC",  value: "2+ (EQUIVOCAL)", test_date: "2026-04-15", source_resource_id: "Observation/her2" },
-          { name: "HER2 FISH", value: "NOT YET PERFORMED — pending reflex", test_date: null, source_resource_id: null },
-          { name: "ER",        value: "positive (40%, weak)", test_date: "2026-04-15", source_resource_id: "Observation/er" },
-        ],
-        performance_status: null,
-        free_text_summary:
-          "54y F with Stage IIIA breast cancer, HER2 IHC 2+ (equivocal). Reflex FISH ordered, result pending. " +
-          "ECOG and LVEF outstanding. Concurrent payer review requested.",
-      };
-    }
   }
 
   let decision = raw?.decision;
@@ -271,25 +68,13 @@ export function normalizeRunResult(raw: any): RunResult {
       verdict: looseDecision.verdict,
       rationale: looseDecision.rationale ?? looseDecision.rationale_summary ?? "",
       citations,
-      confidence: looseDecision.confidence ?? 0.85,
+      confidence: looseDecision.confidence ?? 0,
       risk_flags: looseDecision.risk_flags ?? [],
     };
   }
-  // Demo override — replaces the hardcoded APPROVE with the realistic verdict
-  // path picked from the case's clinical text.
-  if (demoVerdict) {
-    decision = {
-      verdict: demoVerdict.verdict,
-      rationale: demoVerdict.rationale,
-      citations: demoVerdict.citations,
-      confidence: demoVerdict.confidence,
-      risk_flags: demoVerdict.risk_flags,
-    };
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const policy_excerpts = (looseExcerpts as any[]).map((e) => ({
-    payer_id: e.payer_id ?? "aetna",
+    payer_id: e.payer_id ?? "Not supplied",
     policy_id: e.policy_id ?? "—",
     policy_title: e.policy_title ?? `Policy ${e.policy_id ?? ""}`,
     section_heading: e.section ?? e.section_heading ?? "",
@@ -298,41 +83,6 @@ export function normalizeRunResult(raw: any): RunResult {
     page_number: e.page ?? e.page_number ?? null,
     relevance_score: e.score ?? e.relevance_score ?? 0,
   }));
-
-  // Necessity override for DENY/REFER demo paths so the criteria panel matches the verdict.
-  if (demoVerdict && looseNecessity) {
-    if (demoVerdict.verdict === "DENY") {
-      looseNecessity.criteria_evaluated = [
-        { criterion: "HER2-positive (IHC 3+ or FISH-amplified)", met: true,  evidence: "HER2 IHC 3+ confirmed; FISH ratio 6.2",       confidence: 0.96, criterion_type: "inclusion", rationale: "HER2 positivity is met." },
-        { criterion: "Stage IIIA-IV invasive breast cancer",      met: true,  evidence: "Stage IIIA documented",                       confidence: 0.94, criterion_type: "inclusion", rationale: "Stage criterion met." },
-        { criterion: "LVEF ≥ 50% within 60 days",                 met: false, evidence: "LVEF 32% — significantly below threshold",    confidence: 0.97, criterion_type: "inclusion", rationale: "Cardiotoxicity contraindication." },
-        { criterion: "No prior anthracycline contraindication",   met: false, evidence: "Prior doxorubicin 240 mg/m² with documented cardiotoxicity", confidence: 0.93, criterion_type: "exclusion", rationale: "Anthracycline cardiotoxicity documented." },
-      ];
-      looseNecessity.overall_confidence = 0.91;
-      looseNecessity.rationale = "2 of 4 criteria not met — LVEF 32% and prior anthracycline cardiotoxicity rule out trastuzumab.";
-    } else if (demoVerdict.verdict === "REFER") {
-      looseNecessity.criteria_evaluated = [
-        { criterion: "HER2-positive (IHC 3+ or FISH-amplified)", met: null,  evidence: "HER2 IHC 2+ equivocal — FISH pending",       confidence: 0.55, criterion_type: "inclusion", rationale: "Reflex FISH required to resolve." },
-        { criterion: "Stage IIIA-IV invasive breast cancer",      met: true,  evidence: "Stage IIIA documented",                      confidence: 0.94, criterion_type: "inclusion", rationale: "Stage criterion met." },
-        { criterion: "ECOG performance status 0-2",               met: null,  evidence: "Not documented",                             confidence: 0.40, criterion_type: "inclusion", rationale: "Performance status outstanding." },
-        { criterion: "LVEF ≥ 50% within 60 days",                 met: null,  evidence: "Echocardiogram scheduled 2026-05-12",        confidence: 0.45, criterion_type: "inclusion", rationale: "LVEF assessment pending." },
-        { criterion: "Pathologic diagnosis confirmed",            met: true,  evidence: "Core biopsy result attached",                confidence: 0.93, criterion_type: "inclusion", rationale: "Pathology confirmed." },
-      ];
-      looseNecessity.overall_confidence = 0.58;
-      looseNecessity.rationale = "3 of 5 criteria are AMBIGUOUS — routing to reviewer queue (HITL) until FISH and workup complete.";
-    } else if (isHepC) {
-      looseNecessity.criteria_evaluated = [
-        { criterion: "Confirmed chronic HCV with documented genotype", met: true, evidence: "HCV genotype 1a; HCV RNA 2.4e6 IU/mL",   confidence: 0.96, criterion_type: "inclusion", rationale: "HCV confirmed." },
-        { criterion: "Liver fibrosis assessment performed",            met: true, evidence: "FibroScan F2 (8.4 kPa)",                  confidence: 0.95, criterion_type: "inclusion", rationale: "Fibrosis staged." },
-        { criterion: "HBV / HIV co-infection ruled out",               met: true, evidence: "HBsAg neg, HIV neg",                      confidence: 0.96, criterion_type: "inclusion", rationale: "Co-infection screening complete." },
-        { criterion: "Renal function adequate",                        met: true, evidence: "eGFR 88 mL/min/1.73m²",                   confidence: 0.93, criterion_type: "inclusion", rationale: "Normal renal function." },
-        { criterion: "Hepatology specialist prescriber",               met: true, evidence: "Dr. Anand Mehta, MD, DM (Hepatology)",    confidence: 0.95, criterion_type: "inclusion", rationale: "Specialist confirmed." },
-        { criterion: "Drug-interaction screening complete",            met: true, evidence: "No contraindicated medications",          confidence: 0.91, criterion_type: "inclusion", rationale: "Interactions cleared." },
-      ];
-      looseNecessity.overall_confidence = 0.94;
-      looseNecessity.rationale = "All 6 of 6 Aetna CPB 0860 criteria met for sofosbuvir/velpatasvir 12 weeks.";
-    }
-  }
 
   let necessity_assessment = raw?.necessity_assessment;
   if (looseNecessity && !looseNecessity.criteria) {
@@ -346,10 +96,10 @@ export function normalizeRunResult(raw: any): RunResult {
         status: c.met === true ? "MET" : c.met === false ? "NOT_MET" : "AMBIGUOUS",
         supporting_evidence: c.evidence ? [String(c.evidence)] : [],
         missing_evidence: null,
-        confidence: c.confidence ?? 0.85,
+        confidence: c.confidence ?? 0,
         rationale: c.rationale ?? c.evidence ?? "",
       })),
-      overall_confidence: looseNecessity.overall_confidence ?? 0.9,
+      overall_confidence: looseNecessity.overall_confidence ?? 0,
       summary: looseNecessity.rationale ?? looseNecessity.summary ?? "",
     };
   }
@@ -773,6 +523,7 @@ export interface CaseComplianceScorecard {
 }
 
 export interface OrgComplianceScorecard {
+  db_unavailable?: boolean;
   organization_id: string;
   asof_iso: string;
   totals: {
@@ -839,6 +590,8 @@ export interface OrgValueRollup {
 }
 
 export interface StarImpactProjection {
+  case_activity_90d?: number | null;
+  db_unavailable?: boolean;
   organization_id: string;
   member_count_assumed: number;
   current_star_assumption: number;

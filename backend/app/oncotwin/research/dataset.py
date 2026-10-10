@@ -25,7 +25,12 @@ import numpy as np
 
 from app.oncotwin import ONCOTWIN_VERSION
 from app.oncotwin.engine.baseline import Baseline, compute_baseline
-from app.oncotwin.engine.features import feature_tensor, series_context, signal_matrix
+from app.oncotwin.engine.features import (
+    FeatureContext,
+    feature_tensor,
+    series_context,
+    signal_matrix,
+)
 from app.oncotwin.engine.neutrophil import NeutrophilTwin
 from app.oncotwin.engine.series import build_series
 from app.oncotwin.ml.train import COHORT_SEED, PatientData, labels_from_record
@@ -52,7 +57,7 @@ _SOURCES = (
 class CohortPatient:
     data: PatientData
     baseline: Baseline
-    ctx: dict[str, Any]
+    ctx: FeatureContext
     truth: SimulationTruth
     regimen: str
     extras: dict[str, Any] = field(default_factory=dict)
@@ -162,7 +167,10 @@ def load_cohort(
     path = CACHE_DIR / f"cohort_{seed}_{n}_{version}.pkl.gz"
     if not rebuild and path.exists():
         with gzip.open(path, "rb") as f:
-            cohort = pickle.load(f)
+            cached = pickle.load(f)
+            if not isinstance(cached, Cohort):
+                raise ValueError("Invalid synthetic cohort cache")
+            cohort = cached
     else:
         cohort = build_cohort(n, seed, progress)
         CACHE_DIR.mkdir(parents=True, exist_ok=True)

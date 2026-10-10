@@ -274,7 +274,14 @@ def test_probe_paths_exist_as_real_routes():
     from app.interop.receiver import app as receiver_app
     from app.main import app as api_app
 
-    api_paths = {getattr(route, "path", None) for route in api_app.routes}
+    api_paths = set()
+    for route in api_app.routes:
+        if type(route).__name__ == "_IncludedRouter":
+            pfx = getattr(route.include_context, "prefix", "") or ""
+            for sub in route.original_router.routes:
+                api_paths.add(pfx + getattr(sub, "path", ""))
+        elif hasattr(route, "path"):
+            api_paths.add(route.path)
     receiver_paths = {getattr(route, "path", None) for route in receiver_app.routes}
     assert {"/api/v1/healthz", "/api/v1/readyz"} <= api_paths
     assert "/healthz" in receiver_paths

@@ -12,6 +12,7 @@ import {
   UserPlus,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 
 import { useAuth } from "../components/AuthContext";
 import { api } from "../lib/api";
@@ -61,6 +62,7 @@ export default function Settings() {
       setLoading(false);
     }
   }
+  useAutoRefresh(loadUsers, 30_000, !creating);
 
   async function handleCreate(e: React.FormEvent) {
     e.preventDefault();

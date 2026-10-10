@@ -29,6 +29,8 @@ from typing import Any
 
 import numpy as np
 
+from app.llm.base import LLMResponse
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.baseline import compute_baseline
 from app.oncotwin.engine.features import feature_tensor, series_context, signal_matrix
 from app.oncotwin.engine.neutrophil import NeutrophilTwin
@@ -46,7 +48,7 @@ from app.oncotwin.simulator.patients import simulate
 WATCH = ("resting_hr", "hrv_sdnn", "spo2", "steps", "sleep_hours", "temperature")
 
 
-def _intel(record: PatientRecord, day: int, model=None, drift=None) -> dict[str, Any]:
+def _intel(record: PatientRecord, day: int, model: DeteriorationModel | None = None, drift: dict[str, Any] | None = None) -> dict[str, Any]:
     model = model or load_model()
     b = compute_history_bundle(record, day, model)
     states = build_states(record, b.snapshots, b.day_facts)
@@ -258,7 +260,7 @@ def sudden_spike() -> dict[str, Any]:
 
 def _population_rows(
     shift: bool,
-) -> tuple[np.ndarray, np.ndarray, dict[str, list[bool]], int, np.ndarray]:
+) -> tuple[FloatArray, FloatArray, dict[str, list[bool]], int, FloatArray]:
     model = load_model()
     rows, preds, groups = [], [], []
     missing: dict[str, list[bool]] = {k: [] for k in MODEL_SIGNALS}
@@ -347,7 +349,7 @@ def conflicting_events() -> dict[str, Any]:
 
 
 class _FakeLLM:
-    async def complete(self, **_: Any):
+    async def complete(self, **_: Any) -> LLMResponse:
         from app.llm.base import LLMResponse
 
         text = (

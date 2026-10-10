@@ -5,13 +5,14 @@
  * invented text). `buildTickerItems` and `buildNavChips` are pure so the wording rules are unit-testable.
  */
 import { authHeader } from "./auth";
+import { getRefreshRevision } from "./liveUpdates";
 
 export type Tone = "emerald" | "amber" | "cyan" | "brand" | "red";
 export type TickerIcon = "activity" | "alert" | "check" | "heart" | "shield" | "spark" | "zap";
 export interface TickerItem { tone: Tone; icon: TickerIcon; text: string }
 
 export interface FeedSnapshot {
-  health: { status: string; db: string } | null;
+  health: { status: string; db: string; case_storage_configured?: boolean } | null;
   cases: { total: number; awaiting: number } | null;
   onco: { open_alerts: number; patients: number; ledger_valid: boolean } | null;
   cardio: { integrity: boolean; version: string; cad_auc: number | null } | null;
@@ -28,11 +29,18 @@ export const EMPTY_SNAPSHOT: FeedSnapshot = {
 
 const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString()} ${n === 1 ? one : many}`;
 
+export function isHealthDegraded(health: FeedSnapshot["health"]): boolean {
+  return !!health && (health.status !== "ok" || health.case_storage_configured === false);
+}
+
 export function buildTickerItems(s: FeedSnapshot): TickerItem[] {
   const out: TickerItem[] = [];
   if (s.health) {
-    const ok = s.health.status === "ok";
-    out.push({ tone: ok ? "emerald" : "red", icon: ok ? "check" : "alert", text: ok ? `API healthy · database ${s.health.db.replace(/_/g, " ")}` : `API reports status "${s.health.status}"` });
+    const ok = !isHealthDegraded(s.health);
+    const text = s.health.status !== "ok" ? `API reports status "${s.health.status}"`
+      : s.health.case_storage_configured === false ? "API reachable · case storage is not connected · counts and agent metrics unknown"
+      : `API healthy · database ${s.health.db.replace(/_/g, " ")}`;
+    out.push({ tone: ok ? "emerald" : "red", icon: ok ? "check" : "alert", text });
   }
   if (s.cases) {
     out.push({
@@ -84,6 +92,8 @@ export function buildNotifications(s: FeedSnapshot): Notification[] {
   const out: Notification[] = [];
   if (s.health && s.health.status !== "ok") {
     out.push({ key: "health", count: 1, tone: "red", icon: "alert", title: "API is not healthy", body: `Status "${s.health.status}", database ${s.health.db}.`, to: "/architecture" });
+  } else if (s.health?.case_storage_configured === false) {
+    out.push({ key: "health", count: 1, tone: "red", icon: "alert", title: "Case storage is not connected", body: "Case counts and agent metrics are unknown. Database-backed workflows are unavailable.", to: "/architecture" });
   }
   if (s.cases && s.cases.awaiting > 0) {
     out.push({ key: "awaiting", count: s.cases.awaiting, tone: "amber", icon: "alert", title: `${plural(s.cases.awaiting, "case")} awaiting human review`, body: "Paused at the review gate for a clinician decision.", to: "/reviewer" });
@@ -116,27 +126,32 @@ export function buildNavChips(s: FeedSnapshot): Record<string, string | null> {
   };
 }
 
-async function get<T>(url: string, auth = true): Promise<T | null> {
+async function get<T>(url: string, headers: Record<string, string>): Promise<T | null> {
   try {
-    const res = await fetch(url, { headers: auth ? { Accept: "application/json", ...authHeader() } : { Accept: "application/json" } });
+    const res = await fetch(url, { headers: { Accept: "application/json", ...headers } });
     return res.ok ? ((await res.json()) as T) : null;
   } catch {
     return null;
   }
 }
 
-async function loadSnapshot(): Promise<FeedSnapshot> {
+async function loadSnapshot(headers: Record<string, string>): Promise<FeedSnapshot> {
+  const healthRequest = get<NonNullable<FeedSnapshot["health"]>>("/api/v1/healthz", {});
+  // Liveness is not database readiness. Only an explicit unconfigured pool suppresses
+  // case-storage requests; configured/older servers retain their own failure signals.
+  const fromCaseStorage = async <T,>(url: string): Promise<T | null> =>
+    (await healthRequest)?.case_storage_configured === false ? null : get<T>(url, headers);
   const [health, cases, awaiting, onco, cardio, agents, policies, ev, roi, arch] = await Promise.all([
-    get<{ status: string; db: string }>("/api/v1/healthz", false),
-    get<{ total: number }>("/api/v1/cases?limit=1"),
-    get<{ total: number }>("/api/v1/cases?limit=1&status=awaiting_review"),
-    get<{ open_alerts: number; patients: number; ledger: { valid: boolean } }>("/api/v1/oncotwin/overview"),
-    get<{ model: { integrity_verified: boolean; version: string }; headline_metrics: { CAD?: { roc_auc: number } } }>("/api/v1/cardiotwin/overview"),
-    get<{ window_hours: number; agents: Record<string, { errors: number }>; totals: { invocations: number } }>("/api/v1/agents/metrics?hours=24"),
-    get<{ n: number; n_with_recent_change: number }>("/api/v1/policy-catalog"),
-    get<{ macro_f1: number; n?: number }>("/api/v1/eval/cohort"),
-    get<{ direct_savings_annual_projection_usd: number; db_unavailable?: boolean }>("/api/v1/business-value/org"),
-    get<{ layers: unknown[] }>("/api/v1/architecture/layers"),
+    healthRequest,
+    fromCaseStorage<{ total: number }>("/api/v1/cases?limit=1"),
+    fromCaseStorage<{ total: number }>("/api/v1/cases?limit=1&status=awaiting_review"),
+    get<{ open_alerts: number; patients: number; ledger: { valid: boolean } }>("/api/v1/oncotwin/overview", headers),
+    get<{ model: { integrity_verified: boolean; version: string }; headline_metrics: { CAD?: { roc_auc: number } } }>("/api/v1/cardiotwin/overview", headers),
+    fromCaseStorage<{ window_hours: number; agents: Record<string, { errors: number }>; totals: { invocations: number } }>("/api/v1/agents/metrics?hours=24"),
+    get<{ n: number; n_with_recent_change: number }>("/api/v1/policy-catalog", headers),
+    get<{ macro_f1: number; n?: number }>("/api/v1/eval/cohort", headers),
+    get<{ direct_savings_annual_projection_usd: number; db_unavailable?: boolean }>("/api/v1/business-value/org", headers),
+    get<{ layers: unknown[] }>("/api/v1/architecture/layers", headers),
   ]);
   return {
     health,
@@ -154,13 +169,18 @@ async function loadSnapshot(): Promise<FeedSnapshot> {
 // One shared round of requests for the whole shell (ticker + sidebar): concurrent callers share the in-flight
 // promise and results are reused for a short TTL, so the shell never doubles its polling.
 const TTL_MS = 30_000;
-let cached: { at: number; promise: Promise<FeedSnapshot> } | null = null;
+let cached: { at: number; revision: number; authorization: string | undefined; promise: Promise<FeedSnapshot> } | null = null;
 
 export function fetchSnapshot(): Promise<FeedSnapshot> {
   const now = Date.now();
-  if (cached && now - cached.at < TTL_MS) return cached.promise;
-  const promise = loadSnapshot();
-  cached = { at: now, promise };
+  // Capture one identity for the whole round, including requests deferred until health
+  // resolves. Never reuse another signed-in organisation's cached snapshot.
+  const headers = authHeader();
+  const authorization = headers.Authorization;
+  const revision = getRefreshRevision();
+  if (cached && cached.revision === revision && cached.authorization === authorization && now - cached.at < TTL_MS) return cached.promise;
+  const promise = loadSnapshot(headers);
+  cached = { at: now, revision, authorization, promise };
   promise.catch(() => {
     if (cached?.promise === promise) cached = null;
   });

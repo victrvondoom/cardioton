@@ -9,7 +9,7 @@
  */
 import clsx from "clsx";
 import { ArrowRight, ScrollText, Sparkles } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { AgentHealthPanel } from "../components/AgentHealthPanel";
@@ -17,13 +17,12 @@ import { KineticHeading } from "../components/KineticHeading";
 import { LivePipelineConsole } from "../components/LivePipelineConsole";
 import { RecentCasesRibbon } from "../components/RecentCasesRibbon";
 import { StatTile } from "../components/StatTile";
-import { api, type OrgValueRollup } from "../lib/api";
+import { api } from "../lib/api";
 import { fetchManifest, getJson } from "../lib/agentsApi";
 import { buildAgents } from "../lib/agentsModel";
 import { useLive } from "../lib/useLive";
 import { CMS_0057_F_CLAUSES, daysUntil } from "../lib/regulatory";
 import { usePipelineRun } from "../lib/usePipelineRun";
-import type { DemoFixture } from "../lib/types";
 
 const VERDICT_TINT: Record<string, string> = {
   APPROVE: "bg-accent-green/10 text-accent-green border-accent-green/30",
@@ -57,18 +56,14 @@ function TrustChip({
 }
 
 export default function Dashboard() {
-  const [fixtures, setFixtures] = useState<DemoFixture[] | null>(null);
+  const fixtureFeed = useLive(api.listFixtures);
+  const fixtures = fixtureFeed.data;
   const [creating, setCreating] = useState<string | null>(null);
-  const [orgValue, setOrgValue] = useState<OrgValueRollup | null>(null);
+  const valueFeed = useLive(api.getOrgValue);
+  const orgValue = valueFeed.data?.db_unavailable ? null : valueFeed.data;
   // Drives the hero console: one live, streamed run of the 7-agent DAG.
   const pipeline = usePipelineRun();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    api.listFixtures().then(setFixtures).catch(() => setFixtures([]));
-    // Live business-value rollup — populates the new KPI tile.
-    api.getOrgValue().then(setOrgValue).catch(() => setOrgValue(null));
-  }, []);
 
   // Active cases sparkline (last 7d, plausible synthetic series)
   // Real activity series from the org's own cases (last 7 UTC days); hidden until there is any activity.
@@ -77,8 +72,8 @@ export default function Dashboard() {
     return d && d.some((n) => n > 0) ? d : undefined;
   }, [orgValue]);
   const baseline = orgValue?.assumptions;
-  const manifest = useLive(fetchManifest, [], 0);
-  const caps = useLive(() => getJson<{ deployment?: { llm_provider?: string; bedrock_model_id?: string } }>("/api/v1/capabilities", false), [], 0);
+  const manifest = useLive(fetchManifest);
+  const caps = useLive(() => getJson<{ deployment?: { llm_provider?: string; bedrock_model_id?: string } }>("/api/v1/capabilities", false));
 
   async function startDemo(name: string) {
     setCreating(name);
@@ -92,6 +87,7 @@ export default function Dashboard() {
 
   return (
     <div className="px-6 py-6 reveal-go">
+      {(valueFeed.error || fixtureFeed.error || valueFeed.data?.db_unavailable) && <p role="status" className="mb-4 rounded-lg border border-accent-amber/30 bg-accent-amber/5 px-3 py-2 text-xs text-ink-muted">{valueFeed.error ? `Business metrics unavailable: ${valueFeed.error}` : valueFeed.data?.db_unavailable ? "Case storage is unavailable. Business metrics cannot be calculated." : `Demo fixtures unavailable: ${fixtureFeed.error}`}</p>}
       {/* HERO band — 2-col grid (text + shield). Background washes fill the
           card edge-to-edge so light mode doesn't show a white void in the
           middle. Shield is now a real grid column, not absolute, so there's
@@ -116,7 +112,7 @@ export default function Dashboard() {
             <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md border border-accent-brand/25 bg-accent-brand/[0.06]">
               <span className="w-1.5 h-1.5 rounded-full bg-accent-cyan animate-pulse" />
               <span className="text-compact text-[10px] text-accent-brand-glow">
-                Healthcare · Prior Authorisation Automation
+                Cardiovascular Digital Twin Platform
               </span>
             </div>
 
@@ -125,17 +121,15 @@ export default function Dashboard() {
               staggerMs={60}
               className="editorial-hero text-[34px] sm:text-[44px] lg:text-[52px] text-ink-primary mt-5"
               parts={[
-                "ONE HEALTH ",
-                { accent: "INTEROPERABILITY" },
-                " GATEWAY",
+                "WORLD ",
+                { accent: "CARDIOLOGY" },
+                " CLINIC",
               ]}
             />
 
             <p className="text-ui-secondary text-ink-body leading-relaxed mt-4 max-w-[58ch] text-[14.5px]">
-              Provider-side, FHIR-native copilot. Seven agents read clinical evidence and
-              payer policy, then ship a verdict with a citation chain. On denial, an
-              NCCN-grounded appeal letter is drafted automatically. Deploys natively to
-              <strong className="text-accent-brand"> TriZetto AI Gateway</strong>.
+              A centralized digital twin command center for cardiology. Integrate real-world environmental context,
+              live 3D heart simulations, and vessel-level risk predictions in a single patient-centered workflow.
             </p>
 
             <div className="mt-6 flex items-center gap-2 flex-wrap">
@@ -186,7 +180,7 @@ export default function Dashboard() {
             hint={
               orgValue
                 ? `${orgValue.cases_decided} decided MTD`
-                : "loading…"
+                : valueFeed.loading ? "loading…" : "metrics unavailable"
             }
           />
         </div>

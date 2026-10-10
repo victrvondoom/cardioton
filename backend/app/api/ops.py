@@ -212,11 +212,11 @@ async def healthz_deep() -> dict[str, Any]:
         from app.llm.factory import get_llm_client
         from app.llm.gateway import GenAIGateway
 
-        client = get_llm_client()
-        is_gateway = isinstance(client, GenAIGateway)
+        llm_client = get_llm_client()
+        is_gateway = isinstance(llm_client, GenAIGateway)
         layers["genai_gateway"] = {
             "status": "ok",
-            "wrapping_class": type(client).__name__,
+            "wrapping_class": type(llm_client).__name__,
             "gateway_enabled": is_gateway and settings.GENAI_GATEWAY_ENABLED,
         }
     except Exception as e:  # noqa: BLE001

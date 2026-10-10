@@ -8,7 +8,7 @@
  */
 import { ArrowDown, Droplets, Fish, Users } from "lucide-react";
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { useLive } from "../lib/useLive";
 import { Link } from "react-router-dom";
 
 import { aqua } from "../aquahealth/api";
@@ -21,7 +21,7 @@ import {
   StatusBadge,
   formatDate,
 } from "../aquahealth/panels";
-import type { OneHealthLayer, OneHealthView } from "../aquahealth/types";
+import type { OneHealthLayer } from "../aquahealth/types";
 
 const LAYER_ICON: Record<OneHealthLayer["layer"], ReactNode> = {
   ecosystem: <Droplets size={18} />,
@@ -36,19 +36,11 @@ const LAYER_ACCENT: Record<OneHealthLayer["layer"], string> = {
 };
 
 export default function AquaOneHealth() {
-  const [data, setData] = useState<OneHealthView | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const oneHealth = useLive(aqua.oneHealth);
+  const data = oneHealth.data;
+  const error = oneHealth.error;
 
-  useEffect(() => {
-    aqua
-      .oneHealth()
-      .then(setData)
-      .catch((e) =>
-        setError(e instanceof Error ? e.message : "Failed to load the One Health view"),
-      );
-  }, []);
-
-  if (error) {
+  if (error && !data) {
     return (
       <div className="p-6 lg:p-8 max-w-4xl">
         <ErrorNote message={error} />
@@ -66,6 +58,7 @@ export default function AquaOneHealth() {
 
   return (
     <div className="p-6 lg:p-8 max-w-4xl">
+      {error && <ErrorNote message={error} />}
       <PageHeader
         eyebrow="AQUAHEALTH · ONE HEALTH"
         title="Ecosystem, animals and communities"

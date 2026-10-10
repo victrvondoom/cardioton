@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 import { BUTTON, INPUT } from "../onehealth/Forms";
 import { interop, type ExternalFhirCheck, type Job, type Mapping } from "../interop/api";
 import { downloadPassport } from "../onehealth/Journey";
@@ -26,51 +27,89 @@ export default function Interop() {
   const [receiverMode, setReceiverMode] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [refreshError, setRefreshError] = useState("");
   const [returned, setReturned] = useState<unknown>(null);
   const [externalCheck, setExternalCheck] = useState<ExternalFhirCheck | null>(null);
   const [useAI, setUseAI] = useState(false);
   const [resume, setResume] = useState("");
   const canReview = user?.role === "reviewer" || user?.role === "admin";
+  const requestEpoch = useRef(0);
+  const refreshSeq = useRef(0);
+  const initialRead = useRef(false);
+  useAutoRefresh(async () => {
+    if (initialRead.current) return;
+    const epoch = requestEpoch.current;
+    const sequence = ++refreshSeq.current;
+    try {
+      const [m, latest] = await Promise.all([
+        interop<{ targets: Record<string, string>; receiver_mode: string }>("/meta"),
+        job ? interop<Job>(`/jobs/${encodeURIComponent(job.id)}`) : Promise.resolve(null),
+      ]);
+      if (epoch !== requestEpoch.current || sequence !== refreshSeq.current) return;
+      setTargets(m.targets);
+      setReceiverMode(m.receiver_mode);
+      if (latest) {
+        // Keep the source/bundle editors intact; only server-owned progress is refreshed.
+        setJob((current) => current?.id === latest.id && current.version <= latest.version ? latest : current);
+      }
+      setRefreshError("");
+    } catch (e) {
+      if (epoch === requestEpoch.current && sequence === refreshSeq.current) setRefreshError(e instanceof Error ? e.message : "Could not refresh interoperability state.");
+    }
+  }, 15_000, canReview && !busy);
   useEffect(() => {
-    let active = true;
+    const epoch = ++requestEpoch.current;
+    refreshSeq.current++;
+    initialRead.current = true;
+    setBusy(false);
+    setRefreshError("");
+    const initialRequests: Promise<unknown>[] = [];
     if (canReview && jobParam) {
-      interop<Job>(`/jobs/${encodeURIComponent(jobParam)}`)
+      initialRequests.push(interop<Job>(`/jobs/${encodeURIComponent(jobParam)}`)
         .then((j) => {
-          if (!active) return;
+          if (epoch !== requestEpoch.current) return;
           setJob(j);
           setSource(json(j.source.payload));
           setBundle(j.bundle ? json(j.bundle) : "");
           setCheckedBundle(j.validation && j.bundle ? json(j.bundle) : "");
         })
         .catch((e) => {
-          if (active) setError(String(e));
-        });
+          if (epoch === requestEpoch.current) setRefreshError(String(e));
+        }));
     }
-    return () => {
-      active = false;
-    };
-  }, [canReview, jobParam]);
-  useEffect(() => {
     if (canReview)
-      interop<{ targets: Record<string, string>; receiver_mode: string }>(
+      initialRequests.push(interop<{ targets: Record<string, string>; receiver_mode: string }>(
         "/meta",
       )
         .then((m) => {
+          if (epoch !== requestEpoch.current) return;
           setTargets(m.targets);
           setReceiverMode(m.receiver_mode);
         })
-        .catch((e) => setError(String(e)));
-  }, [canReview]);
+        .catch((e) => { if (epoch === requestEpoch.current) setRefreshError(String(e)); }));
+    void Promise.allSettled(initialRequests).finally(() => {
+      if (epoch === requestEpoch.current) initialRead.current = false;
+    });
+    return () => { requestEpoch.current++; refreshSeq.current++; };
+  }, [canReview, jobParam]);
+  function beginAction() {
+    const epoch = ++requestEpoch.current;
+    refreshSeq.current++;
+    initialRead.current = false;
+    setBusy(true);
+    setError("");
+    return epoch;
+  }
   const command = () => ({ job_id: job!.id, expected_version: job!.version });
   async function run(
     action: () => Promise<Job>,
     updateBundle = false,
     validationText?: string,
   ) {
-    setBusy(true);
-    setError("");
+    const epoch = beginAction();
     try {
       const j = await action();
+      if (epoch !== requestEpoch.current) return;
       setJob(j);
       if (updateBundle) {
         const text = j.bundle ? json(j.bundle) : "";
@@ -80,9 +119,9 @@ export default function Interop() {
         setCheckedBundle(validationText);
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
+      if (epoch === requestEpoch.current) setError(e instanceof Error ? e.message : String(e));
     } finally {
-      setBusy(false);
+      if (epoch === requestEpoch.current) setBusy(false);
     }
   }
   if (!canReview)
@@ -117,7 +156,7 @@ export default function Interop() {
           TRACK 7 | DIGITAL HEALTH STANDARDS
         </p>
         <h1 className="text-3xl mt-2">
-          CLINI-CASE / One Health Interoperability Gateway
+          CARDIOTON / One Health Interoperability Gateway
         </h1>
         <p className="text-ink-muted mt-3">
           Move One Health evidence between systems without losing meaning,
@@ -182,6 +221,7 @@ export default function Interop() {
           {error}
         </div>
       )}
+      {refreshError && <p role="status" className="rounded-xl border border-accent-amber/40 bg-accent-amber/5 p-3 text-xs text-accent-amber">Live refresh: {refreshError}. Your editor drafts are retained.</p>}
       <div className="flex flex-wrap gap-3">
         <label className="text-sm">
           Semantic example
@@ -592,8 +632,7 @@ export default function Interop() {
               {button(
                 "Return FHIR/OAH from System B to Lab A",
                 () => {
-                  setBusy(true);
-                  setError("");
+                  const epoch = beginAction();
                   interop<{
                     job: Job;
                     lab_representation: unknown;
@@ -607,11 +646,12 @@ export default function Interop() {
                     };
                   }>("/return", command())
                     .then((r) => {
+                      if (epoch !== requestEpoch.current) return;
                       setJob(r.job);
                       setReturned(r);
                     })
-                    .catch((e) => setError(String(e)))
-                    .finally(() => setBusy(false));
+                    .catch((e) => { if (epoch === requestEpoch.current) setError(String(e)); })
+                    .finally(() => { if (epoch === requestEpoch.current) setBusy(false); });
                 },
                 !job.transfers.some((t) => t.status === "delivered"),
               )}
@@ -667,15 +707,15 @@ export default function Interop() {
               className={BUTTON}
               disabled={busy || !job.bundle || !job.validation?.valid || !job.source.synthetic}
               onClick={() => {
-                setBusy(true);
-                setError("");
+                const epoch = beginAction();
                 interop<{ job: Job; external: ExternalFhirCheck }>("/external-check", command())
                   .then((result) => {
+                    if (epoch !== requestEpoch.current) return;
                     setJob(result.job);
                     setExternalCheck(result.external);
                   })
-                  .catch((e) => setError(e instanceof Error ? e.message : String(e)))
-                  .finally(() => setBusy(false));
+                  .catch((e) => { if (epoch === requestEpoch.current) setError(e instanceof Error ? e.message : String(e)); })
+                  .finally(() => { if (epoch === requestEpoch.current) setBusy(false); });
               }}
             >
               Send synthetic Bundle to HAPI and read back
@@ -700,25 +740,23 @@ export default function Interop() {
             <p className="text-xs mb-3">{job.trust_states?.join(" → ")}</p>
             <div className="flex gap-3 flex-wrap">
               {button("Verify passport integrity", () => {
-                setBusy(true);
-                setError("");
+                const epoch = beginAction();
                 interop<{ status: string }>(
                   `/passport/${job.id}/verify-integrity`,
                   {},
                 )
-                  .then((r) => setIntegrity(r.status))
-                  .catch((e) => setError(String(e)))
-                  .finally(() => setBusy(false));
+                  .then((r) => { if (epoch === requestEpoch.current) setIntegrity(r.status); })
+                  .catch((e) => { if (epoch === requestEpoch.current) setError(String(e)); })
+                  .finally(() => { if (epoch === requestEpoch.current) setBusy(false); });
               })}
               {button(
                 "Export Evidence Passport",
                 () => {
-                  setBusy(true);
-                  setError("");
+                  const epoch = beginAction();
                   interop<unknown>(`/passport/${job.id}/export`)
-                    .then((r) => downloadPassport(r, job.id))
-                    .catch((e) => setError(String(e)))
-                    .finally(() => setBusy(false));
+                    .then((r) => { if (epoch === requestEpoch.current) downloadPassport(r, job.id); })
+                    .catch((e) => { if (epoch === requestEpoch.current) setError(String(e)); })
+                    .finally(() => { if (epoch === requestEpoch.current) setBusy(false); });
                 },
                 !job.bundle,
               )}

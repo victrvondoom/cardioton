@@ -22,7 +22,7 @@ export default function ProblemSection() {
             marginBottom: "1rem",
           }}
         >
-          WITHOUT CLINCASE
+          WITHOUT CARDIOTON
         </p>
         <h2
           style={{

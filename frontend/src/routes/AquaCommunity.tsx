@@ -9,27 +9,19 @@
  */
 import { Award, Droplets, Lock, Trophy, Users } from "lucide-react";
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
+import { useLive } from "../lib/useLive";
 import { Link } from "react-router-dom";
 
 import { aqua } from "../aquahealth/api";
 import { ErrorNote, LoadingNote, PageHeader } from "../aquahealth/panels";
-import type { Badge, CommunityStats } from "../aquahealth/types";
+import type { Badge } from "../aquahealth/types";
 
 export default function AquaCommunity() {
-  const [stats, setStats] = useState<CommunityStats | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const community = useLive(aqua.community);
+  const stats = community.data;
+  const error = community.error;
 
-  useEffect(() => {
-    aqua
-      .community()
-      .then(setStats)
-      .catch((e) =>
-        setError(e instanceof Error ? e.message : "Failed to load community stats"),
-      );
-  }, []);
-
-  if (error) {
+  if (error && !stats) {
     return (
       <div className="p-6 lg:p-8 max-w-4xl">
         <ErrorNote message={error} />
@@ -49,6 +41,7 @@ export default function AquaCommunity() {
 
   return (
     <div className="p-6 lg:p-8 max-w-4xl">
+      {error && <ErrorNote message={error} />}
       <PageHeader
         eyebrow="AQUAHEALTH · COMMUNITY"
         title="Your contribution"

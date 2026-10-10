@@ -11,9 +11,15 @@ router = APIRouter(tags=["health"])
 
 
 @router.get("/healthz")
-async def healthz() -> dict[str, str]:
+async def healthz() -> dict[str, str | bool]:
     """Process-only liveness; database traffic gating belongs to /readyz."""
-    return {"status": "ok", "db": "not_checked"}
+    return {
+        "status": "ok",
+        "db": "not_checked",
+        # Pool initialization is a capability hint, not a database health probe.
+        # DB-less clients can avoid unsupported calls without inventing counts.
+        "case_storage_configured": bool(db.pool_snapshot()["writer_pool"]["configured"]),
+    }
 
 
 @router.get("/readyz")

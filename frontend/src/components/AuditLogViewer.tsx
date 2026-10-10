@@ -1,5 +1,6 @@
 ﻿import { ChevronDown, ChevronUp, FileText } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 
 import { api } from "../lib/api";
 import type { AgentRun } from "../lib/types";
@@ -19,22 +20,34 @@ const AGENT_DISPLAY: Record<string, string> = {
 };
 
 export function AuditLogViewer({ caseId, refreshKey = 0 }: Props) {
-  const [runs, setRuns] = useState<AgentRun[] | null>(null);
+  const [snapshot, setSnapshot] = useState<{ caseId: string; runs: AgentRun[] | null; cost: number | null } | null>(null);
+  const runs = snapshot?.caseId === caseId ? snapshot.runs : null;
+  const cost = snapshot?.caseId === caseId ? snapshot.cost : null;
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const sequence = useRef(0);
+
+  const load = useCallback(async () => {
+    const generation = ++sequence.current;
+    const [audit, value] = await Promise.allSettled([api.getAudit(caseId), api.getCaseValue(caseId)]);
+    if (generation !== sequence.current) return;
+    setSnapshot((previous) => ({
+      caseId,
+      runs: audit.status === "fulfilled" ? audit.value.agent_runs : previous?.caseId === caseId ? previous.runs : null,
+      cost: value.status === "fulfilled" ? value.value.clincase_cost_usd : previous?.caseId === caseId ? previous.cost : null,
+    }));
+    setError([audit, value].filter((result): result is PromiseRejectedResult => result.status === "rejected").map((result) => String(result.reason)).join(" · ") || null);
+  }, [caseId]);
 
   useEffect(() => {
     if (!open) return;
-    api
-      .getAudit(caseId)
-      .then((d) => setRuns(d.agent_runs))
-      .catch((e) => setError(String(e)));
-  }, [caseId, open, refreshKey]);
+    void load();
+    return () => { sequence.current++; };
+  }, [load, open, refreshKey]);
+  useAutoRefresh(load, 30_000, open);
 
   const totalIn = runs?.reduce((s, r) => s + (r.input_tokens ?? 0), 0) ?? 0;
   const totalOut = runs?.reduce((s, r) => s + (r.output_tokens ?? 0), 0) ?? 0;
-  // Sonnet 4.6 pricing: $3 / Mtok in, $15 / Mtok out
-  const cost = (totalIn * 3) / 1_000_000 + (totalOut * 15) / 1_000_000;
   const totalLatency = runs?.reduce((s, r) => s + (r.latency_ms ?? 0), 0) ?? 0;
 
   return (
@@ -42,6 +55,7 @@ export function AuditLogViewer({ caseId, refreshKey = 0 }: Props) {
       <button
         type="button"
         onClick={() => setOpen(!open)}
+        aria-expanded={open}
         className="w-full px-5 py-3 flex items-center justify-between hover:bg-neutral-50 transition-colors"
       >
         <div className="flex items-center gap-2">
@@ -74,7 +88,7 @@ export function AuditLogViewer({ caseId, refreshKey = 0 }: Props) {
 
           {runs && runs.length === 0 && (
             <div className="p-6 text-center text-neutral-400 text-sm">
-              No agent runs yet for this case. Click "Run ClinCase" first.
+              No agent runs yet for this case. Click "Run CARDIOTON" first.
             </div>
           )}
 
@@ -154,9 +168,9 @@ export function AuditLogViewer({ caseId, refreshKey = 0 }: Props) {
                   </span>
                 </div>
                 <span>
-                  Estimated cost (Sonnet 4.6):{" "}
+                  Estimated cost (backend pricing):{" "}
                   <span className="text-mono-tech font-bold text-gray-700">
-                    ${cost.toFixed(4)}
+                    {cost == null ? "Unavailable" : `$${cost.toFixed(4)}`}
                   </span>
                 </span>
               </div>

@@ -24,7 +24,7 @@ export function formatMs(ms: number | null): string {
 }
 
 export function AgentHealthPanel() {
-  const manifest = useLive(fetchManifest, [], 0);
+  const manifest = useLive(fetchManifest, [], 60_000);
   const metrics = useLive(() => fetchMetrics(24), [], 30_000);
   const agents = useMemo(() => (manifest.data ? buildAgents(manifest.data, metrics.data) : []), [manifest.data, metrics.data]);
   const error = manifest.error ?? null;

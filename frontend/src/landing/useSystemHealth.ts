@@ -7,6 +7,7 @@
  * landing page can call them before the visitor has an account.
  */
 import { useCallback, useEffect, useState } from "react";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 
 export const HEALTH_URL = "/api/v1/healthz";
 export const CAPABILITIES_URL = "/api/v1/capabilities";
@@ -14,6 +15,7 @@ export const CAPABILITIES_URL = "/api/v1/capabilities";
 export interface SystemHealth {
   status: string;
   db: string;
+  case_storage_configured?: boolean;
 }
 
 export interface Capabilities {
@@ -44,6 +46,7 @@ export interface HealthState {
   loading: boolean;
   error: string | null;
   checkedAt: number | null;
+  updatedAt?: number | null;
 }
 
 async function probe(): Promise<{
@@ -77,11 +80,13 @@ const INITIAL: HealthState = {
   loading: true,
   error: null,
   checkedAt: null,
+  updatedAt: null,
 };
 
 let sharedState: HealthState = INITIAL;
 let inFlight: Promise<void> | null = null;
 const listeners = new Set<(state: HealthState) => void>();
+const schedulerListeners = new Set<() => void>();
 
 function publish(next: HealthState) {
   sharedState = next;
@@ -101,16 +106,18 @@ function runProbe(): Promise<void> {
         loading: false,
         error: null,
         checkedAt: Date.now(),
+        updatedAt: Date.now(),
       });
     })
     .catch((err: Error) => {
       publish({
-        health: null,
-        capabilities: null,
-        latencyMs: null,
+        health: sharedState.health,
+        capabilities: sharedState.capabilities,
+        latencyMs: sharedState.latencyMs,
         loading: false,
         error: err.message,
         checkedAt: Date.now(),
+        updatedAt: sharedState.updatedAt,
       });
     })
     .finally(() => {
@@ -122,16 +129,24 @@ function runProbe(): Promise<void> {
 export function useSystemHealth(): HealthState & { refresh: () => void } {
   const [state, setState] = useState<HealthState>(sharedState);
 
-  const run = useCallback(() => {
-    void runProbe();
-  }, []);
+  const run = useCallback(() => runProbe(), []);
+
+  // Hooks on the page share an in-flight request, and only one owns its
+  // automatic scheduler. Refresh/focus/reconnect never duplicate the probe.
+  const [scheduler, setScheduler] = useState(false);
+  useAutoRefresh(run, 30_000, scheduler);
 
   useEffect(() => {
     listeners.add(setState);
     setState(sharedState);
-    if (sharedState.checkedAt === null) void runProbe();
+    if (sharedState.checkedAt === null || Date.now() - sharedState.checkedAt > 30_000) void runProbe();
+    const chooseScheduler = () => setScheduler(listeners.values().next().value === setState);
+    schedulerListeners.add(chooseScheduler);
+    schedulerListeners.forEach(listener => listener());
     return () => {
       listeners.delete(setState);
+      schedulerListeners.delete(chooseScheduler);
+      schedulerListeners.forEach(listener => listener());
     };
   }, []);
 

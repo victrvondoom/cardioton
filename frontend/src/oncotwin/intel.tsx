@@ -10,6 +10,7 @@
 import clsx from "clsx";
 import { ChevronDown, ChevronRight, CircleDot, Loader2, Minus, Play, Plus, RotateCcw, ShieldCheck, ShieldX } from "lucide-react";
 import { useEffect, useMemo, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { useLive } from "../lib/useLive";
 
 import { ot } from "./api";
 import { Legend, TimeChart } from "./charts";
@@ -809,14 +810,17 @@ function eventText(e: Json | null | undefined): string {
 export function InterventionRecorder({ pid, alerts, canAct, onDone }: {
   pid: string; alerts: { id: string; tier: Tier; as_of_day: number }[]; canAct: boolean; onDone: () => void;
 }) {
-  const [cat, setCat] = useState<{ kind: string; label: string }[]>([]);
+  const catalog = useLive(ot.interventionCatalog);
+  const cat = catalog.data?.interventions ?? [];
   const [kind, setKind] = useState("urgent_eval_abx");
   const [note, setNote] = useState("");
   const [alertId, setAlertId] = useState<string>("");
   const [msg, setMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  useEffect(() => { ot.interventionCatalog().then((c) => setCat(c.interventions)).catch(() => undefined); }, []);
+  const kindAvailable = cat.some((intervention) => intervention.kind === kind);
+  const catalogConfirmed = !catalog.loading && !catalog.error && catalog.data !== null;
   const go = async () => {
+    if (!canAct || busy || !catalogConfirmed || !kindAvailable) return;
     setBusy(true); setMsg(null);
     try {
       const r = await ot.recordIntervention(pid, kind, note, alertId || null);
@@ -829,11 +833,15 @@ export function InterventionRecorder({ pid, alerts, canAct, onDone }: {
   return (
     <div className="grid gap-2 md:grid-cols-[1.3fr_1fr_1fr_auto] items-end text-[12px]">
       <label className="flex flex-col gap-0.5">Intervention<select className={INPUT} value={kind} onChange={(e) => setKind(e.target.value)}>
+        {!kindAvailable && <option value={kind} disabled>{kind} — unavailable in the confirmed catalog</option>}
         {cat.map((c) => <option key={c.kind} value={c.kind}>{c.label}</option>)}</select></label>
       <label className="flex flex-col gap-0.5">Linked alert<select className={INPUT} value={alertId} onChange={(e) => setAlertId(e.target.value)}>
         <option value="">none</option>{alerts.map((a) => <option key={a.id} value={a.id}>{a.tier} · Day {a.as_of_day}</option>)}</select></label>
       <label className="flex flex-col gap-0.5">Note<input maxLength={2000} className={INPUT} value={note} onChange={(e) => setNote(e.target.value)} /></label>
-      <button type="button" onClick={go} disabled={busy} className={BTN}>{busy ? <Loader2 size={13} className="animate-spin" aria-hidden /> : <CircleDot size={13} aria-hidden />} Record</button>
+      <button type="button" onClick={go} disabled={busy || !catalogConfirmed || !kindAvailable} className={BTN}>{busy ? <Loader2 size={13} className="animate-spin" aria-hidden /> : <CircleDot size={13} aria-hidden />} Record</button>
+      {catalog.loading && <div className="md:col-span-4 text-[12px] text-ink-muted" role="status">Checking the intervention catalog…</div>}
+      {catalog.error && <div className="md:col-span-4 text-[12px] text-accent-red" role="alert">Intervention catalog unavailable: {catalog.error}. Your note and selections are retained.</div>}
+      {catalogConfirmed && !kindAvailable && <div className="md:col-span-4 text-[12px] text-accent-amber" role="status">Choose an intervention from the current catalog before recording.</div>}
       {msg && <div className="md:col-span-4 text-[12px] text-ink-body" role="status">{msg}</div>}
     </div>
   );

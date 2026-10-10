@@ -57,6 +57,8 @@ class StarImpactProjection:
     revenue_lift_high_usd: float
     notes: list[str]
     citations: list[str]
+    case_activity_90d: int | None = None
+    db_unavailable: bool = False
 
 
 def star_revenue_estimate(
@@ -90,19 +92,25 @@ async def projected_star_impact(
         member_count = 100_000
 
     # Pull case-level activity to qualify the projection
-    last_90d = (
-        await db.fetchval(
+    last_90d: int | None = None
+    try:
+        activity = await db.fetchval(
             """SELECT COUNT(*)::INT FROM cases
            WHERE organization_id = $1 AND created_at >= NOW() - INTERVAL '90 days'""",
             organization_id,
         )
-        or 0
-    )
+        last_90d = int(activity) if activity is not None else 0
+    except Exception:  # noqa: BLE001 - optional activity must not fabricate observed adoption
+        pass
 
     notes = [
         f"Projection assumes {member_count:,} MA members at {current_star_assumption:.2f} stars current.",
         f"ClinCase lift band: +{LIFT_LOW:.1f}–{LIFT_HIGH:.1f} stars on PA-influenced measures.",
-        f"Activity signal: {last_90d:,} cases in last 90 days (used for adoption confidence).",
+        (
+            f"Activity signal: {last_90d:,} cases in last 90 days (used for adoption confidence)."
+            if last_90d is not None
+            else "Activity signal unavailable: case storage could not be read. This calculation uses assumptions only, not observed adoption or realized revenue."
+        ),
     ]
 
     rev_low = star_revenue_estimate(member_count=member_count, star_lift=LIFT_LOW)
@@ -123,4 +131,6 @@ async def projected_star_impact(
             "CMS 2026 Star Ratings Measures (file: 2026-star-ratings-measures.pdf)",
             "Healthcare Dive 2026 MA Star Ratings winners/losers (Apr 2026)",
         ],
+        case_activity_90d=last_90d,
+        db_unavailable=last_90d is None,
     )

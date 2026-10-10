@@ -1,0 +1,256 @@
+/* Shared dimensional surfaces. Layout, semantic colours and data stay owned by
+   the existing components. Perspective belongs to decorative geometry only;
+   app ancestors are never transformed, so fixed tools and maps stay anchored. */
+.spatial-ui {
+  /* Decorative glow stays in the app's existing cool clinical palette. */
+  --glass-cyan: 34 211 238;
+  --glass-blue: 59 130 246;
+  --glass-violet: 139 92 246;
+  --glass-sheen-alpha: .58;
+  --depth-highlight: 255 255 255;
+  --depth-highlight-alpha: .92;
+  --depth-shade: 31 41 55;
+  --depth-edge: 204 211 220;
+  --depth-face: .66;
+  --shadow-card: inset 0 1px 0 rgb(var(--depth-highlight) / var(--depth-highlight-alpha)),
+    inset 1px 0 0 rgb(var(--depth-highlight) / .6),
+    inset 0 -1px 0 rgb(var(--depth-shade) / .08),
+    0 4px 0 -1px rgb(var(--depth-edge)), 0 5px 0 -1px rgb(var(--surface-border) / .65),
+    0 14px 24px -13px rgb(var(--depth-shade) / .32);
+  --shadow-raise: inset 0 1px 0 rgb(var(--depth-highlight) / var(--depth-highlight-alpha)),
+    0 5px 0 -1px rgb(var(--depth-edge)), 0 6px 0 -1px rgb(var(--surface-border) / .8),
+    0 22px 36px -15px rgb(var(--depth-shade) / .4);
+  --shadow-pop: inset 0 1px 0 rgb(var(--depth-highlight) / .8),
+    0 7px 0 -2px rgb(var(--depth-edge)), 0 26px 65px -18px rgb(var(--depth-shade) / .5);
+}
+.dark .spatial-ui {
+  --glass-sheen-alpha: .16;
+  --depth-highlight: 235 235 235;
+  --depth-highlight-alpha: .17;
+  --depth-shade: 0 0 0;
+  --depth-edge: 9 9 9;
+  --depth-face: .045;
+  --shadow-card: inset 0 1px 0 rgb(var(--depth-highlight) / .17),
+    inset 1px 0 0 rgb(var(--depth-highlight) / .055), inset 0 -1px 0 rgb(0 0 0 / .8),
+    0 4px 0 -1px rgb(var(--depth-edge)), 0 5px 0 -1px rgb(255 255 255 / .11),
+    0 16px 30px -12px rgb(0 0 0 / .8);
+  --shadow-raise: inset 0 1px 0 rgb(var(--depth-highlight) / .24),
+    0 5px 0 -1px rgb(var(--depth-edge)), 0 6px 0 -1px rgb(255 255 255 / .16),
+    0 24px 45px -14px rgb(0 0 0 / .9);
+  --shadow-pop: inset 0 1px 0 rgb(var(--depth-highlight) / .25),
+    0 7px 0 -2px rgb(var(--depth-edge)), 0 30px 75px -15px rgb(0 0 0 / .95);
+}
+
+.spatial-shell, .spatial-auth {
+  position: relative;
+  isolation: isolate;
+}
+.spatial-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 82% 2%, rgb(var(--glass-cyan) / .13), transparent 43%),
+    radial-gradient(ellipse at 4% 74%, rgb(var(--glass-violet) / .09), transparent 42%),
+    radial-gradient(ellipse at 54% 100%, rgb(var(--glass-blue) / .07), transparent 38%),
+    radial-gradient(ellipse at 80% 0, rgb(var(--ink-muted) / .07), transparent 50%);
+}
+.spatial-backdrop__horizon {
+  position: absolute;
+  inset: 34% -20% auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(var(--ink-muted) / .25), transparent);
+  box-shadow: 0 0 65px 20px rgb(var(--ink-muted) / .035);
+}
+.spatial-backdrop__floor {
+  position: absolute;
+  top: 34%;
+  left: -40%;
+  width: 180%;
+  height: 130%;
+  transform-origin: center top;
+  transform: perspective(650px) rotateX(62deg);
+  background-image: linear-gradient(rgb(var(--ink-muted) / .12) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--ink-muted) / .12) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(transparent, #000 12%, transparent 80%);
+}
+.spatial-backdrop__orb {
+  position: absolute;
+  width: clamp(180px, 24vw, 420px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 28% 22%, rgb(var(--depth-highlight) / .42),
+    rgb(var(--glass-cyan) / .1) 35%, rgb(var(--glass-blue) / .07) 58%,
+    rgb(var(--depth-shade) / .12) 75%, transparent 76%);
+  border: 1px solid rgb(var(--glass-cyan) / .15);
+  box-shadow: inset -20px -28px 50px rgb(var(--depth-shade) / .09),
+    inset 4px 5px 20px rgb(var(--depth-highlight) / .16),
+    0 0 70px -30px rgb(var(--glass-cyan) / .38);
+  opacity: .56;
+  animation: spatial-orb-drift 28s ease-in-out infinite alternate;
+}
+.spatial-backdrop__orb--near { right: -12%; top: 18%; }
+.spatial-backdrop__orb--far {
+  left: -12%; bottom: -18%; width: min(45vw, 600px); opacity: .32;
+  border-color: rgb(var(--glass-violet) / .17);
+  background: radial-gradient(circle at 28% 22%, rgb(var(--depth-highlight) / .3),
+    rgb(var(--glass-violet) / .1) 38%, rgb(var(--glass-blue) / .06) 62%, transparent 76%);
+  box-shadow: inset -20px -28px 50px rgb(var(--depth-shade) / .09),
+    inset 4px 5px 20px rgb(var(--depth-highlight) / .13),
+    0 0 80px -35px rgb(var(--glass-violet) / .4);
+  animation-delay: -12s;
+}
+@keyframes spatial-orb-drift {
+  from { transform: translate3d(-10px, 8px, 0) scale(.98); }
+  to { transform: translate3d(16px, -14px, 0) scale(1.04); }
+}
+
+/* Existing surface classes cover every protected route, including specialist
+   workspaces. Never add transform/perspective to these generic containers. */
+.spatial-shell :where(.card-premium, .card-pop, .lift-3d, .spatial-card,
+  .bg-surface-raised.border, .bg-surface-panel.border),
+.spatial-auth :where(.spatial-card) {
+  background-image: linear-gradient(135deg, rgb(var(--depth-highlight) / var(--glass-sheen-alpha)),
+    rgb(var(--glass-cyan) / .025) 42%, transparent 70%, rgb(var(--glass-violet) / .025));
+  box-shadow: var(--shadow-card);
+  border-color: rgb(var(--glass-blue) / .17);
+  border-top-color: rgb(var(--depth-highlight) / .9);
+  border-bottom-color: rgb(var(--surface-border-hi));
+  backdrop-filter: blur(18px) saturate(1.28);
+  -webkit-backdrop-filter: blur(18px) saturate(1.28);
+  transition: box-shadow 220ms ease, border-color 220ms ease, background-color 220ms ease;
+}
+.spatial-shell :where(.bg-surface-raised.border, .spatial-card),
+.spatial-auth .spatial-card {
+  background-color: rgb(var(--surface-raised) / .8);
+}
+.spatial-shell .bg-surface-panel.border {
+  background-color: rgb(var(--surface-panel) / .82);
+}
+.spatial-shell .card-pop, .spatial-auth .card-pop { box-shadow: var(--shadow-pop); }
+.dark .spatial-shell :where(.card-premium, .card-pop, .lift-3d, .spatial-card,
+  .bg-surface-raised.border),
+.dark .spatial-auth :where(.spatial-card) {
+  background-color: rgb(var(--surface-raised) / .78);
+  border-color: rgb(var(--glass-cyan) / .2);
+  border-top-color: rgb(255 255 255 / .22);
+  box-shadow: var(--shadow-card), 0 14px 38px -28px rgb(var(--glass-blue) / .55);
+}
+.dark .spatial-shell .bg-surface-panel.border {
+  background-color: rgb(var(--surface-panel) / .82);
+}
+.spatial-shell :where(.bg-surface-bg.border, pre.border, [role="tablist"]) {
+  box-shadow: inset 0 2px 4px rgb(var(--depth-shade) / .1),
+    0 1px 0 rgb(var(--depth-highlight) / var(--depth-highlight-alpha));
+}
+.spatial-shell > :where(header),
+.spatial-shell :where(aside[aria-label="Primary navigation"]) {
+  background-image: linear-gradient(110deg, rgb(var(--depth-highlight) / .22),
+      rgb(var(--glass-cyan) / .035) 48%, transparent 72%);
+  backdrop-filter: blur(22px) saturate(1.45);
+  -webkit-backdrop-filter: blur(22px) saturate(1.45);
+  box-shadow: 4px 0 18px -9px rgb(var(--depth-shade) / .4),
+    inset -1px 0 0 rgb(var(--depth-highlight) / .08);
+}
+.spatial-shell :where(nav a[aria-current="page"]) {
+  background-image: linear-gradient(100deg, rgb(var(--glass-cyan) / .13),
+    rgb(var(--glass-blue) / .06) 64%, transparent);
+  box-shadow: inset 0 1px 0 rgb(var(--depth-highlight) / .22),
+    inset 2px 0 0 rgb(var(--glass-cyan) / .75),
+    0 2px 0 rgb(var(--depth-shade) / .22),
+    0 0 22px -12px rgb(var(--glass-cyan) / .72),
+    0 6px 12px -5px rgb(var(--depth-shade) / .35);
+}
+
+/* Tactile controls keep the original colour, focus ring and disabled state. */
+.spatial-ui :where(button.border, button.bg-accent-brand, a.border.bg-accent-brand, a.border.bg-surface-raised,
+  a.rounded-lg.bg-accent-brand, a.rounded-xl.bg-accent-brand) {
+  background-image: linear-gradient(175deg, rgb(var(--depth-highlight) / .09), transparent 65%);
+  box-shadow: inset 0 1px 0 rgb(var(--depth-highlight) / .22),
+    0 2px 0 rgb(var(--depth-shade) / .3), 0 4px 8px -4px rgb(var(--depth-shade) / .28);
+  transition: box-shadow 180ms ease, translate 180ms ease, border-color 180ms ease, filter 180ms ease;
+}
+.spatial-ui :where(button.border:active:not(:disabled), button.bg-accent-brand:active:not(:disabled), a.border:active) {
+  translate: 0 1px;
+  box-shadow: inset 0 1px 3px rgb(var(--depth-shade) / .2),
+    0 1px 0 rgb(var(--depth-highlight) / .12);
+}
+.spatial-shell :where(input.border:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+  textarea.border, select.border),
+.spatial-auth :where(input.border:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+  textarea.border, select.border) {
+  background-color: rgb(var(--surface-raised) / .76);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  box-shadow: inset 0 2px 4px rgb(var(--depth-shade) / .14),
+    inset 0 1px 0 rgb(var(--depth-shade) / .06),
+    0 1px 0 rgb(var(--depth-highlight) / var(--depth-highlight-alpha));
+}
+.spatial-shell :where([role="dialog"], [role="menu"]),
+.spatial-auth :where([role="dialog"], [role="menu"]) {
+  box-shadow: var(--shadow-pop);
+  border-color: rgb(var(--glass-cyan) / .25);
+  backdrop-filter: blur(22px) saturate(1.35);
+  -webkit-backdrop-filter: blur(22px) saturate(1.35);
+}
+.spatial-shell :where(h1, h2), .spatial-auth h1 {
+  text-shadow: 0 1px 0 rgb(var(--depth-highlight) / .16);
+}
+
+/* The marketing page retains its own WebGL scene and palette. Only its existing
+   frosted surfaces receive bevels; no broad app-surface selector reaches it. */
+.spatial-ui .aperture-root .aperture-glass {
+  box-shadow: inset 0 1px 0 var(--overlay-strong),
+    inset 0 -1px 0 rgb(0 0 0 / .2), 0 4px 0 -1px var(--overlay-glass-bg),
+    0 0 36px -24px var(--overlay-glow),
+    0 18px 40px -18px rgb(0 0 0 / .5);
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .spatial-ui :where(.card-premium, .lift-3d, .spatial-card):hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-raise);
+  }
+  .spatial-shell :where(button.border:not(:disabled), button.bg-accent-brand:not(:disabled), a.border):hover,
+  .spatial-auth :where(button.border:not(:disabled), button.bg-accent-brand:not(:disabled), a.border):hover {
+    box-shadow: inset 0 1px 0 rgb(var(--depth-highlight) / .32),
+      0 3px 0 rgb(var(--depth-shade) / .3), 0 8px 12px -6px rgb(var(--depth-shade) / .35),
+      0 0 24px -12px rgb(var(--glass-cyan) / .82);
+    border-color: rgb(var(--glass-cyan) / .42);
+    filter: saturate(1.12);
+  }
+}
+@media (prefers-reduced-motion: reduce), (hover: none) {
+  .spatial-ui :where(.card-premium, .lift-3d, .spatial-card):hover { transform: none; }
+  .spatial-ui :where(button.border, button.bg-accent-brand):hover { transform: none; }
+  .spatial-ui :where(button.border:active, button.bg-accent-brand:active, a.border:active) { translate: none; }
+}
+.spatial-auth .spatial-card:hover { transform: none; }
+@media (max-width: 639px) {
+  .spatial-backdrop__floor { opacity: .55; background-size: 48px 48px; }
+  .spatial-backdrop__orb { opacity: .25; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spatial-backdrop__orb { animation: none; }
+}
+@media (forced-colors: active) {
+  .spatial-backdrop { display: none; }
+  .spatial-ui :where(.card-premium, .card-pop, .lift-3d, .spatial-card) { box-shadow: none; }
+}
+@media print {
+  .spatial-backdrop { display: none; }
+  .spatial-ui * { box-shadow: none !important; text-shadow: none !important; }
+}
+.live-data-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 18px; margin: 16px 24px 0; padding: 10px 14px; border: 1px solid rgb(var(--glass-cyan) / .18); border-radius: 12px; background: linear-gradient(110deg, rgb(var(--surface-raised) / .74), rgb(var(--glass-cyan) / .045)); box-shadow: inset 0 1px rgb(var(--depth-highlight) / .08); backdrop-filter: blur(16px); color: rgb(var(--ink-body)); font-size: 11px; }
+.live-data-controls__status, .live-data-controls__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.live-data-controls__dot { width: 6px; height: 6px; border-radius: 50%; background: rgb(var(--ink-muted)); }
+.live-data-controls__dot.is-live { background: #329b8b; box-shadow: 0 0 8px #329b8b66; }
+.live-data-controls__time { color: rgb(var(--ink-muted)); }
+.live-data-controls__unavailable { color: rgb(var(--ink-muted)); border-left: 1px solid rgb(var(--surface-border)); padding-left: 8px; }
+.live-data-controls button { display: inline-flex; gap: 6px; align-items: center; min-height: 32px; padding: 5px 8px; border: 1px solid rgb(var(--surface-border)); border-radius: 7px; background: rgb(var(--surface-raised) / .7); }
+.live-data-controls button:focus-visible { outline: 2px solid #54c6d8; outline-offset: 2px; }
+.live-data-controls button:disabled { opacity: .5; cursor: default; }
+@media (max-width: 600px) { .live-data-controls { margin: 12px 16px 0; } .live-data-controls__actions { width: 100%; } .live-data-controls__time { flex-basis: 100%; padding-left: 14px; } }

@@ -1,39 +1,58 @@
-# CLINI-CASE
-## One Health Evidence & Interoperability Platform
+# CARDIOTON
+
+## Cardiovascular Intelligence, Digital Twins & Governed Evidence
 
 **"From Evidence to Action, Through One Connected Clinical Journey."**
 
-CLINI-CASE connects intake, environmental and clinical evidence, interoperability, human review, AI-assisted analysis, clinical context and follow-up in one traceable workflow.
+CARDIOTON is a cardiology-first research and clinical-support platform built with React, TypeScript, Three.js and FastAPI. It brings coronary model context, longitudinal hemodynamic reconstruction, reviewed cardiovascular reports, reference heart anatomy and evidence provenance into one workspace. Its wider platform connects oncology, OncoTwin, environmental observations and human-reviewed FHIR/OAH exchange.
 
-**Live demo (deployed from this repository on Render):**
+**Source repository:** [victrvondoom/cardioton](https://github.com/victrvondoom/cardioton)
 
-| | Link |
-|---|---|
-| Application | https://clini-case.onrender.com |
-| Sign in | https://clini-case.onrender.com/login — click **Admin**, **Reviewer** or **Coordinator**; no password needed |
-| API documentation | https://clini-case.onrender.com/docs |
-| Health check | https://clini-case.onrender.com/api/v1/healthz |
-| Real-world globe | https://clini-case.onrender.com/oah-bridge — sign in first, then scroll down one screen (or **Evidence → Map → "Context explorer"**) |
-| Source | https://github.com/victrvondoom/CLINI-CASE |
+This is the new GitHub home for the current project. Local startup instructions are below. The repository includes Docker, Render, Vercel and Kubernetes configuration; publishing here does not establish a hosted deployment or connect an existing hosting service to this repository.
 
-The demo runs on a free instance, so the first request after a quiet period can take about a minute to wake it. Every push to `main` redeploys automatically from the root [`Dockerfile`](Dockerfile) and [`render.yaml`](render.yaml): one container serves the React interface and the FastAPI backend on a single address.
+[![CI](https://github.com/victrvondoom/cardioton/actions/workflows/ci.yml/badge.svg)](https://github.com/victrvondoom/cardioton/actions/workflows/ci.yml)
 
-[![CI](https://github.com/victrvondoom/CLINI-CASE/actions/workflows/ci.yml/badge.svg)](https://github.com/victrvondoom/CLINI-CASE/actions/workflows/ci.yml)
+> **Clinical boundary:** this is a research/support prototype. Human review remains required. Model probabilities, qualitative twin states, reference anatomy and hypothetical scenarios do not establish diagnosis, patient-specific anatomy, treatment benefit or clinical certification. AI-generated denials remain pending human review.
 
-**Built for OneAquaHealth IEEE Global Hackathon — Track 7: Digital Health Standards.**
+The platform also retains its **OneAquaHealth IEEE Global Hackathon — Track 7: Digital Health Standards** evidence journey.
 
-Environmental, laboratory and clinical systems describe evidence with incompatible fields, units, terminology and identifiers. CLINI-CASE makes those differences visible, requires human approval of their interpretation, generates standards-based exchanges and tests whether another system preserves their meaning.
+Environmental, laboratory and clinical systems describe evidence with incompatible fields, units, terminology and identifiers. CARDIOTON makes those differences visible, requires human approval of their interpretation, generates standards-based exchanges and tests whether another system preserves their meaning.
 
-One platform combines evidence intake, environmental observations, laboratory data, semantic mapping, human review, FHIR/OAH standardization, validation, independent exchange, round-trip verification and provenance. Optional clinical contexts connect this journey to oncology decision support, OncoTwin, CardioTwin and follow-up. Docker and local Kubernetes support reproducible deployment of the same application.
+One platform combines evidence intake, environmental observations, laboratory data, semantic mapping, human review, FHIR/OAH standardization, validation, independent exchange, round-trip verification and provenance. The existing oncology, OncoTwin, AquaHealth and interoperability workflows remain available alongside the expanded cardiology workspace.
 
 > **Central Track 7 contribution:** heterogeneous environmental, laboratory and health data can be transformed into a governed standards-based exchange without allowing AI to silently invent clinical meaning.
 
-> **Clinical boundary:** CLINI-CASE does not infer that an environmental measurement caused a specific disease in an individual. It preserves the evidence chain and provides structured context for appropriate human review. Environmental evidence does not change cancer authorization or OncoTwin/CardioTwin model inputs.
+Environmental measurements provide context, not proof that an exposure caused disease in an individual. They do not change cancer authorization or coronary/OncoTwin model inputs. Clinical evidence, model output and environmental context retain their separate provenance.
+
+## Cardiovascular workspace
+
+| Capability | Entry point | What it provides |
+|---|---|---|
+| Coronary CardioTwin | `/cardiotwin` | CAD and LAD/LCX/RCA stenosis probabilities, input integrity, sensitivity and model scenarios |
+| Model evaluation | `/cardiotwin/evaluation` | Reproducible evaluation of the bundled cross-sectional model |
+| Cardio-Hemo Twin | `/cardiotwin/hemo` | Eight qualitative cardiovascular axes, longitudinal evidence, transitions, WHY explanations and historical replay |
+| CardioTwin Atlas | `/cardiotwin/atlas` | Shared replay across evidence fusion, a provenance graph, consent-gated spatial context, isolated hypothetical scenarios and a source-grounded copilot |
+| Cardiovascular intelligence | `/cardiotwin/intelligence` | Review of PDF/text/FHIR reports, source excerpts, measurement correction, versioned approval and Evidence Passport export |
+| Reference anatomy | Within cardiovascular intelligence | Sixteen selectable structures, generic HRA heart surfaces, illustrative vessels, isolate/cutaway controls and an accessible text fallback |
+| Environmental context | Within cardiovascular intelligence | Location/date/hour exploration, ambient air and weather data, provider coverage/gaps and consented temporal alignment |
+| Architecture | `/architecture` | Interactive cardiology architecture and runtime context |
+
+Historical clinical reconstruction admits evidence only when both `event_at <= as_of` and `available_at <= as_of`; report replay also respects reviewer-decision time. Views retain **OBSERVED**, **DERIVED**, **INFERRED** and **UNKNOWN** distinctions, source records and reviewer decisions. Missing or conflicting evidence must remain visible. Atlas scenarios do not overwrite the original reconstruction.
+
+The anatomy is a generic Human Reference Atlas model with illustrative overlays; an uploaded report does not reconstruct a patient's heart or locate an unsupported lesion. Environmental providers do not establish when historical measurements originally became available, so retrieved historical weather/air values cannot prove what was known at a past clinical boundary.
+
+Experimental telemetry, counterfactual, vessel/flow, uncertainty and guideline views are also included. Their nominal geometry, proxy values and assumed uncertainty parameters support software exploration; they do not establish measured patient flow, calibrated coverage, causal treatment effects or verified treatment recommendations. Passport integrity checks attest to recorded bytes and decisions, not clinical truth.
+
+See [CardioTwin](docs/CARDIOTWIN.md), [Cardio-Hemo](docs/CARDIO_HEMO_TWIN.md), [Atlas](docs/CARDIOTWIN_ATLAS.md), [cardiovascular reports](docs/CARDIOVASCULAR_REPORTS.md), [reference anatomy](docs/CARDIO_ANATOMY_VIEWER.md) and [environmental context](docs/CARDIO_ENVIRONMENT.md).
 
 ## Start here
 
 | Purpose | Entry point |
 |---|---|
+| Coronary workspace | `/cardiotwin` · [model and data](docs/CARDIOTWIN.md) |
+| Historical cardiovascular state | `/cardiotwin/hemo` · [Cardio-Hemo guide](docs/CARDIO_HEMO_TWIN.md) |
+| Evidence fusion and replay | `/cardiotwin/atlas` · [Atlas guide](docs/CARDIOTWIN_ATLAS.md) |
+| Reports, anatomy and environment | `/cardiotwin/intelligence` · [delivery and limits](docs/CARDIO_INTELLIGENCE_DELIVERY.md) |
 | Complete evidence journey | `/journey` · [workflow guide](docs/UNIFIED_JOURNEY.md) |
 | Citizen report to final output | [step-by-step path](#from-citizen-report-to-final-output) |
 | Real-world globe and city matrix | `/oah-bridge` (**Evidence → Map → "Context explorer"**) · [details](#real-world-context-oah-bridge-and-the-cesiumjs-globe) |
@@ -45,7 +64,7 @@ One platform combines evidence intake, environmental observations, laboratory da
 
 ## Who it is for
 
-CLINI-CASE is designed for the people who must decide what shared environmental and health data *means* before someone acts on it. It is demonstrated with synthetic data; no pilot, real user or production deployment is claimed.
+CARDIOTON is designed for the people who must decide what shared environmental and health data *means* before someone acts on it. It is demonstrated with synthetic data; no pilot, real user or production deployment is claimed.
 
 | Who | What they do here | What they get |
 |---|---|---|
@@ -99,7 +118,7 @@ The journey orchestrates existing APIs. A persisted interoperability job carries
 
 ```mermaid
 flowchart TD
-    START["CLINI-CASE<br/>Unified Evidence Journey"]
+    START["CARDIOTON<br/>Unified Evidence Journey"]
     START --> A["1. INTAKE<br/>JSON / CSV / FHIR import<br/>Reviewed environmental evidence"]
     A --> B["2. UNDERSTAND<br/>Fields, types and source context"]
     B --> C["3. MAP<br/>Deterministic matches first<br/>Optional governed AI suggestions"]
@@ -149,7 +168,7 @@ flowchart TD
 
 ### Fragmentation and the governed boundary
 
-A laboratory CSV may report `sample_no`, `arsenic_dissolved` and `ug/l`; another system expects FHIR resources, terminology, UCUM units and references. A syntactically valid file can still carry the wrong analyte meaning. CLINI-CASE addresses the interpretation as well as the transport:
+A laboratory CSV may report `sample_no`, `arsenic_dissolved` and `ug/l`; another system expects FHIR resources, terminology, UCUM units and references. A syntactically valid file can still carry the wrong analyte meaning. CARDIOTON addresses the interpretation as well as the transport:
 
 **Source → schema discovery → constrained mapping → human review → OAH/FHIR → validation → independent HTTP exchange → semantic round trip.**
 
@@ -254,7 +273,7 @@ Mapping AI receives field names/schema and allowlisted targets, not measured val
 sequenceDiagram
     actor Reviewer as Authenticated reviewer
     participant A as System A / source
-    participant C as CLINI-CASE
+    participant C as CARDIOTON
     participant DB as Gateway job store
     participant B as Independent System B
     A->>C: Source JSON / CSV / FHIR
@@ -410,11 +429,13 @@ Track 7 works without an LLM. The launcher's `-AI` enables governed suggestions 
 | Oncology stack | Guideline search, genomics/regimens, denial/appeal helpers, peer-to-peer briefing, off-label review, regimen bundling, site-of-care comparison, policy reconciliation | Helpers/simulated economics differ from live payer submission or clinical validation. |
 | OncoTwin | Personal baselines, feature lineage, trajectory/change points, supported horizons, scenarios and reviewed ClinCase handoff | Demo patients/outcomes and evaluations are synthetic. No real-cohort performance claim. |
 | CardioTwin | Clinical/ECG/lab/echo features yield CAD and LAD/LCX/RCA stenosis probabilities with uncertainty/integrity checks | Cross-sectional context, not future events, lesion localization or diagnostic imaging. |
+| Cardio-Hemo / Atlas | Deterministic qualitative state, historical replay, evidence fusion, WHY/provenance, consented spatial context and isolated scenarios | Research reconstruction with explicit unknowns; no measured flow, autonomous diagnosis or causal intervention claim. |
+| Cardiovascular intelligence | Reviewed report measurements and source excerpts associated with generic anatomy, plus ambient environmental exploration | Reference illustration is separate from patient evidence; environmental timing alignment is not individual causation. |
 | Case Digital Twin | Auditable runs, evidence, reviews, verification and cost reconciliation | Distinct from physiological modeling. |
 
 OncoTwin's prototype `OT-ACUTE-7` uses supported 24-hour, 72-hour and seven-day horizons. Living state, baseline, feature store, trajectory, simulation, memory and handoff are in [ONCOTWIN.md](docs/ONCOTWIN.md). Synthetic benchmarks are not clinical performance.
 
-CardioTwin uses a 303-row angiography cohort from [UCI dataset 411](https://archive.ics.uci.edu/dataset/411/extension+of+z+alizadeh+sani+dataset). Its heart visualization is schematic; what-if changes re-evaluate the model, not treatment effects. [CARDIOTWIN.md](docs/CARDIOTWIN.md).
+The coronary model uses a 303-row angiography cohort from [UCI dataset 411](https://archive.ics.uci.edu/dataset/411/extension+of+z+alizadeh+sani+dataset). Its model-linked vessel views are illustrative; what-if changes re-evaluate the model, not treatment effects. The separate reference-anatomy viewer includes a bundled HRA/HuBMAP heart under CC BY 4.0, with [asset attribution](frontend/public/models/README.md). Neither view is patient imaging. [CARDIOTWIN.md](docs/CARDIOTWIN.md).
 
 The Hepatitis C reference case uses the same policy-driven pipeline with a different corpus. Broader specialties require appropriate evidence and validation.
 
@@ -424,7 +445,7 @@ The Hepatitis C reference case uses the same policy-driven pipeline with a diffe
 |---|---|
 | Workspace | Dashboard, Cases, case detail, Intake, live agent console |
 | Evidence/standards | Journey, Environmental Evidence/AquaHealth, OneHealth, Track 7, Safety |
-| Clinical | Oncology, OncoTwin, CardioTwin, clinical handoff |
+| Clinical | Coronary CardioTwin, Cardio-Hemo, Atlas, cardiovascular intelligence, Oncology, OncoTwin, clinical handoff |
 | Research/evaluation | Research Lab, Cohorts, comparisons, evaluation harness, model operations |
 | Governance/operations | Reviewer, Observability, Insights, ROI, Compliance, Foundry/Architecture, Runtime |
 | Access/integration | Authentication, tenant/role controls, APIs, tests, FHIR intake, configured adapters |
@@ -562,14 +583,19 @@ System B owns storage and does not share application PostgreSQL. Local kind mani
 Prerequisites: Python 3.11+, Node.js 20+, npm. From repository root:
 
 ```powershell
-python -m pip install -e "backend[dev]"
+git clone https://github.com/victrvondoom/cardioton.git
+cd cardioton
+python -m venv backend/.venv
+./backend/.venv/Scripts/python.exe -m pip install -e "backend[dev]"
 cd frontend
 npm ci
 cd ..
 ./start-track7.ps1 -SQLite
 ```
 
-Open the launcher URL and start `/journey`. Runtime files are ignored; API/receiver are separate processes. The intentionally simple local-demo credential is in the [runbook](docs/DEMO_RUNBOOK.md); production auth retains its own configuration. Use `-AI` when choosing governed provider calls.
+Open the launcher URL and start `/journey` or `/cardiotwin`. These commands use an isolated Python environment on Windows/PowerShell. On macOS/Linux, create the same environment, install with `backend/.venv/bin/python`, then run `backend/.venv/bin/python backend/scripts/track7_demo.py --sqlite --keep-running --open`. Runtime files are ignored; API/receiver are separate processes. The intentionally simple local-demo credential is in the [runbook](docs/DEMO_RUNBOOK.md); production auth retains its own configuration. Use `-AI` when choosing governed provider calls.
+
+SQLite report storage is limited to clearly fictional demo reports. Real report persistence requires configured PostgreSQL, authorization and its database/RLS verification.
 
 ### Local Kubernetes
 
@@ -581,12 +607,12 @@ python k8s/cluster.py verify
 python k8s/cluster.py credentials
 ```
 
-The helper targets its owned `kind-clinicase` context and writes credentials to an ignored file. `verify` proves current reachability/isolation; manifests alone do not. Docker's Linux engine was stopped at publication, so current cluster verification is **not passed**. [Runbook](docs/KUBERNETES.md).
+The helper targets its owned `kind-clinicase` context and writes credentials to an ignored file. `verify` proves current reachability/isolation; manifests alone do not. A separate [remote-cluster profile](k8s/remote/README.md) uses managed PostgreSQL and its own deployment configuration. Current cluster operation, ingress/TLS, backups and production readiness require separate verification. [Runbook](docs/KUBERNETES.md).
 
 ### Developer and hosted configuration
 
 - Copy `.env.example` to private `.env`; configure needed services. Never commit keys, DB/JWT credentials or Passport private keys.
-- Standard dev: PostgreSQL, `uvicorn app.main:app --reload --port 8000` from `backend/`, `npm run dev` from `frontend/`. Compose initializes the local DB; `--profile full` also starts API/frontend. [Setup/testing](docs/TESTING.md).
+- Standard dev: PostgreSQL, `uvicorn app.main:app --reload --port 8000` from `backend/`, `npm run dev` from `frontend/`. Compose initializes the local DB and exposes it on host port `15432`; match your private database configuration to that port. `--profile full` also starts API/frontend. [Setup/testing](docs/TESTING.md).
 - `docker-compose.track7.yml` includes System B and needs explicit local secrets. SQLite is the simpler deterministic demo.
 - Vercel entrypoint initializes app lifespan before requests. Review continuation is inline automatically on Vercel or with `HUMAN_REVIEW_CONTINUATION_MODE=inline`. Default timeout: 240 seconds; hosting limits must accommodate it. Timeout preserves the human decision and retry state.
 - Readiness cron is not a clinical worker. Production long-running work needs suitable capacity and operational validation.
@@ -597,12 +623,15 @@ The helper targets its owned `kind-clinicase` context and writes credentials to 
 # backend/
 python -m pytest
 python -m pytest tests/onehealth tests/interop -q
-python -m ruff check app tests
+python -m ruff check app tests scripts
+python -m mypy app
 # frontend/
 npm test -- --run
 npm run typecheck
 npm run build
 # repository root
+python .github/scripts/check_readme.py
+python -m unittest discover -s .github/scripts -p "test_*.py"
 python backend/scripts/track7_network_demo.py
 python k8s/cluster.py verify
 git diff --check
@@ -610,15 +639,29 @@ git diff --check
 
 Default pytest excludes marked `integration`/`live` tests. PostgreSQL contracts and metered models need separate checks; green offline tests are not clinical validation.
 
-Latest local run (2026-10-05): backend 814 passed (108 integration tests deselected), frontend 151 passed, `ruff` clean on `app` and `tests`, production build succeeds. [Final verification](docs/FINAL_PUBLICATION_VERIFICATION.md) records totals/browser proof/infrastructure limits.
+Local publication checks on **10 October 2026**:
+
+| Check | Result |
+|---|---|
+| Backend offline regression | 1,142 passed, 1 skipped, 108 deselected |
+| Strict backend typing | Passed across all 406 application source files |
+| Backend Ruff (`app tests scripts`) | Passed |
+| Backend dependency consistency | Passed |
+| Frontend regression | 219 passed across 46 files |
+| Frontend TypeScript and production build | Passed |
+| README contract and checker regressions | Passed; 4 checker tests |
+| Staged whitespace check | Passed |
+
+The optional trace-propagation test is skipped because `opentelemetry.sdk.trace` is unavailable. External integration and live-provider tests are excluded from these offline totals. The production build retains large Three.js/MapLibre chunk warnings. PostgreSQL integration, browser/live-provider coverage, clinical validation and deployed infrastructure were not rerun as part of this publication. Earlier implementation/browser evidence remains dated in the [cardiovascular delivery report](docs/CARDIO_INTELLIGENCE_DELIVERY.md) and [9 October remediation report](docs/ERROR_REMEDIATION_2026-10-09.md).
 
 ## Repository map
 
 ```text
-CLINI-CASE/
+cardioton/
 ├── frontend/
 │   ├── src/routes/        Journey, Runtime, Interop, OneHealth, clinical/twin pages
 │   ├── src/components/    Shell, agent console, review and evidence views
+│   ├── src/cardiotwin/    Coronary, hemodynamics, Atlas, anatomy and environment UI
 │   ├── src/globe/         CesiumJS and offline globes, weather layers
 │   ├── src/oahbridge/     OAH-Bridge client, city matrix, weather, live chain, monitor
 │   ├── src/lib/           API, SSE and clinical intake conversion
@@ -633,14 +676,14 @@ CLINI-CASE/
 │   ├── app/graph/         Clinical/review LangGraph DAGs
 │   ├── app/llm/           Governed gateway/provider adapters
 │   ├── app/oncotwin/      Trajectory, simulation, research, safety
-│   ├── app/cardiotwin/    Import, training, integrity, serving
+│   ├── app/cardiotwin/    Coronary model, hemodynamics, Atlas, reports and environment
 │   ├── app/workers/       Durable clinical worker
 │   ├── data/interop/      Synthetic deterministic fixtures
 │   ├── scripts/           HTTP demo, export, external-data fetch
 │   ├── tests/             Contracts, safety, regressions
 │   ├── index.py           Vercel entrypoint
 │   └── vercel.json        Backend hosting configuration
-├── k8s/                  Local kind helper/manifests
+├── k8s/                  Local kind helper/manifests and remote-cluster profile
 ├── ops/                  Cloud/container/worker references
 ├── docs/                 Architecture, evidence, validation, runbooks
 ├── demo_pdfs/            Synthetic clinical packets
@@ -663,6 +706,7 @@ Remaining work: broader external profile/terminology coverage, licensed/current 
 - [Passport](docs/EVIDENCE_PASSPORT.md) · [epistemic ceiling](docs/EPISTEMIC_CEILING.md) · [conformance](docs/OAH_CONFORMANCE.md)
 - [Build scope/reuse](docs/HACKATHON_BUILD_SCOPE.md) · [self-audit](docs/TRACK7_SELF_AUDIT.md) · [judge access](docs/JUDGE_ACCESS.md)
 - [AquaHealth](docs/AQUAHEALTH_TRACK3.md) · [OncoTwin](docs/ONCOTWIN.md) · [CardioTwin](docs/CARDIOTWIN.md)
+- [Cardio-Hemo](docs/CARDIO_HEMO_TWIN.md) · [Atlas](docs/CARDIOTWIN_ATLAS.md) · [cardiovascular intelligence](docs/CARDIO_INTELLIGENCE_DELIVERY.md)
 - [Human review](docs/HUMAN_REVIEW.md) · [security processing](docs/SECURITY_PROCESSING.md) · [case twin](docs/CASE_DIGITAL_TWIN.md)
 - [Contributing](CONTRIBUTING.md) · [security reporting](SECURITY.md)
 

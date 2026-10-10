@@ -92,7 +92,7 @@ class TwinEventBus:
             raise ValueError(f"unknown event type {event_type!r}")
         with self._lock:
             self.seq += 1
-            ev = {
+            ev: dict[str, Any] = {
                 "id": str(uuid.uuid4()),
                 "seq": self.seq,
                 "type": event_type,

@@ -1,17 +1,17 @@
 /**
- * VitalsMonitor — real-time, ECG-style scrolling waveform plus the two
- * primary bedside actions: Emergency and Appointment.
+ * VitalsMonitor — an illustrative ECG-style waveform and confirmed actions.
  *
  * The waveform is a client-side simulation (this app has no live device/EHR
  * vitals feed — every OncoTwin signal is synthetic, see oncotwin/*). It is
  * seeded from the twin's current resting heart rate when available so the
- * trace rate matches what the rest of the page is already showing, and
- * falls back to a plausible resting rate otherwise. It is a visual/demo
- * aid, not a diagnostic monitor.
+ * trace rate matches what the rest of the page is already showing. Unknown
+ * heart rate stays unavailable. This is a visual/demo aid, not a diagnostic
+ * monitor or a device trace.
  */
-import { AlertTriangle, CalendarPlus, CheckCircle2, Loader2, PhoneCall, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { AlertTriangle, CalendarPlus, CheckCircle2, Loader2, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import clsx from "clsx";
+import { getLiveUpdateState, subscribeLiveUpdates } from "../lib/liveUpdates";
 
 const BTN = "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-surface-border bg-surface-raised text-[12px] text-ink-body hover:border-accent-brand/60 disabled:opacity-40 focus:outline-none focus:ring-2 focus:ring-accent-brand";
 
@@ -37,7 +37,7 @@ function beatY(t: number): number {
 }
 
 interface Props {
-  /** Beats per minute driving the trace; defaults to a plausible resting rate. */
+  /** Source beats per minute driving an illustrative trace, when known. */
   bpm?: number;
   width?: number;
   height?: number;
@@ -45,22 +45,45 @@ interface Props {
   label?: string;
 }
 
-export function EcgWaveform({ bpm = 72, width = 320, height = 72, className, label }: Props) {
-  const [points, setPoints] = useState<number[]>(() => new Array(Math.floor(width)).fill(0));
+export function EcgWaveform({ bpm, width = 320, height = 72, className, label }: Props) {
+  const [points, setPoints] = useState<number[]>(() => Array.from({ length: Math.floor(width) }, (_, i) => (
+    bpm != null && Number.isFinite(bpm) && bpm > 0 ? beatY(((i / width) * 3.2 * bpm / 60) % 1) : 0
+  )));
   const rafRef = useRef<number | undefined>(undefined);
   const phaseRef = useRef(0);
   const lastTsRef = useRef<number | undefined>(undefined);
   const bpmRef = useRef(bpm);
   bpmRef.current = bpm;
+  const hasRate = bpm != null && Number.isFinite(bpm) && bpm > 0;
+  const { enabled } = useSyncExternalStore(subscribeLiveUpdates, getLiveUpdateState, getLiveUpdateState);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [visible, setVisible] = useState(() => document.visibilityState !== "hidden");
 
   useEffect(() => {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const motion = () => setReducedMotion(preference.matches);
+    const visibility = () => setVisible(document.visibilityState !== "hidden");
+    motion();
+    preference.addEventListener("change", motion);
+    document.addEventListener("visibilitychange", visibility);
+    return () => {
+      preference.removeEventListener("change", motion);
+      document.removeEventListener("visibilitychange", visibility);
+    };
+  }, []);
+
+  useEffect(() => {
+    lastTsRef.current = undefined;
+    if (!enabled || reducedMotion || !visible || !hasRate) return;
     const pxPerSecond = width / 3.2; // ~3.2s of trace visible, like a bedside monitor sweep
     function tick(ts: number) {
       const last = lastTsRef.current ?? ts;
       const dt = Math.min(0.05, (ts - last) / 1000);
       lastTsRef.current = ts;
 
-      const secondsPerBeat = 60 / Math.max(20, bpmRef.current);
+      const rate = bpmRef.current;
+      if (rate == null || !Number.isFinite(rate) || rate <= 0) return;
+      const secondsPerBeat = 60 / rate;
       phaseRef.current = (phaseRef.current + dt / secondsPerBeat) % 1;
       const y = beatY(phaseRef.current);
 
@@ -74,7 +97,7 @@ export function EcgWaveform({ bpm = 72, width = 320, height = 72, className, lab
     }
     rafRef.current = requestAnimationFrame(tick);
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
-  }, [width]);
+  }, [width, enabled, reducedMotion, visible, hasRate]);
 
   const path = useMemo(() => {
     const midY = height / 2;
@@ -85,10 +108,10 @@ export function EcgWaveform({ bpm = 72, width = 320, height = 72, className, lab
   }, [points, height]);
 
   return (
-    <div className={className} aria-hidden>
-      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="block">
+    <div className={className}>
+      <svg aria-hidden="true" width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="block">
         <line x1={0} y1={height / 2} x2={width} y2={height / 2} stroke="currentColor" strokeOpacity={0.08} strokeWidth={1} />
-        <path d={path} fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="text-accent-green" />
+        {hasRate && <path d={path} fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="text-accent-green" />}
       </svg>
       {label && <div className="text-[10px] text-compact text-ink-faint -mt-1">{label}</div>}
     </div>
@@ -107,7 +130,7 @@ const SBP_ALARM = { low: 90, high: 160 };
 
 type Vital = { value: number | null | undefined; low: number; high: number };
 function vitalTone(v: Vital): "ok" | "alarm" {
-  if (v.value == null) return "ok";
+  if (v.value == null || !Number.isFinite(v.value)) return "ok";
   return v.value < v.low || v.value > v.high ? "alarm" : "ok";
 }
 
@@ -118,7 +141,7 @@ function VitalReadout({ label, value, unit, decimals = 0, tone }: {
     <div className="min-w-[64px]">
       <div className="text-[9.5px] text-compact text-ink-faint">{label}</div>
       <div className={clsx("text-[15px] leading-tight text-mono-tech font-semibold", tone === "alarm" ? "text-accent-red animate-pulse-soft" : "text-ink-primary")}>
-        {value == null ? "—" : value.toFixed(decimals)}
+        {value == null || !Number.isFinite(value) ? "—" : value.toFixed(decimals)}
         <span className="text-[10px] text-ink-muted font-normal ml-0.5">{unit}</span>
       </div>
     </div>
@@ -141,10 +164,10 @@ interface VitalsMonitorProps {
   temperatureF?: number | null;
   /** Latest systolic blood pressure reading (mmHg), if available. */
   systolicBp?: number | null;
-  /** Called when the clinician confirms the emergency escalation. */
-  onEmergency?: () => Promise<void> | void;
+  /** Records a synthetic alert investigation and returns confirmed service copy. */
+  onEmergency?: () => Promise<string>;
   /** Called when an appointment is confirmed; receives the chosen ISO date + reason. */
-  onScheduleAppointment?: (isoDate: string, reason: string) => Promise<void> | void;
+  onScheduleAppointment?: (isoDate: string, reason: string) => Promise<string>;
   className?: string;
 }
 
@@ -153,9 +176,11 @@ export function VitalsMonitor({ who, restingHr, temperatureF, systolicBp, onEmer
   const [apptOpen, setApptOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const actionLock = useRef(false);
   const [log, setLog] = useState<LogEntry[]>([]);
 
-  const bpm = restingHr && restingHr > 30 && restingHr < 220 ? restingHr : 72;
+  const bpm = restingHr != null && Number.isFinite(restingHr) && restingHr > 0 ? restingHr : undefined;
   const hrTone = vitalTone({ value: restingHr, ...HR_ALARM });
   const tempTone = vitalTone({ value: temperatureF, ...TEMP_ALARM_F });
   const sbpTone = vitalTone({ value: systolicBp, ...SBP_ALARM });
@@ -165,15 +190,22 @@ export function VitalsMonitor({ who, restingHr, temperatureF, systolicBp, onEmer
     setLog((prev) => [{ id: Date.now(), at: new Date().toLocaleTimeString(), kind, text }, ...prev].slice(0, 6));
 
   const confirmEmergency = async () => {
+    if (!onEmergency || actionLock.current) return;
+    actionLock.current = true;
     setBusy(true);
+    setNotice(null);
+    setActionError(null);
     try {
-      await onEmergency?.();
-      const msg = "Emergency escalation logged. Care team notified.";
+      const msg = await onEmergency();
+      if (!msg) throw new Error("The action was not confirmed by the service.");
       setNotice(msg);
       addLog("emergency", msg);
-    } finally {
-      setBusy(false);
       setEmergencyOpen(false);
+    } catch (error) {
+      setActionError(error instanceof Error ? error.message : "The action was not confirmed.");
+    } finally {
+      actionLock.current = false;
+      setBusy(false);
     }
   };
 
@@ -181,7 +213,7 @@ export function VitalsMonitor({ who, restingHr, temperatureF, systolicBp, onEmer
     <div className={className}>
       <div className={clsx("flex flex-wrap items-center gap-4 rounded-xl border p-3 transition-colors duration-300",
         anyAlarm ? "border-accent-red/60 bg-accent-red/5" : "border-surface-border bg-surface-raised")}>
-        <EcgWaveform bpm={bpm} width={220} height={56} label={`${Math.round(bpm)} bpm · live trace (simulated)`} />
+        <EcgWaveform bpm={bpm} width={220} height={56} label={bpm == null ? "Heart rate unavailable · no device trace" : `${Math.round(bpm)} bpm source value · illustrative trace`} />
 
         <div className="flex items-center gap-4">
           <VitalReadout label="HR" value={restingHr} unit="bpm" tone={hrTone} />
@@ -199,21 +231,24 @@ export function VitalsMonitor({ who, restingHr, temperatureF, systolicBp, onEmer
 
         <button
           type="button"
-          onClick={() => setEmergencyOpen(true)}
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md bg-accent-red text-white text-[12.5px] font-semibold hover:brightness-110 focus:outline-none focus:ring-2 focus:ring-accent-red focus:ring-offset-2 focus:ring-offset-surface-bg"
-          title="Escalate to emergency review"
+          onClick={() => { setActionError(null); setEmergencyOpen(true); }}
+          disabled={!onEmergency || busy}
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md bg-accent-red text-white text-[12.5px] font-semibold hover:brightness-110 disabled:opacity-40 focus:outline-none focus:ring-2 focus:ring-accent-red focus:ring-offset-2 focus:ring-offset-surface-bg"
+          title={onEmergency ? "Record a clinician investigation on the synthetic alert" : "Alert investigation unavailable for this view"}
         >
-          <AlertTriangle size={14} aria-hidden /> Emergency
+          <AlertTriangle size={14} aria-hidden /> Investigate alert
         </button>
 
         <button
           type="button"
           onClick={() => setApptOpen(true)}
+          disabled={!onScheduleAppointment || busy}
           className={BTN}
-          title="Schedule a follow-up appointment"
+          title={onScheduleAppointment ? "Request a follow-up appointment" : "Appointment scheduling is not connected"}
         >
           <CalendarPlus size={14} aria-hidden /> Appointment
         </button>
+        {!onScheduleAppointment && <span className="text-[10px] text-ink-muted">Scheduling is not connected</span>}
       </div>
 
       {notice && (
@@ -241,7 +276,8 @@ export function VitalsMonitor({ who, restingHr, temperatureF, systolicBp, onEmer
         <EmergencyDialog
           who={who}
           busy={busy}
-          onCancel={() => setEmergencyOpen(false)}
+          error={actionError}
+          onCancel={() => { if (!actionLock.current) setEmergencyOpen(false); }}
           onConfirm={confirmEmergency}
         />
       )}
@@ -251,8 +287,9 @@ export function VitalsMonitor({ who, restingHr, temperatureF, systolicBp, onEmer
           who={who}
           onCancel={() => setApptOpen(false)}
           onConfirm={async (iso, reason) => {
-            await onScheduleAppointment?.(iso, reason);
-            const msg = `Appointment requested for ${iso}${reason ? `: ${reason}` : ""}.`;
+            if (!onScheduleAppointment) throw new Error("Appointment scheduling is not connected.");
+            const msg = await onScheduleAppointment(iso, reason);
+            if (!msg) throw new Error("Appointment request was not confirmed by the service.");
             setNotice(msg);
             addLog("appointment", msg);
             setApptOpen(false);
@@ -283,15 +320,16 @@ function Dialog({ title, icon, tone, children, onCancel }: {
   );
 }
 
-function EmergencyDialog({ who, busy, onCancel, onConfirm }: {
-  who?: string; busy: boolean; onCancel: () => void; onConfirm: () => void;
+function EmergencyDialog({ who, busy, error, onCancel, onConfirm }: {
+  who?: string; busy: boolean; error: string | null; onCancel: () => void; onConfirm: () => void;
 }) {
   return (
-    <Dialog title="Confirm emergency escalation" icon={<AlertTriangle size={16} aria-hidden />} tone="red" onCancel={onCancel}>
+    <Dialog title="Investigate synthetic alert" icon={<AlertTriangle size={16} aria-hidden />} tone="red" onCancel={onCancel}>
       <p className="text-[12.5px] text-ink-body mb-3">
-        This will flag {who ?? "this patient"} for immediate clinician review. Use for a genuine urgent
-        concern — this is a demo action and does not dial emergency services.
+        Record a clinician investigation on the selected synthetic alert for {who ?? "this patient"}.
+        This updates the demo audit trail. It does not notify a care team or contact emergency services.
       </p>
+      {error && <p role="alert" className="text-xs text-accent-red mb-3">{error}</p>}
       <div className="flex justify-end gap-2">
         <button type="button" onClick={onCancel} className={BTN} disabled={busy}>Cancel</button>
         <button
@@ -300,7 +338,7 @@ function EmergencyDialog({ who, busy, onCancel, onConfirm }: {
           disabled={busy}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-accent-red text-white text-[12px] font-semibold disabled:opacity-60"
         >
-          {busy ? <Loader2 size={13} className="animate-spin" aria-hidden /> : <PhoneCall size={13} aria-hidden />} Escalate now
+          {busy ? <Loader2 size={13} className="animate-spin" aria-hidden /> : <AlertTriangle size={13} aria-hidden />} Record investigation
         </button>
       </div>
     </Dialog>
@@ -318,15 +356,20 @@ function AppointmentDialog({ who, onCancel, onConfirm }: {
   const [date, setDate] = useState(tomorrow);
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const submit = async () => {
     setBusy(true);
-    try { await onConfirm(date, reason.trim()); } finally { setBusy(false); }
+    setError(null);
+    try { await onConfirm(date, reason.trim()); }
+    catch (failure) { setError(failure instanceof Error ? failure.message : "Appointment request was not confirmed."); }
+    finally { setBusy(false); }
   };
 
   return (
     <Dialog title="Schedule appointment" icon={<CalendarPlus size={16} aria-hidden />} tone="brand" onCancel={onCancel}>
       <p className="text-[12px] text-ink-muted mb-3">Request a follow-up visit for {who ?? "this patient"}.</p>
+      {error && <p role="alert" className="text-xs text-accent-red mb-3">{error}</p>}
       <div className="space-y-2 mb-3">
         <label className="flex flex-col gap-1 text-[12px] text-ink-body">
           Date

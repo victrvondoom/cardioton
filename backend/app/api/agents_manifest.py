@@ -11,7 +11,7 @@ import asyncio
 import logging
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
@@ -43,7 +43,12 @@ def pipeline_graph() -> dict[str, Any] | None:
         logging.getLogger(__name__).exception("pipeline graph could not be built")
         return None
     skip = {"__start__", "__end__"}
-    edges = [
+    class GraphEdge(TypedDict):
+        source: str
+        target: str
+        conditional: bool
+
+    edges: list[GraphEdge] = [
         {"source": e.source, "target": e.target, "conditional": bool(e.conditional)}
         for e in g.edges
     ]

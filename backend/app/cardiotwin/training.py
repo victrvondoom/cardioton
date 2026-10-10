@@ -26,7 +26,7 @@ import json
 import warnings
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 from sklearn.covariance import LedoitWolf
@@ -84,12 +84,13 @@ from app.cardiotwin.schema import (
     TARGET_ORDER,
     VESSELS,
 )
+from app.oncotwin._typing import FloatArray
 
 CS = np.logspace(-3, 1, 9)
 QLEVELS = list(range(0, 101, 5))
 
 
-def _sig(z: np.ndarray) -> np.ndarray:
+def _sig(z: FloatArray) -> FloatArray:
     return 1.0 / (1.0 + np.exp(-np.clip(z, -35, 35)))
 
 
@@ -110,7 +111,7 @@ def _pipe(model: Any) -> Any:
     return make_pipeline(SimpleImputer(strategy="median"), StandardScaler(), model)
 
 
-def _platt(logit_oof: np.ndarray, y: np.ndarray) -> tuple[float, float]:
+def _platt(logit_oof: FloatArray, y: FloatArray) -> tuple[float, float]:
     lr = LogisticRegression(C=1e6, solver="lbfgs", max_iter=1000)
     lr.fit(logit_oof.reshape(-1, 1), y)
     return float(lr.coef_[0, 0]), float(lr.intercept_[0])
@@ -122,7 +123,7 @@ def _platt(logit_oof: np.ndarray, y: np.ndarray) -> tuple[float, float]:
 
 
 def _shipped_fold(
-    Xtr: np.ndarray, ytr: np.ndarray, Xte: np.ndarray, seed: int, n_boot: int
+    Xtr: FloatArray, ytr: FloatArray, Xte: FloatArray, seed: int, n_boot: int
 ) -> dict[str, Any]:
     pipe = _pipe(_lrcv(seed))
     pipe.fit(Xtr, ytr)
@@ -172,8 +173,8 @@ def _shipped_fold(
 
 
 def _challenger_fold(
-    name: str, Xtr: np.ndarray, ytr: np.ndarray, Xte: np.ndarray, seed: int
-) -> np.ndarray:
+    name: str, Xtr: FloatArray, ytr: FloatArray, Xte: FloatArray, seed: int
+) -> FloatArray:
     if name == "lr_l1":
         pipe = _pipe(_lrcv(seed, "l1"))
     elif name == "random_forest":
@@ -198,7 +199,7 @@ def _challenger_fold(
 # ---------------------------------------------------------------------------
 
 
-def leakage_audit(df: Any, X: np.ndarray, ys: dict[str, np.ndarray], seed: int) -> dict[str, Any]:
+def leakage_audit(df: Any, X: FloatArray, ys: dict[str, FloatArray], seed: int) -> dict[str, Any]:
     per_target: dict[str, Any] = {}
     flagged: list[str] = []
     for t in TARGET_ORDER:
@@ -340,17 +341,17 @@ def train(
     d2_cv = d2_oof.mean(axis=0)
 
     # ---------------- per-target aggregation -------------------------------
-    def oof_avg(t: str, key: str) -> np.ndarray:
+    def oof_avg(t: str, key: str) -> FloatArray:
         acc = np.zeros((n_repeats, n))
         for k, f in enumerate(fold[t]):
             acc[k // n_splits, f["te"]] = f[key]
-        return acc.mean(axis=0)
+        return cast(FloatArray, acc.mean(axis=0))
 
     targets_eval: dict[str, Any] = {}
     chosen_cal: dict[str, str] = {}
-    oof_cal: dict[str, np.ndarray] = {}
-    oof_boot_sd: dict[str, np.ndarray] = {}
-    oof_boot_w: dict[str, np.ndarray] = {}
+    oof_cal: dict[str, FloatArray] = {}
+    oof_boot_sd: dict[str, FloatArray] = {}
+    oof_boot_w: dict[str, FloatArray] = {}
     for t in TARGET_ORDER:
         y = ys[t]
         F = fold[t]
@@ -457,7 +458,7 @@ def train(
     p_max = np.maximum(p_cad, p_ves.max(axis=1))
     p_noisy = 1 - np.prod(1 - p_ves, axis=1)
     y_cad = ys["CAD"]
-    consistency = {
+    consistency: dict[str, Any] = {
         "logical_constraint": "P(CAD) >= max(P(LAD), P(LCX), P(RCA))",
         "supported_by_data": (
             f"{rel['cad_equals_any_vessel']}/{rel['n']} rows have CAD == any target-vessel stenosis"
@@ -693,10 +694,10 @@ def _patient_dict(df: Any, i: int) -> dict[str, Any]:
 
 def build_scenarios(
     df: Any,
-    X: np.ndarray,
+    X: FloatArray,
     model: CardioModel,
-    oof: dict[str, np.ndarray],
-    ys: dict[str, np.ndarray],
+    oof: dict[str, FloatArray],
+    ys: dict[str, FloatArray],
 ) -> dict[str, Any]:
     from app.cardiotwin.features import RAW_TO_ENCODED_IDX, encode_record
 
@@ -705,7 +706,7 @@ def build_scenarios(
     def labels(i: int) -> dict[str, str]:
         return {c: str(df.iloc[i][c]) for c in LABEL_COLUMNS}
 
-    def pick_min(mask: np.ndarray, score: np.ndarray) -> int:
+    def pick_min(mask: FloatArray, score: FloatArray) -> int:
         idx = np.where(mask)[0]
         return int(idx[np.argmin(score[idx])])
 

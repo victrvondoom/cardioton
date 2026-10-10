@@ -31,6 +31,8 @@ import { SearchPalette } from "./SearchPalette";
 import { Sidenav } from "./Sidenav";
 import { TopBar } from "./TopBar";
 import { RouteBoundary } from "./RouteBoundary";
+import { SpatialBackdrop } from "./SpatialBackdrop";
+import { LiveDataControls } from "./LiveDataControls";
 
 // Routes that already have their own primary CTA at the bottom-right where
 // the FAB would otherwise overlap content. The FAB is suppressed here.
@@ -78,6 +80,8 @@ export function AppShell() {
     location.pathname.startsWith("/journey") ||
     location.pathname.startsWith("/aquahealth");
   const showFab = !_SUPPRESS_FAB_ROUTES.has(location.pathname);
+  // Atlas tabs share one reconstruction; retain it across workspace navigation.
+  const outletKey = location.pathname === "/cardiotwin/atlas" || location.pathname.startsWith("/cardiotwin/atlas/") ? "/cardiotwin/atlas" : location.pathname;
 
   const openPalette = useCallback(() => setPaletteOpen(true), []);
   const closePalette = useCallback(() => setPaletteOpen(false), []);
@@ -117,7 +121,8 @@ export function AppShell() {
   }, [navigate, paletteOpen]);
 
   return (
-    <div className="min-h-screen bg-surface-bg text-ink-body">
+    <div className="spatial-shell min-h-screen bg-surface-bg text-ink-body">
+      <SpatialBackdrop />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:z-[100] focus:top-2 focus:left-2 focus:bg-surface-raised focus:p-3"
@@ -130,7 +135,8 @@ export function AppShell() {
       {/* Compensate for fixed ticker (28px on sm+) + topbar (56px) = 84px */}
       <div className="pt-14 sm:pt-[84px] flex">
         <Sidenav />
-        <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 pb-24">
+        <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 pb-28 md:pb-24">
+          <LiveDataControls />
           <WorkflowNavigation />
           <div ref={contentRef}>
             <RouteBoundary>
@@ -139,7 +145,7 @@ export function AppShell() {
                 <Outlet />
               ) : (
                 <div
-                  key={location.pathname}
+                  key={outletKey}
                   className="page-typography reveal-go [&_h1]:text-2xl [&_h1]:font-semibold [&_h1]:leading-tight [&_h1]:text-ink-primary"
                 >
                   <Outlet />

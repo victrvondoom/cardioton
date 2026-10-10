@@ -11,6 +11,7 @@ DEMONSTRATION DATA — NOT LIVE PUBLIC-HEALTH SURVEILLANCE.
 
 from .models import (
     CitizenReport,
+    CompositeEvidenceResult,
     LabAssay,
     ModelInference,
     ScenarioDefinition,
@@ -309,7 +310,7 @@ SCENARIOS = {
 }
 
 
-def load_scenario_and_compute(scenario_id: str):
+def load_scenario_and_compute(scenario_id: str) -> tuple[ScenarioDefinition, CompositeEvidenceResult]:
     """
     Loads scenario, dynamically computes deterministic evidence score directly from raw inputs,
     and returns scenario definition and computed evidence.

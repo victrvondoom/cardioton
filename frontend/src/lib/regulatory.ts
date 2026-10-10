@@ -53,7 +53,7 @@ export const CMS_0057_F_CLAUSES: RegulatoryClause[] = [
     effective_iso: "2027-01-01",
     fr_ref: "89 FR 8758 § IV.A",
     clincase_posture:
-      "ClinCase exposes a partial POST /fhir/Claim/$submit contract that accepts PAS-shaped Bundles and returns a queued ClaimResponse. Full IG validation is not implemented.",
+      "CARDIOTON exposes a partial POST /fhir/Claim/$submit contract that accepts PAS-shaped Bundles and returns a queued ClaimResponse. Full IG validation is not implemented.",
   },
   {
     id: "§ III.D",
@@ -63,7 +63,7 @@ export const CMS_0057_F_CLAUSES: RegulatoryClause[] = [
     effective_iso: "2027-01-01",
     fr_ref: "89 FR 8758 § III.D",
     clincase_posture:
-      "Cross-payer policy corpus enables ClinCase to re-evaluate transferred-member cases under the new payer's criteria within seconds.",
+      "Cross-payer policy corpus enables CARDIOTON to re-evaluate transferred-member cases under the new payer's criteria within seconds.",
   },
   {
     id: "§ V.A",

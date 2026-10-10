@@ -7,15 +7,14 @@ export default function WorkflowArea() {
   return (
     <section className="mx-auto max-w-5xl p-6">
       <p className="text-xs uppercase text-accent-brand">
-        CLINI-CASE / One connected evidence journey
+        World Cardiology Clinic / Digital Twin Workflow
       </p>
       <h1 className="mt-2 text-3xl font-semibold text-ink-primary">
         {area.label}
       </h1>
       <p className="my-4 max-w-3xl text-ink-muted">{area.summary}</p>
       <h2 className="mb-3 font-semibold">
-        Choose{" "}
-        {area.label === "Clinical Context" ? "clinical context" : "a tool"}
+        Choose{" "}{area.label === "Cardiac Assessment" ? "cardiac assessment" : "a tool"}
       </h2>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {area.links.map(([label, href]) => (

@@ -37,6 +37,7 @@ from fastapi.responses import Response
 from pydantic import BaseModel, Field
 
 from app.auth import get_current_user
+from app.json_contract import json_object
 
 router = APIRouter(prefix="/onco", tags=["oncology-stack"])
 
@@ -44,7 +45,7 @@ _DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "oncology"
 
 
 def _load_json(name: str) -> dict[str, Any]:
-    return json.loads((_DATA_DIR / name).read_text(encoding="utf-8"))
+    return json_object(json.loads((_DATA_DIR / name).read_text(encoding="utf-8")), name)
 
 
 # Lazy-loaded singletons — loaded on first access, cached for process lifetime.
@@ -164,7 +165,7 @@ def _tfidf_score(
     if not query_tokens or not doc_tokens:
         return 0.0
     n = len(all_docs)
-    doc_freqs = Counter()
+    doc_freqs: Counter[str] = Counter()
     for d in all_docs:
         for tok in set(d):
             doc_freqs[tok] += 1
@@ -605,7 +606,7 @@ async def davinci_pas_submit(
     claim_id = uuid.uuid4().hex
     now = datetime.now(UTC).isoformat()
 
-    bundle = {
+    bundle: dict[str, Any] = {
         "resourceType": "Bundle",
         "id": bundle_id,
         "meta": {
@@ -1206,7 +1207,7 @@ async def regimen_bundle(
         ],
     }
 
-    bundle = {
+    bundle: dict[str, Any] = {
         "resourceType": "Bundle",
         "id": bundle_id,
         "type": "collection",

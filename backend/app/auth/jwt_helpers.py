@@ -5,7 +5,7 @@ module is safely usable from scripts / tests.
 from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
-from typing import Any
+from typing import Any, cast
 
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -17,13 +17,13 @@ _pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def hash_password(plain: str) -> str:
     """Return bcrypt hash of the plaintext password."""
-    return _pwd_ctx.hash(plain)
+    return cast(str, _pwd_ctx.hash(plain))
 
 
 def verify_password(plain: str, hashed: str) -> bool:
     """Constant-time check that the plaintext matches the stored hash."""
     try:
-        return _pwd_ctx.verify(plain, hashed)
+        return cast(bool, _pwd_ctx.verify(plain, hashed))
     except (ValueError, TypeError):
         return False
 
@@ -57,12 +57,15 @@ def create_access_token(
         "exp": expires,
         "iat": datetime.now(UTC),
     }
-    return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
+    return cast(str, jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM))
 
 
 def decode_access_token(token: str) -> dict[str, Any] | None:
     """Decode + verify a JWT. Returns the claims dict or None on any error."""
     try:
-        return jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM])
+        return cast(
+            dict[str, Any],
+            jwt.decode(token, settings.JWT_SECRET, algorithms=[settings.JWT_ALGORITHM]),
+        )
     except JWTError:
         return None

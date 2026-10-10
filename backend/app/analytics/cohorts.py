@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from collections import Counter, defaultdict
 from datetime import UTC, datetime
-from typing import Any
+from typing import Any, TypedDict
 
 from app.db import db
 
@@ -25,6 +25,27 @@ TIME_BUCKETS: tuple[tuple[str, float | None], ...] = (
     ("> 30m", None),
 )
 TOP_TREATMENTS = 8
+
+
+class PayerSummary(TypedDict):
+    payer: str
+    decided: int
+    approve: int
+    deny: int
+    refer: int
+    rate: float | None
+
+
+class TimeBucket(TypedDict):
+    bucket: str
+    count: int
+
+
+class TreatmentSummary(TypedDict):
+    treatment: str
+    approve: int
+    deny: int
+    refer: int
 
 
 def _pct(part: int, whole: int) -> float | None:
@@ -60,7 +81,7 @@ def compute_cohorts(rows: list[dict[str, Any]], *, days: int) -> dict[str, Any]:
     by_payer: dict[str, Counter[str]] = defaultdict(Counter)
     for r in decided:
         by_payer[r["payer_id"] or "unknown"][r["verdict"]] += 1
-    approval_by_payer = sorted(
+    approval_by_payer: list[PayerSummary] = sorted(
         (
             {
                 "payer": p,
@@ -79,7 +100,7 @@ def compute_cohorts(rows: list[dict[str, Any]], *, days: int) -> dict[str, Any]:
     durs = sorted(
         float(r["dur_s"]) for r in decided if r.get("dur_s") is not None and r["dur_s"] >= 0
     )
-    buckets = [{"bucket": label, "count": 0} for label, _ in TIME_BUCKETS]
+    buckets: list[TimeBucket] = [{"bucket": label, "count": 0} for label, _ in TIME_BUCKETS]
     for d in durs:
         for i, (_, upper) in enumerate(TIME_BUCKETS):
             if upper is None or d < upper:
@@ -91,7 +112,7 @@ def compute_cohorts(rows: list[dict[str, Any]], *, days: int) -> dict[str, Any]:
     by_tx: dict[str, Counter[str]] = defaultdict(Counter)
     for r in decided:
         by_tx[(r["treatment"] or "unspecified").strip().lower()][r["verdict"]] += 1
-    verdict_by_treatment = [
+    verdict_by_treatment: list[TreatmentSummary] = [
         {"treatment": t, "approve": c["APPROVE"], "deny": c["DENY"], "refer": c["REFER"]}
         for t, c in sorted(by_tx.items(), key=lambda kv: (-sum(kv[1].values()), kv[0]))[
             :TOP_TREATMENTS

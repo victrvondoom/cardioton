@@ -25,7 +25,7 @@ export function WorkflowNavigation() {
     >
       <div className="flex flex-wrap items-center gap-3">
         <p className="text-compact text-[11px] text-accent-cyan">
-          Where you are in the CLINI-CASE workflow
+          Where you are in the CARDIOTON workflow
         </p>
         <Link
           className="ml-auto rounded-md border border-surface-border px-3 py-1.5 text-xs font-medium text-ink-primary hover:border-accent-brand focus-visible:ring-2"

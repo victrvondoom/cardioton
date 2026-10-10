@@ -32,8 +32,11 @@ Real-world use requires validation of this structure on real cohorts.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import cast
 
 import numpy as np
+
+from app.oncotwin._typing import BoolArray, FloatArray
 
 LATENT = ("infection", "dehydration", "fatigue")
 
@@ -95,17 +98,17 @@ IV_DIARRHEA_PULSE = {3: 0.4, 4: 0.5, 5: 0.5, 6: 0.4, 7: 0.25}
 BACKGROUND_INFECTION_HAZARD = 0.003
 
 
-def seed_virulence(u: np.ndarray | float) -> np.ndarray:
+def seed_virulence(u: FloatArray | float) -> FloatArray:
     """Map a uniform draw to a pathogen virulence (shared by simulator and twin)."""
     u = np.asarray(u, dtype=float)
     return np.where(u < 0.5, 0.0, np.where(u < 0.8, 0.1 + 1.15 * (u - 0.5), 0.7 + 1.5 * (u - 0.8)))
 
 
-def sigmoid(x: np.ndarray | float) -> np.ndarray:
-    return 1.0 / (1.0 + np.exp(-np.asarray(x, dtype=float)))
+def sigmoid(x: FloatArray | float) -> FloatArray:
+    return cast(FloatArray, 1.0 / (1.0 + np.exp(-np.asarray(x, dtype=float))))
 
 
-def neutropenia_factor(anc: np.ndarray | float) -> np.ndarray:
+def neutropenia_factor(anc: FloatArray | float) -> FloatArray:
     """0 (normal ANC) → 1 (profound neutropenia). ANC in 10^3/µL."""
     return sigmoid((1.0 - np.asarray(anc, dtype=float)) / 0.18)
 
@@ -117,15 +120,15 @@ def neutropenia_factor(anc: np.ndarray | float) -> np.ndarray:
 
 @dataclass
 class FribergState:
-    prol: np.ndarray
-    t1: np.ndarray
-    t2: np.ndarray
-    t3: np.ndarray
-    circ: np.ndarray
-    exposure: np.ndarray
+    prol: FloatArray
+    t1: FloatArray
+    t2: FloatArray
+    t3: FloatArray
+    circ: FloatArray
+    exposure: FloatArray
 
     @classmethod
-    def steady(cls, circ0: np.ndarray) -> FribergState:
+    def steady(cls, circ0: FloatArray) -> FribergState:
         c = np.asarray(circ0, dtype=float).copy()
         return cls(c.copy(), c.copy(), c.copy(), c.copy(), c.copy(), np.zeros_like(c))
 
@@ -140,11 +143,11 @@ class FribergState:
 
 def friberg_advance_day(
     st: FribergState,
-    circ0: np.ndarray,
-    slope: np.ndarray,
+    circ0: FloatArray,
+    slope: FloatArray,
     *,
-    dose_scale: np.ndarray | float = 0.0,
-    gcsf_active: np.ndarray | bool = False,
+    dose_scale: FloatArray | float = 0.0,
+    gcsf_active: BoolArray | bool = False,
     mtt: float = FRIBERG_MTT_DAYS,
     gamma: float = FRIBERG_GAMMA,
     substeps: int = 8,
@@ -184,15 +187,15 @@ def friberg_advance_day(
 
 
 def simulate_anc(
-    circ0: np.ndarray,
-    slope: np.ndarray,
+    circ0: FloatArray,
+    slope: FloatArray,
     n_days: int,
     doses: dict[int, float],
     gcsf_days: set[int] | list[int],
     *,
     start_day: int = 1,
     state: FribergState | None = None,
-) -> tuple[np.ndarray, FribergState]:
+) -> tuple[FloatArray, FribergState]:
     """Morning ANC for days start_day … start_day+n_days-1. Shape (B, n_days).
 
     `doses` maps 1-based day → relative dose scale (1.0 = full dose).
@@ -226,13 +229,13 @@ class DayDrivers:
     diarrhea: float  # regimen diarrhea load
     fatigue: float  # regimen fatigue load
     oral_days: int
-    adherence: np.ndarray | float  # supportive-medication adherence today (0..1)
-    infection_seed: np.ndarray | float = 0.0
-    virulence: np.ndarray | float = 0.0
-    abx_boost: np.ndarray | float = 0.0
-    hydration_boost: np.ndarray | float = 0.0
-    activity_boost: np.ndarray | float = 0.0
-    gi_insult: np.ndarray | float = 0.0  # acute GI illness (injected / exogenous)
+    adherence: FloatArray | float  # supportive-medication adherence today (0..1)
+    infection_seed: FloatArray | float = 0.0
+    virulence: FloatArray | float = 0.0
+    abx_boost: FloatArray | float = 0.0
+    hydration_boost: FloatArray | float = 0.0
+    activity_boost: FloatArray | float = 0.0
+    gi_insult: FloatArray | float = 0.0  # acute GI illness (injected / exogenous)
 
 
 def gi_pulses(
@@ -258,15 +261,15 @@ def fatigue_pulse(days_since_dose: int | None, fatigue: float) -> float:
 
 
 def latent_step(
-    infection: np.ndarray,
-    dehydration: np.ndarray,
-    fatigue: np.ndarray,
-    anc: np.ndarray,
+    infection: FloatArray,
+    dehydration: FloatArray,
+    fatigue: FloatArray,
+    anc: FloatArray,
     drv: DayDrivers,
     *,
-    infection_growth: np.ndarray | float = 0.60,
-    gi_sensitivity: np.ndarray | float = 1.0,
-) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    infection_growth: FloatArray | float = 0.60,
+    gi_sensitivity: FloatArray | float = 1.0,
+) -> tuple[FloatArray, FloatArray, FloatArray, FloatArray]:
     """One-day update of the three latent loads. Returns (I, D, F, emesis)."""
     nf = neutropenia_factor(anc)
     growth = infection_growth * nf + np.asarray(drv.virulence, dtype=float)
@@ -299,19 +302,19 @@ def latent_step(
 
 def observation_means(
     baseline: dict[str, float],
-    infection: np.ndarray,
-    dehydration: np.ndarray,
-    fatigue: np.ndarray,
+    infection: FloatArray,
+    dehydration: FloatArray,
+    fatigue: FloatArray,
     *,
-    emesis: np.ndarray | float = 0.0,
-    steroid: np.ndarray | float = 0.0,
-) -> dict[str, np.ndarray]:
+    emesis: FloatArray | float = 0.0,
+    steroid: FloatArray | float = 0.0,
+) -> dict[str, FloatArray]:
     """Expected value of each signal in TRANSFORMED units given latent loads.
 
     `baseline` holds the patient's baseline in transformed units (log for
     hrv_sdnn / steps).
     """
-    out: dict[str, np.ndarray] = {}
+    out: dict[str, FloatArray] = {}
     for key, base in baseline.items():
         load = LOADINGS.get(key)
         if load is None:

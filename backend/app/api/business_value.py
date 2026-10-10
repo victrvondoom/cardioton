@@ -36,6 +36,11 @@ async def case_value(
         raise HTTPException(status_code=404, detail=f"Case {case_id} not found") from e
     except PermissionError as e:
         raise HTTPException(status_code=404, detail=f"Case {case_id} not found") from e
+    except Exception as e:  # noqa: BLE001 - keep unavailable storage out of unhandled 500s
+        raise HTTPException(
+            status_code=503,
+            detail="Per-case business value is unavailable because case storage could not be read.",
+        ) from e
     return roi.__dict__
 
 
@@ -95,9 +100,15 @@ async def abrasion(
     days: int = Query(default=90, ge=1, le=365),
     user: dict[str, Any] = Depends(get_current_user),
 ) -> dict[str, Any]:
-    score = await provider_abrasion_score(
-        user["organization_id"],
-        rendering_npi=rendering_npi,
-        days=days,
-    )
+    try:
+        score = await provider_abrasion_score(
+            user["organization_id"],
+            rendering_npi=rendering_npi,
+            days=days,
+        )
+    except Exception as e:  # noqa: BLE001 - unavailable observations must not become zero scores
+        raise HTTPException(
+            status_code=503,
+            detail="Provider abrasion metrics are unavailable because case storage could not be read. Case counts, delays, and savings are unknown.",
+        ) from e
     return score.__dict__

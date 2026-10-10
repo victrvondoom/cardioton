@@ -52,7 +52,7 @@ async def stream_case_events(
 
     queue = subscribe(case_id)
 
-    async def event_gen() -> AsyncIterator[dict]:
+    async def event_gen() -> AsyncIterator[dict[str, Any]]:
         idle_start = asyncio.get_event_loop().time()
         try:
             while True:

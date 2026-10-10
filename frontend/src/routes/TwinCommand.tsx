@@ -6,13 +6,14 @@
  */
 import clsx from "clsx";
 import { Activity, ArrowRight, FlaskConical, Gauge, HeartPulse, Loader2, PlayCircle, RefreshCw } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { ot } from "../oncotwin/api";
+import { useLive } from "../lib/useLive";
 import { Chip, Note, SevMark } from "../oncotwin/intel";
 import { RiskSpark, Section, TierBadge, pct } from "../oncotwin/panels";
-import type { CCRow, CommandCenter } from "../oncotwin/types2";
+import type { CCRow } from "../oncotwin/types2";
 
 const BTN = "inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-surface-border bg-surface-raised text-[12px] text-ink-body hover:border-accent-brand/60 disabled:opacity-40 focus:outline-none focus:ring-2 focus:ring-accent-brand";
 
@@ -26,16 +27,12 @@ const CATEGORY_HELP: Record<string, string> = {
 };
 
 export default function TwinCommand() {
-  const [cc, setCc] = useState<CommandCenter | null>(null);
-  const [err, setErr] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
+  const command = useLive(ot.commandCenter);
+  const cc = command.data;
+  const err = command.error;
+  const busy = command.loading;
   const [filter, setFilter] = useState<string | null>(null);
-
-  const load = async () => {
-    setBusy(true); setErr(null);
-    try { setCc(await ot.commandCenter()); } catch (e) { setErr((e as Error).message); } finally { setBusy(false); }
-  };
-  useEffect(() => { void load(); }, []);
+  const load = command.reload;
 
   const rows = (cc?.patients ?? []).filter((r) => !filter || r.category === filter);
   return (
@@ -47,7 +44,7 @@ export default function TwinCommand() {
             A dynamic, explainable, predictive digital twin for each patient's treatment trajectory, triaged for clinician review.
           </p>
           <p className="text-[11.5px] text-ink-muted mt-1">
-            All patients are synthetic. Clinical decision support only; accepted alerts become ClinCase prior-authorisation cases.
+            All patients are synthetic. Clinical decision support only; accepted alerts become CARDIOTON prior-authorisation cases.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">

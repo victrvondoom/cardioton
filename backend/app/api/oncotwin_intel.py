@@ -20,7 +20,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import PlainTextResponse
 from pydantic import BaseModel, Field
 
-from app.api.oncotwin import _actor, _model_or_503, _patient_or_404, _persist, clean, org_store
+from app.api.oncotwin import _actor, _model_or_503, _patient_or_404, _persist, org_store
+from app.api.oncotwin import clean_object as clean
 from app.auth import get_current_user, require_role
 from app.oncotwin import ONCOTWIN_VERSION, runtime
 from app.oncotwin.engine.simulate import SCENARIOS

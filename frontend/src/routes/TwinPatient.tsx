@@ -15,6 +15,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { useAuth } from "../components/AuthContext";
+import { useAutoRefresh } from "../lib/useAutoRefresh";
 import { ExposureContext } from "../onehealth/ContextPanel";
 import { VitalsMonitor } from "../components/VitalsMonitor";
 import { ot } from "../oncotwin/api";
@@ -37,7 +38,7 @@ export const TABS = [
   { id: "trajectory", label: "Trajectory" },
   { id: "whatif", label: "What-if" },
   { id: "evidence", label: "Evidence" },
-  { id: "clincase", label: "ClinCase" },
+  { id: "clincase", label: "CARDIOTON" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
@@ -104,6 +105,7 @@ export default function TwinPatient({ demo = false }: { demo?: boolean }) {
 
   useEffect(() => { void load(asOf); }, [load, asOf]);
   useEffect(() => { setAsOf(undefined); setSelectedAlert(null); setNotice(null); }, [pid]);
+  useAutoRefresh(() => load(), 30_000, asOf === undefined && !busy && !playing);
 
   useEffect(() => {
     if (!playing || !d) return;
@@ -174,7 +176,7 @@ export default function TwinPatient({ demo = false }: { demo?: boolean }) {
       if (!id) return "No accepted alert to hand off.";
       const h = await ot.handoff(id);
       await refreshAll();
-      return `ClinCase case ${h.handoff.case_id} created for ${h.handoff.requested_treatment.name} with ${h.handoff.policy_preview.length} retrieved policy sections${h.already_handed_off ? " (already handed off)" : ""}.`;
+      return `CARDIOTON case ${h.handoff.case_id} created for ${h.handoff.requested_treatment.name} with ${h.handoff.policy_preview.length} retrieved policy sections${h.already_handed_off ? " (already handed off)" : ""}.`;
     },
   };
 
@@ -220,17 +222,17 @@ export default function TwinPatient({ demo = false }: { demo?: boolean }) {
         restingHr={signalValue(d, "resting_hr")}
         temperatureF={signalValue(d, "temperature")}
         systolicBp={signalValue(d, "sbp")}
-        onEmergency={() => run("emergency", async () => {
-          const alertId = selectedAlert ?? alerts.find((a) => a.status === "open")?.id ?? alerts[0]?.id;
-          if (alertId) {
-            await ot.act(alertId, "investigate", "Emergency escalation raised from bedside monitor (synthetic demo).");
-            await refreshAll();
-          }
-          return `Emergency escalation recorded for ${d.patient.label}.`;
-        })}
-        onScheduleAppointment={(iso, reason) => run("appointment", async () => {
-          return `Appointment requested for ${d.patient.label} on ${iso}${reason ? ` (${reason})` : ""}.`;
-        })}
+        onEmergency={canAct && !d.is_replay && !busy ? async () => {
+          setBusy("investigate"); setErr(null);
+          try {
+            const alertId = selectedAlert ?? alerts.find((a) => a.status === "open")?.id ?? alerts[0]?.id;
+            if (!alertId) throw new Error("No synthetic alert is available to investigate.");
+            const saved = await ot.act(alertId, "investigate", "Clinician investigation recorded from the illustrative vitals panel (synthetic demo).");
+            if (saved.alert?.id !== alertId) throw new Error("The service did not confirm an alert investigation.");
+            const refreshed = await refreshAll();
+            return `Investigation recorded for synthetic alert ${saved.alert.id}. No care-team notification was sent.${refreshed ? "" : " The latest view could not be refreshed."}`;
+          } finally { setBusy(null); }
+        } : undefined}
       />
 
       {demo && <FlagshipGuide who={who} canAct={canAct} actions={demoActions} busy={busy !== null} run={run} />}
@@ -256,7 +258,7 @@ export default function TwinPatient({ demo = false }: { demo?: boolean }) {
           <Section id="ot-state" eyebrow="Living Twin State · 19 dimensions · never overwritten" title="The patient, as the twin understands them today">
             <StatePanel intel={intel} />
           </Section>
-          <div className="grid gap-4 xl:grid-cols-[1fr_1.4fr]">
+          <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)]">
             <Section id="ot-what-changed" eyebrow="WHAT CHANGED?" title="Previous twin state → current twin state">
               <WhatChangedPanel wc={intel.what_changed} />
             </Section>
@@ -282,7 +284,7 @@ export default function TwinPatient({ demo = false }: { demo?: boolean }) {
 
       {tab === "trajectory" && (
         <>
-          <div className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
+          <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
             <Section id="ot-risk" eyebrow="Historical → current → predicted" title={`7-day risk of unplanned acute care (${d.prediction.outcome_id})`}>
               <RiskChart d={d} alerts={alerts} />
             </Section>
@@ -358,11 +360,11 @@ export default function TwinPatient({ demo = false }: { demo?: boolean }) {
 
       {tab === "clincase" && (
         <>
-          <Section id="ot-alerts" eyebrow="Clinician in the loop" title="Alerts, review & ClinCase handoff">
+          <Section id="ot-alerts" eyebrow="Clinician in the loop" title="Alerts, review & CARDIOTON handoff">
             <AlertPanel alerts={alerts} canAct={canAct} selected={selectedAlert} onSelect={setSelectedAlert}
               onChanged={() => { void load(asOf); setRefreshKey((k) => k + 1); }} />
           </Section>
-          <Section id="ot-context" eyebrow="Clinical context agent · ClinCase reuse" title="What a ClinCase case would contain">
+          <Section id="ot-context" eyebrow="Clinical context agent · CARDIOTON reuse" title="What a CARDIOTON case would contain">
             <ClinicalContextPanel pid={pid} asOf={d.as_of_day} refreshKey={refreshKey} />
           </Section>
           <Section id="ot-knowledge" eyebrow="Audit" title="What did the Digital Twin know at that moment?">
@@ -402,15 +404,15 @@ function ClinicalContextPanel({ pid, asOf, refreshKey }: { pid: string; asOf: nu
       </div>
       {req ? (
         <div className="rounded-lg border border-surface-border p-3 text-[12px]">
-          <div className="text-[10px] text-compact text-ink-faint">If a clinician accepts the alert, the ClinCase case would request</div>
+          <div className="text-[10px] text-compact text-ink-faint">If a clinician accepts the alert, the CARDIOTON case would request</div>
           <div className="text-ink-primary font-semibold">{req.name} · {req.hcpcs_code} · {req.dose}</div>
           <div className="text-ink-muted">{req.intent}</div>
           <div className="text-ink-body mt-1">{c.rationale}</div>
         </div>
-      ) : <div className="text-[12px] text-ink-muted">{c.rationale ?? "No ClinCase request applies to the current twin state."}</div>}
+      ) : <div className="text-[12px] text-ink-muted">{c.rationale ?? "No CARDIOTON request applies to the current twin state."}</div>}
       {c.policy_preview?.length > 0 && (
         <div>
-          <div className="text-[11px] text-ink-muted mb-1">Policy sections retrieved by the existing ClinCase policy retrieval ({c.payer_id})</div>
+          <div className="text-[11px] text-ink-muted mb-1">Policy sections retrieved by the existing CARDIOTON policy retrieval ({c.payer_id})</div>
           <ul className="space-y-1">{c.policy_preview.map((p: Json, i: number) => (
             <li key={i} className="text-[11.5px] border-l-2 border-surface-border-hi pl-2">
               <b>{p.policy_title}</b> · {p.section_heading}{p.page_number ? ` · p.${p.page_number}` : ""}<div className="text-ink-muted">{p.excerpt}</div>
@@ -422,7 +424,7 @@ function ClinicalContextPanel({ pid, asOf, refreshKey }: { pid: string; asOf: nu
             {i < c.flow.length - 1 && <ChevronRight size={11} className="text-ink-faint" aria-hidden />}</li>))}
       </ol>
       {c.handoffs.length > 0 && (
-        <div className="text-[12px]"><div className="text-[11px] text-ink-muted">ClinCase cases created from this twin</div>
+        <div className="text-[12px]"><div className="text-[11px] text-ink-muted">CARDIOTON cases created from this twin</div>
           <ul className="list-disc ml-4">{c.handoffs.map((h: Json) => (
             <li key={h.case_id}><Link className="underline" to={`/cases/${h.case_id}`}>{h.case_id}</Link>: {h.requested_treatment?.name}, created {String(h.created_at).slice(0, 16).replace("T", " ")} by {h.created_by}</li>))}</ul>
         </div>)}
@@ -538,8 +540,8 @@ function FlagshipGuide({ who, actions, canAct, busy, run }: {
     { title: "Counterfactual twin",
       say: "The observed twin against a twin in which nothing changed, checked against the generator's ground truth (possible only for synthetic patients).",
       go: view("whatif", "ot-counterfactual") },
-    { title: "ClinCase handoff",
-      say: "The accepted alert becomes a ClinCase prior-authorisation case, reusing ClinCase's FHIR, policy-retrieval and agent pipeline.",
+    { title: "CARDIOTON handoff",
+      say: "The accepted alert becomes a CARDIOTON prior-authorisation case, reusing CARDIOTON's FHIR, policy-retrieval and agent pipeline.",
       go: async () => { if (!canAct) return "Reviewer or admin role required."; actions.setTab("clincase"); const m = await actions.handoff(); scrollTo("ot-context"); return m; } },
     { title: "What did the twin know?",
       say: "Pick a ledgered evaluation and reproduce it bit-for-bit: inputs, model artifact, state hash, risk and tier.",

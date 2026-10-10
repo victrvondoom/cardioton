@@ -2,11 +2,11 @@ import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { ActivityTicker } from "../src/components/ActivityTicker";
-import { EMPTY_SNAPSHOT, buildNavChips, buildTickerItems, fetchSnapshot, resetSnapshotCache, type FeedSnapshot } from "../src/lib/liveFeed";
+import { EMPTY_SNAPSHOT, buildNavChips, buildNotifications, buildTickerItems, fetchSnapshot, isHealthDegraded, resetSnapshotCache, type FeedSnapshot } from "../src/lib/liveFeed";
 
 const snap = (over: Partial<FeedSnapshot> = {}): FeedSnapshot => ({ ...EMPTY_SNAPSHOT, ...over });
-beforeEach(() => resetSnapshotCache());
-afterEach(() => { cleanup(); vi.unstubAllGlobals(); });
+beforeEach(() => { resetSnapshotCache(); localStorage.clear(); });
+afterEach(() => { cleanup(); vi.unstubAllGlobals(); localStorage.clear(); });
 
 describe("ticker wording comes from data", () => {
   it("emits nothing when nothing is known — no filler claims", () => {
@@ -34,6 +34,20 @@ describe("ticker wording comes from data", () => {
 
   it("marks an unhealthy API in red", () => {
     expect(buildTickerItems(snap({ health: { status: "degraded", db: "down" } }))[0].tone).toBe("red");
+  });
+
+  it("keeps a live process with disconnected case storage visibly degraded", () => {
+    const health = { status: "ok", db: "not_checked", case_storage_configured: false };
+    expect(isHealthDegraded(health)).toBe(true);
+    expect(isHealthDegraded({ ...health, case_storage_configured: true })).toBe(false);
+    expect(isHealthDegraded(null)).toBe(false);
+    const state = snap({ health });
+    expect(buildTickerItems(state)[0]).toMatchObject({ tone: "red", icon: "alert" });
+    expect(buildTickerItems(state)[0].text).toMatch(/case storage is not connected.*counts and agent metrics unknown/);
+    expect(buildNotifications(state)).toEqual([expect.objectContaining({
+      key: "health", tone: "red", title: "Case storage is not connected", body: expect.stringContaining("unknown"),
+    })]);
+    expect(buildTickerItems(state).some((item) => /0 cases|API healthy/.test(item.text))).toBe(false);
   });
 });
 
@@ -70,6 +84,82 @@ describe("snapshot fetching", () => {
     expect(a.policies).toEqual({ n: 22, with_change: 2 });
     expect(a.roiAnnualUsd).toBeNull(); // db_unavailable is never shown as a number
     expect(a.archLayers).toBe(3);
+  });
+
+  it("skips only case-backed shell requests when the pool is explicitly not configured", async () => {
+    const f = stubBackend({
+      "/healthz": { status: "ok", db: "not_checked", case_storage_configured: false },
+      "/policy-catalog": { n: 22, n_with_recent_change: 2 },
+      "/architecture/layers": { layers: [1, 2, 3] },
+    });
+    const result = await fetchSnapshot();
+    expect(f.mock.calls.length).toBe(7);
+    expect(f.mock.calls.some(([url]) => url.includes("/cases?") || url.includes("/agents/metrics"))).toBe(false);
+    expect(result.cases).toBeNull();
+    expect(result.agents).toBeNull();
+    expect(result.health?.status).toBe("ok"); // process liveness remains the server's signal
+    expect(result.policies?.n).toBe(22);
+    expect(result.archLayers).toBe(3);
+  });
+
+  it("does not suppress case-storage failures when a pool exists", async () => {
+    const f = stubBackend({ "/healthz": { status: "ok", db: "not_checked", case_storage_configured: true } });
+    const result = await fetchSnapshot();
+    expect(f.mock.calls.length).toBe(10);
+    expect(f.mock.calls.filter(([url]) => url.includes("/cases?") || url.includes("/agents/metrics"))).toHaveLength(3);
+    expect(result.cases).toBeNull();
+    expect(result.agents).toBeNull();
+  });
+
+  it("rechecks pool configuration after the shared cache expires and resumes polling", async () => {
+    const now = vi.spyOn(Date, "now").mockReturnValue(0);
+    try {
+      stubBackend({ "/healthz": { status: "ok", db: "not_checked", case_storage_configured: false } });
+      expect((await fetchSnapshot()).cases).toBeNull();
+      const f = stubBackend({
+        "/healthz": { status: "ok", db: "not_checked", case_storage_configured: true },
+        "status=awaiting_review": { total: 2 }, "/cases?limit=1": { total: 9 },
+      });
+      now.mockReturnValue(30_001);
+      const recovered = await fetchSnapshot();
+      expect(f.mock.calls.length).toBe(10);
+      expect(recovered.cases).toEqual({ total: 9, awaiting: 2 });
+      expect(buildNotifications(recovered).some((notification) => notification.key === "health")).toBe(false);
+    } finally {
+      now.mockRestore();
+    }
+  });
+
+  it("never reuses a cached organisation snapshot after sign-in identity changes", async () => {
+    const f = stubBackend({ "/healthz": { status: "ok", db: "not_checked" }, "/cases?limit=1": { total: 9 } });
+    localStorage.setItem("clincase-jwt", "first-session");
+    const first = await fetchSnapshot();
+    localStorage.setItem("clincase-jwt", "second-session");
+    const second = await fetchSnapshot();
+    expect(first).not.toBe(second);
+    expect(f).toHaveBeenCalledTimes(20);
+    localStorage.removeItem("clincase-jwt");
+    expect(await fetchSnapshot()).not.toBe(second);
+    expect(f).toHaveBeenCalledTimes(30);
+  });
+
+  it("keeps delayed case requests bound to the identity captured before the health response", async () => {
+    let resolveHealth!: (response: Response) => void;
+    const health = new Promise<Response>((resolve) => { resolveHealth = resolve; });
+    const f = vi.fn(async (url: string, init?: RequestInit) => {
+      if (url.includes("/healthz")) return health;
+      return url.includes("/cases?") ? new Response(JSON.stringify({ total: 1 })) : new Response("unavailable", { status: 503 });
+    });
+    vi.stubGlobal("fetch", f);
+    localStorage.setItem("clincase-jwt", "first-session");
+    const inFlight = fetchSnapshot();
+    localStorage.setItem("clincase-jwt", "second-session");
+    resolveHealth(new Response(JSON.stringify({ status: "ok", db: "not_checked", case_storage_configured: true })));
+    await inFlight;
+    for (const [url, init] of f.mock.calls) {
+      expect(new Headers(init?.headers).get("Authorization")).toBe(url.includes("/healthz") ? null : "Bearer first-session");
+    }
+    expect(f.mock.calls.filter(([url]) => url.includes("/cases?") || url.includes("/agents/metrics"))).toHaveLength(3);
   });
 });
 

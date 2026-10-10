@@ -31,8 +31,12 @@ lead 4.0 vs 3.5 days) at the cost of more false alerts (1.67 vs 1.26 per
 
 from __future__ import annotations
 
-import numpy as np
+from typing import TypedDict, cast
 
+import numpy as np
+from numpy.typing import ArrayLike
+
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.baseline import (
     DEVIATION_Z,
     Baseline,
@@ -72,31 +76,43 @@ NADIR_CENTER_DAYS = 10.0
 NADIR_WIDTH_DAYS = 3.5
 
 
-def signal_matrix(series: PatientSeries) -> np.ndarray:
+class FeatureContext(TypedDict):
+    nadir: FloatArray
+    anc_twin_log: FloatArray
+    anc_twin_low: FloatArray
+    anc_lab_low: FloatArray
+    adherence_7d: FloatArray
+    adherence_sched: FloatArray
+    age65: float
+    on_treatment: FloatArray
+    myelotox: float
+
+
+def signal_matrix(series: PatientSeries) -> FloatArray:
     """(1, T, S) transformed model-signal values."""
     return np.stack([series.transformed(k) for k in MODEL_SIGNALS], axis=-1)[None, :, :]
 
 
-def nadir_risk(days_since_dose: np.ndarray, myelotox: float, gcsf_cycle: np.ndarray) -> np.ndarray:
+def nadir_risk(days_since_dose: FloatArray, myelotox: float, gcsf_cycle: FloatArray) -> FloatArray:
     w = np.exp(-(((days_since_dose - NADIR_CENTER_DAYS) / NADIR_WIDTH_DAYS) ** 2))
     w = np.where(np.isnan(days_since_dose), 0.0, w)
-    return w * myelotox * (1.0 - 0.6 * gcsf_cycle)
+    return cast(FloatArray, w * myelotox * (1.0 - 0.6 * gcsf_cycle))
 
 
 def feature_tensor(
-    values_t: np.ndarray,  # (B, T, S) transformed, NaN missing
+    values_t: FloatArray,  # (B, T, S) transformed, NaN missing
     baseline: Baseline,
     *,
-    nadir: np.ndarray,  # (B, T) or (T,)
-    anc_twin_log: np.ndarray,  # (B, T) or (T,)
-    anc_twin_low: np.ndarray,
-    anc_lab_low: np.ndarray,
-    adherence_7d: np.ndarray,
-    adherence_sched: np.ndarray,
+    nadir: FloatArray,  # (B, T) or (T,)
+    anc_twin_log: FloatArray,  # (B, T) or (T,)
+    anc_twin_low: FloatArray,
+    anc_lab_low: FloatArray,
+    adherence_7d: FloatArray,
+    adherence_sched: FloatArray,
     age65: float,
-    on_treatment: np.ndarray,
+    on_treatment: FloatArray,
     myelotox: float,
-) -> np.ndarray:
+) -> FloatArray:
     B, T, S = values_t.shape
     z = adverse_z(values_t, baseline)
     z_cf = carry_forward(z, 1)
@@ -109,7 +125,7 @@ def feature_tensor(
     F[:, :, :N_SIG] = np.clip(np.nan_to_num(z_cf, nan=0.0), -3.0, 8.0)
     F[:, :, N_SIG : 2 * N_SIG] = np.clip(np.nan_to_num(slope3, nan=0.0), -4.0, 4.0)
 
-    def put(name: str, arr) -> None:
+    def put(name: str, arr: ArrayLike) -> None:
         F[:, :, IDX[name]] = np.broadcast_to(np.asarray(arr, dtype=float), (B, T))
 
     put("n_concordant", np.nansum(z_cf >= DEVIATION_Z, axis=-1))
@@ -130,8 +146,8 @@ def feature_tensor(
 def series_context(
     series: PatientSeries,
     neutro: NeutrophilTwin | None = None,
-    anc_arrays: tuple[np.ndarray, np.ndarray] | None = None,
-) -> dict[str, np.ndarray | float]:
+    anc_arrays: tuple[FloatArray, FloatArray] | None = None,
+) -> FeatureContext:
     """Per-day clinical/twin context arrays for the actual history.
 
     `anc_arrays` lets a caller pass the (causal) twin ANC features computed on
@@ -167,8 +183,8 @@ def series_features(
     series: PatientSeries,
     baseline: Baseline,
     neutro: NeutrophilTwin | None = None,
-    anc_arrays: tuple[np.ndarray, np.ndarray] | None = None,
-) -> np.ndarray:
+    anc_arrays: tuple[FloatArray, FloatArray] | None = None,
+) -> FloatArray:
     """(T, F) feature matrix for the patient's actual history."""
     ctx = series_context(series, neutro, anc_arrays)
-    return feature_tensor(signal_matrix(series), baseline, **ctx)[0]
+    return cast(FloatArray, feature_tensor(signal_matrix(series), baseline, **ctx)[0])

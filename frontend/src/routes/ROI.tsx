@@ -18,44 +18,35 @@ import {
   Users,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useLive } from "../lib/useLive";
 
-import {
-  api,
-  type OrgValueRollup,
-  type ProviderAbrasionScore,
-  type StarImpactProjection,
-} from "../lib/api";
+import { api } from "../lib/api";
 
 const PRESETS: Array<{ label: string; member_count: number; note: string }> = [
-  { label: "Mid-size regional payer", member_count: 100_000, note: "Demo cohort scale" },
-  { label: "Centene MA segment", member_count: 1_500_000, note: "Public CMS enrollment" },
-  { label: "Humana MA enrollment", member_count: 6_000_000, note: "$1.26B / half-star" },
-  { label: "UnitedHealthcare MA", member_count: 7_800_000, note: "Largest MA payer" },
+  { label: "100,000 members", member_count: 100_000, note: "Illustrative scenario size" },
+  { label: "1.5 million members", member_count: 1_500_000, note: "Illustrative scenario size" },
+  { label: "6 million members", member_count: 6_000_000, note: "Illustrative scenario size" },
+  { label: "7.8 million members", member_count: 7_800_000, note: "Illustrative scenario size" },
 ];
 
 export default function ROI() {
   const [memberCount, setMemberCount] = useState(6_000_000);
   const [currentStar, setCurrentStar] = useState(3.98);
-  const [proj, setProj] = useState<StarImpactProjection | null>(null);
-  const [orgRollup, setOrgRollup] = useState<OrgValueRollup | null>(null);
-  const [abrasion, setAbrasion] = useState<ProviderAbrasionScore | null>(null);
+  const [assumptions, setAssumptions] = useState({ member_count: memberCount, current_star: currentStar });
+  const projectionFeed = useLive(() => api.getStarImpact(assumptions), [assumptions]);
+  const orgFeed = useLive(api.getOrgValue);
+  const abrasionFeed = useLive(() => api.getProviderAbrasion({ days: 90 }));
+  const proj = projectionFeed.data;
+  const orgRollup = orgFeed.data?.db_unavailable ? null : orgFeed.data;
+  const abrasion = abrasionFeed.data;
 
   // Debounced re-fetch of star-impact whenever the sliders move
   useEffect(() => {
     const t = setTimeout(() => {
-      api
-        .getStarImpact({ member_count: memberCount, current_star: currentStar })
-        .then(setProj)
-        .catch(() => setProj(null));
+      setAssumptions({ member_count: memberCount, current_star: currentStar });
     }, 200);
     return () => clearTimeout(t);
   }, [memberCount, currentStar]);
-
-  // Org rollup + provider abrasion: load once
-  useEffect(() => {
-    api.getOrgValue().then(setOrgRollup).catch(() => {});
-    api.getProviderAbrasion({ days: 90 }).then(setAbrasion).catch(() => {});
-  }, []);
 
   const formattedMembers = useMemo(
     () => memberCount.toLocaleString(undefined, { maximumFractionDigits: 0 }),
@@ -66,7 +57,7 @@ export default function ROI() {
     <div className="px-6 py-6">
       <header className="mb-5">
         <div className="text-[10px] text-compact text-accent-brand mb-1">
-          CLINCASE · BUSINESS VALUE CALCULATOR
+          CARDIOTON · BUSINESS VALUE CALCULATOR
         </div>
         <h1 className="text-2xl font-semibold text-ink-primary leading-tight">
           Star Ratings + per-case ROI projection
@@ -83,6 +74,7 @@ export default function ROI() {
         <div className="flex items-center gap-2 mb-4">
           <CalculatorIcon size={14} className="text-accent-brand" />
           <span className="text-sm font-semibold text-ink-primary">Inputs</span>
+          <span className="text-xs text-ink-muted">Scenario assumptions · enter your own figures</span>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -132,19 +124,20 @@ export default function ROI() {
               type="range"
               min={2.0}
               max={5.0}
-              step={0.05}
+              step={0.01}
               value={currentStar}
               onChange={(e) => setCurrentStar(Number(e.target.value))}
               className="w-full"
             />
             <div className="text-[11px] text-ink-faint mt-2">
-              <span className="text-mono-tech">2026 MA average: 3.98 stars</span> · 4.0+ qualifies for the quality
-              bonus.
+              <span className="text-mono-tech">Starting assumption: 3.98 stars</span> · Adjust to your plan's current rating.
             </div>
           </div>
         </div>
       </section>
 
+      {(projectionFeed.error || orgFeed.error || abrasionFeed.error || orgFeed.data?.db_unavailable) && <p role="status" className="mb-4 rounded-lg border border-accent-amber/30 bg-accent-amber/5 px-3 py-2 text-xs text-ink-muted">{[projectionFeed.error, orgFeed.error, abrasionFeed.error].filter(Boolean).join(" · ") || "Case storage is unavailable. Organization savings cannot be calculated."}{proj || orgRollup || abrasion ? " Last successful data remains visible." : ""}</p>}
+      {projectionFeed.loading && <p role="status" className="mb-3 text-xs text-ink-muted">Updating projection…</p>}
       {/* Projected revenue lift */}
       {proj && (
         <section className="bg-surface-raised border border-surface-border rounded-2xl p-5 mb-5">
@@ -238,7 +231,7 @@ export default function ROI() {
           value={
             orgRollup?.avg_speedup_factor != null ? `${orgRollup.avg_speedup_factor.toFixed(1)}×` : "—"
           }
-          hint="vs 18-min AMA median per PA"
+          hint={`vs ${orgRollup?.assumptions?.manual_pa_minutes ?? "—"}-min manual baseline`}
           accent="brand"
         />
       </section>

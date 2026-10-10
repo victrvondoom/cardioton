@@ -21,9 +21,10 @@ import {
   Send,
   Shield,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useLive } from "../lib/useLive";
 
-import { api, type TrizettoInfo, type TrizettoSubmitResponse } from "../lib/api";
+import { api, type TrizettoSubmitResponse } from "../lib/api";
 
 interface Props {
   caseId: string;
@@ -31,17 +32,11 @@ interface Props {
 }
 
 export function TrizettoSubmitPanel({ caseId, hasDecision }: Props) {
-  const [info, setInfo] = useState<TrizettoInfo | null>(null);
+  const gateway = useLive(api.getTrizettoInfo);
+  const info = gateway.data;
   const [submitting, setSubmitting] = useState(false);
   const [response, setResponse] = useState<TrizettoSubmitResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    api.getTrizettoInfo().then(setInfo).catch(() => {
-      // DB-less demo fallback so the MOCK GATEWAY badge still renders.
-      setInfo({ running_in: "mock", launched: "2025-08-06" } as TrizettoInfo);
-    });
-  }, []);
 
   const submit = async () => {
     setSubmitting(true);
@@ -49,39 +44,13 @@ export function TrizettoSubmitPanel({ caseId, hasDecision }: Props) {
     setError(null);
     try {
       const r = await api.submitToTrizetto({ case_id: caseId, target: "both" });
-      setResponse(r);
-    } catch {
-      // Endpoint-unavailable demo fallback. Synthesize a realistic round-trip
-      // envelope so reviewers can see the TriZetto submission moment.
-      const now = new Date();
-      const hash = (Math.random().toString(36) + Math.random().toString(36)).slice(2, 26).toUpperCase();
-      setResponse({
-        case_id: caseId,
-        accepted: true,
-        is_mock: true,
-        gateway_id: `tz-mock-${now.getTime().toString(36).slice(-8)}`,
-        received_at: now.toISOString(),
-        fanout_targets: ["facets-v3", "qnxt-v2"],
-        facets_event: {
-          schema_version: "Facets/prior_auth_event/v3",
-          case_id: caseId,
-          submitted_at: now.toISOString(),
-          external_decision_engine: {
-            engine: "ClinCase",
-            engine_version: "1.0.0",
-            decision_hash_sha256: hash + hash.slice(0, 16).toLowerCase(),
-            cms_0057_f_clauses: ["§ IV.A", "§ IV.B.1", "§ IV.B.2", "§ IV.C", "§ IV.D.1", "§ IV.E"],
-          },
-          determination: { verdict: "APPROVE", confidence: 0.92 },
-        },
-        qnxt_event: {
-          schema_version: "QNXT/case_event/v2",
-          event_type: "prior_auth.decided",
-          case_id: caseId,
-          decided_at: now.toISOString(),
-          payload: { verdict: "APPROVE", reviewer_required: false, audit_chain_head: hash.slice(0, 24).toLowerCase() },
-        },
-      } as TrizettoSubmitResponse);
+      if (!r.accepted) {
+        setError("The Gateway did not accept this determination. Review the server response before retrying.");
+      } else {
+        setResponse(r);
+      }
+    } catch (failure) {
+      setError(failure instanceof Error ? failure.message : "Gateway submission failed. No acceptance receipt was received.");
     } finally {
       setSubmitting(false);
     }
@@ -107,7 +76,7 @@ export function TrizettoSubmitPanel({ caseId, hasDecision }: Props) {
                 : "bg-accent-green/15 text-accent-green"
             }`}
           >
-            {info.running_in === "mock" ? "MOCK GATEWAY" : "LIVE GATEWAY"}
+            {gateway.error ? "STATUS STALE" : info.running_in === "mock" ? "MOCK GATEWAY" : "LIVE GATEWAY"}
           </span>
         )}
       </div>
@@ -141,10 +110,11 @@ export function TrizettoSubmitPanel({ caseId, hasDecision }: Props) {
 
       {!hasDecision && (
         <div className="mt-3 text-[11px] text-ink-faint">
-          Run ClinCase first — the submission needs a persisted decision row.
+          Run CARDIOTON first — the submission needs a persisted decision row.
         </div>
       )}
 
+      {gateway.error && <p role="status" className="mt-3 text-[11px] text-accent-amber">Gateway status unavailable: {gateway.error}{info ? ". Last known configuration remains visible." : ". A submission requires a response from the backend."}</p>}
       {error && (
         <div className="mt-3 text-[11px] text-accent-red bg-accent-red/10 border border-accent-red/30 rounded p-2">
           {error}
@@ -157,7 +127,7 @@ export function TrizettoSubmitPanel({ caseId, hasDecision }: Props) {
             <CheckCircle2 size={16} className="text-accent-green shrink-0 mt-0.5" />
             <div className="min-w-0 flex-1">
               <div className="text-sm font-semibold text-accent-green">
-                Gateway accepted determination
+                {response.is_mock ? "Mock gateway accepted determination" : "Gateway accepted determination"}
               </div>
               <div className="text-[11px] text-ink-muted mt-0.5">
                 gateway_id <code className="text-mono-tech text-ink-body bg-surface-panel px-1 py-0.5 rounded">{response.gateway_id}</code> ·{" "}

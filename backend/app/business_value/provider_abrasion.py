@@ -93,14 +93,15 @@ async def provider_abrasion_score(
         f"""SELECT
               COUNT(*)::INT AS n_cases,
               COUNT(*) FILTER (WHERE d.verdict = 'DENY')::INT AS n_denied,
-              COUNT(a.id)::INT AS n_appeals,
+              COUNT(*) FILTER (WHERE EXISTS (
+                  SELECT 1 FROM appeals a WHERE a.case_id = c.id
+              ))::INT AS n_appeals,
               AVG(EXTRACT(EPOCH FROM (d.created_at - c.created_at)))::FLOAT AS avg_dur_s
            FROM cases c
            LEFT JOIN LATERAL (
                SELECT verdict, created_at FROM decisions WHERE case_id = c.id
                ORDER BY id DESC LIMIT 1
            ) d ON TRUE
-           LEFT JOIN appeals a ON a.case_id = c.id
            WHERE c.organization_id = $1
              AND c.created_at >= NOW() - INTERVAL '{int(days)} days'""",
         organization_id,

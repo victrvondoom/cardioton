@@ -46,6 +46,9 @@ import App from "./App";
 const BulkImport = lazy(() => import("./routes/BulkImport"));
 const CardioEvaluation = lazy(() => import("./routes/CardioEvaluation"));
 const CardioTwin = lazy(() => import("./routes/CardioTwin"));
+const CardioHemoTwin = lazy(() => import("./routes/CardioHemoTwin"));
+const CardioTwinAtlas = lazy(() => import("./routes/CardioTwinAtlas"));
+const CardioIntelligence = lazy(() => import("./routes/CardioIntelligence"));
 const CaseDetail = lazy(() => import("./routes/CaseDetail"));
 const Cases = lazy(() => import("./routes/Cases"));
 const Cohorts = lazy(() => import("./routes/Cohorts"));
@@ -73,6 +76,10 @@ const TwinLab = lazy(() => import("./routes/TwinLab"));
 const TwinOps = lazy(() => import("./routes/TwinOps"));
 const TwinPatient = lazy(() => import("./routes/TwinPatient"));
 import "./styles/index.css";
+import "./styles/spatial.css";
+import { installLiveRequestTracking } from "./lib/liveUpdates";
+
+installLiveRequestTracking();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -132,6 +139,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             {/* CardioTwin — cardiovascular risk visualisation & vessel-level prediction (additive) */}
             <Route path="/cardiotwin" element={<CardioTwin />} />
             <Route path="/cardiotwin/evaluation" element={<CardioEvaluation />} />
+            <Route path="/cardiotwin/hemo" element={<CardioHemoTwin />} />
+            <Route path="/cardiotwin/intelligence" element={<CardioIntelligence />} />
+            <Route path="/cardiotwin/atlas/:tab?" element={<CardioTwinAtlas />} />
 
             <Route path="/policies" element={<Policies />} />
             <Route path="/onco" element={<OncologyStack />} />

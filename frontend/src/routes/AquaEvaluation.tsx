@@ -1,25 +1,16 @@
 /** Track 3 safety evaluation, calculated live by the production assessment rules. */
 import { AlertTriangle, CheckCircle2, FlaskConical, ShieldCheck } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useLive } from "../lib/useLive";
 
 import { aqua } from "../aquahealth/api";
 import { ErrorNote, LoadingNote, PageHeader, StatusBadge } from "../aquahealth/panels";
-import type { Track3Evaluation } from "../aquahealth/types";
 
 const pct = (value: number) => `${Math.round(value * 100)}%`;
 
 export default function AquaEvaluation() {
-  const [report, setReport] = useState<Track3Evaluation | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    aqua
-      .evaluation()
-      .then(setReport)
-      .catch((e) =>
-        setError(e instanceof Error ? e.message : "Failed to run the Track 3 benchmark"),
-      );
-  }, []);
+  const evaluation = useLive(aqua.evaluation);
+  const report = evaluation.data;
+  const error = evaluation.error;
 
   return (
     <div className="p-6 lg:p-8 max-w-[1400px]">

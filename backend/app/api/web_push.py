@@ -16,9 +16,9 @@ from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, ConfigDict, Field, HttpUrl
 
-from app import db
 from app.auth.dependencies import get_current_user
 from app.config import settings
+from app.db import db
 
 router = APIRouter(prefix="/notifications/push", tags=["web-push"])
 _SCHEMA_LOCK = asyncio.Lock()
@@ -137,7 +137,10 @@ def _decrypt(payload: bytes, key: bytes, aad: bytes) -> dict[str, Any]:
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
     plaintext = AESGCM(key).decrypt(payload[:12], payload[12:], aad)
-    return json.loads(plaintext)
+    decoded = json.loads(plaintext)
+    if not isinstance(decoded, dict):
+        raise ValueError("Push subscription payload must be a JSON object")
+    return decoded
 
 
 def _aad(org: str, user: str, endpoint_hash: str) -> bytes:

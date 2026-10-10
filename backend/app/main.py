@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import AsyncIterator
+from collections.abc import AsyncIterator, Awaitable, Callable
 from contextlib import asynccontextmanager
 
 import structlog
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import RequestResponseEndpoint
 
 from app.config import settings
 from app.db import db
@@ -34,7 +35,7 @@ _configure_logging()
 log = structlog.get_logger()
 
 
-async def _bootstrap_optional(label: str, coro_factory) -> None:
+async def _bootstrap_optional(label: str, coro_factory: Callable[[], Awaitable[None]]) -> None:
     """Run an OPTIONAL bootstrap step with consistent fail-soft logging.
 
     Optional steps are: schema migrations (idempotent — worker can re-run),
@@ -53,7 +54,7 @@ async def _bootstrap_optional(label: str, coro_factory) -> None:
         log.warning(f"clincase.bootstrap.{label}.failed", error=str(e))
 
 
-def _install_optional_sync(label: str, fn) -> None:
+def _install_optional_sync(label: str, fn: Callable[[], None]) -> None:
     """Synchronous variant of _bootstrap_optional (for OTEL + signal handlers)."""
     try:
         fn()
@@ -90,7 +91,7 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
         await _ensure_run_identity_schema()
 
     # OpenTelemetry — no-op when OTEL_EXPORTER_OTLP_ENDPOINT is unset.
-    def _otel_setup():
+    def _otel_setup() -> None:
         from app.observability.otel import instrument_fastapi, setup_otel
 
         setup_otel(service_name="clincase", service_version="0.1.0")
@@ -100,35 +101,35 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
 
     # Idempotent schema bootstraps. Each is safe to re-run; the worker
     # process also runs them. Failure here does NOT prevent boot.
-    async def _outbox():
+    async def _outbox() -> None:
         from app.events.outbox import ensure_schema
 
         await ensure_schema()
 
     await _bootstrap_optional("outbox_schema", _outbox)
 
-    async def _saga():
+    async def _saga() -> None:
         from app.saga import ensure_schema
 
         await ensure_schema()
 
     await _bootstrap_optional("saga_schema", _saga)
 
-    async def _dlq():
+    async def _dlq() -> None:
         from app.events.dlq import ensure_schema
 
         await ensure_schema()
 
     await _bootstrap_optional("dlq_schema", _dlq)
 
-    async def _secanom():
+    async def _secanom() -> None:
         from app.security.breach_detector import ensure_schema
 
         await ensure_schema()
 
     await _bootstrap_optional("security_anomalies_schema", _secanom)
 
-    def _shutdown_handlers():
+    def _shutdown_handlers() -> None:
         from app.graceful_shutdown import install_signal_handlers
 
         install_signal_handlers()
@@ -145,34 +146,34 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
         ("app.api.cases", "cases_status_schema"),
     ):
 
-        async def _ensure(mp=module_path):
+        async def _ensure(mp: str = module_path) -> None:
             mod = __import__(mp, fromlist=["ensure_schema"])
             await mod.ensure_schema()
 
         await _bootstrap_optional(label, _ensure)
 
-    async def _jobs_queue():
+    async def _jobs_queue() -> None:
         from app.jobs import queue
 
         await queue.ensure_schema()
 
     await _bootstrap_optional("jobs_queue_schema", _jobs_queue)
 
-    async def _quotas():
+    async def _quotas() -> None:
         from app.quotas import ensure_schema
 
         await ensure_schema()
 
     await _bootstrap_optional("quotas_schema", _quotas)
 
-    async def _cache():
+    async def _cache() -> None:
         from app.agents.framework.cache import ensure_schema
 
         await ensure_schema()
 
     await _bootstrap_optional("cache_schema", _cache)
 
-    async def _gateway():
+    async def _gateway() -> None:
         from app.llm.gateway import ensure_schema
 
         await ensure_schema()
@@ -180,7 +181,7 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     await _bootstrap_optional("genai_gateway_schema", _gateway)
 
     # OncoTwin (digital-twin layer) — hash-chained prediction/HITL audit ledger.
-    async def _oncotwin():
+    async def _oncotwin() -> None:
         from app.oncotwin.store import ensure_schema
 
         await ensure_schema()
@@ -188,7 +189,7 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     await _bootstrap_optional("oncotwin_audit_schema", _oncotwin)
 
     # AquaHealth (OneAquaHealth freshwater module) — additive; own tables only.
-    async def _aquahealth():
+    async def _aquahealth() -> None:
         from app.aquahealth.store import ensure_schema
 
         await ensure_schema()
@@ -196,14 +197,14 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     await _bootstrap_optional("aquahealth_schema", _aquahealth)
 
 
-    async def _onehealth():
+    async def _onehealth() -> None:
         from app.onehealth.repository import ensure_schema
 
         await ensure_schema()
 
     await _bootstrap_optional("onehealth_schema", _onehealth)
 
-    async def _interop():
+    async def _interop() -> None:
         from app.interop.repository import ensure_schema
 
         await ensure_schema()
@@ -216,7 +217,7 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     # it's a degraded mode worth alerting on.
     if settings.REDIS_URL:
 
-        async def _redis_backend():
+        async def _redis_backend() -> None:
             from app.streaming import use_redis_backend
 
             await use_redis_backend(settings.REDIS_URL)
@@ -286,7 +287,7 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
 
 
 app = FastAPI(
-    title="ClinCase API",
+    title="CARDIOTON API",
     version="0.1.0",
     description="Provider-side prior-authorisation copilot for oncology",
     lifespan=lifespan,
@@ -337,7 +338,7 @@ app.add_middleware(OncoTwinGZipMiddleware)
 
 
 @app.middleware("http")
-async def request_id_middleware(request, call_next):
+async def request_id_middleware(request: Request, call_next: RequestResponseEndpoint) -> Response:
     """Propagate X-Request-Id header through every request.
 
     If client provided one, echo it back (lets a customer correlate their
@@ -358,6 +359,8 @@ async def request_id_middleware(request, call_next):
 from app.api import (  # noqa: E402
     agents_manifest,
     auth,
+    cardio_anatomy,
+    cardio_environment,
     cases,
     demo,
     fhir_interop,
@@ -551,6 +554,8 @@ app.include_router(oncology_stack.router, prefix="/api/v1")
 app.include_router(oncotwin_api.router, prefix="/api/v1")
 app.include_router(oncotwin_intel_api.router, prefix="/api/v1")  # OncoTwin 2.0 (additive)
 app.include_router(cardiotwin_api.router, prefix="/api/v1")  # CardioTwin (additive)
+app.include_router(cardio_anatomy.router, prefix="/api/v1")
+app.include_router(cardio_environment.router, prefix="/api/v1")
 app.include_router(cohorts_api.router, prefix="/api/v1")
 app.include_router(reviewer_queue_api.router, prefix="/api/v1")
 app.include_router(policy_catalog_api.router, prefix="/api/v1")
@@ -599,7 +604,7 @@ def _mount_frontend() -> None:
         return
 
     @app.get("/{full_path:path}", include_in_schema=False)
-    async def _spa(full_path: str):
+    async def _spa(full_path: str) -> FileResponse:
         if full_path.startswith(("api/", "fhir/", "mcp")):
             raise HTTPException(status_code=404)
         candidate = (dist / full_path).resolve()

@@ -87,9 +87,9 @@ def _require_llm() -> None:
 class CreateCaseRequest(BaseModel):
     payer_id: str = Field(..., examples=["aetna"])
     patient_initials: str = Field(..., examples=["JD"])
-    fhir_bundle: dict
+    fhir_bundle: dict[str, Any]
     physician_note: str | None = None
-    requested_treatment: dict = Field(..., examples=[{"name": "trastuzumab", "j_code": "J9355"}])
+    requested_treatment: dict[str, Any] = Field(..., examples=[{"name": "trastuzumab", "j_code": "J9355"}])
 
 
 class CreateCaseResponse(BaseModel):
@@ -985,11 +985,12 @@ async def submit_review(
 
     # A pending outcome must use the same authenticated, transactional decision
     # path as /resume; a status-only override would leave no reviewed Decision.
-    verdict = {
+    verdicts: dict[str, Literal["APPROVE", "DENY", "REFER"]] = {
         "approve": "APPROVE",
         "override_to_approve": "APPROVE",
         "override_to_deny": "DENY",
-    }.get(req.action)
+    }
+    verdict = verdicts.get(req.action)
     if verdict:
         try:
             async with db.pool.acquire() as conn:

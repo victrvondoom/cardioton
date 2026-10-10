@@ -21,35 +21,12 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
-import { useEffect, useState } from "react";
-
-import { api, type OrgComplianceScorecard } from "../lib/api";
+import { api } from "../lib/api";
+import { useLive } from "../lib/useLive";
 
 export default function Compliance() {
-  const [data, setData] = useState<OrgComplianceScorecard | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    api
-      .getOrgCompliance()
-      .then((r) => {
-        if (!cancelled) {
-          setData(r);
-          setError(null);
-        }
-      })
-      .catch((e) => {
-        if (!cancelled) setError(String(e));
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const { data: response, loading, error } = useLive(() => api.getOrgCompliance());
+  const data = response?.db_unavailable ? null : response;
 
   return (
     <div className="px-6 py-6">
@@ -58,7 +35,7 @@ export default function Compliance() {
         <div className="border-b border-surface-border bg-accent-brand-soft/40 px-8 py-6 flex items-center justify-between">
           <div>
             <div className="text-[10px] text-compact text-accent-brand mb-1">
-              ClinCase · Compliance Report (LIVE)
+              CARDIOTON · Compliance Report
             </div>
             <h1 className="text-2xl font-semibold text-ink-primary leading-tight">
               CMS-0057-F + State AI Law Scorecard
@@ -74,32 +51,35 @@ export default function Compliance() {
           <div className="flex items-center gap-2 print:hidden">
             <button
               type="button"
+              disabled={!data}
               onClick={() => window.print()}
-              className="text-xs font-medium px-3 py-1.5 rounded-md border border-surface-border text-ink-body hover:bg-surface-raised-hi transition-colors flex items-center gap-1.5"
+              className="text-xs font-medium px-3 py-1.5 rounded-md border border-surface-border text-ink-body hover:bg-surface-raised-hi disabled:opacity-40 transition-colors flex items-center gap-1.5"
             >
               <Printer size={11} />
               Print
             </button>
             <button
               type="button"
+              disabled={!data}
               onClick={() => {
-                const subject = encodeURIComponent("ClinCase Compliance Report");
+                const subject = encodeURIComponent("CARDIOTON Compliance Report");
                 const body = encodeURIComponent(
                   "Live compliance scorecard at:\n" +
                     window.location.origin +
                     "/compliance\n\nPrint > Save as PDF for the full document.",
                 );
-                window.location.href = `mailto:cfo@clincase.health?subject=${subject}&body=${body}`;
+                window.location.href = `mailto:?subject=${subject}&body=${body}`;
               }}
-              className="text-xs font-medium px-3 py-1.5 rounded-md border border-surface-border text-ink-body hover:bg-surface-raised-hi transition-colors flex items-center gap-1.5"
+              className="text-xs font-medium px-3 py-1.5 rounded-md border border-surface-border text-ink-body hover:bg-surface-raised-hi disabled:opacity-40 transition-colors flex items-center gap-1.5"
             >
               <Mail size={11} />
-              Email CFO
+              Email report link
             </button>
             <button
               type="button"
+              disabled={!data}
               onClick={() => window.print()}
-              className="text-xs font-medium px-3 py-1.5 rounded-md bg-accent-brand text-ink-invert hover:opacity-90 transition-opacity flex items-center gap-1.5"
+              className="text-xs font-medium px-3 py-1.5 rounded-md bg-accent-brand text-ink-invert hover:opacity-90 disabled:opacity-40 transition-opacity flex items-center gap-1.5"
               title="Opens print dialog · choose 'Save as PDF'"
             >
               <Download size={11} />
@@ -117,6 +97,7 @@ export default function Compliance() {
               Could not load compliance scorecard: {error}
             </div>
           )}
+          {response?.db_unavailable && <p role="status" className="text-sm text-ink-muted rounded-xl border border-accent-amber/30 bg-accent-amber/5 p-4">Case storage is not connected. Compliance metrics and case volumes are unavailable. Connect case storage before generating an organization report.</p>}
 
           {data && (
             <>
@@ -124,7 +105,7 @@ export default function Compliance() {
               <section>
                 <h2 className="text-sm font-semibold text-ink-primary mb-3 flex items-center gap-2">
                   <Sparkles size={14} className="text-accent-brand" />
-                  Headline metrics (live from RDS)
+                  Headline metrics from recorded cases
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   <Metric
@@ -269,7 +250,7 @@ export default function Compliance() {
 
               {/* Sign-off */}
               <section className="pt-4 border-t border-surface-border text-[11px] text-ink-faint text-mono-tech">
-                Generated {new Date(data.asof_iso).toISOString()} · clincase-v0.1.0 ·{" "}
+                Generated {new Date(data.asof_iso).toISOString()} · CARDIOTON v0.1.0 ·{" "}
                 {data.totals.cases_total.toLocaleString()} cases under audit ·
                 {" "}cryptographic audit log SHA-256 enabled.
               </section>

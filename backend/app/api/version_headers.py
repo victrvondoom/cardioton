@@ -19,7 +19,7 @@ import os
 from datetime import UTC, datetime
 from email.utils import format_datetime
 
-from starlette.types import ASGIApp, Receive, Scope, Send
+from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 _V1_SUNSET_DATE = os.getenv("V1_SUNSET_DATE")  # ISO-8601 date e.g. "2026-08-01"
 _V1_SUCCESSOR_PREFIX = os.getenv("V1_SUCCESSOR_PREFIX", "/api/v2")
@@ -51,7 +51,7 @@ class VersionHeadersMiddleware:
         is_v1 = path.startswith("/api/v1/")
         is_v2 = path.startswith("/api/v2/")
 
-        async def send_with_headers(message: dict) -> None:
+        async def send_with_headers(message: Message) -> None:
             if message["type"] == "http.response.start":
                 headers = list(message.get("headers", []))
                 if is_v1:

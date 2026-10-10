@@ -19,7 +19,7 @@ from __future__ import annotations
 import time
 from collections import OrderedDict
 from copy import deepcopy
-from typing import ClassVar
+from typing import Any, ClassVar
 
 from app.agents.intake.pipeline.base import IntakeContext, IntakeStage
 from app.config import settings
@@ -37,11 +37,11 @@ class _LRUWithTTL:
     """
 
     def __init__(self, *, max_entries: int, ttl_seconds: int) -> None:
-        self._store: OrderedDict[str, tuple[float, dict]] = OrderedDict()
+        self._store: OrderedDict[str, tuple[float, dict[str, Any]]] = OrderedDict()
         self._max_entries = max_entries
         self._ttl = ttl_seconds
 
-    def get(self, key: str) -> dict | None:
+    def get(self, key: str) -> dict[str, Any] | None:
         entry = self._store.get(key)
         if entry is None:
             return None
@@ -53,7 +53,7 @@ class _LRUWithTTL:
         self._store.move_to_end(key)
         return deepcopy(value)
 
-    def put(self, key: str, value: dict) -> None:
+    def put(self, key: str, value: dict[str, Any]) -> None:
         self._store[key] = (time.time(), deepcopy(value))
         self._store.move_to_end(key)
         while len(self._store) > self._max_entries:
@@ -93,7 +93,7 @@ def cache_key(sha256: str, tenant_id: str | None) -> str | None:
     return f"{tenant_id}:{settings.CLOUD_DOCUMENT_PROCESSING_ENABLED}:{sha256}"
 
 
-def _store_in_cache(sha256: str, intake_result_dict: dict, tenant_id: str | None = None) -> None:
+def _store_in_cache(sha256: str, intake_result_dict: dict[str, Any], tenant_id: str | None = None) -> None:
     """Called by assemble; never cache unscoped patient data."""
     key = cache_key(sha256, tenant_id)
     if key:

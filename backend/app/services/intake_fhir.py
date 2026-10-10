@@ -98,17 +98,17 @@ def shape_intake(result: IntakeResult) -> IntakeResult:
     # PA request headings sometimes provide the requested drug instead of a
     # separate Drug field. An arbitrary mention elsewhere is never sufficient.
     if "treatment" not in values and "treatment" not in conflicts:
-        match = re.search(r"^([^\n:]+?)\s+\((J\d{4})\)\s+for\s+[^\n]+$", text, re.I | re.M)
-        if match:
-            values["treatment"] = match.group(1).strip()
-            values.setdefault("j_code", match.group(2).upper())
+        heading_match = re.search(r"^([^\n:]+?)\s+\((J\d{4})\)\s+for\s+[^\n]+$", text, re.I | re.M)
+        if heading_match:
+            values["treatment"] = heading_match.group(1).strip()
+            values.setdefault("j_code", heading_match.group(2).upper())
             fields.append(
                 ExtractedField(
                     name="treatment",
                     value=values["treatment"],
                     confidence=result.ocr.overall_confidence,
-                    source_excerpt=match.group(0),
-                    page=(1 + text[: match.start()].count("\f"))
+                    source_excerpt=heading_match.group(0),
+                    page=(1 + text[: heading_match.start()].count("\f"))
                     if result.ocr.pages == 1 or "\f" in text
                     else None,
                 )

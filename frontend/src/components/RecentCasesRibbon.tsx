@@ -7,10 +7,10 @@
  */
 import clsx from "clsx";
 import { ArrowRight, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useLive } from "../lib/useLive";
 import { Link } from "react-router-dom";
 
-import { api, type CaseListItem } from "../lib/api";
+import { api } from "../lib/api";
 
 type Status = "approved" | "denied" | "referred" | "appealed" | "running" | "pending" | "awaiting_review" | "overturned";
 
@@ -35,31 +35,11 @@ function timeAgo(iso: string | null): string {
 }
 
 export function RecentCasesRibbon() {
-  const [cases, setCases] = useState<CaseListItem[]>([]);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const d = await api.listCases({ limit: 6 });
-        if (cancelled) return;
-        setCases(d.cases || []);
-        setTotal(d.total ?? d.cases?.length ?? 0);
-        setError(null);
-      } catch (e) {
-        if (cancelled) return;
-        setError(e instanceof Error ? e.message : "Failed to load cases");
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const recent = useLive(() => api.listCases({ limit: 6 }));
+  const cases = recent.data?.cases ?? [];
+  const total = recent.data?.total;
+  const loading = recent.loading;
+  const error = recent.error;
 
   return (
     <div className="bg-surface-raised border border-surface-border rounded-2xl overflow-hidden">
@@ -69,7 +49,7 @@ export function RecentCasesRibbon() {
           {loading && <Loader2 size={11} className="animate-spin text-ink-faint" />}
         </h3>
         <Link to="/cases" className="text-xs text-accent-brand hover:underline flex items-center gap-1">
-          View all {total} →
+          View all {total ?? ""} →
         </Link>
       </div>
 
@@ -79,7 +59,7 @@ export function RecentCasesRibbon() {
         </div>
       )}
 
-      {!loading && cases.length === 0 && !error && (
+      {!loading && cases.length === 0 && !error && recent.data && (
         <div className="px-5 py-8 text-center text-sm text-ink-muted">
           No cases yet.{" "}
           <Link to="/intake" className="text-accent-brand hover:underline">

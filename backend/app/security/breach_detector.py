@@ -96,7 +96,7 @@ async def _record_anomaly(
     sns_ok = False
     if _SNS_TOPIC_ARN:
         try:
-            import boto3  # type: ignore[import-not-found]
+            import boto3
 
             client = boto3.client("sns")
             client.publish(

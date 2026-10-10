@@ -32,6 +32,7 @@ import time
 import uuid
 from collections import deque
 from dataclasses import dataclass
+from typing import Any
 
 import structlog
 
@@ -206,7 +207,7 @@ async def check_rate_limit(
 # =============================================================================
 
 
-async def snapshot_for_tier(*, tier: str) -> dict:
+async def snapshot_for_tier(*, tier: str) -> dict[str, Any]:
     """Return the limit table for a tier, used by /rate-limits/me to show
     the caller what their declared limits are."""
     table = _DEFAULT_LIMITS.get(tier, _DEFAULT_LIMITS["silver"])

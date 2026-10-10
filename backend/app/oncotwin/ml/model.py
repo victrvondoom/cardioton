@@ -6,10 +6,11 @@ import hashlib
 import json
 from functools import lru_cache
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 
+from app.oncotwin._typing import FloatArray
 from app.oncotwin.engine.features import FEATURE_NAMES
 from app.oncotwin.ml.logistic import LogisticModel
 
@@ -48,15 +49,15 @@ class DeteriorationModel:
 
     @property
     def model_id(self) -> str:
-        return self.artifact["model_id"]
+        return cast(str, self.artifact["model_id"])
 
     @property
     def version(self) -> str:
-        return self.artifact["version"]
+        return cast(str, self.artifact["version"])
 
     @property
     def sha256(self) -> str:
-        return self.artifact.get("sha256", "")
+        return cast(str, self.artifact.get("sha256", ""))
 
     def version_info(self) -> dict[str, Any]:
         return {
@@ -68,19 +69,19 @@ class DeteriorationModel:
             "horizon_days": self.artifact["horizon_days"],
         }
 
-    def predict(self, X: np.ndarray) -> np.ndarray:
+    def predict(self, X: FloatArray) -> FloatArray:
         return self.lr.predict_proba(np.atleast_2d(X))
 
     def predict_interval(
-        self, X: np.ndarray, lo: float = 10, hi: float = 90
-    ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        self, X: FloatArray, lo: float = 10, hi: float = 90
+    ) -> tuple[FloatArray, FloatArray, FloatArray]:
         X = np.atleast_2d(X)
         Z = self.lr.standardise(X)
         logits = self.boot_intercepts[None, :] + Z @ self.boot_coefs.T  # (N, B)
         probs = 1.0 / (1.0 + np.exp(-np.clip(logits, -35, 35)))
         return self.predict(X), np.percentile(probs, lo, axis=1), np.percentile(probs, hi, axis=1)
 
-    def contributions(self, x: np.ndarray) -> np.ndarray:
+    def contributions(self, x: FloatArray) -> FloatArray:
         return self.lr.contributions(np.asarray(x))
 
     def card(self) -> dict[str, Any]:

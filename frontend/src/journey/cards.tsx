@@ -327,7 +327,7 @@ export function ExchangeCard({ detail }: { detail: StageDetail }) {
       <Section title="System A → System B">
         <div className="flex items-center gap-3 text-xs">
           <div className="flex-1 rounded-lg border border-surface-border bg-surface-bg p-3">
-            <div className="font-medium text-ink-primary">CLINI-CASE gateway</div>
+            <div className="font-medium text-ink-primary">CARDIOTON gateway</div>
             <div className="text-ink-muted">Validated collection Bundle</div>
           </div>
           <ArrowRight size={18} className="shrink-0 text-accent-cyan" aria-hidden="true" />
@@ -544,7 +544,7 @@ type PassportState =
   | { kind: "error"; message: string }
   | { kind: "done"; verdict: PassportVerdict; change: string | null };
 
-/** Verify (and demonstrably break) the CLINI-CASE demo-system signature on the exported Evidence Passport. */
+/** Verify (and demonstrably break) the CARDIOTON demo-system signature on the exported Evidence Passport. */
 export function PassportVerifyCard({
   signing,
   verify,
@@ -574,7 +574,7 @@ export function PassportVerifyCard({
           ? `${signing.algorithm} · key ${signing.key_id} · ${signing.signer}.`
           : "No signing key is configured, so exports are hash-chain only."}{" "}
         {signing?.scope ??
-          "A CLINI-CASE demo-system signature. Not a laboratory, clinician, government or third-party attestation."}
+          "A CARDIOTON demo-system signature. Not a laboratory, clinician, government or third-party attestation."}
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         <button type="button" className={PRIMARY_BUTTON} disabled={working} onClick={() => void run(false)}>

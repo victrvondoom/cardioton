@@ -1,0 +1,75 @@
+.hemo-scene {
+  --hemo-scene-ink: rgb(var(--ink-primary, 233 239 250));
+  position: relative;
+  isolation: isolate;
+  margin: 0 0 1rem;
+  padding: 1rem;
+  border: 1px solid rgb(var(--surface-border));
+  border-radius: 1rem;
+  color: var(--hemo-scene-ink);
+  background: radial-gradient(ellipse at 50% 48%, rgb(var(--ink-primary) / .05), transparent 56%), linear-gradient(150deg, rgb(var(--surface-raised-hi) / .8), rgb(var(--surface-bg) / .65));
+  box-shadow: inset 0 1px rgb(var(--ink-primary) / .06), inset 0 -1px rgb(var(--ink-primary) / .08);
+}
+.hemo-scene__caption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .75rem; }
+.hemo-scene__eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .63rem; text-transform: uppercase; letter-spacing: .13em; opacity: .7; }
+.hemo-scene__caption p { margin: .3rem 0 0; font-size: .8rem; font-weight: 600; }
+.hemo-scene__tag { align-self: flex-start; padding: .3rem .45rem; border: 1px solid rgb(var(--surface-border)); border-radius: .4rem; font-size: .52rem; letter-spacing: .08em; opacity: .65; }
+.hemo-scene__space { position: relative; min-height: 340px; margin-top: 1.25rem; perspective: 1100px; }
+.hemo-scene__core { position: absolute; inset: 0 28%; transform-style: preserve-3d; pointer-events: none; }
+.hemo-scene__floor { position: absolute; width: 100%; height: 72%; left: 0; top: 32%; transform: rotateX(64deg) rotateZ(-24deg); transform-style: preserve-3d; background-image: linear-gradient(rgb(var(--ink-primary) / .09) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--ink-primary) / .09) 1px, transparent 1px); background-size: 22px 22px; border-radius: 30%; border: 1px solid rgb(var(--ink-primary) / .15); box-shadow: 0 28px 0 -2px rgb(var(--ink-primary) / .04), 0 29px 0 -2px rgb(var(--ink-primary) / .07), 0 56px 0 -3px rgb(var(--ink-primary) / .03); }
+.hemo-scene__floor span { position: absolute; inset: 7%; border: 1px solid rgb(var(--ink-primary) / .18); border-radius: 50%; transform: translateZ(25px); }
+.hemo-scene__floor span:nth-child(2) { inset: 22%; transform: translateZ(50px); }
+.hemo-scene__floor span:nth-child(3) { inset: 37%; transform: translateZ(75px); }
+.hemo-scene__heart { position: absolute; width: min(100%, 205px); height: 240px; top: 4%; left: 50%; transform: translateX(-50%) rotateY(-17deg) rotateX(5deg) rotateZ(-8deg); transform-style: preserve-3d; filter: drop-shadow(8px 21px 16px rgba(0, 0, 0, .22)); }
+.hemo-scene__heart-front { position: absolute; inset: 0; width: 100%; height: 100%; transform: translateZ(24px); }
+.hemo-scene__heart-depth { position: absolute; inset: 14% 11% 11% 11%; clip-path: polygon(48% 12%, 28% 0, 9% 5%, 0 28%, 7% 51%, 28% 76%, 52% 100%, 78% 70%, 97% 40%, 95% 18%, 80% 8%, 64% 9%); background: linear-gradient(130deg, #76344f, #391b3d); }
+.hemo-scene__heart-depth--back { transform: translate3d(9px, 2px, -8px); }
+.hemo-scene__heart-depth--mid { transform: translate3d(5px, 1px, 9px); background: linear-gradient(140deg, #b74f70, #572344); }
+.hemo-scene__orbit { position: absolute; inset: 4% -19%; border: 1px solid rgb(var(--ink-primary) / .2); border-radius: 50%; transform: rotateY(59deg) rotateZ(22deg); }
+.hemo-scene__orbit--two { inset: -5% -1%; transform: rotateX(68deg) rotateZ(-14deg); border-color: rgb(var(--ink-primary) / .15); }
+.hemo-scene__core-label { position: absolute; left: -10%; right: -10%; top: 78%; text-align: center; transform: translateZ(20px); }
+.hemo-scene__core-label span { display: block; font-size: .56rem; letter-spacing: .24em; opacity: .6; }
+.hemo-scene__core-label strong { display: block; margin-top: .3rem; font-size: .8rem; }
+.hemo-scene__core-label small { display: block; margin-top: .3rem; font-size: .6rem; opacity: .65; }
+.hemo-scene__axes { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 42%; row-gap: .65rem; padding: 0; margin: 0; list-style: none; transform-style: preserve-3d; }
+.hemo-scene__axis { position: relative; min-width: 0; transform-style: preserve-3d; }
+.hemo-scene__axis::after { content: ""; position: absolute; top: 50%; width: 40%; border-top: 1px solid rgb(var(--ink-primary) / .2); pointer-events: none; }
+.hemo-scene__axis--left::after { left: 100%; transform: rotate(10deg); transform-origin: left; }
+.hemo-scene__axis--right::after { right: 100%; transform: rotate(-10deg); transform-origin: right; }
+.hemo-scene__node { display: flex; flex-direction: column; width: 100%; min-height: 76px; padding: .65rem .75rem; text-align: left; color: inherit; border: 1px solid rgb(var(--surface-border-hi)); border-radius: .7rem; background: linear-gradient(145deg, rgb(var(--surface-raised-hi)), rgb(var(--surface-bg))); box-shadow: 0 5px 0 -1px rgb(var(--surface-panel)), 0 6px 0 -1px rgb(var(--surface-border-hi)), 3px 12px 16px -8px rgba(0, 0, 0, .2), inset 0 1px rgb(var(--ink-primary) / .05); cursor: pointer; }
+.hemo-scene__axis--left .hemo-scene__node { transform: rotateY(7deg) translateZ(12px); }
+.hemo-scene__axis--right .hemo-scene__node { transform: rotateY(-7deg) translateZ(12px); }
+.hemo-scene__node:focus-visible { outline: 2px solid rgb(var(--accent-brand)); outline-offset: 4px; }
+.hemo-scene__node-label { display: flex; align-items: center; justify-content: space-between; gap: .25rem; width: 100%; font-size: .62rem; opacity: .8; }
+.hemo-scene__node-label svg { flex-shrink: 0; opacity: .6; }
+.hemo-scene__node strong { display: block; margin-top: .25rem; font-size: .88rem; letter-spacing: .025em; }
+.hemo-scene__node-meta { display: block; margin-top: .18rem; font-size: .6rem; letter-spacing: .025em; opacity: .75; }
+.hemo-scene__node--unknown { border-style: dashed; background: linear-gradient(145deg, rgb(var(--surface-bg)), rgb(var(--surface-panel))); }
+.hemo-scene__node--elevated { border-color: rgb(var(--ink-muted)); }
+.hemo-scene__node--high { border-color: rgb(var(--ink-primary) / .7); background: linear-gradient(145deg, rgb(var(--ink-primary) / .08), rgb(var(--surface-bg))); }
+.hemo-scene__note { margin: 1.1rem 0 0; max-width: 70ch; font-size: .62rem; line-height: 1.7; opacity: .65; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .hemo-scene__node { transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+  .hemo-scene__node:hover { transform: translateY(-3px) translateZ(24px); border-color: rgb(var(--ink-primary) / .65); box-shadow: 0 8px 0 -1px rgb(var(--surface-panel)), 0 9px 0 -1px rgb(var(--surface-border-hi)), 3px 17px 23px -8px rgba(0, 0, 0, .24); }
+}
+@media (max-width: 640px) {
+  .hemo-scene { padding: .8rem; }
+  .hemo-scene__space { padding-top: 245px; margin-top: .25rem; }
+  .hemo-scene__core { top: 0; bottom: auto; left: 22%; right: 22%; height: 220px; }
+  .hemo-scene__heart { width: 150px; height: 180px; top: 0; }
+  .hemo-scene__core-label { top: 77%; }
+  .hemo-scene__floor { height: 65%; top: 34%; }
+  .hemo-scene__axes { column-gap: .65rem; row-gap: .7rem; }
+  .hemo-scene__axis::after { display: none; }
+  .hemo-scene__node { min-height: 78px; padding: .6rem; }
+  .hemo-scene__node-label { font-size: .6rem; }
+  .hemo-scene__node-meta { font-size: .56rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hemo-scene__node { transition: none; }
+  .hemo-scene__node:hover, .hemo-scene__node:focus-visible { transform: none; }
+}
+@media (forced-colors: active) {
+  .hemo-scene, .hemo-scene__node { border-color: CanvasText; }
+  .hemo-scene__node:focus-visible { outline-color: Highlight; }
+}

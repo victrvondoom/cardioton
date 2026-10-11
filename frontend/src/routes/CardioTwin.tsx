@@ -240,7 +240,7 @@ export default function CardioTwin() {
                     <path
                       d="M 105 85 Q 90 140 120 220"
                       fill="none"
-                      stroke={selected === "LAD" ? "#e11d48" : (viz?.LAD ? (viz.LAD.probability > 0.5 ? "#f43f5e" : "#38bdf8") : "#94a3b8")}
+                      stroke={selected === "LAD" ? "#f26a32" : (viz?.LAD ? (viz.LAD.probability > 0.5 ? "#ef4444" : "#38bdf8") : "#94a3b8")}
                       strokeWidth={selected === "LAD" ? "8" : "6"}
                       strokeLinecap="round"
                       className="cursor-pointer hover:opacity-80 transition-all"
@@ -250,7 +250,7 @@ export default function CardioTwin() {
                     <path
                       d="M 105 85 Q 70 110 50 160"
                       fill="none"
-                      stroke={selected === "LCX" ? "#e11d48" : (viz?.LCX ? (viz.LCX.probability > 0.5 ? "#f43f5e" : "#38bdf8") : "#94a3b8")}
+                      stroke={selected === "LCX" ? "#f26a32" : (viz?.LCX ? (viz.LCX.probability > 0.5 ? "#ef4444" : "#38bdf8") : "#94a3b8")}
                       strokeWidth={selected === "LCX" ? "8" : "6"}
                       strokeLinecap="round"
                       className="cursor-pointer hover:opacity-80 transition-all"
@@ -260,7 +260,7 @@ export default function CardioTwin() {
                     <path
                       d="M 135 60 Q 180 100 160 190"
                       fill="none"
-                      stroke={selected === "RCA" ? "#e11d48" : (viz?.RCA ? (viz.RCA.probability > 0.5 ? "#f43f5e" : "#38bdf8") : "#94a3b8")}
+                      stroke={selected === "RCA" ? "#f26a32" : (viz?.RCA ? (viz.RCA.probability > 0.5 ? "#ef4444" : "#38bdf8") : "#94a3b8")}
                       strokeWidth={selected === "RCA" ? "8" : "6"}
                       strokeLinecap="round"
                       className="cursor-pointer hover:opacity-80 transition-all"

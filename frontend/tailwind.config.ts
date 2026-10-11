@@ -6,17 +6,17 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        // 9-role typography system — see src/styles/index.css .text-* utilities
-        // for the fully-configured role classes (size/line-height/tracking/etc).
-        display:          ['"Source Serif 4"', "Georgia", "serif"],            // 1. Display Primary — hero/major headlines
-        "display-secondary": ['"Playfair Display"', "Georgia", "serif"],       // 2. Display Secondary — section intros
-        ui:               ['"Outfit"', "system-ui", "sans-serif"],             // 3. UI Primary — nav/buttons/body
-        "ui-secondary":   ['"Work Sans"', "system-ui", "sans-serif"],          // 4. UI Secondary — descriptions/metadata
-        compact:          ['"Barlow Condensed"', "system-ui", "sans-serif"],   // 5. Compact/Condensed — tags/dense UI
-        editorial:        ['"Cormorant"', "Georgia", "serif"],                 // 6. Editorial Italic — quotes/emphasis
+        // Three-family system: Inter (UI/data), Newsreader (editorial serif),
+        // JetBrains Mono (technical). Role classes live in src/styles/index.css.
+        display:          ['"Newsreader"', "Georgia", "serif"],                // 1. Display Primary — hero/major headlines
+        "display-secondary": ['"Newsreader"', "Georgia", "serif"],             // 2. Display Secondary — section intros
+        ui:               ['"Inter"', "system-ui", "sans-serif"],              // 3. UI Primary — nav/buttons/body
+        "ui-secondary":   ['"Inter"', "system-ui", "sans-serif"],              // 4. UI Secondary — descriptions/metadata
+        compact:          ['"Inter"', "system-ui", "sans-serif"],              // 5. Compact/Condensed — tags/dense UI
+        editorial:        ['"Newsreader"', "Georgia", "serif"],                // 6. Editorial Italic — quotes/emphasis
         "mono-tech":      ['"JetBrains Mono"', "Menlo", "monospace"],          // 7. Technical Monospace — IDs/system metadata
-        micro:            ['"IBM Plex Sans"', "system-ui", "sans-serif"],      // 8. Micro/Footnote — fine print
-        "data-numeric":   ['"Space Grotesk"', "system-ui", "sans-serif"],      // 9. Data/Numeric — stats/metrics/counters
+        micro:            ['"Inter"', "system-ui", "sans-serif"],              // 8. Micro/Footnote — fine print
+        "data-numeric":   ['"Inter"', "system-ui", "sans-serif"],              // 9. Data/Numeric — stats/metrics/counters
       },
       colors: {
         // Semantic tokens — driven by CSS custom properties (see styles/index.css).

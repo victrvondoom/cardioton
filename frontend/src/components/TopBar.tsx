@@ -65,7 +65,7 @@ export function TopBar({ onOpenSearch, oneHealth = false }: Props) {
           />
           <div className="leading-tight min-w-0">
             <div className="text-ui-primary tracking-[0.01em] text-ink-primary text-[15px] truncate">
-              CARDIOTON<span className="text-accent-cyan">.</span>
+              CARDIOTON<span className="text-accent-brand">.</span>
             </div>
             <div className="text-compact hidden sm:block text-[9px] text-ink-muted">
               World Cardiology Clinic

@@ -3,9 +3,9 @@
    app ancestors are never transformed, so fixed tools and maps stay anchored. */
 .spatial-ui {
   /* Decorative glow stays in the app's existing cool clinical palette. */
-  --glass-cyan: 34 211 238;
+  --glass-cyan: 14 116 144;
   --glass-blue: 59 130 246;
-  --glass-violet: 139 92 246;
+  --glass-violet: 124 58 237;
   --glass-sheen-alpha: .58;
   --depth-highlight: 255 255 255;
   --depth-highlight-alpha: .92;

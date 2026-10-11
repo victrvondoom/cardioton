@@ -1,4 +1,5 @@
 import { authHeader, clearAuth } from "../../lib/auth";
+import { readFetch } from "../../lib/readFetch";
 
 export interface ReportFinding {
   id: string;
@@ -24,7 +25,7 @@ export interface ReportsResponse { reports: CardiovascularReport[]; as_of: strin
 export interface ReviewDecision { finding_id: string; action: "approve" | "reject" | "correct"; expected_version: number; normalized?: ReportFinding["normalized"]; note?: string }
 const BASE = "/api/v1/cardiotwin/anatomy";
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const response = await fetch(BASE + path, { ...init, headers: { ...authHeader(), ...(init.body instanceof FormData ? {} : { "Content-Type": "application/json" }), ...init.headers } });
+  const response = await readFetch(BASE + path, { ...init, headers: { ...authHeader(), ...(init.body instanceof FormData ? {} : { "Content-Type": "application/json" }), ...init.headers } });
   if (response.status === 401) { clearAuth(); window.location.assign("/login"); throw new Error("Session expired"); }
   if (!response.ok) {
     const body = await response.json().catch(() => ({ detail: "Report service unavailable" }));

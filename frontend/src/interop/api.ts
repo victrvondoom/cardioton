@@ -1,4 +1,5 @@
 import { authHeader, clearAuth } from "../lib/auth";
+import { readFetch } from "../lib/readFetch";
 import type { Validation, ExposureRecord } from "../onehealth/api";
 export interface Mapping {
   source_field: string;
@@ -119,7 +120,7 @@ export interface ExternalFhirCheck {
   semantic: { fields_preserved: number; fields_total: number; fields: { field: string; preserved: boolean }[] } | null;
 }
 export async function interop<T>(path: string, body?: unknown): Promise<T> {
-  const res = await fetch(`/api/v1/interop${path}`, {
+  const res = await readFetch(`/api/v1/interop${path}`, {
     method: body === undefined ? "GET" : "POST",
     headers: { "Content-Type": "application/json", ...authHeader() },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),

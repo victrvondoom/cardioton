@@ -1,5 +1,6 @@
 ﻿/** Typed client for the existing global research endpoints. */
 import { authHeader } from "../lib/auth";
+import { readFetch } from "../lib/readFetch";
 
 const API_BASE = "/api/cardiotwin/global";
 
@@ -204,7 +205,7 @@ function queryString(params?: EvidenceFilters & { phase?: string; indication?: s
   return query.size ? `?${query}` : "";
 }
 async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
+  const response = await readFetch(`${API_BASE}${path}`, {
     ...options,
     headers: { "Content-Type": "application/json", ...authHeader(), ...options.headers },
   });

@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 
 import { api } from "../lib/api";
 import type { DemoFixture } from "../lib/types";
+import { useAuth } from "./AuthContext";
+import { WORKSPACES, workspaceLinks } from "../workflow/workspaces";
 
 const SECTIONS: { label: string; items: { label: string; href: string; mono?: boolean }[] }[] = [
   {
@@ -50,12 +52,18 @@ const SECTIONS: { label: string; items: { label: string; href: string; mono?: bo
   },
 ];
 
+const SEARCH_ALIASES = SECTIONS.flatMap(section => section.items).reduce<Record<string, string>>((aliases, item) => {
+  aliases[item.href] = `${aliases[item.href] ?? ""} ${item.label}`;
+  return aliases;
+}, {});
+
 interface Props {
   open: boolean;
   onClose: () => void;
 }
 
 export function SearchPalette({ open, onClose }: Props) {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [fixtures, setFixtures] = useState<DemoFixture[]>([]);
@@ -124,10 +132,13 @@ export function SearchPalette({ open, onClose }: Props) {
   if (!open) return null;
 
   const q = query.toLowerCase().trim();
-  const filteredSections = SECTIONS.map((section) => ({
+  const workspaceSections = WORKSPACES.map(workspace => ({ label: workspace.label, items: workspaceLinks(workspace, user?.role) }));
+  const workspaceHrefs = new Set(workspaceSections.flatMap(section => section.items.map(item => item.href)));
+  const extraSections = SECTIONS.map(section => ({ ...section, items: section.items.filter(item => !workspaceHrefs.has(item.href)) }));
+  const filteredSections = [...workspaceSections, ...extraSections].map((section) => ({
     ...section,
     items: section.items.filter((item) =>
-      q === "" ? true : item.label.toLowerCase().includes(q),
+      q === "" ? true : `${section.label} ${item.label} ${item.href} ${SEARCH_ALIASES[item.href] ?? ""}`.toLowerCase().includes(q),
     ),
   })).filter((s) => s.items.length > 0);
 

@@ -6,6 +6,7 @@ import { SearchPalette } from "../src/components/SearchPalette";
 import { api } from "../src/lib/api";
 
 vi.mock("../src/lib/api", () => ({ api: { listFixtures: vi.fn(), createFromFixture: vi.fn() } }));
+vi.mock("../src/components/AuthContext", () => ({ useAuth: () => ({ user: { role: "admin" } }) }));
 afterEach(() => { cleanup(); vi.resetAllMocks(); });
 const fixture = { name: "test", label: "Test demo", requested_treatment: { name: "Therapy" }, payer_id: "demo", expected_verdict: "REFER" };
 
@@ -41,11 +42,28 @@ describe("search palette", () => {
     const input = screen.getByRole("textbox");
     await waitFor(() => expect(document.activeElement).toBe(input));
     await userEvent.tab({ shift: true });
-    expect(document.activeElement).toBe(screen.getByRole("button", { name: "Compliance" }));
+    expect(document.activeElement).toBe(screen.getAllByRole("button").at(-1));
     await userEvent.tab();
     expect(document.activeElement).toBe(input);
     rerender(<MemoryRouter><SearchPalette open={false} onClose={vi.fn()} /></MemoryRouter>);
     expect(document.activeElement).toBe(trigger);
     trigger.remove();
+  });
+
+  it("finds retained specialist tools through the shared workspace inventory", async () => {
+    vi.mocked(api.listFixtures).mockResolvedValue([]);
+    render(<MemoryRouter><SearchPalette open onClose={vi.fn()} /></MemoryRouter>);
+    const input = screen.getByRole("textbox");
+    fireEvent.change(input, { target: { value: "hemo" } });
+    expect(screen.getByRole("button", { name: "Hemodynamic Twin" })).toBeTruthy();
+    fireEvent.change(input, { target: { value: "global" } });
+    expect(screen.getByRole("button", { name: "Global Evidence" })).toBeTruthy();
+    fireEvent.change(input, { target: { value: "risk assessment" } });
+    expect(screen.getByRole("button", { name: "CardioTwin 3D Heart" })).toBeTruthy();
+    fireEvent.change(input, { target: { value: "Policy library" } });
+    expect(screen.getByRole("button", { name: "Policy Engine" })).toBeTruthy();
+    fireEvent.change(input, { target: { value: "Environmental Review" } });
+    expect(screen.getByRole("button", { name: "Environmental Review Queue" })).toBeTruthy();
+    await waitFor(() => expect(api.listFixtures).toHaveBeenCalled());
   });
 });

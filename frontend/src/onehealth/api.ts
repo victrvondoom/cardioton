@@ -1,4 +1,5 @@
 import { authHeader, clearAuth } from "../lib/auth";
+import { readFetch } from "../lib/readFetch";
 
 export interface LabSample {
   sample_id: string;
@@ -123,7 +124,7 @@ export interface CaseCandidate {
 }
 
 async function request<T>(path: string, body?: unknown): Promise<T> {
-  const res = await fetch(`/api/v1/onehealth${path}`, {
+  const res = await readFetch(`/api/v1/onehealth${path}`, {
     method: body === undefined ? "GET" : "POST",
     headers: { "Content-Type": "application/json", ...authHeader() },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),

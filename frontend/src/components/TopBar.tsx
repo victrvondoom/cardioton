@@ -1,16 +1,5 @@
-/**
- * Top app bar (h-14) — sits below the ActivityTicker (sm:top-7) so the
- * 28px live ticker peeks above it. Ported 1:1 from the deployed
- * clinical-healthcare showcase (components.jsx TopBar, lines 379-450).
- *
- * Layout (left → right):
- *   - Logo + brand lockup ("ClinCase." with cyan dot · "World Cardiology Clinic")
- *   - Cmd+K search (md+ block, mobile icon-only)
- *   - Status link (opens the live system status panel)
- *   - NotificationsBell (with unread count)
- *   - Theme toggle
- *   - UserChip (initials + role + Verified badge)
- */
+/** Compact 56px app header with search, live status and refresh controls,
+ * notifications, theme and user profile. Activity details open in the status menu. */
 import { useEffect, useRef, useState } from "react";
 import {
   Activity,
@@ -30,6 +19,8 @@ import { Link } from "react-router-dom";
 
 import { useAuth } from "./AuthContext";
 import { ProfilePanel } from "./ProfilePanel";
+import { ActivityTicker } from "./ActivityTicker";
+import { LiveDataControls } from "./LiveDataControls";
 import { EMPTY_SNAPSHOT, buildNotifications, fetchSnapshot, notifSignature, type TickerIcon, type Tone } from "../lib/liveFeed";
 import { useTheme } from "../lib/theme";
 import { useLive } from "../lib/useLive";
@@ -52,7 +43,7 @@ export function TopBar({ onOpenSearch, oneHealth = false }: Props) {
 
   return (
     <header
-      className={`fixed top-0 sm:top-7 inset-x-0 z-30 transition-colors duration-200 border-b ${
+      className={`fixed top-0 inset-x-0 z-30 transition-colors duration-200 border-b ${
         scrolled
           ? "backdrop-blur-xl bg-surface-bg/90 border-surface-border"
           : "bg-surface-bg/70 backdrop-blur-md border-surface-border/60"
@@ -61,7 +52,7 @@ export function TopBar({ onOpenSearch, oneHealth = false }: Props) {
       <div className="h-14 flex items-center justify-between px-3 sm:px-4 lg:px-5 gap-2 sm:gap-3">
         <Link
           to={oneHealth ? "/journey" : "/dashboard"}
-          className="flex items-center gap-2 sm:gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand rounded-md min-w-0 lg:w-[228px] lg:shrink-0"
+          className="flex items-center gap-2 sm:gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand rounded-md min-w-0 lg:w-[176px] lg:shrink-0"
           aria-label="CARDIOTON home — open Dashboard"
         >
           <img
@@ -106,7 +97,7 @@ export function TopBar({ onOpenSearch, oneHealth = false }: Props) {
         </button>
 
         <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
-          <StatusPill />
+          <StatusPill oneHealth={oneHealth} />
           <NotificationsBell />
           <button
             type="button"
@@ -125,18 +116,36 @@ export function TopBar({ onOpenSearch, oneHealth = false }: Props) {
 }
 
 // ---------- Link to measured deployment status ----------
-function StatusPill() {
+function StatusPill({ oneHealth }: { oneHealth: boolean }) {
+  const ref = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    function dismiss(event: MouseEvent) {
+      if (ref.current && !ref.current.contains(event.target as Node)) ref.current.open = false;
+    }
+    function escape(event: KeyboardEvent) {
+      if (event.key === "Escape" && ref.current?.open) {
+        ref.current.open = false;
+        ref.current.querySelector("summary")?.focus();
+      }
+    }
+    document.addEventListener("mousedown", dismiss);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("mousedown", dismiss);
+      document.removeEventListener("keydown", escape);
+    };
+  }, []);
   return (
-    <Link
-      to="/compliance"
-      className="hidden lg:inline-flex items-center gap-2 h-8 px-2.5 rounded-md border border-accent-green/30 bg-accent-green/[0.06] text-[11px] text-mono-tech text-accent-green hover:bg-accent-green/10 transition-colors"
-      title="Open deployment status and compliance evidence"
-    >
-      <span className="relative flex h-1.5 w-1.5">
-        <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent-green status-dot-live" />
-      </span>
-      <span className="tracking-tight">Check live system status</span>
-    </Link>
+    <details ref={ref} className="workspace-status">
+      <summary aria-label="Live status and update controls" title="Live status and update controls">
+        <Activity size={14} aria-hidden="true" /><span className="hidden lg:inline">Live status</span>
+      </summary>
+      <div className="workspace-status__panel">
+        <ActivityTicker oneHealth={oneHealth} inline />
+        <LiveDataControls />
+        <Link to="/compliance" onClick={() => { if (ref.current) ref.current.open = false; }} className="workspace-status__link">Check live system status &amp; compliance →</Link>
+      </div>
+    </details>
   );
 }
 
@@ -286,7 +295,7 @@ function UserChip() {
           onClick={onClick}
           aria-expanded={open}
           aria-label="Profile and activity"
-          className="hidden md:flex items-center gap-2 h-8 pl-1 pr-2.5 rounded-md border border-surface-border bg-surface-raised hover:border-surface-border-hi hover:shadow-[var(--shadow-raise)] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand"
+          className="flex items-center gap-2 h-8 px-1 md:pr-2.5 rounded-md border border-surface-border bg-surface-raised hover:border-surface-border-hi hover:shadow-[var(--shadow-raise)] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand"
         >
           <div
             className="w-6 h-6 rounded-full grid place-items-center text-[10px] text-mono-tech font-semibold text-white"
@@ -300,9 +309,6 @@ function UserChip() {
               {isAdmin ? "Admin" : role}
             </div>
           </div>
-          <span className="hidden xl:inline-flex items-center text-[9px] text-mono-tech px-1.5 py-0.5 rounded bg-accent-green/10 text-accent-green border border-accent-green/30 uppercase tracking-wider">
-            Verified
-          </span>
         </button>
       )}
     />

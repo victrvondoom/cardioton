@@ -7,6 +7,7 @@
  * never invents progress — after each action it re-reads the projection.
  */
 import { authHeader, clearAuth } from "../lib/auth";
+import { readFetch } from "../lib/readFetch";
 import { interop, type Job } from "../interop/api";
 
 export type StageStatus = "complete" | "ready" | "waiting" | "blocked" | "failed";
@@ -188,7 +189,7 @@ export function isStageId(value: string | undefined): value is StageId {
 }
 
 async function request<T>(path: string): Promise<T> {
-  const res = await fetch(`/api/v1/journey${path}`, { headers: authHeader() });
+  const res = await readFetch(`/api/v1/journey${path}`, { headers: authHeader() });
   if (res.status === 401) {
     clearAuth();
     throw new Error("Session expired. Sign in again.");

@@ -2,6 +2,7 @@
 // Weather goes through our backend, never straight to Open-Meteo, so the browser sends no
 // third-party request and the server can cache and label freshness.
 import { authHeader, clearAuth } from "../lib/auth";
+import { readFetch } from "../lib/readFetch";
 import type {
   CdsDiscovery,
   CdsResponse,
@@ -28,7 +29,7 @@ export class OahBridgeError extends Error {
 }
 
 async function request<T>(path: string, body?: unknown, signal?: AbortSignal): Promise<T> {
-  const res = await fetch(`${OAH_BRIDGE_BASE}${path}`, {
+  const res = await readFetch(`${OAH_BRIDGE_BASE}${path}`, {
     method: body === undefined ? "GET" : "POST",
     headers: {
       ...(body === undefined ? {} : { "Content-Type": "application/json" }),

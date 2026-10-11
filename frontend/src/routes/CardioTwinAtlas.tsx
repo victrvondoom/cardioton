@@ -12,7 +12,7 @@ import { AtlasAblation, AtlasDimensions, SystemTwins, WearableTimeline } from ".
 import { KnowledgeFrontier } from "../cardiotwin/EvidenceSensitivity";
 import { axisWhy, EvidenceRecord, GovernanceNote, HemoSection, InteractionPanels, InterventionResponses, TrajectoryPanel, TransitionList, WhyPanel, type WhySelection } from "../cardiotwin/HemoPanels";
 import type { HemoAxisKey } from "../cardiotwin/hemoTypes";
-import { downloadHemoJson } from "./CardioHemoTwin";
+import { downloadHemoJson } from "../cardiotwin/downloadHemoJson";
 import "../cardiotwin/atlas/atlas.css";
 
 const AtlasHeart3D=lazy(()=>import("../cardiotwin/atlas/AtlasHeart3D"));

@@ -17,9 +17,11 @@ from app.cardiotwin.connectors.adapters import (
     PubMedConnector,
     SourceRetrievalError,
 )
+from app.cardiotwin.cross5 import agent_tools as cross5_agent_tools
 from app.cardiotwin.evidence.passport import compute_content_sha256
 from app.cardiotwin.mapping.engine import EvidenceMappingEngine
 from app.config import settings
+from app.integrations.slicerheart import agent_tools as slicerheart_agent_tools
 
 
 def now() -> str:
@@ -70,6 +72,13 @@ class MultiAgentOrchestrator:
             active_tasks = sum(t["status"] == "running" and t["agent_role"] == role.value for t in tasks)
             registry.append({"role": role.value, "status": "running" if active_tasks else "idle",
                              "active_tasks": active_tasks})
+        # SlicerHeart integration: deterministic imaging/anatomy reference tools,
+        # always idle (lookups, not background agents). Agents can explain
+        # SlicerHeart terminology and bridge status, never invent measurements.
+        registry.append(slicerheart_agent_tools.registry_entry())
+        # CROSS-5: deterministic five-frame reference guide. Agents can explain
+        # frames, declared intersections and experiments — never invent data.
+        registry.append(cross5_agent_tools.registry_entry())
         return registry
 
     def get_tasks(self, scope: str = "local-research") -> list[dict[str, Any]]:

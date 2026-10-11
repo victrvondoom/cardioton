@@ -19,6 +19,13 @@ Illustrative great vessels and coronary surface branches are added in code.
 The model is general reference anatomy; those additions and the display motion
 are illustrative and are not patient imaging or a physiological simulation.
 
+The Cardio-Hemo anatomy studio uses this model with local procedural tissue,
+micro-surface and adipose textures, studio lighting, selectable structures,
+camera presets and a clipping-plane cutaway. Pulse and optional flow symbols
+use a fixed presentation cycle independent of clinical values. Dated source
+readouts and qualitative state cards follow the backend reconstruction window;
+they do not change reference geometry or imply measured flow or contractility.
+
 `heart-reference-preview.png` is a transparent render of that adapted scene,
 used while the model loads and when WebGL is unavailable. It has the same
 source attribution and CC-BY-4.0 license.

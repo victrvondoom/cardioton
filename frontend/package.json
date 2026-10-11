@@ -20,7 +20,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.18.4",
-    "three": "^0.169.0"
+    "three": "^0.169.0",
+    "three-mesh-bvh": "0.7.8"
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.3",

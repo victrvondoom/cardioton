@@ -19,9 +19,12 @@ from app.cardiotwin.atlas.api import router as atlas_router
 from app.cardiotwin.conformal import analyze_missingness_bounds
 from app.cardiotwin.evidence.api import router as evidence_router
 from app.cardiotwin.features import LeakageError, RecordValidationError
+from app.cardiotwin.ecg.api import router as ecg_router
 from app.cardiotwin.guideline_engine import evaluate_guidelines
 from app.cardiotwin.hemodynamics.api import router as hemodynamics_router
 from app.cardiotwin.hemodynamics.physics import solve_coronary_tree_physics
+from app.cardiotwin.multimodal.api import router as multimodal_router
+from app.cardiotwin.wearables.api import router as wearables_router
 from app.cardiotwin.model import (
     EVALUATION_PATH,
     SAFETY_NOTICE,
@@ -49,6 +52,9 @@ router = APIRouter(prefix="/cardiotwin", tags=["cardiotwin"])
 router.include_router(hemodynamics_router)
 router.include_router(atlas_router)
 router.include_router(evidence_router)
+router.include_router(ecg_router)
+router.include_router(wearables_router)
+router.include_router(multimodal_router)
 
 
 def _model_or_503() -> CardioModel:

@@ -6,6 +6,8 @@
  */
 import { authHeader } from "./auth";
 import { getRefreshRevision } from "./liveUpdates";
+import { readFetch } from "./readFetch";
+import { fetchServiceHealth, resetServiceHealthCache } from "./serviceHealth";
 
 export type Tone = "emerald" | "amber" | "cyan" | "brand" | "red";
 export type TickerIcon = "activity" | "alert" | "check" | "heart" | "shield" | "spark" | "zap";
@@ -128,7 +130,7 @@ export function buildNavChips(s: FeedSnapshot): Record<string, string | null> {
 
 async function get<T>(url: string, headers: Record<string, string>): Promise<T | null> {
   try {
-    const res = await fetch(url, { headers: { Accept: "application/json", ...headers } });
+    const res = await readFetch(url, { headers: { Accept: "application/json", ...headers } });
     return res.ok ? ((await res.json()) as T) : null;
   } catch {
     return null;
@@ -136,7 +138,7 @@ async function get<T>(url: string, headers: Record<string, string>): Promise<T |
 }
 
 async function loadSnapshot(headers: Record<string, string>): Promise<FeedSnapshot> {
-  const healthRequest = get<NonNullable<FeedSnapshot["health"]>>("/api/v1/healthz", {});
+  const healthRequest = fetchServiceHealth(headers);
   // Liveness is not database readiness. Only an explicit unconfigured pool suppresses
   // case-storage requests; configured/older servers retain their own failure signals.
   const fromCaseStorage = async <T,>(url: string): Promise<T | null> =>
@@ -190,4 +192,5 @@ export function fetchSnapshot(): Promise<FeedSnapshot> {
 /** test hook */
 export function resetSnapshotCache(): void {
   cached = null;
+  resetServiceHealthCache();
 }

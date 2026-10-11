@@ -1,8 +1,9 @@
 import { authHeader, clearAuth } from "../../lib/auth";
+import { readFetch } from "../../lib/readFetch";
 import type { AtlasAnswer, AtlasInput, AtlasObservation, AtlasResult, AtlasScenarioResult } from "./types";
 
 async function request<T>(path: string, input?: unknown, preserveText=false): Promise<T> {
-  const response = await fetch(`/api/v1/cardiotwin/atlas${path}`, {
+  const response = await readFetch(`/api/v1/cardiotwin/atlas${path}`, {
     ...(input === undefined ? {} : { method: "POST", body: JSON.stringify(input) }),
     headers: { "Content-Type": "application/json", ...authHeader() },
   });

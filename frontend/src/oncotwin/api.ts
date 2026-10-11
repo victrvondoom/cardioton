@@ -1,5 +1,6 @@
 // OncoTwin API client — same auth + 401 behaviour as lib/api.ts.
 import { authHeader, clearAuth } from "../lib/auth";
+import { readFetch } from "../lib/readFetch";
 import type {
   AlertDetail,
   Dashboard,
@@ -25,7 +26,7 @@ export class OncoTwinError extends Error {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, {
+  const res = await readFetch(`${BASE}${path}`, {
     ...init,
     headers: { "Content-Type": "application/json", ...authHeader() },
   });

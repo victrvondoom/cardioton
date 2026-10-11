@@ -7,6 +7,7 @@ import { ComplianceScorecardCard } from "../src/components/ComplianceScorecardCa
 import { TopBar } from "../src/components/TopBar";
 import { api } from "../src/lib/api";
 import { buildNotifications, EMPTY_SNAPSHOT, resetSnapshotCache, type FeedSnapshot } from "../src/lib/liveFeed";
+import { REFRESH_EVENT, setAutomaticUpdates } from "../src/lib/liveUpdates";
 
 vi.mock("../src/components/AuthContext", () => ({ useAuth: () => ({ user: { id: "u", email: "a@b.c", full_name: "Ann Lee", role: "admin", organization_id: "o", organization_name: "Org" }, logout: vi.fn() }) }));
 vi.mock("../src/components/ProfilePanel", () => ({ ProfilePanel: () => null }));
@@ -97,5 +98,26 @@ describe("TopBar notifications bell", () => {
     fireEvent.click(screen.getByRole("button", { name: "Notifications" }));
     expect((await screen.findByTestId("notif-empty")).textContent).toMatch(/Nothing needs your attention/);
     expect(screen.getByTestId("notif-count").textContent).toBe("all clear");
+  });
+
+  it("keeps pause, resume and manual refresh available inside the merged live menu", () => {
+    backend(0);
+    setAutomaticUpdates(true);
+    mount();
+    const summary = screen.getByLabelText("Live status and update controls");
+    fireEvent.click(summary);
+    expect(screen.getByRole("region", { name: "Live data controls" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Pause updates" }));
+    expect(screen.getByText("Automatic updates paused")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Resume updates" }));
+    expect(screen.getByText("Live updates on")).toBeTruthy();
+    const refresh = vi.fn();
+    window.addEventListener(REFRESH_EVENT, refresh);
+    fireEvent.click(screen.getByRole("button", { name: "Refresh now" }));
+    expect(refresh).toHaveBeenCalledTimes(1);
+    window.removeEventListener(REFRESH_EVENT, refresh);
+    fireEvent.keyDown(summary, { key: "Escape" });
+    expect((summary.closest("details") as HTMLDetailsElement).open).toBe(false);
+    expect(document.activeElement).toBe(summary);
   });
 });

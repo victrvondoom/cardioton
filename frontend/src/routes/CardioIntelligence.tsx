@@ -10,7 +10,7 @@ import { REFERENCE_STRUCTURES, type AnatomyFinding } from "../cardiotwin/intelli
 import SurfaceBoundary from "../cardiotwin/intelligence/SurfaceBoundary";
 import { visibleCoronaryContext } from "../cardiotwin/intelligence/coronaryContext";
 import { VESSELS } from "../cardiotwin/types";
-import { downloadHemoJson } from "./CardioHemoTwin";
+import { downloadHemoJson } from "../cardiotwin/downloadHemoJson";
 import "../cardiotwin/intelligence/intelligence.css";
 
 const AnatomyViewer = lazy(() => import("../cardiotwin/intelligence/AnatomyViewer"));

@@ -1,20 +1,22 @@
-"""Unified evidence journey: one read-only view over the existing gateway and One Health APIs.
+"""Unified evidence journey and bounded preparation over the existing persisted gateway.
 
-Actions stay on the existing /interop and /onehealth endpoints; this router only composes their
-persisted state so every client sees the same stage, proof and next legal action.
+The journey composes existing state. Automation advances one permitted preparation step;
+approval, transfer and clinical decisions remain explicit actions on the existing APIs.
 """
 
 from typing import Any
 
 import structlog
 from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import Field, StrictInt
 
 from app.api import interop as interop_api
 from app.api import onehealth as onehealth_api
 from app.auth import require_role
-from app.interop import repository
-from app.interop.models import Job
-from app.journey import projection
+from app.interop import repository, service
+from app.interop.models import Command, Job, ValidationRequest
+from app.journey import automation, projection
+from app.onehealth.models import StrictModel
 from app.onehealth.repository import mode
 
 log = structlog.get_logger()
@@ -81,3 +83,53 @@ async def recent_journeys(
 @router.get("/{job_id}")
 async def get_journey(job_id: str, user: dict[str, Any] = Depends(reviewer)) -> dict[str, Any]:
     return await _project(await repository.get(user["organization_id"], job_id), user)
+
+
+class AutomationCommand(StrictModel):
+    expected_version: StrictInt = Field(ge=1)
+
+
+async def _automation_view(job: Job, user: dict[str, Any]) -> dict[str, Any]:
+    return automation.describe(job, await _project(job, user))
+
+
+@router.get("/{job_id}/automation")
+async def get_automation(job_id: str, user: dict[str, Any] = Depends(reviewer)) -> dict[str, Any]:
+    return await _automation_view(await repository.get(user["organization_id"], job_id), user)
+
+
+@router.post("/{job_id}/automation")
+async def advance_automation(
+    job_id: str, payload: AutomationCommand, user: dict[str, Any] = Depends(reviewer)
+) -> dict[str, Any]:
+    """Advance exactly one server-selected step, protected by the existing job CAS.
+
+    Returning a waiting or terminal state is read-only. A browser reload can resume
+    by reading this same endpoint; there is no ephemeral second execution registry.
+    """
+    job = await repository.get(user["organization_id"], job_id)
+    if job.version != payload.expected_version:
+        raise HTTPException(409, "Job changed; reload before retrying")
+    state = await _automation_view(job, user)
+    step = state["next_step"]
+    if step is None:
+        return state
+    command = Command(job_id=job.id, expected_version=job.version)
+    if step == "map":
+        await service.analyze(job, use_ai=False)
+        service.event(
+            job, "automation_step_completed", str(user["id"]),
+            step="map", expected_version=payload.expected_version,
+            authority="Preparation only; human mapping decisions required",
+        )
+        job = await repository.save(job, payload.expected_version)
+    elif step == "generate":
+        await interop_api.generate(command, user)
+        job = await repository.get(user["organization_id"], job_id)
+    elif step == "validate":
+        assert job.bundle is not None  # chosen only for a persisted generated package
+        await interop_api.validate(
+            ValidationRequest(**command.model_dump(), bundle=job.bundle), user
+        )
+        job = await repository.get(user["organization_id"], job_id)
+    return await _automation_view(job, user)

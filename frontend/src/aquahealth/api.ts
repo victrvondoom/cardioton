@@ -2,6 +2,7 @@
 // oncotwin/api.ts. Reuses ClinCase's existing auth helpers rather than
 // introducing a second token mechanism.
 import { authHeader, clearAuth } from "../lib/auth";
+import { readFetch } from "../lib/readFetch";
 import type {
   AgentManifest,
   AquaMeta,
@@ -34,7 +35,7 @@ export class AquaHealthError extends Error {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, {
+  const res = await readFetch(`${BASE}${path}`, {
     ...init,
     headers: { "Content-Type": "application/json", ...authHeader() },
   });

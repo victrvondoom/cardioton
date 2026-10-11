@@ -1,4 +1,5 @@
 import { authHeader, clearAuth } from "../lib/auth";
+import { readFetch } from "../lib/readFetch";
 
 export type ProbeStatus = "up" | "down" | "embedded" | "not_probed" | "misconfigured";
 
@@ -40,7 +41,7 @@ export interface RuntimeTopology {
 }
 
 export async function fetchRuntime(): Promise<RuntimeTopology> {
-  const res = await fetch("/api/v1/runtime", { headers: authHeader() });
+  const res = await readFetch("/api/v1/runtime", { headers: authHeader() });
   if (res.status === 401) {
     clearAuth();
     throw new Error("Session expired. Sign in again.");

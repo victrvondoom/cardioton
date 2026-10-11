@@ -1,6 +1,8 @@
 ﻿// Typed API client. Vite proxies /api to localhost:8000 in dev.
 // Auto-attaches the JWT from localStorage; 401 → clear storage + redirect to /login.
 import { authHeader, clearAuth } from "./auth";
+import { readFetch } from "./readFetch";
+import { isCaseStorageRead, requireCaseStorage } from "./serviceHealth";
 import type {
   AgentRun,
   CaseComparison,
@@ -142,12 +144,13 @@ async function jsonOrThrow<T>(res: Response): Promise<T> {
   return res.json();
 }
 
-function authedFetch(input: string, init?: RequestInit): Promise<Response> {
+async function authedFetch(input: string, init?: RequestInit): Promise<Response> {
   const headers = {
     ...(init?.headers as Record<string, string> | undefined),
     ...authHeader(),
   };
-  return fetch(input, { ...init, headers });
+  if ((init?.method ?? "GET").toUpperCase() === "GET" && isCaseStorageRead(input)) await requireCaseStorage(headers);
+  return readFetch(input, { ...init, headers });
 }
 
 /** Response of POST /cases/{id}/run-async. */
@@ -196,7 +199,7 @@ export interface CaseListItem {
 
 export const api = {
   async listFixtures(): Promise<DemoFixture[]> {
-    const res = await fetch(`${BASE}/demo-fixtures`);
+    const res = await readFetch(`${BASE}/demo-fixtures`);
     const data = await jsonOrThrow<{ fixtures: DemoFixture[] }>(res);
     return data.fixtures;
   },

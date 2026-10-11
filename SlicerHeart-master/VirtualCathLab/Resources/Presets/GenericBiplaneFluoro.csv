@@ -1,0 +1,4 @@
+Model,frontalArmAngleL,frontalArmAngleP,frontalArmAngleC,frontalArmDetectorRotationAngle,frontalArmSourceToObjectDistance,frontalArmSourceToImageDistance,frontalDetectorHeightMm,frontalDetectorWidthMm,lateralArmAngleP,lateralArmAngleC,lateralArmDetectorRotationAngle,lateralArmOffset,lateralArmSourceToObjectDistance,lateralArmSourceToImageDistance,lateralDetectorHeightMm,lateralDetectorWidthMm,tableShiftLongitudinal,tableShiftLateral,tableShiftVertical,patientSpin
+Source Left,0,0,0,0,720,1100,400.4,293.7,0,0,0,0,720,1100,232.5,234.5,0,0,-145,0
+Source Right,0,0,0,0,720,1100,400.4,293.7,-180,0,0,0,720,1100,232.5,234.5,0,0,-145,0
+Spine,0,0,0,0,720,1100,400.4,293.7,0,0,0,0,720,1100,232.5,234.5,0,0,-145,180

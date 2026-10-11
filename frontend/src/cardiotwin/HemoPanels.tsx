@@ -14,7 +14,7 @@ export const hemoDate = (value: string, time = false) => {
 export const hemoValue = (value: unknown): string => value == null || value === "" ? "UNKNOWN" : typeof value === "string" ? value : JSON.stringify(value) ?? "UNKNOWN";
 
 export function HemoSection({ title, eyebrow, children, id, right }: { title: string; eyebrow?: string; children: ReactNode; id?: string; right?: ReactNode }) {
-  return <section id={id} className="min-w-0 rounded-2xl border border-surface-border bg-surface-raised p-4 sm:p-5 scroll-mt-24">
+  return <section id={id} className="hemo-section min-w-0 rounded-2xl border border-surface-border bg-surface-raised p-4 sm:p-5 scroll-mt-24">
     <header className="mb-4 flex flex-wrap items-start justify-between gap-2"><div>{eyebrow && <p className="text-[10px] uppercase tracking-[0.18em] text-ink-muted">{eyebrow}</p>}<h2 className="mt-1 text-base font-semibold text-ink-primary">{title}</h2></div>{right}</header>
     {children}
   </section>;
@@ -24,17 +24,17 @@ export interface WhySelection { title: string; from?: string; to: string; explan
 export function transitionWhy(t: HemoTransition): WhySelection { return { title: hemoLabel(t.axis), from: t.from_level, to: t.to_level, explanation: t.explanation, confidence: t.confidence, evidence_refs: t.evidence_refs, timestamp: t.timestamp }; }
 export function axisWhy(key: HemoAxisKey, axis: HemoAxis, timestamp: string): WhySelection { return { title: HEMO_AXES.find(([k]) => k === key)?.[1] ?? hemoLabel(key), to: axis.level, explanation: axis.explanation, confidence: axis.confidence, evidence_refs: axis.evidence_refs, uncertainties: axis.uncertainties, timestamp, classification: axis.classification === "INFERRED" ? "TWIN INFERENCE" : axis.classification }; }
 
-export function StateVector({ result, onWhy }: { result: HemoResult; onWhy: (why: WhySelection) => void }) {
+export function StateVector({ result, onWhy, onSceneWhy = onWhy, pending = false }: { result: HemoResult; onWhy: (why: WhySelection) => void; onSceneWhy?: (why: WhySelection) => void; pending?: boolean }) {
   const s = result.snapshot;
-  return <HemoSection title="Cardiovascular state" eyebrow="Time-indexed reconstruction" right={<span className="rounded-full border border-surface-border px-2.5 py-1 text-[11px] text-ink-body">Confidence: <b>{s.confidence}</b></span>}>
-    <HemoStateScene snapshot={s} onSelect={key => onWhy(axisWhy(key, s[key], s.timestamp))} />
-    <div className="grid grid-cols-2 gap-2 md:grid-cols-4" aria-label="Cardiovascular state vector">
-      {HEMO_AXES.map(([key, label]) => { const axis = s[key]; return <button key={key} type="button" onClick={() => onWhy(axisWhy(key, axis, s.timestamp))} className={`group flex min-h-[136px] flex-col items-start rounded-xl border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand ${axis.level === "UNKNOWN" ? "border-dashed border-surface-border bg-surface-bg" : axis.level === "HIGH" ? "border-accent-brand bg-accent-brand/10" : "border-surface-border bg-surface-bg hover:border-accent-brand"}`} data-testid={`hemo-axis-${key}`}>
+  return <HemoSection title="Cardiovascular state" eyebrow="Time-indexed reconstruction" right={<span className="rounded-full border border-surface-border px-2.5 py-1 text-[11px] text-ink-body">{pending ? "Loading evidence…" : <>Confidence: <b>{s.confidence}</b></>}</span>}>
+    <HemoStateScene snapshot={s} evidence={pending ? [] : result.evidence} asOf={result.as_of} pending={pending} recentDays={typeof result.rules?.recent_days === "number" ? result.rules.recent_days : 14} onSelect={key => onSceneWhy(axisWhy(key, s[key], s.timestamp))} />
+    {!pending && <details className="hemo-vector-details"><summary>Detailed state vector &middot; all eight dimensions</summary><div className="mt-3 grid grid-cols-2 gap-2 md:grid-cols-4" aria-label="Cardiovascular state vector">
+      {HEMO_AXES.map(([key, label]) => { const axis = s[key]; return <button key={key} type="button" onClick={() => onWhy(axisWhy(key, axis, s.timestamp))} className={`group flex min-h-[104px] flex-col items-start rounded-xl border p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand ${axis.level === "UNKNOWN" ? "border-dashed border-surface-border bg-surface-bg" : axis.level === "HIGH" ? "border-accent-brand bg-accent-brand/10" : "border-surface-border bg-surface-bg hover:border-accent-brand"}`} data-testid={`hemo-axis-${key}`}>
         <span className="text-xs text-ink-body">{label}</span><strong className="mt-3 text-lg tracking-tight text-ink-primary">{axis.level}</strong>
         <span className="mt-1 text-[9px] uppercase tracking-wider text-ink-muted">{axis.classification} · {axis.confidence} confidence</span>
         <span className="mt-auto pt-2 text-[10px] text-ink-muted group-hover:text-ink-primary">Inspect evidence <ArrowRight size={10} className="inline" aria-hidden /></span>
       </button>; })}
-    </div>
+    </div></details>}
     <p className="mt-3 text-[11px] leading-relaxed text-ink-muted">Qualitative state categories describe this research reconstruction. Filling pressure is a proxy; inferred states are not directly measured pressures.</p>
   </HemoSection>;
 }

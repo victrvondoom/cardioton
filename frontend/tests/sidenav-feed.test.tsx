@@ -32,15 +32,17 @@ function backend(configured: boolean) {
 }
 
 const desktop = () => screen.getByRole("navigation", { name: "Sections" });
-const casesLink = () => within(desktop()).getByRole("link", { name: "Patient Registry" });
+const casesLink = () => within(desktop()).getByRole("link", { name: "Patients" });
 const reviewLink = () => within(desktop()).getByRole("link", { name: "Reviewer Queue" });
-const openAdministration = () => fireEvent.click(within(desktop()).getByRole("button", { name: "Administration" }));
+const openAdministration = () => fireEvent.click(within(desktop()).getByRole("button", { name: "Administration tools" }));
+const openEvidence = () => fireEvent.click(within(desktop()).getByRole("button", { name: "Evidence & Exchange tools" }));
 
 describe("sidebar shares the governed shell feed", () => {
   it("shows real case and review badges from the shared snapshot", async () => {
     const fetcher = backend(true);
     render(<MemoryRouter><Sidenav /></MemoryRouter>);
-    await waitFor(() => expect(casesLink().textContent).toBe("Patient Registry9"));
+    openEvidence();
+    await waitFor(() => expect(casesLink().textContent).toBe("Patients9"));
     expect(reviewLink().textContent).toBe("Reviewer Queue2");
     openAdministration();
     expect(screen.getByTestId("chip-/architecture").textContent).toBe("3-LAYER");
@@ -51,9 +53,10 @@ describe("sidebar shares the governed shell feed", () => {
   it("leaves badges unknown and skips case requests when storage is not configured", async () => {
     const fetcher = backend(false);
     render(<MemoryRouter><Sidenav /></MemoryRouter>);
+    openEvidence();
     openAdministration();
     await screen.findByTestId("chip-/architecture");
-    expect(casesLink().textContent).toBe("Patient Registry");
+    expect(casesLink().textContent).toBe("Patients");
     expect(reviewLink().textContent).toBe("Reviewer Queue");
     expect(fetcher.mock.calls.some(([url]) => url.includes("/cases?") || url.includes("/agents/metrics"))).toBe(false);
     expect(api.listCases).not.toHaveBeenCalled();
@@ -62,7 +65,7 @@ describe("sidebar shares the governed shell feed", () => {
   it("shares a single request round with the ticker", async () => {
     const fetcher = backend(true);
     render(<MemoryRouter><ActivityTicker /><Sidenav /></MemoryRouter>);
-    await waitFor(() => expect(casesLink().textContent).toBe("Patient Registry9"));
+    await waitFor(() => expect(casesLink().textContent).toBe("Patients9"));
     expect(fetcher).toHaveBeenCalledTimes(10);
     expect(fetcher.mock.calls.filter(([url]) => url.includes("/cases?"))).toHaveLength(2);
     expect(api.listCases).not.toHaveBeenCalled();

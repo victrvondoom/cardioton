@@ -43,6 +43,16 @@ export function AboutModal({ open, onClose }: Props) {
   const [version, setVersion] = useState<VersionInfo | null>(null);
   const [caps, setCaps] = useState<CapabilitiesInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [spatialBackdrop, setSpatialBackdrop] = useState(() => {
+    try { return localStorage.getItem("clini-spatial-backdrop") === "on"; } catch { return false; }
+  });
+  useEffect(() => {
+    const sync = () => setSpatialBackdrop(() => {
+      try { return localStorage.getItem("clini-spatial-backdrop") === "on"; } catch { return false; }
+    });
+    window.addEventListener("clini-spatial-backdrop", sync);
+    return () => window.removeEventListener("clini-spatial-backdrop", sync);
+  }, []);
   const sequence = useRef(0);
   const load = useCallback(async () => {
     const generation = ++sequence.current;
@@ -170,7 +180,23 @@ export function AboutModal({ open, onClose }: Props) {
           </>
         )}
 
-        <div className="mt-6 pt-4 border-t border-surface-border text-[11px] text-ink-faint">
+        <div className="mt-6 pt-4 border-t border-surface-border">
+          <div className="text-[10px] text-compact text-ink-muted mb-2">Appearance</div>
+          <label className="flex items-center gap-2 text-sm text-ink-body">
+            <input
+              type="checkbox"
+              checked={spatialBackdrop}
+              onChange={(e) => {
+                try { localStorage.setItem("clini-spatial-backdrop", e.target.checked ? "on" : "off"); } catch { /* storage unavailable */ }
+                window.dispatchEvent(new Event("clini-spatial-backdrop"));
+              }}
+              className="accent-[rgb(var(--accent-brand))]"
+            />
+            Spatial backdrop (decorative gradients behind the workspace)
+          </label>
+        </div>
+
+        <div className="mt-4 pt-4 border-t border-surface-border text-[11px] text-ink-faint">
           CARDIOTON — Built by vsrupeshkumar · Proprietary · All rights reserved
         </div>
       </div>

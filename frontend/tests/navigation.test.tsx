@@ -55,7 +55,7 @@ describe("one platform, nothing removed", () => {
     }
   });
 
-  it("leads navigation with the evidence journey and keeps every capability reachable", () => {
+  it("consolidates navigation into six workspaces and keeps every capability reachable", () => {
     render(
       <MemoryRouter>
         <Sidenav />
@@ -65,7 +65,7 @@ describe("one platform, nothing removed", () => {
     const hrefs = within(nav)
       .getAllByRole("link")
       .map((link) => link.getAttribute("href"));
-    expect(hrefs.slice(0, 3)).toEqual(["/dashboard", "/cases", "/journey"]);
+    for (const href of ["/dashboard", "/cases", "/cardiotwin", "/onehealth", "/research", "/runtime"]) expect(hrefs).toContain(href);
     expect(hrefs.length).toBeLessThanOrEqual(13);
     expect(new Set(hrefs).size).toBe(hrefs.length);
     for (const button of within(nav).getAllByRole("button")) {
@@ -83,14 +83,62 @@ it("keeps sidebar DOM, scroll and expanded state across navigation and remembers
   const nav = screen.getByRole("navigation", { name: "Sections" });
   nav.scrollTop = 125;
   fireEvent.scroll(nav);
-  fireEvent.click(screen.getByRole("button", { name: "Evidence & Review" }));
+  const evidence = screen.getByRole("button", { name: "Evidence & Exchange tools" });
+  fireEvent.click(evidence);
+  fireEvent.click(evidence);
   fireEvent.click(screen.getByRole("link", { name: "Open architecture" }));
   expect(screen.getByRole("navigation", { name: "Sections" })).toBe(nav);
   expect(nav.scrollTop).toBe(125);
-  expect(screen.getByRole("button", { name: "Evidence & Review" }).getAttribute("aria-expanded")).toBe("false");
-  fireEvent.click(screen.getByRole("button", { name: "Administration" }));
+  expect(evidence.getAttribute("aria-expanded")).toBe("false");
+  fireEvent.click(screen.getByRole("button", { name: "Administration tools" }));
   fireEvent.click(screen.getByRole("button", { name: "Collapse navigation" }));
   expect(localStorage.getItem("clini-nav-collapsed")).toBe("true");
+  expect(within(nav).getByRole("link", { name: "Cardiology" }).getAttribute("title")).toContain("Heart anatomy");
+  fireEvent.click(screen.getByRole("button", { name: "Expand navigation" }));
   expect(screen.getByRole("link", { name: "Architecture" }).getAttribute("title")).toBe("Architecture");
-  expect(screen.getByRole("link", { name: "CardioTwin 3D Heart" }).getAttribute("title")).toBe("CardioTwin 3D Heart: Live vessel-level CAD prediction and 3D heart");
+});
+
+it("makes every tool reachable from the mobile menu and closes after choosing one", () => {
+  render(<MemoryRouter initialEntries={["/cardiotwin/hemo"]}><Sidenav /></MemoryRouter>);
+  fireEvent.click(screen.getByRole("button", { name: "All workspaces and tools" }));
+  const dialog = screen.getByRole("dialog", { name: "All workspaces & tools" });
+  const menu = within(dialog).getByRole("navigation", { name: "All tools" });
+  for (const href of LEGACY_NAV) expect(within(menu).getAllByRole("link").some((link) => link.getAttribute("href") === href), href).toBe(true);
+  fireEvent.change(within(dialog).getByRole("textbox", { name: "Filter all tools" }), { target: { value: "Architecture" } });
+  expect(within(menu).getAllByRole("link")).toHaveLength(1);
+  fireEvent.click(within(menu).getByRole("link", { name: "Architecture" }));
+  expect(screen.queryByRole("dialog", { name: "All workspaces & tools" })).toBeNull();
+});
+
+it("selects the hemodynamic tool without also selecting the 3D heart home", () => {
+  render(<MemoryRouter initialEntries={["/cardiotwin/hemo"]}><Sidenav /></MemoryRouter>);
+  const nav = screen.getByRole("navigation", { name: "Sections" });
+  const active = within(nav).getAllByRole("link").filter((link) => link.getAttribute("aria-current") === "page");
+  expect(active.map((link) => link.getAttribute("href"))).toEqual(["/cardiotwin/hemo"]);
+});
+
+it("starts the new grouping compact while retaining old preferences and new group choices", () => {
+  const oldPreference = JSON.stringify(["Patient Intake", "Administration"]);
+  localStorage.setItem("clini-nav-groups", oldPreference);
+  render(<MemoryRouter initialEntries={["/cardiotwin/hemo"]}><Sidenav /></MemoryRouter>);
+  const nav = screen.getByRole("navigation", { name: "Sections" });
+  expect(within(nav).getAllByRole("button").filter((button) => button.getAttribute("aria-expanded") === "true")).toHaveLength(1);
+  expect(within(nav).getByRole("button", { name: "Cardiology tools" }).getAttribute("aria-expanded")).toBe("true");
+  fireEvent.click(within(nav).getByRole("button", { name: "Research & AI tools" }));
+  expect(localStorage.getItem("clini-nav-groups")).toBe(oldPreference);
+  expect(JSON.parse(localStorage.getItem("clini-nav-workspaces")!)).not.toContain("research");
+});
+
+it("restores mobile menu focus and scrolling when dismissed with Escape", () => {
+  render(<MemoryRouter><Sidenav /></MemoryRouter>);
+  const trigger = screen.getByRole("button", { name: "All workspaces and tools" });
+  trigger.focus();
+  fireEvent.click(trigger);
+  const dialog = screen.getByRole("dialog", { name: "All workspaces & tools" });
+  expect(document.body.style.overflow).toBe("hidden");
+  expect(document.activeElement).toBe(within(dialog).getByRole("textbox", { name: "Filter all tools" }));
+  fireEvent.keyDown(dialog, { key: "Escape" });
+  expect(screen.queryByRole("dialog", { name: "All workspaces & tools" })).toBeNull();
+  expect(document.activeElement).toBe(trigger);
+  expect(document.body.style.overflow).toBe("");
 });

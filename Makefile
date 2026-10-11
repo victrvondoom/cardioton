@@ -8,6 +8,7 @@
         migrate sbom sign supply-chain \
         twin.test twin.demo twin.stress twin.train twin.reference twin.benchmark \
         cardio.test cardio.train cardio.data \
+        automation.install automation.test automation.dashboard \
         test lint clean
 
 help:

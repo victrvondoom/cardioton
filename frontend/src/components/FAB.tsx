@@ -17,7 +17,7 @@ export function FAB() {
     <button
       type="button"
       onClick={() => navigate("/intake")}
-      className="group fixed bottom-6 right-6 z-30 inline-flex items-center gap-2 h-14 pl-4 pr-5 rounded-full text-white font-medium text-sm fab-pulse focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg transition-transform active:scale-[0.97]"
+      className="group fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] md:bottom-6 right-6 z-30 inline-flex items-center gap-2 h-14 pl-4 pr-5 rounded-full text-white font-medium text-sm fab-pulse focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg transition-transform active:scale-[0.97]"
       style={{
         background: "linear-gradient(180deg, #525252 0%, #121212 100%)",
         boxShadow:

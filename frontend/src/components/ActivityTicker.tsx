@@ -1,14 +1,5 @@
-/**
- * Live activity ticker — fixed-position scrolling band at the very top of the
- * app, above the TopBar. Ported 1:1 from the deployed clinical-healthcare
- * showcase (components.jsx ActivityTicker, lines 134-177).
- *
- * Layout:
- *   - Fixed top-0, h-7 (28px), full width
- *   - LIVE badge anchored left with solid backdrop + soft fade
- *   - Soft fade on right edge so the marquee disappears into the surface
- *   - Items duplicated [...items, ...items] for seamless loop via .marquee-track
- */
+/** Live activity feed, available inline in the shared status menu.
+ * The standalone fixed variant remains available to existing consumers. */
 import { Activity, AlertCircle, CheckCircle, Heart, ShieldCheck, Sparkles, Zap } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
@@ -29,7 +20,7 @@ const TONE_TEXT: Record<Tone, string> = {
 
 const REFRESH_MS = 60_000;
 
-export function ActivityTicker({ oneHealth = false }: { oneHealth?: boolean }) {
+export function ActivityTicker({ oneHealth = false, inline = false }: { oneHealth?: boolean; inline?: boolean }) {
   const { data, error, loading } = useLive(fetchSnapshot, [], REFRESH_MS);
   const snapshot = data ?? EMPTY_SNAPSHOT;
   const items = buildTickerItems(oneHealth ? { ...EMPTY_SNAPSHOT, health: snapshot.health } : snapshot);
@@ -38,7 +29,7 @@ export function ActivityTicker({ oneHealth = false }: { oneHealth?: boolean }) {
   const all = items.length ? [...items, ...items] : [];
 
   return (
-    <div className="fixed top-0 inset-x-0 z-40 h-7 overflow-hidden border-b border-surface-border bg-surface-raised/95 backdrop-blur-md hidden sm:block">
+    <div className={inline ? "relative h-8 overflow-hidden border-b border-surface-border bg-surface-raised/95" : "fixed top-0 inset-x-0 z-40 h-7 overflow-hidden border-b border-surface-border bg-surface-raised/95 backdrop-blur-md hidden sm:block"}>
       {/* LIVE badge anchored left with solid backdrop above the marquee */}
       <div className="absolute left-0 top-0 bottom-0 z-20 flex items-center gap-1.5 pl-3 pr-4 bg-surface-raised">
         <span className="relative flex h-1.5 w-1.5">

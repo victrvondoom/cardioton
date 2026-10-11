@@ -366,10 +366,18 @@ def validate(bundle: dict[str, Any]) -> dict[str, Any]:
             extra.append("Unsupported gateway resource type")
         if not any(x["resourceType"] == "Provenance" for x in resources):
             extra.append("Transformation provenance required")
-        decoded = fhir.read_evidence(bundle)
-        h = decoded["history"]
-        if h and (not h["consent_recorded"] or decoded["consent_withdrawn"]):
-            extra.append("Patient-linked transfer requires active recorded consent")
+        decoded = None
+        try:
+            decoded = fhir.read_evidence(bundle)
+        except fhir.ContractViolationError as exc:
+            # A bundle that breaks the exchange contract is a failed validation,
+            # not an exception: the automation state machine must see it as
+            # blocked instead of crashing (and must not blindly retry).
+            extra.append(f"Exchange contract violation: {exc}")
+        if decoded is not None:
+            h = decoded["history"]
+            if h and (not h["consent_recorded"] or decoded["consent_withdrawn"]):
+                extra.append("Patient-linked transfer requires active recorded consent")
     if base_valid and not extra:
         record = ExposureRecord(
             organization_id="roundtrip",
@@ -442,7 +450,15 @@ def assessment(bundle: dict[str, Any]) -> dict[str, Any]:
 
 def loss_report(j: Job) -> dict[str, Any]:
     """Compare actual source values with decoded values, including excluded fields."""
-    decoded_evidence = fhir.read_evidence(j.bundle) if j.bundle else {}
+    decoded_evidence: dict[str, Any] = {}
+    if j.bundle:
+        try:
+            decoded_evidence = fhir.read_evidence(j.bundle)
+        except fhir.ContractViolationError:
+            # An undecodable package is itself the worst loss case: every
+            # field counts as lost from the exchange rather than crashing the
+            # workbench/automation views that render this report.
+            decoded_evidence = {}
     decoded = decoded_evidence.get("sample", {})
     rows = []
     for name, value in j.fields.items():

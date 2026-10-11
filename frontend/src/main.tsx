@@ -6,7 +6,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 // fetches to "/api/*" can't be proxied. Rewrite them to the deployed
 // backend URL. In dev, VITE_API_BASE is empty and the Vite proxy handles it.
 const API_BASE = (import.meta.env.VITE_API_BASE as string | undefined)?.replace(/\/$/, "");
-if (API_BASE) {
+if (API_BASE && !import.meta.hot?.data.apiRewriteInstalled) {
   const originalFetch = window.fetch.bind(window);
   window.fetch = (input: RequestInfo | URL, init?: RequestInit) => {
     if (typeof input === "string" && input.startsWith("/api/")) {
@@ -17,6 +17,7 @@ if (API_BASE) {
     }
     return originalFetch(input, init);
   };
+  if (import.meta.hot) import.meta.hot.data.apiRewriteInstalled = true;
 }
 
 import { RouteBoundary } from "./components/RouteBoundary";
@@ -50,6 +51,8 @@ const CardioHemoTwin = lazy(() => import("./routes/CardioHemoTwin"));
 const CardioTwinAtlas = lazy(() => import("./routes/CardioTwinAtlas"));
 const CardioIntelligence = lazy(() => import("./routes/CardioIntelligence"));
 const CardioGlobalIntelligence = lazy(() => import("./routes/CardioGlobalIntelligence"));
+const IitMandiDemo = lazy(() => import("./routes/IitMandiDemo"));
+const Cross5Studio = lazy(() => import("./routes/Cross5Studio"));
 const CaseDetail = lazy(() => import("./routes/CaseDetail"));
 const Cases = lazy(() => import("./routes/Cases"));
 const Cohorts = lazy(() => import("./routes/Cohorts"));
@@ -82,7 +85,11 @@ import { installLiveRequestTracking } from "./lib/liveUpdates";
 
 installLiveRequestTracking();
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+// Reuse the root when a dependency invalidates this entry during development.
+// Creating another root leaves duplicate subscriptions and mounted canvases.
+const root: ReactDOM.Root = import.meta.hot?.data.reactRoot ?? ReactDOM.createRoot(document.getElementById("root")!);
+if (import.meta.hot) import.meta.hot.data.reactRoot = root;
+root.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
@@ -144,6 +151,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             <Route path="/cardiotwin/intelligence" element={<CardioIntelligence />} />
             <Route path="/cardiotwin/global" element={<CardioGlobalIntelligence />} />
             <Route path="/cardiotwin/atlas/:tab?" element={<CardioTwinAtlas />} />
+            {/* IIT Mandi Track A — complete cardiovascular risk demonstration (synthetic patients) */}
+            <Route path="/iit-mandi" element={<IitMandiDemo />} />
+            {/* CROSS-5 — five-frame multiscale intersection engine (additive) */}
+            <Route path="/cross5" element={<Cross5Studio />} />
 
             <Route path="/policies" element={<Policies />} />
             <Route path="/onco" element={<OncologyStack />} />

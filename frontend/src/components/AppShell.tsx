@@ -1,15 +1,5 @@
-/**
- * Full app layout, ported from the deployed clinical-healthcare showcase.
- *
- * Stack (top → bottom):
- *   - ActivityTicker: fixed top-0, h-7 (28px), only on sm+
- *   - TopBar:         fixed top-0 sm:top-7, h-14
- *   - Sidenav:        sticky top-14 sm:top-[84px], full-height column
- *   - Main outlet:    inside same flex as Sidenav, padding-top compensates
- *                     for the fixed ticker + topbar
- *   - FAB:            fixed bottom-6 right-6, "New case" pill
- *   - SearchPalette:  Cmd+K modal overlay
- */
+/** Shared workspace shell. A 56px header contains status and global controls;
+ * the persistent sidebar and compact tool strip preserve route and scroll state. */
 import {
   useCallback,
   useEffect,
@@ -25,14 +15,13 @@ import {
 } from "react-router-dom";
 
 import { WorkflowNavigation } from "../workflow/WorkflowNavigation";
-import { ActivityTicker } from "./ActivityTicker";
 import { FAB } from "./FAB";
 import { SearchPalette } from "./SearchPalette";
 import { Sidenav } from "./Sidenav";
 import { TopBar } from "./TopBar";
 import { RouteBoundary } from "./RouteBoundary";
 import { SpatialBackdrop } from "./SpatialBackdrop";
-import { LiveDataControls } from "./LiveDataControls";
+import "../styles/workspace.css";
 
 // Routes that already have their own primary CTA at the bottom-right where
 // the FAB would otherwise overlap content. The FAB is suppressed here.
@@ -73,6 +62,17 @@ export function AppShell() {
     }
   }, [location.pathname]);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  // Decorative spatial backdrop is opt-in (off by default); toggled in the About dialog.
+  const [spatialBackdrop, setSpatialBackdrop] = useState(() => {
+    try { return localStorage.getItem("clini-spatial-backdrop") === "on"; } catch { return false; }
+  });
+  useEffect(() => {
+    const sync = () => setSpatialBackdrop(() => {
+      try { return localStorage.getItem("clini-spatial-backdrop") === "on"; } catch { return false; }
+    });
+    window.addEventListener("clini-spatial-backdrop", sync);
+    return () => window.removeEventListener("clini-spatial-backdrop", sync);
+  }, []);
   const oneHealth =
     location.pathname === "/onehealth" ||
     location.pathname === "/interop" ||
@@ -121,22 +121,20 @@ export function AppShell() {
   }, [navigate, paletteOpen]);
 
   return (
-    <div className="spatial-shell min-h-screen bg-surface-bg text-ink-body">
-      <SpatialBackdrop />
+    <div className="spatial-shell compact-workspace min-h-screen bg-surface-bg text-ink-body">
+      {spatialBackdrop && <SpatialBackdrop />}
+
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:z-[100] focus:top-2 focus:left-2 focus:bg-surface-raised focus:p-3"
       >
         Skip to content
       </a>
-      <ActivityTicker oneHealth={oneHealth} />
       <TopBar onOpenSearch={openPalette} oneHealth={oneHealth} />
 
-      {/* Compensate for fixed ticker (28px on sm+) + topbar (56px) = 84px */}
-      <div className="pt-14 sm:pt-[84px] flex">
+      <div className="pt-14 flex">
         <Sidenav />
         <main id="main-content" tabIndex={-1} className="flex-1 min-w-0 pb-28 md:pb-24">
-          <LiveDataControls />
           <WorkflowNavigation />
           <div ref={contentRef}>
             <RouteBoundary>

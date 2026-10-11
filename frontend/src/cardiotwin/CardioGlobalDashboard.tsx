@@ -119,7 +119,7 @@ export default function CardioGlobalDashboard() {
   function inspectMetric(key: MetricKey) { if (key === "evidence_sources_connected") setShowSources(true); else if (key === "open_safety_events") setTab("safety"); else setSelectedMetric(key); }
   const stale = metrics?.last_updated_at ? Date.now() - Date.parse(metrics.last_updated_at) > 30 * 86400000 : false;
   return <div className="cgi-workspace" data-testid="cardio-global-dashboard">
-    <header className="cgi-header"><div><p className="cgi-kicker">CARDIOTWIN / GLOBAL INTELLIGENCE PLATFORM</p><h1>Cardiovascular Intelligence Workspace</h1><p>Source records · Transparent evidence mapping · Research briefs · Reproducible evidence passports</p></div><div className="cgi-header-actions">
+    <header className="cgi-header"><div><p className="cgi-kicker">CARDIOTWIN / GLOBAL EVIDENCE</p><h1>Cardiovascular Evidence Workspace</h1><p>Source records · Transparent evidence mapping · Research briefs · Reproducible evidence passports</p></div><div className="cgi-header-actions">
       {state.loading ? <span className="cgi-badge">Loading data status…</span> : <DataMode mode={metrics?.data_mode} />}
       <span className="cgi-badge">Corpus updated {metrics ? dateText(metrics.last_updated_at) : "unavailable"}{stale ? " · Older than 30 days" : ""}</span>
       <button className="cgi-badge" onClick={() => setRevision(value => value + 1)} aria-label="Refresh dashboard"><RefreshCw size={11} aria-hidden />Refresh</button>
@@ -139,7 +139,7 @@ export default function CardioGlobalDashboard() {
     {tab === "pipeline" && <div className="cgi-two-col"><PipelinePanel revision={revision} onProgram={setSelectedProgram} /><SafetyPanel revision={revision} sources={metrics?.source_configuration} /></div>}
     {tab === "safety" && <SafetyPanel revision={revision} sources={metrics?.source_configuration} />}
     {tab === "agents" && <div className="cgi-two-col"><AgentMonitorPanel revision={revision} onTask={setSelectedTask} /><div className="cgi-panel"><div className="cgi-panel-header"><span className="cgi-panel-title"><FileText size={14} aria-hidden />Evidence Passport Verifier</span></div><div className="cgi-panel-body"><PassportPanel /></div></div></div>}
-    <footer className="cgi-footer">CardioTwin Global Intelligence Platform · Source traceability supports research review · Evidence integrity does not establish clinical validity</footer>
+    <footer className="cgi-footer">CardioTwin Global Evidence · Source traceability supports research review · Evidence integrity does not establish clinical validity</footer>
     {selectedRecord && <RecordDrawer id={selectedRecord} onClose={() => setSelectedRecord(null)} />}
     {selectedTask && <TaskDrawer id={selectedTask} onClose={() => setSelectedTask(null)} />}
     {selectedMetric && <MetricRecords metric={selectedMetric} onRecord={inspectRecord} onClose={() => setSelectedMetric(null)} />}

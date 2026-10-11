@@ -427,6 +427,9 @@ from app.api import (  # noqa: E402
     foundry as foundry_api,
 )
 from app.api import (  # noqa: E402
+    iit_mandi as iit_mandi_api,
+)
+from app.api import (  # noqa: E402
     intake as intake_api,
 )
 from app.api import (  # noqa: E402
@@ -507,6 +510,8 @@ from app.api import (  # noqa: E402
 from app.api import (  # noqa: E402
     web_push as web_push_api,
 )
+from app.integrations.slicerheart.api import router as slicerheart_router  # noqa: E402
+from app.api.cross5 import router as cross5_router  # noqa: E402
 from app.integrations.trizetto.router import router as trizetto_router  # noqa: E402
 from app.mcp.server import router as mcp_router  # noqa: E402
 
@@ -572,6 +577,9 @@ app.include_router(web_push_api.router, prefix="/api/v1")
 
 app.include_router(onehealth_api.router, prefix="/api/v1")
 app.include_router(interop_api.router, prefix="/api/v1")
+app.include_router(iit_mandi_api.router, prefix="/api/v1")
+app.include_router(slicerheart_router, prefix="/api/v1")  # SlicerHeart integration (additive)
+app.include_router(cross5_router, prefix="/api/v1")  # CROSS-5 multiscale frames (additive)
 # Unified journey (read-only projection over interop + One Health) and runtime topology.
 app.include_router(journey_api.router, prefix="/api/v1")
 app.include_router(runtime_api.router, prefix="/api/v1")

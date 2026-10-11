@@ -7,6 +7,7 @@ import { useLive } from "../lib/useLive";
 import { Link } from "react-router-dom";
 
 import { cardio } from "../cardiotwin/api";
+import { SlicerHeartPanel } from "../cardiotwin/slicerheart/SlicerHeartPanel";
 import { CARD, SafetyBanner } from "../cardiotwin/panels";
 import { TARGETS, type TargetId } from "../cardiotwin/types";
 
@@ -246,6 +247,8 @@ export default function CardioEvaluation() {
           </Section>
         </>
       )}
+
+      <SlicerHeartPanel />
     </div>
   );
 }

@@ -25,6 +25,7 @@ function fixture(day = 21): HemoResult {
   return { engine_version: "hemo-test-1", as_of: at(day), patient_ref: "Patient/synthetic-hemo", safety_notice: "This is not a medical diagnosis or autonomous treatment recommendation.", research_label: "Research / clinical-support inference", review: { status: "REQUIRED", clinical_approval: false }, snapshot, timeline: [snapshot], transitions: [{ id: "volume-transition", timestamp: at(3), axis: "volume_status", from_level: "NORMAL", to_level: "ELEVATED", evidence_refs: ["weight-3", "edema-3"], explanation: "Weight +3.2 kg and newly documented edema support this possible congestion signal.", confidence: "LOW", review_required: true }], evidence: records, issues: [{ code: "CONFLICT", message: "Conflicting rhythm observations remain UNKNOWN." }], derived_measures: [{ id: "weight-delta", kind: "weight_change", value: 3.2, unit: "kg", evidence_refs: ["weight-3"], classification: "DERIVED", percent_change: 4, timestamp: at(day), baseline: 80, latest: 83.2, window_days: 7, transformation: "latest minus baseline" }], intervention_responses: [], demo: { label: "Synthetic longitudinal scenario", start_at: at(1), end_at: at(21), replay_dates: [at(3), at(12), at(21)], guide: ["Replay a date", "Inspect WHY", "Trace source"] } };
 }
 const mount = () => render(<MemoryRouter><CardioHemoTwin /></MemoryRouter>);
+const openPanel = (name: string) => fireEvent.click(screen.getByRole("tab", { name }));
 function deferred<T>() { let resolve!: (value: T) => void; let reject!: (reason: Error) => void; const promise = new Promise<T>((r, j) => { resolve = r; reject = j; }); return { promise, resolve, reject }; }
 
 beforeEach(() => {
@@ -49,10 +50,13 @@ describe("CARDIO-HEMO TWIN", () => {
     expect(screen.getByRole("heading", { name: "CARDIO-HEMO TWIN" })).toBeTruthy();
     expect(screen.getByTestId("hemo-axis-pump_function").textContent).toContain("UNKNOWN");
     expect(screen.getByTestId("hemo-axis-volume_status").textContent).toContain("INFERRED");
+    openPanel("Uncertainty");
     expect(screen.getByText("Limited confidence due to sparse recent evidence.")).toBeTruthy();
     expect(screen.getByText("Rhythm status uncertain.")).toBeTruthy();
+    fireEvent.click(screen.getByText(/Research \/ clinical-support inference.*human review required/));
     expect(screen.getByRole("note", { name: "Cardio-hemo clinical safety boundary" }).textContent).toContain("not a medical diagnosis");
     expect(screen.queryByRole("button", { name: /approve|prescribe/i })).toBeNull();
+    openPanel("Import & export");
     expect(screen.getByRole("link", { name: /Existing review/ }).getAttribute("href")).toBe("/interop");
     expect(cardio.predict).not.toHaveBeenCalled();
     expect(cardio.model).not.toHaveBeenCalled();
@@ -60,6 +64,8 @@ describe("CARDIO-HEMO TWIN", () => {
 
   it("WHY links contributing evidence to original records and transformation provenance", async () => {
     mount();
+    await screen.findByTestId("hemo-as-of");
+    openPanel("Evidence & WHY");
     const why = await screen.findByTestId("hemo-why");
     expect(why.textContent).toContain("Weight +3.2 kg");
     expect(why.textContent).toContain("Human review REQUIRED");
@@ -76,17 +82,23 @@ describe("CARDIO-HEMO TWIN", () => {
   it("clears current evidence while replay loads and never displays later hospital evidence in the historical result", async () => {
     const pending = deferred<HemoResult>();
     mount();
+    await screen.findByTestId("hemo-as-of");
+    openPanel("Evidence & WHY");
     await screen.findByTestId("hemo-evidence-hospital-20");
+    const anatomyViewer = screen.getByTestId("hemo-realistic-scene");
     vi.mocked(cardio.hemoDemo).mockReturnValueOnce(pending.promise);
     fireEvent.change(screen.getByLabelText("As-of date · end of day UTC"), { target: { value: "2026-08-03" } });
     fireEvent.click(screen.getByRole("button", { name: "Reconstruct as of date" }));
     expect(cardio.hemoDemo).toHaveBeenLastCalledWith(endAt(3));
     expect(screen.queryByTestId("hemo-evidence-hospital-20")).toBeNull();
     expect(screen.queryByTestId("hemo-axis-volume_status")).toBeNull();
+    expect(screen.getByTestId("hemo-realistic-scene")).toBe(anatomyViewer);
+    expect(screen.queryByLabelText("Current reconstruction context")).toBeNull();
     pending.resolve(fixture(3));
     await screen.findByTestId("hemo-as-of");
     expect(screen.getByTestId("hemo-as-of").textContent).toContain(at(3));
     expect(screen.queryByTestId("hemo-evidence-hospital-20")).toBeNull();
+    expect(screen.getByTestId("hemo-realistic-scene")).toBe(anatomyViewer);
   });
 
   it("ignores an obsolete reconstruction response under StrictMode", async () => {
@@ -106,14 +118,17 @@ describe("CARDIO-HEMO TWIN", () => {
     mount();
     await screen.findByTestId("hemo-as-of");
     expect(screen.getByTestId("hemo-axis-rhythm_stability").textContent).toContain("UNKNOWN");
+    openPanel("Uncertainty");
     expect(screen.getByText("Evidence window contains conflicting observations.")).toBeTruthy();
     expect(screen.getByText(/Conflicting rhythm observations remain UNKNOWN/)).toBeTruthy();
+    openPanel("Clinical patterns");
     expect(screen.getByText(/No evaluable intervention response/)).toBeTruthy();
   });
 
   it("rejects invalid or non-Bundle input locally and calls the existing API for a valid Bundle", async () => {
     mount();
     await screen.findByTestId("hemo-as-of");
+    openPanel("Import & export");
     const input = screen.getByLabelText("FHIR Bundle JSON");
     fireEvent.change(input, { target: { value: "invalid" } });
     fireEvent.click(screen.getByRole("button", { name: /Reconstruct FHIR evidence/ }));
@@ -149,6 +164,7 @@ describe("CARDIO-HEMO TWIN", () => {
     vi.mocked(cardio.hemoDemo).mockResolvedValueOnce(fixture(3));
     mount();
     await screen.findByTestId("hemo-as-of");
+    openPanel("Import & export");
     fireEvent.click(screen.getByRole("button", { name: "Export Evidence Passport" }));
     await waitFor(() => expect(cardio.hemoDemoPassport).toHaveBeenCalledWith(at(3)));
     await waitFor(() => expect(create).toHaveBeenCalledTimes(1));
@@ -173,6 +189,7 @@ describe("CARDIO-HEMO TWIN", () => {
     mount();
     await screen.findByTestId("hemo-as-of");
     fireEvent.change(screen.getByLabelText("As-of date · end of day UTC"), { target: { value: "2026-08-03" } });
+    openPanel("Import & export");
     fireEvent.click(screen.getByRole("button", { name: "Export snapshot" }));
     expect(filename).toBe("cardio-hemo-snapshot-2026-08-21.json");
     expect(cardio.hemoDemo).toHaveBeenCalledTimes(1);
@@ -186,12 +203,14 @@ describe("CARDIO-HEMO TWIN", () => {
     mount();
     await screen.findByTestId("hemo-as-of");
     const bundle = { resourceType: "Bundle", type: "collection", entry: [{ resource: { resourceType: "Patient", id: "synthetic-hemo" } }] };
+    openPanel("Import & export");
     fireEvent.change(screen.getByLabelText("FHIR Bundle JSON"), { target: { value: JSON.stringify(bundle) } });
     fireEvent.change(screen.getByLabelText(/Patient reference/), { target: { value: "Patient/synthetic-hemo" } });
     fireEvent.change(screen.getByLabelText("Reconstruction date · UTC"), { target: { value: "2026-08-21" } });
     fireEvent.click(screen.getByRole("button", { name: /Reconstruct FHIR evidence/ }));
     await screen.findByText("FHIR EVIDENCE RECONSTRUCTION");
     const original = vi.mocked(cardio.hemoFhir).mock.calls[0][0];
+    openPanel("Import & export");
     fireEvent.click(screen.getByRole("button", { name: "Export Evidence Passport" }));
     await waitFor(() => expect(cardio.hemoFhirPassport).toHaveBeenCalledWith({ ...original, as_of: at(21) }));
     expect(cardio.hemoPassport).not.toHaveBeenCalled();
@@ -204,6 +223,7 @@ describe("CARDIO-HEMO TWIN", () => {
     vi.mocked(cardio.hemoDemoPassport).mockReturnValueOnce(pending.promise);
     mount();
     await screen.findByTestId("hemo-as-of");
+    openPanel("Import & export");
     fireEvent.click(screen.getByRole("button", { name: "Export Evidence Passport" }));
     vi.mocked(cardio.hemoDemo).mockResolvedValueOnce(fixture(3));
     fireEvent.change(screen.getByLabelText("As-of date · end of day UTC"), { target: { value: "2026-08-03" } });
@@ -214,4 +234,59 @@ describe("CARDIO-HEMO TWIN", () => {
     await waitFor(() => expect(screen.getByRole("button", { name: "Export Evidence Passport" }).hasAttribute("disabled")).toBe(false));
     expect(screen.queryByTestId("cardiohemo-error")).toBeNull();
   });
+
+  it("keeps every detail area in one keyboard-accessible workspace while retaining import edits and anatomy", async () => {
+    mount();
+    await screen.findByTestId("hemo-as-of");
+    const anatomy = screen.getByTestId("hemo-realistic-scene");
+    const overview = screen.getByRole("tab", { name: "Overview" });
+    expect(screen.getAllByRole("tabpanel")).toHaveLength(1);
+    expect(screen.getByRole("tabpanel").getAttribute("aria-labelledby")).toBe(overview.id);
+    expect(screen.getAllByRole("tabpanel", { hidden: true })).toHaveLength(5);
+    // Expensive evidence/JSON detail trees mount on first use, then retain
+    // their DOM so drafts and native disclosures survive tab switches.
+    expect(screen.queryByLabelText("FHIR Bundle JSON")).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Patient cardiovascular timeline", hidden: true })).toBeNull();
+    fireEvent.keyDown(overview, { key: "End" });
+    const exchange = screen.getByRole("tab", { name: "Import & export" });
+    expect(exchange.getAttribute("aria-selected")).toBe("true");
+    expect(document.activeElement).toBe(exchange);
+    const input = screen.getByLabelText("FHIR Bundle JSON") as HTMLTextAreaElement;
+    fireEvent.change(input, { target: { value: '{"resourceType":"Bundle","entry":[]}' } });
+    fireEvent.keyDown(exchange, { key: "ArrowRight" });
+    expect(overview.getAttribute("aria-selected")).toBe("true");
+    expect(screen.getByTestId("hemo-realistic-scene")).toBe(anatomy);
+    openPanel("Import & export");
+    expect(screen.getByLabelText("FHIR Bundle JSON")).toBe(input);
+    expect(input.value).toBe('{"resourceType":"Bundle","entry":[]}');
+    expect(screen.getByRole("button", { name: "Export Evidence Passport" })).toBeTruthy();
+    expect(screen.getByRole("button", { name: /Reconstruct FHIR evidence/ })).toBeTruthy();
+    fireEvent.keyDown(exchange, { key: "Home" });
+    expect(document.activeElement).toBe(overview);
+    fireEvent.keyDown(overview, { key: "ArrowLeft" });
+    expect(document.activeElement).toBe(exchange);
+  });
+
+  it("opens retained evidence from a compact state and keeps provenance disclosures across panel changes", async () => {
+    mount();
+    await screen.findByTestId("hemo-as-of");
+    fireEvent.click(screen.getByText(/Detailed state vector/));
+    fireEvent.click(screen.getByTestId("hemo-axis-volume_status"));
+    expect(screen.getByRole("tab", { name: "Evidence & WHY" }).getAttribute("aria-selected")).toBe("true");
+    const why = screen.getByTestId("hemo-why");
+    fireEvent.click(within(why).getByRole("button", { name: /Weight.*83.2/ }));
+    const source = screen.getByRole("heading", { name: /Twin state.*original record/ }).closest("section")!;
+    const disclosure = within(source).getByText("Original record & provenance").closest("details")!;
+    fireEvent.click(within(source).getByText("Original record & provenance"));
+    expect(disclosure.open).toBe(true);
+    openPanel("Clinical patterns");
+    expect(screen.getByRole("heading", { name: "Derived measures" })).toBeTruthy();
+    openPanel("Uncertainty");
+    expect(screen.getByRole("heading", { name: "Uncertainty is part of the twin" })).toBeTruthy();
+    openPanel("Evidence & WHY");
+    expect(disclosure.open).toBe(true);
+    expect(screen.getByRole("heading", { name: "Patient cardiovascular timeline" })).toBeTruthy();
+    expect(within(source).getByTestId("hemo-evidence-weight-3").textContent).toContain("Explicit source mapping");
+  });
+
 });

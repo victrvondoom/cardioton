@@ -1,0 +1,48 @@
+/* MapLibre control chrome — square geometry and on-palette surfaces so the
+   third-party controls embed in the CardioTwin near-black product. Map tiles
+   (real geography) and data-layer paint are untouched.
+   Imported AFTER maplibre-gl/dist/maplibre-gl.css, so equal-specificity
+   rules here win the cascade. */
+
+.maplibregl-ctrl-group {
+  background: rgb(var(--surface-raised) / .92);
+  border-radius: 4px;
+}
+.maplibregl-ctrl-group button + button {
+  border-top-color: rgb(var(--surface-border));
+}
+/* Zoom/compass icons ship as dark (#333) SVG data-URIs — invert for dark chrome. */
+.maplibregl-ctrl-group .maplibregl-ctrl-icon {
+  filter: invert(1);
+  opacity: .85;
+}
+.maplibregl-ctrl button:not(:disabled):hover,
+.maplibregl-ctrl button:not(:disabled):active {
+  background-color: rgb(var(--surface-raised-hi));
+}
+
+.maplibregl-ctrl.maplibregl-ctrl-attrib {
+  background-color: rgb(var(--surface-raised) / .92);
+  color: rgb(var(--ink-muted));
+}
+.maplibregl-ctrl-attrib.maplibregl-compact {
+  background-color: rgb(var(--surface-raised) / .95);
+  color: rgb(var(--ink-muted));
+  border-radius: 2px;
+}
+.maplibregl-ctrl-attrib.maplibregl-compact-show,
+.maplibregl-ctrl-top-left > .maplibregl-ctrl-attrib.maplibregl-compact-show {
+  border-radius: 2px;
+}
+.maplibregl-ctrl-attrib-button {
+  background-color: rgb(var(--surface-raised) / .92);
+  border-radius: 2px;
+  /* Same info glyph as upstream, re-tinted for the dark chip. */
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill-rule%3D%22evenodd%22%20fill%3D%22%23F7F7F4%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20d%3D%22M4%2010a6%206%200%201%200%2012%200%206%206%200%201%200-12%200m5-3a1%201%200%201%200%202%200%201%201%200%201%200-2%200m0%203a1%201%200%201%201%202%200v3a1%201%200%201%201-2%200%22%2F%3E%3C%2Fsvg%3E");
+}
+.maplibregl-ctrl-attrib.maplibregl-compact-show .maplibregl-ctrl-attrib-button {
+  background-color: rgb(var(--surface-raised-hi));
+}
+.maplibregl-ctrl-attrib a {
+  color: rgb(var(--accent-cyan));
+}

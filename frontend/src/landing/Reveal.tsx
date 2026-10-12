@@ -1,11 +1,13 @@
 /**
- * Reveal — scroll-triggered fade/rise.
+ * Reveal — scroll-triggered pixel-flavoured reveal.
  *
- * Stands in for framer-motion's `whileInView` (not a dependency of this app).
- * One IntersectionObserver per element, disconnected after the first reveal so
- * the effect is once-only, matching the original `viewport={{ once: true }}`.
+ * One IntersectionObserver per element, disconnected after the first reveal.
+ * A short rise + fade; under prefers-reduced-motion the landing stylesheet
+ * forces content visible, and without IntersectionObserver (jsdom) it shows
+ * immediately rather than leaving content hidden.
  */
 import { useEffect, useRef, useState } from "react";
+
 import type { CSSProperties, ElementType, ReactNode } from "react";
 
 interface Props {
@@ -16,7 +18,7 @@ interface Props {
   style?: CSSProperties;
   as?: ElementType;
   id?: string;
-  /** Forwarded so sections can drive the 3D scene on hover/focus. */
+  /** Forwarded for callers that drive hover-linked effects. */
   onMouseEnter?: () => void;
   onFocus?: () => void;
 }
@@ -37,8 +39,6 @@ export default function Reveal({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    // No IntersectionObserver (very old browser / jsdom) → show immediately
-    // rather than leaving the content invisible.
     if (typeof IntersectionObserver === "undefined") {
       setVisible(true);
       return;
@@ -62,13 +62,7 @@ export default function Reveal({
       id={id}
       onMouseEnter={onMouseEnter}
       onFocus={onFocus}
-      className={[
-        "aperture-reveal",
-        visible ? "is-visible" : "",
-        className ?? "",
-      ]
-        .filter(Boolean)
-        .join(" ")}
+      className={["pl-reveal", visible ? "is-visible" : "", className ?? ""].filter(Boolean).join(" ")}
       style={{ ...style, ["--reveal-delay" as string]: `${delay}ms` }}
     >
       {children}

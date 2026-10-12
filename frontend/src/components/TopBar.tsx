@@ -33,6 +33,7 @@ interface Props {
 export function TopBar({ onOpenSearch, oneHealth = false }: Props) {
   const { theme, toggle } = useTheme();
   const [scrolled, setScrolled] = useState(false);
+  const searchShortcut = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform) ? "⌘K" : "Ctrl K";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -45,8 +46,8 @@ export function TopBar({ onOpenSearch, oneHealth = false }: Props) {
     <header
       className={`fixed top-0 inset-x-0 z-30 transition-colors duration-200 border-b ${
         scrolled
-          ? "backdrop-blur-xl bg-surface-bg/90 border-surface-border"
-          : "bg-surface-bg/70 backdrop-blur-md border-surface-border/60"
+          ? "bg-surface-bg/95 border-surface-border"
+          : "bg-surface-bg/90 border-surface-border/60"
       }`}
     >
       <div className="h-14 flex items-center justify-between px-3 sm:px-4 lg:px-5 gap-2 sm:gap-3">
@@ -64,8 +65,9 @@ export function TopBar({ onOpenSearch, oneHealth = false }: Props) {
             height={32}
           />
           <div className="leading-tight min-w-0">
-            <div className="text-ui-primary tracking-[0.01em] text-ink-primary text-[15px] truncate">
-              CARDIOTON<span className="text-accent-brand">.</span>
+            <div className="text-ui-primary tracking-[0.01em] text-ink-primary text-[15px] truncate inline-flex items-center gap-1.5">
+              CARDIOTON
+              <span aria-hidden="true" className="inline-block h-[7px] w-[7px] bg-accent-brand" />
             </div>
             <div className="text-compact hidden sm:block text-[9px] text-ink-muted">
               World Cardiology Clinic
@@ -81,8 +83,8 @@ export function TopBar({ onOpenSearch, oneHealth = false }: Props) {
             className="w-full h-9 px-3 flex items-center gap-2.5 rounded-md border border-surface-border bg-surface-raised hover:border-surface-border-hi hover:shadow-[var(--shadow-raise)] text-left text-[13px] text-ink-muted transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand"
           >
             <Search size={14} className="text-ink-faint" />
-            <span className="text-ui-secondary flex-1">Search cases, policies, agents…</span>
-            <span className="text-mono-tech text-[10px] text-ink-faint">⌘K</span>
+            <span className="text-ui-secondary flex-1">Search workspaces and tools…</span>
+            <span className="text-mono-tech text-[10px] text-ink-faint">{searchShortcut}</span>
           </button>
         </div>
 
@@ -297,10 +299,7 @@ function UserChip() {
           aria-label="Profile and activity"
           className="flex items-center gap-2 h-8 px-1 md:pr-2.5 rounded-md border border-surface-border bg-surface-raised hover:border-surface-border-hi hover:shadow-[var(--shadow-raise)] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand"
         >
-          <div
-            className="w-6 h-6 rounded-full grid place-items-center text-[10px] text-mono-tech font-semibold text-white"
-            style={{ background: "linear-gradient(135deg, #121212 0%, #737373 100%)" }}
-          >
+          <div className="w-6 h-6 rounded grid place-items-center text-[10px] text-mono-tech font-semibold text-accent-brand bg-accent-brand/15">
             {initials}
           </div>
           <div className="leading-tight hidden lg:block">

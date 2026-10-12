@@ -12,90 +12,33 @@ export default function LiveStatus() {
     useSystemHealth();
 
   return (
-    <section
-      id="live-status"
-      style={{ position: "relative", zIndex: 1, padding: "6rem 1.5rem", scrollMarginTop: "5rem" }}
-    >
-      <div style={{ maxWidth: "760px", margin: "0 auto" }}>
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.78rem",
-            letterSpacing: "0.14em",
-            color: "var(--cyan)",
-            marginBottom: "0.75rem",
-            textAlign: "center",
-          }}
-        >
-          TRY IT
-        </p>
-        <h2
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(1.6rem, 3vw, 2.2rem)",
-            fontWeight: 400,
-            textAlign: "center",
-            marginBottom: "2rem",
-          }}
-        >
-          A real call to the running system, right now.
-        </h2>
+    <section id="live-status" className="pl-section">
+      <div className="pl-section-inner" style={{ maxWidth: "760px" }}>
+        <div className="pl-section-head">
+          <Reveal as="p" className="pl-kicker" style={{ justifyContent: "center" }}>
+            Try it
+          </Reveal>
+          <Reveal as="h2" className="pl-h2" delay={60}>
+            A real call to the running system, right now.
+          </Reveal>
+        </div>
 
-        <Reveal
-          className="aperture-glass"
-          style={{
-            borderRadius: "8px",
-            padding: "1.5rem",
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.85rem",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "1rem",
-              marginBottom: "1rem",
-              flexWrap: "wrap",
-            }}
-          >
-            <span style={{ opacity: 0.5 }}>~ curl {HEALTH_URL}</span>
-            <button
-              type="button"
-              onClick={refresh}
-              disabled={loading}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.4rem",
-                background: "none",
-                border: "1px solid var(--overlay-border-faint)",
-                borderRadius: "4px",
-                padding: "0.3rem 0.6rem",
-                color: "var(--bone)",
-                opacity: 0.8,
-                fontFamily: "var(--font-mono)",
-                fontSize: "0.72rem",
-                cursor: loading ? "default" : "pointer",
-              }}
-            >
-              {loading ? (
-                <Loader2 size={12} className="aperture-spin" />
-              ) : (
-                <RotateCw size={12} />
-              )}
+        <Reveal className="pl-panel">
+          <div className="pl-panel-head">
+            <span>~ curl {HEALTH_URL}</span>
+            <button type="button" onClick={refresh} disabled={loading} className="pl-link-btn">
+              {loading ? <Loader2 size={12} className="pl-spin" /> : <RotateCw size={12} />}
               Refresh status
             </button>
           </div>
 
-          {loading && <div style={{ opacity: 0.6 }}>connecting...</div>}
+          {loading && <div style={{ color: "var(--muted)" }}>connecting...</div>}
 
           {error && !loading && (
-            <div style={{ color: "var(--ember)" }}>
+            <div style={{ color: "var(--p-red)" }}>
               request failed: {error}
-              {updatedAt && <div style={{ marginTop: "0.5rem", fontSize: "0.78rem" }}>Last successful reading: {new Date(updatedAt).toLocaleString()}. Previously: API {health?.status}, database {health?.db}.</div>}
-              <div style={{ opacity: 0.5, marginTop: "0.5rem", fontSize: "0.78rem" }}>
+              {updatedAt && <div style={{ marginTop: "0.5rem", fontSize: "0.74rem", color: "var(--muted)" }}>Last successful reading: {new Date(updatedAt).toLocaleString()}. Previously: API {health?.status}, database {health?.db}.</div>}
+              <div style={{ color: "var(--faint)", marginTop: "0.5rem", fontSize: "0.74rem" }}>
                 Refresh to retry the running service.
               </div>
             </div>
@@ -103,19 +46,12 @@ export default function LiveStatus() {
 
           {health && !loading && !error && (
             <>
-              <div style={{ color: "var(--cyan)", marginBottom: "0.6rem" }}>
+              <div style={{ color: "var(--p-orange)", marginBottom: "0.6rem" }}>
                 &#8618; {latencyMs}ms &middot; status: {health.status} &middot; db:{" "}
                 {health.db}
                 {checkedAt ? ` · ${new Date(checkedAt).toLocaleTimeString()}` : ""}
               </div>
-              <pre
-                style={{
-                  margin: 0,
-                  whiteSpace: "pre-wrap",
-                  opacity: 0.75,
-                  lineHeight: 1.6,
-                }}
-              >
+              <pre>
                 {JSON.stringify(
                   {
                     healthz: health,

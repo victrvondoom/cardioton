@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- CardioTwin Icon - Simplified for favicon -->
+
+  <!-- Left Heart -->
+  <path d="M16 32 C16 24, 24 16, 32 24 C40 16, 48 24, 48 32 C48 40, 40 48, 32 48 C24 48, 16 40, 16 32 Z"
+        fill="#ff4757"/>
+
+  <!-- Right Heart (offset) -->
+  <path d="M24 32 C24 24, 32 16, 40 24 C48 16, 56 24, 56 32 C56 40, 48 48, 40 48 C32 48, 24 40, 24 32 Z"
+        fill="#ff6b81" opacity="0.9"/>
+
+  <!-- Connecting Path -->
+  <path d="M32 32 Q36 28, 40 32" stroke="#ffa502" stroke-width="2" fill="none"/>
+
+  <!-- Center Dot (Evidence Hub) -->
+  <circle cx="32" cy="32" r="3" fill="#ffa502"/>
+</svg>

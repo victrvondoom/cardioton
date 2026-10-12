@@ -11,14 +11,14 @@ Hackathon 2026 Track A requirements:
 All functionality is built on top of the existing CardioTon platform.
 """
 
-from app.iit_mandi.scenarios import (
-    create_synthetic_patient,
-    generate_demo_scenarios,
-    IIT_MANDI_SCENARIOS,
-)
 from app.iit_mandi.demo import (
     IIT_MANDI_Demo,
     run_demo_sequence,
+)
+from app.iit_mandi.scenarios import (
+    IIT_MANDI_SCENARIOS,
+    create_synthetic_patient,
+    generate_demo_scenarios,
 )
 
 __all__ = [

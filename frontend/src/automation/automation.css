@@ -7,31 +7,31 @@
  * BASE VARIABLES
  * ============================================================================ */
 :root {
-  --automation-primary: #6366f1;
-  --automation-primary-hover: #4f46e5;
-  --automation-primary-light: rgba(99, 102, 241, 0.1);
+  --automation-primary: rgb(var(--accent-brand));
+  --automation-primary-hover: rgb(var(--accent-brand-glow));
+  --automation-primary-light: rgb(var(--accent-brand) / 0.12);
   
-  --automation-secondary: #6b7280;
-  --automation-secondary-hover: #4b5563;
+  --automation-secondary: rgb(var(--ink-muted));
+  --automation-secondary-hover: rgb(var(--ink-faint));
   
-  --automation-success: #10b981;
-  --automation-warning: #f59e0b;
-  --automation-danger: #ef4444;
-  --automation-info: #3b82f6;
+  --automation-success: rgb(var(--accent-green));
+  --automation-warning: rgb(var(--accent-amber));
+  --automation-danger: rgb(var(--accent-red));
+  --automation-info: rgb(var(--accent-cyan));
   
-  --automation-bg: #1f2937;
-  --automation-bg-light: #374151;
-  --automation-bg-lighter: #4b5563;
-  --automation-border: #374151;
-  --automation-text: #f3f4f6;
-  --automation-text-muted: #9ca3af;
+  --automation-bg: rgb(var(--surface-raised));
+  --automation-bg-light: rgb(var(--surface-raised-hi));
+  --automation-bg-lighter: rgb(var(--surface-border-hi));
+  --automation-border: rgb(var(--surface-border));
+  --automation-text: rgb(var(--ink-primary));
+  --automation-text-muted: rgb(var(--ink-muted));
   
   --automation-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
   --automation-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
   
-  --automation-radius: 8px;
-  --automation-radius-lg: 12px;
-  --automation-radius-sm: 4px;
+  --automation-radius: 4px;
+  --automation-radius-lg: 4px;
+  --automation-radius-sm: 2px;
   
   --automation-transition: all 0.2s ease;
   --automation-transition-slow: all 0.3s ease;
@@ -109,7 +109,7 @@
 }
 
 .automation-panel__stop:hover {
-  background: #dc2626;
+  background: rgb(var(--accent-red));
 }
 
 .automation-panel__run {
@@ -307,8 +307,8 @@
 }
 
 .automation-btn--danger:hover:not(:disabled) {
-  background: #dc2626;
-  border-color: #dc2626;
+  background: rgb(var(--accent-red));
+  border-color: rgb(var(--accent-red));
 }
 
 .automation-btn--text {
@@ -361,7 +361,7 @@
   width: 2rem;
   height: 2rem;
   background: var(--automation-primary-light);
-  border-radius: 50%;
+  border-radius: 0;
 }
 
 .automation-state-indicator--running .automation-state-indicator__icon {
@@ -407,7 +407,7 @@
 
 .automation-progress-bar__fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--automation-primary), var(--automation-primary-hover));
+  background: var(--automation-primary);
   border-radius: 4px;
   transition: width 0.3s ease;
 }
@@ -1205,7 +1205,7 @@
   height: 1.5rem;
   background: var(--automation-primary);
   color: white;
-  border-radius: 50%;
+  border-radius: 0;
   font-size: 0.75rem;
   font-weight: 600;
 }
@@ -1562,8 +1562,8 @@
 }
 
 .automation-toolbar__control-btn--warning:hover:not(:disabled) {
-  background: #d97706;
-  border-color: #d97706;
+  background: rgb(var(--accent-amber));
+  border-color: rgb(var(--accent-amber));
 }
 
 .automation-toolbar__control-btn--danger {
@@ -1573,8 +1573,8 @@
 }
 
 .automation-toolbar__control-btn--danger:hover:not(:disabled) {
-  background: #dc2626;
-  border-color: #dc2626;
+  background: rgb(var(--accent-red));
+  border-color: rgb(var(--accent-red));
 }
 
 .automation-toolbar__quick-actions {
@@ -1644,7 +1644,7 @@
   z-index: 900;
   width: 56px;
   height: 56px;
-  border-radius: 50%;
+  border-radius: 0;
   background: var(--automation-primary);
   border: none;
   color: white;
@@ -1695,7 +1695,7 @@
   width: 8px;
   height: 8px;
   background: var(--automation-success);
-  border-radius: 50%;
+  border-radius: 0;
   animation: pulse 2s infinite;
 }
 
@@ -1703,7 +1703,7 @@
   width: 100%;
   height: 100%;
   background: currentColor;
-  border-radius: 50%;
+  border-radius: 0;
 }
 
 .automation-floating-btn__progress {
@@ -1814,7 +1814,7 @@
   align-items: center;
   justify-content: center;
   background: var(--automation-primary-light);
-  border-radius: 50%;
+  border-radius: 0;
 }
 
 .automation-status-bar__icon--running {

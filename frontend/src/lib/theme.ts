@@ -1,6 +1,7 @@
 ﻿/**
  * Theme management with localStorage persistence.
- * Default: light. Dark applied via `.dark` class on <html>.
+ * Default: dark (the near-black pixel-native palette is the primary
+ * experience). Light is applied by removing the `.dark` class on <html>.
  *
  * The provider reads localStorage BEFORE first paint via a tiny inline
  * script in index.html (see frontend/index.html) to avoid a flash of
@@ -24,8 +25,7 @@ const listeners = new Set<(t: Theme) => void>();
 function readStoredTheme(): Theme {
   if (typeof window === "undefined") return "dark";
   const stored = window.localStorage.getItem(STORAGE_KEY);
-  // Default to dark — matches the deployed clinical-healthcare showcase.
-  // Users who toggle to light have it persisted.
+  // Keep the runtime default aligned with the pre-paint bootstrap in index.html.
   return stored === "light" ? "light" : "dark";
 }
 

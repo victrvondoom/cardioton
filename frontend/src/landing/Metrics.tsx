@@ -9,95 +9,48 @@ export default function Metrics() {
 
   // Every number is read from this deployment (/capabilities + /healthz); an unavailable value shows "--".
   const sys = capabilities?.system;
-  const cards: { label: string; display: ReactNode }[] = [
+  const cards: { label: string; display: ReactNode; accent?: boolean }[] = [
     { label: "agents in the pipeline", display: <CountUp value={sys?.agents ?? null} /> },
     { label: "sub-agents", display: <CountUp value={sys?.sub_agents ?? null} /> },
     { label: "payer policies indexed", display: <CountUp value={sys?.policies_indexed ?? null} /> },
     { label: "CMS-0057-F clauses tracked", display: <CountUp value={capabilities?.compliance?.cms_0057f_clauses_tracked ?? null} /> },
-    { label: "this health check", display: latencyMs != null ? `${latencyMs}ms` : "--" },
+    { label: "this health check", display: latencyMs != null ? `${latencyMs}ms` : "--", accent: true },
   ];
 
   return (
-    <section
-      id="metrics"
-      style={{ position: "relative", zIndex: 1, padding: "6rem 1.5rem", scrollMarginTop: "5rem" }}
-    >
-      <div style={{ maxWidth: "900px", margin: "0 auto" }}>
-        <p
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.78rem",
-            letterSpacing: "0.14em",
-            color: "var(--cyan)",
-            marginBottom: "0.75rem",
-            textAlign: "center",
-          }}
-        >
-          DEPLOYMENT METRICS
-        </p>
-        <h2
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(1.6rem, 3vw, 2.2rem)",
-            fontWeight: 400,
-            marginBottom: "0.75rem",
-            textAlign: "center",
-          }}
-        >
-          Numbers from this running instance.
-        </h2>
-        <p
-          style={{
-            textAlign: "center",
-            opacity: 0.6,
-            marginBottom: "2.5rem",
-            fontSize: "0.92rem",
-          }}
-        >
-          {error
-            ? `Refresh unavailable.${updatedAt ? ` Showing the last successful reading from ${new Date(updatedAt).toLocaleTimeString()}.` : " No successful reading yet."}`
-            : loading
-            ? "fetching..."
-            : health
-              ? `Checked ${updatedAt ? new Date(updatedAt).toLocaleTimeString() : "this session"}. Updates follow your live update preference.`
-              : "backend unreachable right now."}
-          {" "}<button type="button" onClick={refresh} disabled={loading} style={{ color: "var(--cyan)", textDecoration: "underline", textUnderlineOffset: "3px", cursor: loading ? "default" : "pointer" }}>{loading ? "Refreshing…" : "Refresh metrics"}</button>
-        </p>
+    <section id="metrics" className="pl-section">
+      <div className="pl-section-inner">
+        <div className="pl-section-head">
+          <Reveal as="p" className="pl-kicker">
+            Deployment metrics
+          </Reveal>
+          <Reveal as="h2" className="pl-h2" delay={60}>
+            Numbers from this running instance.
+          </Reveal>
+          <Reveal as="p" className="pl-section-sub" delay={120}>
+            {error
+              ? `Refresh unavailable.${updatedAt ? ` Showing the last successful reading from ${new Date(updatedAt).toLocaleTimeString()}.` : " No successful reading yet."}`
+              : loading
+              ? "fetching..."
+              : health
+                ? `Checked ${updatedAt ? new Date(updatedAt).toLocaleTimeString() : "this session"}. Updates follow your live update preference.`
+                : "backend unreachable right now."}{" "}
+            <button type="button" onClick={refresh} disabled={loading} className="pl-link-btn">{loading ? "Refreshing…" : "Refresh metrics"}</button>
+          </Reveal>
+        </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-            gap: "1.5rem",
-          }}
-        >
+        <div className="pl-metrics">
           {cards.map((card, i) => (
             <Reveal
               key={card.label}
               delay={i * 50}
-              className="aperture-glass"
-              style={{ borderRadius: "8px", padding: "1.5rem", textAlign: "center" }}
+              className="pl-metric"
+              style={{ borderRight: "none", borderBottom: "none", background: "transparent", padding: 0 }}
             >
-              <div
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "1.8rem",
-                  color: "var(--cyan)",
-                  marginBottom: "0.4rem",
-                }}
-              >
-                {card.display}
+              <div className="pl-metric-value">
+                {card.accent ? <span className="pl-metric-accent">{card.display}</span> : card.display}
               </div>
-              <div
-                style={{
-                  fontFamily: "var(--font-mono)",
-                  fontSize: "0.72rem",
-                  opacity: 0.6,
-                  letterSpacing: "0.04em",
-                }}
-              >
-                {card.label}
-              </div>
+              <div className="pl-metric-label">{card.label}</div>
             </Reveal>
           ))}
         </div>

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * PHI Redaction Banner — visibly simulates AWS Bedrock Guardrails firing on a case
  * with sensitive PHI in the physician note. Slide-in from top with a red-tinted
  * backdrop pulse, auto-dismisses after 8s.
@@ -58,12 +58,12 @@ export function PHIBanner({
 
   return (
     <>
-      {/* Subtle red-tinted backdrop pulse */}
+      {/* Flat backdrop pulse */}
       <div
         aria-hidden
         className="fixed inset-0 z-40 pointer-events-none"
         style={{
-          background: "radial-gradient(circle at top, rgba(18, 18, 18, 0.12), transparent 60%)",
+          background: "rgb(var(--ink-primary) / 0.05)",
           animation: "phi-backdrop 0.4s ease-out both",
         }}
       />

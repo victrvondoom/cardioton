@@ -124,7 +124,7 @@ def access_analysis(
         if added_facility.get("node") not in {n["id"] for n in _NODES}:
             raise ValueError("added facility must reference an existing node")
         facilities.append({**added_facility, "id": added_facility.get("id", "new-facility")})
-    closed = {tuple(e) for e in (closed_edges or [])}
+    closed = set(closed_edges or [])
     nodes = {node["id"]: node for node in _NODES}
 
     if from_node is not None:

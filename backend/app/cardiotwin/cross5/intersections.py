@@ -139,7 +139,7 @@ def temporal_overlap(records: list[EvidenceRecord]) -> dict[str, Any]:
     wall_clock = [r for r in records if r.temporal.resolution not in ("model_time",)]
     if len(wall_clock) < 2:
         return {"overlaps": [], "note": "Need at least two wall-clock records to intersect."}
-    overlaps = []
+    overlaps: list[dict[str, Any]] = []
     for i, a in enumerate(wall_clock):
         for b in wall_clock[i + 1 :]:
             start = max(a.temporal.start, b.temporal.start)
@@ -163,7 +163,7 @@ def temporal_overlap(records: list[EvidenceRecord]) -> dict[str, Any]:
                     "subject_match": a.subject == b.subject,
                 }
             )
-    overlaps.sort(key=lambda o: -o["overlap_seconds"])
+    overlaps.sort(key=lambda o: -float(o["overlap_seconds"]))
     return {
         "overlaps": overlaps,
         "notice": (

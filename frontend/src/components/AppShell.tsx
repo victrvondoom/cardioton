@@ -15,6 +15,7 @@ import {
 } from "react-router-dom";
 
 import { WorkflowNavigation } from "../workflow/WorkflowNavigation";
+import { PixelTransition } from "../pixel/PixelTransition";
 import { FAB } from "./FAB";
 import { SearchPalette } from "./SearchPalette";
 import { Sidenav } from "./Sidenav";
@@ -23,9 +24,9 @@ import { RouteBoundary } from "./RouteBoundary";
 import { SpatialBackdrop } from "./SpatialBackdrop";
 import "../styles/workspace.css";
 
-// Routes that already have their own primary CTA at the bottom-right where
-// the FAB would otherwise overlap content. The FAB is suppressed here.
-const _SUPPRESS_FAB_ROUTES = new Set(["/intake"]);
+// Keep the new-case shortcut beside the patient workflow. On research canvases
+// and evidence inspectors it obscures measurements and map controls.
+const _CASE_FAB_ROUTES = new Set(["/dashboard", "/cases"]);
 
 export function AppShell() {
   const location = useLocation();
@@ -79,7 +80,7 @@ export function AppShell() {
     location.pathname === "/oah-bridge" ||
     location.pathname.startsWith("/journey") ||
     location.pathname.startsWith("/aquahealth");
-  const showFab = !_SUPPRESS_FAB_ROUTES.has(location.pathname);
+  const showFab = _CASE_FAB_ROUTES.has(location.pathname) || location.pathname.startsWith("/cases/");
   // Atlas tabs share one reconstruction; retain it across workspace navigation.
   const outletKey = location.pathname === "/cardiotwin/atlas" || location.pathname.startsWith("/cardiotwin/atlas/") ? "/cardiotwin/atlas" : location.pathname;
 
@@ -122,6 +123,7 @@ export function AppShell() {
 
   return (
     <div className="spatial-shell compact-workspace min-h-screen bg-surface-bg text-ink-body">
+      <PixelTransition locationKey={location.pathname} />
       {spatialBackdrop && <SpatialBackdrop />}
 
       <a

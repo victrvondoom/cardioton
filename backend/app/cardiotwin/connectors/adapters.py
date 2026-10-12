@@ -77,12 +77,12 @@ def _categories(text: str) -> dict[str, Any]:
             area = candidate
             break
     modality = EvidenceModality.UNKNOWN
-    for pattern, candidate in [(r"\b(ecg|electrocardiogram)\b", EvidenceModality.ECG),
+    for pattern, modality_candidate in [(r"\b(ecg|electrocardiogram)\b", EvidenceModality.ECG),
                                (r"\b(ct|computed tomography)\b", EvidenceModality.CT),
                                (r"\b(echocardiography|echocardiogram)\b", EvidenceModality.ECHO),
                                (r"\b(mri|cmr)\b", EvidenceModality.MRI)]:
         if re.search(pattern, text):
-            modality = candidate
+            modality = modality_candidate
             break
     return {"clinical_area": area, "modality": modality, "task_category": EvidenceTaskCategory.UNKNOWN,
             "mapping_rationale": [f"Lexical mapping {PARSER_VERSION}: clinical area={area.value}, modality={modality.value}; task not inferred. Requires human review."]}

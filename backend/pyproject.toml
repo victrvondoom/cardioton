@@ -103,6 +103,10 @@ ignore = ["E501"]  # ruff formatter handles line length
 "app/integrations/**/*.py" = ["B008"]
 # This additional router uses the same required FastAPI dependency defaults.
 "app/cardiotwin/evidence/api.py" = ["B008"]
+"app/cardiotwin/ecg/api.py" = ["B008"]
+"app/cardiotwin/multimodal/api.py" = ["B008"]
+"app/cardiotwin/wearables/api.py" = ["B008"]
+"app/cardiotwin/api/**/*.py" = ["B008"]
 # N806/N803/N812 ("should be lowercase") false-positive on the OncoTwin
 # simulator's linear-algebra / matrix code, which deliberately follows
 # NumPy/stats convention: capitals for matrices (Z, R, B) and short module

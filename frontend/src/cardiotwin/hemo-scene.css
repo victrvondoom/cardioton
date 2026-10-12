@@ -1,78 +1,76 @@
 .hemo-scene {
   --hemo-ink: rgb(var(--ink-primary));
   position: relative; isolation: isolate; margin: 0 0 1rem; padding: 1.2rem;
-  border: 1px solid rgb(var(--surface-border)); border-radius: 1.25rem; color: var(--hemo-ink);
-  background: linear-gradient(135deg, rgb(var(--surface-raised-hi) / .7), rgb(var(--surface-bg)));
-  box-shadow: inset 0 1px rgb(var(--ink-primary) / .04), 0 20px 50px -35px #0008;
+  border: 1px solid rgb(var(--surface-border)); border-radius: 4px; color: var(--hemo-ink);
+  background: rgb(var(--surface-raised));
 }
 .hemo-scene__caption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; align-items: center; }
 .hemo-scene__eyebrow { display: inline-flex; align-items: center; gap: .4rem; font-size: .6rem; text-transform: uppercase; letter-spacing: .14em; color: rgb(var(--ink-muted)); }
-.hemo-scene__caption h3 { margin: .45rem 0 0; font-size: 1.05rem; font-weight: 650; letter-spacing: -.025em; }
+.hemo-scene__caption h3 { margin: .45rem 0 0; font-size: 1.05rem; font-weight: 600; letter-spacing: -.025em; }
 .hemo-scene__caption-actions { display: flex; align-items: center; gap: .65rem; }
-.hemo-scene__tag { padding: .4rem .55rem; border: 1px solid rgb(var(--surface-border)); border-radius: .4rem; font-size: .51rem; letter-spacing: .1em; color: rgb(var(--ink-muted)); }
+.hemo-scene__tag { padding: .4rem .55rem; border: 1px solid rgb(var(--surface-border)); border-radius: 2px; font-size: .51rem; letter-spacing: .1em; color: rgb(var(--ink-muted)); }
 .hemo-scene button, .hemo-scene select { font: inherit; }
 .hemo-scene__caption-actions button, .hemo-scene__toolbar button, .hemo-scene__view-controls button {
   display: inline-flex; align-items: center; justify-content: center; gap: .4rem; min-height: 34px; padding: .45rem .65rem;
-  border: 1px solid rgb(var(--surface-border)); border-radius: .5rem; background: rgb(var(--surface-bg) / .5); color: rgb(var(--ink-body)); font-size: .65rem; cursor: pointer;
+  border: 1px solid rgb(var(--surface-border)); border-radius: 2px; background: rgb(var(--surface-bg) / .5); color: rgb(var(--ink-body)); font-size: .65rem; cursor: pointer;
 }
 .hemo-scene button:focus-visible, .hemo-scene select:focus-visible, .hemo-scene summary:focus-visible { outline: 2px solid rgb(var(--accent-brand)); outline-offset: 3px; }
 .hemo-scene button:disabled { opacity: .4; cursor: default; }
 .hemo-scene__toolbar { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: 1.1rem; }
 .hemo-scene__toolbar button[aria-pressed="true"], .hemo-scene__view-controls button[aria-pressed="true"] { background: rgb(var(--accent-brand) / .12); color: rgb(var(--ink-primary)); border-color: rgb(var(--accent-brand) / .6); }
-.hemo-scene__space { position: relative; min-height: 510px; margin-top: .8rem; border: 1px solid rgb(var(--surface-border) / .6); border-radius: 1rem; overflow: hidden; background: radial-gradient(ellipse at 50% 40%, #343345 0, #191e2b 39%, #101723 73%); }
+.hemo-scene__space { position: relative; min-height: 510px; margin-top: .8rem; border: 1px solid rgb(var(--surface-border) / .6); border-radius: 4px; overflow: hidden; background: rgb(var(--surface-bg)); }
 .hemo-scene__viewport { position: absolute; inset: 0 19%; overflow: hidden; }
 .hemo-scene__canvas { position: absolute !important; inset: 0; touch-action: none; }
 .hemo-scene__canvas canvas { cursor: grab; }
 .hemo-scene__canvas canvas:active { cursor: grabbing; }
-.hemo-scene__studio-glow { position: absolute; inset: 9% 4% 12%; border-radius: 50%; background: radial-gradient(ellipse, #d8a19515, #9dbbd50a 40%, transparent 70%); pointer-events: none; }
 .hemo-scene__preview { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1rem; pointer-events: none; }
-.hemo-scene__preview img { width: min(100%, 430px); max-height: 410px; object-fit: contain; filter: drop-shadow(0 20px 26px #0008); }
-.hemo-scene__preview > span { max-width: 250px; font-size: .65rem; color: #bac3d3; text-align: center; }
-.hemo-scene__model-caption { position: absolute; left: 0; right: 0; bottom: 1.15rem; text-align: center; pointer-events: none; color: #dce2ee; }
-.hemo-scene__model-caption span { color: #929caf; font-size: .52rem; letter-spacing: .22em; }
+.hemo-scene__preview img { width: min(100%, 430px); max-height: 410px; object-fit: contain; filter: drop-shadow(0 8px 14px rgb(0 0 0 / .4)); }
+.hemo-scene__preview > span { max-width: 250px; font-size: .65rem; color: rgb(var(--ink-muted)); text-align: center; }
+.hemo-scene__model-caption { position: absolute; left: 0; right: 0; bottom: 1.15rem; text-align: center; pointer-events: none; color: rgb(var(--ink-primary)); }
+.hemo-scene__model-caption span { color: rgb(var(--ink-muted)); font-size: .52rem; letter-spacing: .22em; }
 .hemo-scene__model-caption p { margin: .4rem 0 0; font-size: .65rem; text-transform: capitalize; }
 .hemo-scene__axes { position: relative; display: grid; grid-template-columns: minmax(140px, 1fr) minmax(250px, 2.3fr) minmax(140px, 1fr); grid-template-rows: repeat(4, minmax(90px, auto)); gap: .7rem; margin: 0; padding: 3rem 1rem; list-style: none; pointer-events: none; }
 .hemo-scene__axis { min-width: 0; pointer-events: auto; }
 .hemo-scene__axis--left { grid-column: 1; }
 .hemo-scene__axis--right { grid-column: 3; }
-.hemo-scene__node { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: 94px; padding: .7rem .8rem; text-align: left; color: #e3e9f3; border: 1px solid #4d566e70; border-radius: .8rem; background: linear-gradient(135deg, #202938e8, #131b29ed); box-shadow: 0 4px 18px #0002; cursor: pointer; }
-.hemo-scene__node-label { display: flex; align-items: center; justify-content: space-between; gap: .25rem; width: 100%; color: #b5c0d2; font-size: .64rem; }
+.hemo-scene__node { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: 94px; padding: .7rem .8rem; text-align: left; color: rgb(var(--ink-primary)); border: 1px solid rgb(var(--surface-border)); border-radius: 4px; background: rgb(var(--surface-raised)); cursor: pointer; }
+.hemo-scene__node-label { display: flex; align-items: center; justify-content: space-between; gap: .25rem; width: 100%; color: rgb(var(--ink-body)); font-size: .64rem; }
 .hemo-scene__node-label svg { flex-shrink: 0; opacity: .65; }
 .hemo-scene__node strong { margin-top: .35rem; font-size: .92rem; letter-spacing: .02em; }
-.hemo-scene__node-meta { margin-top: .22rem; font-size: .54rem; letter-spacing: .05em; color: #abb5c8; }
-.hemo-scene__node small { margin-top: .35rem; font-size: .53rem; color: #8390a8; }
+.hemo-scene__node-meta { margin-top: .22rem; font-size: .54rem; letter-spacing: .05em; color: rgb(var(--ink-muted)); }
+.hemo-scene__node small { margin-top: .35rem; font-size: .53rem; color: rgb(var(--ink-faint)); }
 .hemo-scene__node--unknown { border-style: dashed; }
-.hemo-scene__node--elevated { border-left: 2px solid #c4a175; }
-.hemo-scene__node--high { border-left: 2px solid #e9928a; }
-.hemo-scene__node--normal { border-left: 2px solid #90baae; }
+.hemo-scene__node--elevated { border-left: 2px solid rgb(var(--accent-amber)); }
+.hemo-scene__node--high { border-left: 2px solid rgb(var(--accent-red)); }
+.hemo-scene__node--normal { border-left: 2px solid rgb(var(--accent-green)); }
 .hemo-scene__node[aria-pressed="true"] { border-color: rgb(var(--accent-brand)); box-shadow: 0 0 0 1px rgb(var(--accent-brand) / .25); }
 .hemo-scene__view-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8rem; margin-top: .85rem; }
 .hemo-scene__view-controls [role="group"] { display: flex; gap: .35rem; }
 .hemo-scene__view-controls label { display: flex; align-items: center; gap: .65rem; font-size: .62rem; color: rgb(var(--ink-muted)); }
-.hemo-scene__view-controls select { max-width: 180px; min-height: 34px; border: 1px solid rgb(var(--surface-border)); border-radius: .5rem; padding: .4rem .5rem; background: rgb(var(--surface-bg)); color: rgb(var(--ink-primary)); font-size: .66rem; }
-.hemo-scene__readouts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; margin: 1rem 0 0; border: 1px solid rgb(var(--surface-border)); border-radius: .8rem; background: rgb(var(--surface-border)); overflow: hidden; }
-.hemo-scene__selection { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .8rem; margin-top: .8rem; padding: .9rem; border: 1px solid rgb(var(--accent-brand) / .4); border-radius: .75rem; background: rgb(var(--surface-bg)); }
+.hemo-scene__view-controls select { max-width: 180px; min-height: 34px; border: 1px solid rgb(var(--surface-border)); border-radius: 2px; padding: .4rem .5rem; background: rgb(var(--surface-bg)); color: rgb(var(--ink-primary)); font-size: .66rem; }
+.hemo-scene__readouts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; margin: 1rem 0 0; border: 1px solid rgb(var(--surface-border)); border-radius: 4px; background: rgb(var(--surface-border)); overflow: hidden; }
+.hemo-scene__selection { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .8rem; margin-top: .8rem; padding: .9rem; border: 1px solid rgb(var(--accent-brand) / .4); border-radius: 4px; background: rgb(var(--surface-bg)); }
 .hemo-scene__selection > div { flex: 1 1 260px; }
 .hemo-scene__selection strong { font-size: .72rem; }
 .hemo-scene__selection p { margin: .3rem 0; font-size: .67rem; line-height: 1.7; color: rgb(var(--ink-body)); }
 .hemo-scene__selection small { font-size: .58rem; color: rgb(var(--ink-muted)); }
-.hemo-scene__selection button { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem .7rem; border: 1px solid rgb(var(--surface-border)); border-radius: .5rem; color: rgb(var(--ink-primary)); font-size: .65rem; }
+.hemo-scene__selection button { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem .7rem; border: 1px solid rgb(var(--surface-border)); border-radius: 2px; color: rgb(var(--ink-primary)); font-size: .65rem; }
 .hemo-scene__readouts > div { min-width: 0; padding: .9rem; background: rgb(var(--surface-bg)); }
 .hemo-scene__readouts dt { display: flex; align-items: center; gap: .4rem; color: rgb(var(--ink-muted)); font-size: .61rem; }
-.hemo-scene__readouts dd { margin: .4rem 0 0; font-size: .92rem; font-weight: 650; letter-spacing: -.01em; }
+.hemo-scene__readouts dd { margin: .4rem 0 0; font-size: .92rem; font-weight: 600; letter-spacing: -.01em; }
 .hemo-scene__readouts small { display: block; margin-top: .3rem; font-size: .57rem; line-height: 1.6; color: rgb(var(--ink-muted)); }
 .hemo-scene__note { margin: 1rem 0 0; max-width: 105ch; font-size: .62rem; line-height: 1.8; color: rgb(var(--ink-muted)); }
 .hemo-scene__credit { margin-top: .5rem; font-size: .6rem; color: rgb(var(--ink-muted)); }
 .hemo-scene__credit summary { cursor: pointer; width: fit-content; }
 .hemo-scene__credit p { max-width: 100ch; line-height: 1.8; }
 .hemo-scene-host { position: static; inset: auto; display: block; width: 100%; max-width: none; padding: 0; margin: 0; border: 0; color: inherit; background: transparent; }
-.hemo-scene-host.hemo-scene-dialog { position: fixed; inset: 1rem; width: calc(100vw - 2rem); height: calc(100dvh - 2rem); max-width: none; max-height: none; padding: 0; margin: 0; border: 1px solid rgb(var(--surface-border)); border-radius: 1.25rem; background: rgb(var(--surface-bg)); color: rgb(var(--ink-primary)); overflow: auto; }
-.hemo-scene-dialog::backdrop { background: #05080ed9; backdrop-filter: blur(8px); }
+.hemo-scene-host.hemo-scene-dialog { position: fixed; inset: 1rem; width: calc(100vw - 2rem); height: calc(100dvh - 2rem); max-width: none; max-height: none; padding: 0; margin: 0; border: 1px solid rgb(var(--surface-border)); border-radius: 4px; background: rgb(var(--surface-bg)); color: rgb(var(--ink-primary)); overflow: auto; }
+.hemo-scene-dialog::backdrop { background: rgb(5 8 14 / .85); }
 .hemo-scene--expanded { margin: 0; border: 0; border-radius: 0; background: rgb(var(--surface-bg)); }
 .hemo-scene--expanded .hemo-scene__space { min-height: min(64vh, 760px); }
 .hemo-scene--expanded .hemo-scene__axes { padding-top: 5rem; padding-bottom: 5rem; grid-template-rows: repeat(4, minmax(105px, auto)); }
 .hemo-workspace { display: flex; flex-direction: column; gap: .65rem; }
-.hemo-workspace__header, .hemo-workspace__details { min-width: 0; border: 1px solid rgb(var(--surface-border)); border-radius: .85rem; background: rgb(var(--surface-raised)); }
+.hemo-workspace__header, .hemo-workspace__details { min-width: 0; border: 1px solid rgb(var(--surface-border)); border-radius: 4px; background: rgb(var(--surface-raised)); }
 .hemo-workspace__header { padding: .65rem .8rem; }
 .hemo-workspace__header-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; }
 .hemo-workspace__date-controls { display: flex; flex-wrap: wrap; align-items: center; gap: .45rem; }
@@ -91,27 +89,27 @@
 .hemo-workspace__utilities > details[open] { flex-basis: 100%; }
 .hemo-workspace__checkpoints, .hemo-workspace__guide { color: rgb(var(--ink-muted)); font-size: .64rem; }
 .hemo-workspace__checkpoints summary, .hemo-workspace__guide summary, .hemo-vector-details summary { width: fit-content; cursor: pointer; }
-.hemo-workspace__checkpoints summary:focus-visible, .hemo-workspace__guide summary:focus-visible, .hemo-vector-details summary:focus-visible, .hemo-workspace__safety summary:focus-visible { outline: 2px solid rgb(var(--accent-brand)); outline-offset: 3px; border-radius: .25rem; }
+.hemo-workspace__checkpoints summary:focus-visible, .hemo-workspace__guide summary:focus-visible, .hemo-vector-details summary:focus-visible, .hemo-workspace__safety summary:focus-visible { outline: 2px solid rgb(var(--accent-brand)); outline-offset: 3px; border-radius: 2px; }
 .hemo-workspace__context { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .4rem; padding: .3rem .15rem; font-size: .64rem; color: rgb(var(--ink-body)); }
-.hemo-workspace .hemo-section { border-radius: .85rem; padding: .85rem; }
+.hemo-workspace .hemo-section { border-radius: 4px; padding: .85rem; }
 .hemo-workspace .hemo-section > header { margin-bottom: .7rem; }
 .hemo-workspace .hemo-section > header h2 { font-size: .85rem; }
-.hemo-workspace .hemo-scene:not(.hemo-scene--expanded) { margin-bottom: .6rem; padding: .75rem; border-radius: .75rem; }
+.hemo-workspace .hemo-scene:not(.hemo-scene--expanded) { margin-bottom: .6rem; padding: .75rem; border-radius: 4px; }
 .hemo-workspace .hemo-scene:not(.hemo-scene--expanded) .hemo-scene__caption h3 { font-size: .85rem; margin-top: .25rem; }
 .hemo-workspace .hemo-scene:not(.hemo-scene--expanded) .hemo-scene__toolbar { margin-top: .6rem; gap: .35rem; }
 .hemo-workspace .hemo-scene:not(.hemo-scene--expanded) .hemo-scene__space { min-height: 370px; margin-top: .6rem; }
 .hemo-workspace .hemo-scene:not(.hemo-scene--expanded) .hemo-scene__axes { grid-template-rows: repeat(4, minmax(72px, auto)); padding: 1rem .7rem; gap: .45rem; }
-.hemo-workspace .hemo-scene:not(.hemo-scene--expanded) .hemo-scene__node { min-height: 74px; padding: .5rem .65rem; border-radius: .55rem; }
+.hemo-workspace .hemo-scene:not(.hemo-scene--expanded) .hemo-scene__node { min-height: 74px; padding: .5rem .65rem; border-radius: 2px; }
 .hemo-workspace .hemo-scene:not(.hemo-scene--expanded) .hemo-scene__node strong { font-size: .8rem; margin-top: .25rem; }
 .hemo-workspace .hemo-scene:not(.hemo-scene--expanded) .hemo-scene__node small { margin-top: .2rem; }
 .hemo-workspace .hemo-scene:not(.hemo-scene--expanded) .hemo-scene__view-controls { margin-top: .55rem; }
 .hemo-workspace .hemo-scene:not(.hemo-scene--expanded) .hemo-scene__readouts { margin-top: .55rem; }
 .hemo-workspace .hemo-scene:not(.hemo-scene--expanded) .hemo-scene__readouts > div { padding: .6rem .7rem; }
 .hemo-workspace .hemo-scene:not(.hemo-scene--expanded) .hemo-scene__note { margin-top: .55rem; line-height: 1.6; }
-.hemo-vector-details { padding: .55rem .7rem; border: 1px solid rgb(var(--surface-border)); border-radius: .55rem; color: rgb(var(--ink-body)); font-size: .68rem; }
+.hemo-vector-details { padding: .55rem .7rem; border: 1px solid rgb(var(--surface-border)); border-radius: 2px; color: rgb(var(--ink-body)); font-size: .68rem; }
 .hemo-workspace__tabs { display: flex; gap: .2rem; overflow-x: auto; padding: .5rem; border-bottom: 1px solid rgb(var(--surface-border)); }
-.hemo-workspace__tabs [role="tab"] { flex-shrink: 0; min-height: 36px; border: 1px solid transparent; border-radius: .55rem; padding: .5rem .85rem; color: rgb(var(--ink-muted)); font-size: .72rem; font-weight: 600; }
-.hemo-workspace__tabs [aria-selected="true"] { color: rgb(var(--ink-primary)); background: rgb(var(--surface-bg)); border-color: rgb(var(--surface-border)); box-shadow: 0 1px 3px #0001; }
+.hemo-workspace__tabs [role="tab"] { flex-shrink: 0; min-height: 36px; border: 1px solid transparent; border-radius: 2px; padding: .5rem .85rem; color: rgb(var(--ink-muted)); font-size: .72rem; font-weight: 600; }
+.hemo-workspace__tabs [aria-selected="true"] { color: rgb(var(--ink-primary)); background: rgb(var(--surface-bg)); border-color: rgb(var(--surface-border)); }
 .hemo-workspace__tabs [role="tab"]:focus-visible, .hemo-workspace__panel:focus-visible { outline: 2px solid rgb(var(--accent-brand)); outline-offset: -2px; }
 .hemo-workspace__panel { padding: .65rem; }
 .hemo-workspace__panel > * + * { margin-top: .65rem; }
@@ -138,7 +136,7 @@
 }
 @media (hover: hover) and (pointer: fine) {
   .hemo-scene button:not(:disabled):hover { border-color: rgb(var(--accent-brand) / .65); }
-  .hemo-scene__node:hover { background: linear-gradient(135deg, #293446f5, #192233f5); }
+  .hemo-scene__node:hover { background: rgb(var(--surface-raised-hi)); }
 }
 @media (prefers-reduced-motion: no-preference) { .hemo-scene__node, .hemo-scene__toolbar button { transition: border-color .18s, background .18s, box-shadow .18s; } }
 @media (max-width: 1000px) {

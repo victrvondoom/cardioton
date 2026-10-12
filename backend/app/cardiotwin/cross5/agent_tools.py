@@ -15,7 +15,7 @@ relation; anything numeric stays inside the frame modules and their APIs.
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 from . import city, earth, experiments, frames, intersections
 
@@ -27,7 +27,7 @@ AGENT_TOOL_NOTICE = (
 
 
 def explain_frame(frame_id: str) -> dict[str, Any]:
-    frame = frames.FRAMES.get(frame_id)
+    frame = frames.FRAMES.get(cast(frames.FrameId, frame_id))
     if frame is None:
         return {
             "found": False,

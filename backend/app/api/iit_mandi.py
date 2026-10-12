@@ -12,14 +12,14 @@ These endpoints showcase:
 
 from __future__ import annotations
 
-import structlog
 from typing import Any
 
+import structlog
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
 from app.auth import get_current_user
-from app.cardiotwin.ecg import generate_synthetic_ecg, analyze_ecg
+from app.cardiotwin.ecg import generate_synthetic_ecg
 from app.cardiotwin.model import load_model
 from app.cardiotwin.multimodal.fusion import (
     MultimodalInput,
@@ -28,7 +28,6 @@ from app.cardiotwin.multimodal.fusion import (
 )
 from app.cardiotwin.wearables.simulation import generate_synthetic_wearable_stream
 from app.iit_mandi.scenarios import (
-    IIT_MANDI_SCENARIOS,
     create_synthetic_patient,
     get_scenario,
     list_scenarios,
@@ -45,7 +44,7 @@ router = APIRouter(prefix="/iit_mandi", tags=["iit_mandi_track_a"])
 
 class ScenarioRequest(BaseModel):
     """Request for scenario operations."""
-    
+
     scenario_id: str | None = Field(
         default=None,
         description="ID of a specific scenario, or None for random",
@@ -64,9 +63,9 @@ async def list_iit_mandi_scenarios(
 ) -> dict[str, Any]:
     """List all available IIT Mandi Track A scenarios."""
     scenarios = list_scenarios()
-    
+
     METRICS.inc("iit_mandi_scenarios_listed")
-    
+
     return {
         "scenarios": scenarios,
         "total": len(scenarios),
@@ -81,15 +80,15 @@ async def get_scenario_details(
 ) -> dict[str, Any]:
     """Get details of a specific scenario."""
     scenario = get_scenario(scenario_id)
-    
+
     if scenario is None:
         raise HTTPException(
             status_code=404,
             detail={"error": "Scenario not found", "scenario_id": scenario_id},
         )
-    
+
     METRICS.inc("iit_mandi_scenario_retrieved")
-    
+
     return scenario.to_dict()
 
 
@@ -100,8 +99,8 @@ async def generate_scenarios(
 ) -> dict[str, Any]:
     """Generate new synthetic scenarios."""
     scenarios = []
-    
-    for i in range(request.num_scenarios):
+
+    for _scenario_index in range(request.num_scenarios):
         if request.scenario_id:
             scenario = get_scenario(request.scenario_id)
             if scenario:
@@ -109,9 +108,9 @@ async def generate_scenarios(
         else:
             scenario = create_synthetic_patient()
             scenarios.append(scenario.to_dict())
-    
+
     METRICS.inc("iit_mandi_scenarios_generated", count=request.num_scenarios)
-    
+
     return {
         "scenarios": scenarios,
         "generated": len(scenarios),
@@ -124,12 +123,12 @@ async def generate_scenarios(
 
 class MultimodalRequest(BaseModel):
     """Request for multimodal prediction."""
-    
+
     ehr_data: dict[str, Any] = Field(
         default_factory=dict,
         description="EHR/clinical data as feature name-value pairs",
     )
-    
+
     ecg_signal: list[float] | None = Field(
         default=None,
         description="ECG signal values",
@@ -140,7 +139,7 @@ class MultimodalRequest(BaseModel):
         le=10000.0,
         description="ECG sampling rate in Hz",
     )
-    
+
     wearable_duration: float = Field(
         default=300.0,
         ge=10.0,
@@ -159,15 +158,14 @@ async def multimodal_prediction(
     _: dict[str, Any] = Depends(get_current_user)
 ) -> dict[str, Any]:
     """Make multimodal prediction combining EHR, ECG, and wearable data.
-    
+
     This endpoint:
     1. Processes EHR data with the CAD model
     2. Processes ECG signal for arrhythmia/ischemia detection
     3. Processes synthetic wearable data
     4. Fuses all predictions with uncertainty quantification
     """
-    import numpy as np
-    
+
     # Create input
     input_data = MultimodalInput(
         ehr_data=request.ehr_data,
@@ -175,7 +173,7 @@ async def multimodal_prediction(
         ecg_sampling_rate=request.ecg_sampling_rate,
         wearable_data=[],  # Will be generated below
     )
-    
+
     # Generate wearable data if needed
     if request.wearable_duration > 0:
         wearable_data = generate_synthetic_wearable_stream(
@@ -183,12 +181,12 @@ async def multimodal_prediction(
             scenario=request.wearable_scenario,
         )
         input_data.wearable_data = wearable_data
-    
+
     # Fuse predictions
     prediction = fuse_predictions(input_data)
-    
+
     METRICS.inc("iit_mandi_multimodal_predictions")
-    
+
     return {
         "prediction": prediction.to_dict(),
         "input_summary": {
@@ -205,12 +203,12 @@ async def multimodal_prediction(
 
 class DemoRequest(BaseModel):
     """Request to run IIT Mandi Track A demonstration."""
-    
+
     scenario_id: str = Field(
         default="high_risk_65m",
         description="ID of the scenario to demonstrate",
     )
-    
+
     include_ehr: bool = Field(
         default=True,
         description="Include EHR data in demonstration",
@@ -231,7 +229,7 @@ async def run_demonstration(
     _: dict[str, Any] = Depends(get_current_user)
 ) -> dict[str, Any]:
     """Run complete IIT Mandi Track A demonstration.
-    
+
     This endpoint demonstrates:
     1. Selecting a synthetic patient
     2. Processing multiple modalities
@@ -243,13 +241,13 @@ async def run_demonstration(
     scenario = get_scenario(request.scenario_id)
     if scenario is None:
         scenario = create_synthetic_patient(request.scenario_id)
-    
+
     # Prepare input data
     input_data = MultimodalInput(
         ehr_data=scenario.ehr_data if request.include_ehr else {},
         patient_id=scenario.id,
     )
-    
+
     # Add ECG if requested
     if request.include_ecg:
         signal, metadata = generate_synthetic_ecg(
@@ -259,7 +257,7 @@ async def run_demonstration(
         )
         input_data.ecg_signal = signal.tolist()
         input_data.ecg_sampling_rate = 500.0
-    
+
     # Add wearable if requested
     if request.include_wearable:
         wearable_data = generate_synthetic_wearable_stream(
@@ -267,15 +265,15 @@ async def run_demonstration(
             scenario=scenario.wearable_scenario,
         )
         input_data.wearable_data = wearable_data
-    
+
     # Fuse predictions
     prediction = fuse_predictions(input_data)
-    
+
     # Get visualization data
     visualization = _prepare_visualization(prediction, scenario)
-    
+
     METRICS.inc("iit_mandi_demonstrations")
-    
+
     return {
         "scenario": scenario.to_dict(),
         "prediction": prediction.to_dict(),
@@ -295,7 +293,7 @@ def _prepare_visualization(
         prediction.ecg_prediction.cad_probability,
         prediction.wearable_prediction.cad_probability,
     )
-    
+
     # Create visualization data for 3D view
     visualization = {
         "cad_probability": round(max_cad_prob, 4),
@@ -325,7 +323,7 @@ def _prepare_visualization(
         "color_scheme": scenario.visualization.get("primary_color", "#3b82f6"),
         "highlight_areas": scenario.visualization.get("highlight", "normal"),
     }
-    
+
     return visualization
 
 
@@ -338,16 +336,16 @@ async def get_evaluation_summary(
     _: dict[str, Any] = Depends(get_current_user)
 ) -> dict[str, Any]:
     """Get evaluation summary for IIT Mandi Track A.
-    
+
     Returns:
         Summary of model performance and capabilities
     """
     try:
         model = load_model()
         evaluation = model.card()
-        
+
         METRICS.inc("iit_mandi_evaluation_retrieved")
-        
+
         return {
             "cardiotwin_model": evaluation,
             "multimodal_capabilities": {
@@ -374,4 +372,4 @@ async def get_evaluation_summary(
         raise HTTPException(
             status_code=503,
             detail={"error": str(e)},
-        )
+        ) from e

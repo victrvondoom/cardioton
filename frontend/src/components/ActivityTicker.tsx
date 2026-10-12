@@ -29,7 +29,7 @@ export function ActivityTicker({ oneHealth = false, inline = false }: { oneHealt
   const all = items.length ? [...items, ...items] : [];
 
   return (
-    <div className={inline ? "relative h-8 overflow-hidden border-b border-surface-border bg-surface-raised/95" : "fixed top-0 inset-x-0 z-40 h-7 overflow-hidden border-b border-surface-border bg-surface-raised/95 backdrop-blur-md hidden sm:block"}>
+    <div className={inline ? "relative h-8 overflow-hidden border-b border-surface-border bg-surface-raised/95" : "fixed top-0 inset-x-0 z-40 h-7 overflow-hidden border-b border-surface-border bg-surface-raised/95 hidden sm:block"}>
       {/* LIVE badge anchored left with solid backdrop above the marquee */}
       <div className="absolute left-0 top-0 bottom-0 z-20 flex items-center gap-1.5 pl-3 pr-4 bg-surface-raised">
         <span className="relative flex h-1.5 w-1.5">
@@ -37,12 +37,7 @@ export function ActivityTicker({ oneHealth = false, inline = false }: { oneHealt
           <span className={`relative inline-flex rounded-full h-1.5 w-1.5 ${degraded ? "bg-accent-red" : data?.health ? "bg-accent-green" : "bg-ink-faint"}`} />
         </span>
         <span className="text-[9px] text-compact text-ink-muted">Status</span>
-        {/* Soft fade from solid badge backdrop into the scrolling track */}
-        <span className="absolute inset-y-0 -right-6 w-6 bg-gradient-to-r from-surface-raised to-transparent pointer-events-none" />
       </div>
-
-      {/* Right-edge fade so items dissolve into the surface */}
-      <div className="absolute inset-y-0 right-0 z-10 w-24 pointer-events-none bg-gradient-to-l from-surface-raised via-surface-raised/70 to-transparent" />
 
       <div className={all.length ? "marquee-track flex items-center gap-10 h-full whitespace-nowrap pl-28" : "flex items-center h-full pl-28"} data-testid="ticker">
         {all.length === 0 && (

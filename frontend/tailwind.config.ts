@@ -6,14 +6,14 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        // Three-family system: Inter (UI/data), Newsreader (editorial serif),
+        // Two-family system: Inter (geometric sans — display, UI, data),
         // JetBrains Mono (technical). Role classes live in src/styles/index.css.
-        display:          ['"Newsreader"', "Georgia", "serif"],                // 1. Display Primary — hero/major headlines
-        "display-secondary": ['"Newsreader"', "Georgia", "serif"],             // 2. Display Secondary — section intros
+        display:          ['"Inter"', "system-ui", "sans-serif"],              // 1. Display Primary — hero/major headlines
+        "display-secondary": ['"Inter"', "system-ui", "sans-serif"],           // 2. Display Secondary — section intros
         ui:               ['"Inter"', "system-ui", "sans-serif"],              // 3. UI Primary — nav/buttons/body
         "ui-secondary":   ['"Inter"', "system-ui", "sans-serif"],              // 4. UI Secondary — descriptions/metadata
         compact:          ['"Inter"', "system-ui", "sans-serif"],              // 5. Compact/Condensed — tags/dense UI
-        editorial:        ['"Newsreader"', "Georgia", "serif"],                // 6. Editorial Italic — quotes/emphasis
+        editorial:        ['"Inter"', "system-ui", "sans-serif"],              // 6. Editorial Italic — quotes/emphasis
         "mono-tech":      ['"JetBrains Mono"', "Menlo", "monospace"],          // 7. Technical Monospace — IDs/system metadata
         micro:            ['"Inter"', "system-ui", "sans-serif"],              // 8. Micro/Footnote — fine print
         "data-numeric":   ['"Inter"', "system-ui", "sans-serif"],              // 9. Data/Numeric — stats/metrics/counters
@@ -52,7 +52,16 @@ export default {
           deny:    "rgb(var(--accent-red) / <alpha-value>)",
           refer:   "rgb(var(--accent-amber) / <alpha-value>)",
         },
-        // Brand ramp — clinical-healthcare deep-navy progression
+        // Pixel ramp — the five square colours that carry the interface.
+        // Driven by CSS custom properties (see styles/index.css).
+        pixel: {
+          red:    "rgb(var(--pixel-red) / <alpha-value>)",
+          orange: "rgb(var(--pixel-orange) / <alpha-value>)",
+          yellow: "rgb(var(--pixel-yellow) / <alpha-value>)",
+          blue:   "rgb(var(--pixel-blue) / <alpha-value>)",
+          green:  "rgb(var(--pixel-green) / <alpha-value>)",
+        },
+        // Brand ramp — pixel-orange progression
         brand: {
           50:  "rgb(var(--brand-50) / <alpha-value>)",
           100: "rgb(var(--brand-100) / <alpha-value>)",
@@ -97,6 +106,9 @@ export default {
         "verdict-pulse":   { "0%": { opacity: "0.45", transform: "scale(0.96)" }, "60%": { opacity: "0", transform: "scale(1.18)" }, "100%": { opacity: "0", transform: "scale(1.18)" } },
         "stagger-word":    { "0%": { transform: "translateY(8px)" }, "100%": { transform: "translateY(0)" } },
         "chart-draw-in":   { "0%": { transform: "scaleX(0)" }, "100%": { transform: "scaleX(1)" } },
+        "pixel-cell-in":   { "0%": { opacity: "0", transform: "translate(var(--px-from-x, 0px), var(--px-from-y, 0px)) scale(0.6)" }, "100%": { opacity: "1", transform: "translate(0, 0) scale(1)" } },
+        "pixel-blink":     { "0%,100%": { opacity: "1" }, "50%": { opacity: "0.35" } },
+        "pixel-wipe-out":  { "0%": { clipPath: "inset(0 0 0 0)" }, "100%": { clipPath: "inset(0 0 0 100%)" } },
       },
       animation: {
         "pulse-soft":      "pulse-soft 1.6s ease-in-out infinite",
@@ -127,20 +139,27 @@ export default {
         "verdict-pulse":   "verdict-pulse 0.6s cubic-bezier(0.2,0,0,1) both",
         "stagger-word":    "stagger-word 0.45s cubic-bezier(0.2,0,0,1) both",
         "chart-draw-in":   "chart-draw-in 480ms cubic-bezier(0.16,1,0.3,1) both",
+        "pixel-cell-in":   "pixel-cell-in 360ms cubic-bezier(0.2,0,0,1) both",
+        "pixel-blink":     "pixel-blink 1.4s steps(2, jump-none) infinite",
+        "pixel-wipe-out":  "pixel-wipe-out 260ms steps(8, jump-none) forwards",
       },
       fontFamily: {
         sans: ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
-        mono: ['"Geist Mono"', "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
-        serif: ['"Crimson Pro"', "Georgia", "serif"],
+        mono: ['"JetBrains Mono"', "Geist Mono", "ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
+        serif: ["Georgia", "serif"],
       },
+      // Square geometry: panels, chips, avatars and pills are squares —
+      // the atomic unit of the design system is the square, never the circle.
       borderRadius: {
-        sm: "4px",
-        DEFAULT: "4px",
-        md: "6px",
-        lg: "8px",
-        xl: "12px",
-        "2xl": "12px",
-        "3xl": "16px",
+        none: "0px",
+        sm: "2px",
+        DEFAULT: "2px",
+        md: "4px",
+        lg: "4px",
+        xl: "6px",
+        "2xl": "6px",
+        "3xl": "8px",
+        full: "2px",
       },
       fontFeatureSettings: {
         nums: '"tnum", "ss01"',

@@ -15,7 +15,9 @@ import { useEffect, useState } from "react";
 import { useAutoRefresh } from "../lib/useAutoRefresh";
 
 import { useAuth } from "../components/AuthContext";
+
 import { api } from "../lib/api";
+import { PixelStatus } from "../pixel/PixelStatus";
 
 interface OrgUser {
   id: string;
@@ -27,7 +29,7 @@ interface OrgUser {
 }
 
 const ROLE_TINT: Record<string, string> = {
-  admin:       "bg-accent-violet/15 text-accent-violet",
+  admin:       "bg-pixel-red/15 text-pixel-red",
   reviewer:    "bg-accent-amber/15  text-accent-amber",
   coordinator: "bg-accent-cyan/15   text-accent-cyan",
 };
@@ -108,7 +110,7 @@ export default function Settings() {
       </header>
 
       {/* User management section */}
-      <section className="bg-surface-raised border border-surface-border rounded-2xl overflow-hidden mb-5">
+      <section className="bg-surface-raised border border-surface-border rounded overflow-hidden mb-5">
         <div className="px-5 py-3 border-b border-surface-border flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Shield size={16} className="text-accent-brand" />
@@ -118,6 +120,10 @@ export default function Settings() {
                 {users.length} member{users.length === 1 ? "" : "s"}
               </span>
             )}
+            <span className="flex items-center gap-1.5 text-[11px] text-mono-tech text-ink-muted" title="Users list refreshes from the backend every 30 seconds">
+              <PixelStatus state="running" size={6} />
+              auto-refresh 30 s
+            </span>
           </div>
           <button
             type="button"
@@ -188,7 +194,7 @@ export default function Settings() {
                 {users.map((u) => (
                   <tr key={u.id} className="hover:bg-surface-raised-hi">
                     <td className="px-5 py-2.5 text-ink-primary flex items-center gap-2">
-                      <div className="w-7 h-7 rounded-full bg-accent-brand/15 text-accent-brand flex items-center justify-center text-mono-tech font-semibold text-[11px]">
+                      <div className="w-7 h-7 rounded bg-accent-brand/15 text-accent-brand flex items-center justify-center text-mono-tech font-semibold text-[11px]">
                         {(u.full_name ?? u.email)[0].toUpperCase()}
                       </div>
                       {u.full_name || <span className="text-ink-muted italic">no name</span>}
@@ -214,7 +220,7 @@ export default function Settings() {
       </section>
 
       {/* Org info */}
-      <section className="bg-surface-raised border border-surface-border rounded-2xl p-5">
+      <section className="bg-surface-raised border border-surface-border rounded p-5">
         <h2 className="text-sm font-semibold text-ink-primary mb-3">Organization details</h2>
         <dl className="grid grid-cols-2 gap-3 text-sm">
           <div>

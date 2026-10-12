@@ -2,17 +2,19 @@ import { useEffect, useRef } from "react";
 import { LngLatBounds, Map as MapLibreMap, Marker, NavigationControl, setWorkerUrl } from "maplibre-gl";
 import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import "maplibre-gl/dist/maplibre-gl.css";
+import "../styles/maplibre-dark.css";
 
 import type { MapPoint } from "../aquahealth/types";
 
 setWorkerUrl(workerUrl);
 
+// Markers use the CardioTwin pixel ramp — square status tiles over the map.
 const STATUS_COLOR: Record<MapPoint["status"], string> = {
-  critical_signal: "#ef4444",
-  potential_stress: "#f59e0b",
-  watch: "#3b82f6",
-  healthy_signal: "#22c55e",
-  insufficient_data: "#94a3b8",
+  critical_signal: "#F0442B",
+  potential_stress: "#FFB400",
+  watch: "#39A9E8",
+  healthy_signal: "#59DFA6",
+  insufficient_data: "#96979E",
 };
 
 interface Props {
@@ -33,7 +35,7 @@ export default function AquaHealthMapLibre({ points, selectedId, onSelect, viewB
     const first = points[0];
     const instance = new MapLibreMap({
       container: container.current,
-      style: "https://tiles.openfreemap.org/styles/liberty",
+      style: "https://tiles.openfreemap.org/styles/dark",
       center: first ? [first.longitude, first.latitude] : [-8.4265, 40.2033],
       zoom: first ? 11 : 5,
       attributionControl: {},
@@ -66,9 +68,8 @@ export default function AquaHealthMapLibre({ points, selectedId, onSelect, viewB
       node.style.backgroundColor = STATUS_COLOR[point.status];
       node.style.width = isSelected ? "22px" : "16px";
       node.style.height = isSelected ? "22px" : "16px";
-      node.style.border = "2px solid white";
-      node.style.borderRadius = "9999px";
-      node.style.boxShadow = "0 1px 5px #0008";
+      node.style.border = "2px solid #F7F7F4";
+      node.style.borderRadius = "0";
       node.style.cursor = "pointer";
       node.addEventListener("click", () => onSelect(point));
       return new Marker({ element: node, anchor: "center" })
@@ -94,7 +95,7 @@ export default function AquaHealthMapLibre({ points, selectedId, onSelect, viewB
   }, [points, viewBounds]);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-surface-border">
+    <div className="overflow-hidden rounded border border-surface-border">
       <div ref={container} className="h-[360px] w-full" role="region" aria-label="MapLibre OpenStreetMap observations" />
       <p className="border-t border-surface-border bg-surface-raised px-3 py-2 text-[10px] text-ink-faint">Map tiles: OpenFreeMap · map data © OpenStreetMap contributors · selecting a marker opens the corresponding observation.</p>
     </div>

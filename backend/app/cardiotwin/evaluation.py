@@ -24,7 +24,7 @@ try:
 except ImportError:
     HAS_SKLEARN = False
 
-    def _unavailable_metric(*args: Any, **kwargs: Any) -> Any:
+    def _unavailable_metric(*args: Any, **kwargs) -> Any:
         raise ImportError("Scientific evaluation requires the optional scikit-learn dependency; no substitute metric is computed")
 
     roc_auc_score = average_precision_score = brier_score_loss = log_loss = precision_recall_curve = roc_curve = _unavailable_metric

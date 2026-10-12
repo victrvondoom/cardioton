@@ -23,7 +23,7 @@
 
 .cgi-kicker {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgb(var(--accent-brand));
@@ -32,7 +32,7 @@
 
 .cgi-header h1 {
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600;
   color: rgb(var(--ink-primary));
   margin: 0 0 0.25rem;
   line-height: 1.2;
@@ -56,7 +56,7 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.25rem 0.6rem;
-  border-radius: 0.375rem;
+  border-radius: 2px;
   font-size: 10.5px;
   font-weight: 600;
   border: 1px solid rgb(var(--surface-border));
@@ -84,7 +84,7 @@
   padding: 0.25rem;
   background: rgb(var(--surface-raised));
   border: 1px solid rgb(var(--surface-border));
-  border-radius: 0.625rem;
+  border-radius: 4px;
 }
 
 .cgi-tabs button {
@@ -92,7 +92,7 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.375rem 0.75rem;
-  border-radius: 0.4rem;
+  border-radius: 2px;
   border: none;
   background: transparent;
   font-size: 12px;
@@ -121,18 +121,17 @@
 
 .cgi-metric-card {
   padding: 0.875rem 1rem;
-  border-radius: 0.75rem;
+  border-radius: 4px;
   border: 1px solid rgb(var(--surface-border));
   background: rgb(var(--surface-raised));
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.15s;
 }
 
 .cgi-metric-card:hover {
   border-color: rgba(var(--accent-brand), 0.3);
-  box-shadow: var(--shadow-raise);
 }
 
 .cgi-metric-label {
@@ -145,7 +144,7 @@
 
 .cgi-metric-value {
   font-size: 1.625rem;
-  font-weight: 700;
+  font-weight: 600;
   color: rgb(var(--ink-primary));
   line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -187,7 +186,7 @@
 
 /* ── Panel ── */
 .cgi-panel {
-  border-radius: 0.875rem;
+  border-radius: 4px;
   border: 1px solid rgb(var(--surface-border));
   background: rgb(var(--surface-raised));
   overflow: hidden;
@@ -204,7 +203,7 @@
 
 .cgi-panel-title {
   font-size: 12.5px;
-  font-weight: 700;
+  font-weight: 600;
   color: rgb(var(--ink-primary));
   display: flex;
   align-items: center;
@@ -230,7 +229,7 @@
 .cgi-copilot-input {
   flex: 1;
   padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
+  border-radius: 2px;
   border: 1px solid rgb(var(--surface-border));
   background: rgb(var(--surface-bg));
   color: rgb(var(--ink-primary));
@@ -245,7 +244,7 @@
 
 .cgi-copilot-btn {
   padding: 0.5rem 0.875rem;
-  border-radius: 0.5rem;
+  border-radius: 2px;
   border: none;
   background: rgb(var(--accent-brand));
   color: white;
@@ -262,7 +261,7 @@
 
 .cgi-copilot-response {
   background: rgb(var(--surface-raised-hi));
-  border-radius: 0.625rem;
+  border-radius: 4px;
   padding: 0.75rem;
   font-size: 12px;
   color: rgb(var(--ink-body));
@@ -299,7 +298,7 @@
   text-align: left;
   padding: 0.5rem 0.75rem;
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgb(var(--ink-muted));
@@ -322,7 +321,7 @@
 .cgi-pill {
   display: inline-block;
   padding: 0.15rem 0.5rem;
-  border-radius: 999px;
+  border-radius: 2px;
   font-size: 10px;
   font-weight: 600;
 }
@@ -351,7 +350,7 @@
 
 .cgi-sankey-node {
   padding: 0.35rem 0.75rem;
-  border-radius: 0.375rem;
+  border-radius: 2px;
   border: 1px solid rgb(var(--surface-border));
   background: rgb(var(--surface-raised));
   cursor: pointer;
@@ -379,12 +378,12 @@
   color: rgb(var(--ink-muted));
   background: rgb(var(--surface-raised-hi));
   padding: 0.1rem 0.4rem;
-  border-radius: 0.25rem;
+  border-radius: 2px;
 }
 
 .cgi-sankey-header {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: rgb(var(--ink-faint));
@@ -400,7 +399,7 @@
 
 .cgi-agent-card {
   padding: 0.625rem 0.75rem;
-  border-radius: 0.5rem;
+  border-radius: 2px;
   border: 1px solid rgb(var(--surface-border));
   background: rgb(var(--surface-raised));
   display: flex;
@@ -424,7 +423,7 @@
 .cgi-dot {
   width: 6px;
   height: 6px;
-  border-radius: 50%;
+  border-radius: 0;
   flex-shrink: 0;
 }
 
@@ -457,7 +456,7 @@
 
 .cgi-trace-agent {
   font-size: 9.5px;
-  font-weight: 700;
+  font-weight: 600;
   color: rgb(var(--accent-brand));
   white-space: nowrap;
   min-width: 120px;
@@ -478,7 +477,7 @@
 /* ── Passport ── */
 .cgi-passport {
   background: rgb(var(--surface-raised-hi));
-  border-radius: 0.625rem;
+  border-radius: 4px;
   padding: 0.75rem;
   font-size: 11.5px;
   line-height: 1.5;
@@ -503,9 +502,9 @@
 
 .cgi-severity {
   font-size: 9.5px;
-  font-weight: 700;
+  font-weight: 600;
   padding: 0.15rem 0.45rem;
-  border-radius: 0.25rem;
+  border-radius: 2px;
   white-space: nowrap;
 }
 
@@ -557,7 +556,7 @@
   right: 1.25rem;
   background: rgb(var(--surface-raised-hi));
   border: 1px solid rgb(var(--surface-border));
-  border-radius: 0.375rem;
+  border-radius: 2px;
   padding: 0.3rem 0.6rem;
   font-size: 11px;
   cursor: pointer;
@@ -574,7 +573,7 @@
 
 .cgi-select {
   padding: 0.35rem 0.65rem;
-  border-radius: 0.4rem;
+  border-radius: 2px;
   border: 1px solid rgb(var(--surface-border));
   background: rgb(var(--surface-raised));
   color: rgb(var(--ink-body));
@@ -597,7 +596,7 @@
 
 .cgi-error {
   padding: 0.625rem 0.875rem;
-  border-radius: 0.5rem;
+  border-radius: 2px;
   border: 1px solid rgba(var(--accent-red), 0.3);
   background: rgba(var(--accent-red), 0.06);
   color: rgb(var(--accent-red));
@@ -622,7 +621,7 @@
   height: 16px;
   border: 2px solid rgb(var(--surface-border));
   border-top-color: rgb(var(--accent-brand));
-  border-radius: 50%;
+  border-radius: 0;
   animation: cgi-spin 0.7s linear infinite;
 }
 
@@ -636,7 +635,7 @@
   color: rgb(var(--ink-muted));
   background: rgb(var(--surface-raised-hi));
   border: 1px solid rgb(var(--surface-border));
-  border-radius: 0.5rem;
+  border-radius: 2px;
   padding: 0.5rem 0.75rem;
   line-height: 1.5;
 }
@@ -673,3 +672,59 @@
 .cgi-flow-node:hover rect, .cgi-flow-node:focus rect { stroke: rgb(var(--accent-brand)); stroke-width: 2; }
 @media (max-width: 600px) { .cgi-detail-list > div { grid-template-columns: 1fr; gap: .3rem; } .cgi-drawer { padding: 1rem; } }
 @media (prefers-reduced-motion: reduce) { .cgi-spinner { animation: none; } .cgi-workspace * { transition: none !important; } }
+
+/* ── Pixel-native accents — CardioTwin square geometry ── */
+
+.cgi-header h1 {
+  font-size: 1.75rem;
+  letter-spacing: -0.02em;
+}
+
+.cgi-kicker::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 0.5rem;
+  background: rgb(var(--pixel-orange));
+}
+
+.cgi-tabs button[aria-pressed="true"]::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  background: currentColor;
+}
+
+.cgi-metric-card {
+  position: relative;
+  padding-left: 2.25rem;
+}
+
+.cgi-metric-card::before {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
+  width: 8px;
+  height: 8px;
+}
+
+.cgi-metric-card:nth-child(5n+1)::before { background: rgb(var(--pixel-red)); }
+.cgi-metric-card:nth-child(5n+2)::before { background: rgb(var(--pixel-orange)); }
+.cgi-metric-card:nth-child(5n+3)::before { background: rgb(var(--pixel-yellow)); }
+.cgi-metric-card:nth-child(5n+4)::before { background: rgb(var(--pixel-blue)); }
+.cgi-metric-card:nth-child(5n+5)::before { background: rgb(var(--pixel-green)); }
+
+.cgi-metric-value {
+  letter-spacing: -0.02em;
+}
+
+.cgi-panel-title::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  background: rgb(var(--pixel-orange));
+}

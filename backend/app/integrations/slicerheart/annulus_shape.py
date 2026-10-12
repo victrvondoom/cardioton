@@ -25,7 +25,12 @@ with no clinical interpretation attached.
 
 from __future__ import annotations
 
+from typing import Any
+
 import numpy as np
+from numpy.typing import NDArray
+
+FloatArray = NDArray[np.float64]
 
 REQUIRED_COLUMNS = (
     "Filename",
@@ -42,10 +47,10 @@ class ContourDataError(ValueError):
     """Raised when the supplied cohort export cannot be analysed."""
 
 
-def get_unique_column_values(rows: list[dict], column_name: str) -> list | None:
+def get_unique_column_values(rows: list[dict[str, str]], column_name: str) -> list[str] | None:
     """Unique values of a column, in order of first occurrence (upstream behaviour)."""
-    used: list = []
-    seen: set = set()
+    used: list[str] = []
+    seen: set[str] = set()
     for row in rows:
         if column_name not in row:
             return None
@@ -57,8 +62,8 @@ def get_unique_column_values(rows: list[dict], column_name: str) -> list | None:
 
 
 def get_annulus_contour_points(
-    rows: list[dict], annulus_filename: str, annulus_phase: str, valve_type: str
-) -> list:
+    rows: list[dict[str, str]], annulus_filename: str, annulus_phase: str, valve_type: str
+) -> list[Any]:
     """Point coordinates and label->index map for one case/phase/valve (upstream logic)."""
     rows_for_annulus = [
         row
@@ -82,7 +87,9 @@ def get_annulus_contour_points(
     return [np.array(coordinates), labels]
 
 
-def order_annulus_contour_points(annulus_point_coordinates, labels, label_order):
+def order_annulus_contour_points(
+    annulus_point_coordinates: FloatArray, labels: dict[str, int], label_order: list[str]
+) -> list[Any]:
     """Order contour points so the first point is the first label (upstream logic)."""
     number_of_annulus_points = annulus_point_coordinates.shape[0]
     if label_order[0] not in labels:
@@ -106,7 +113,7 @@ def order_annulus_contour_points(annulus_point_coordinates, labels, label_order)
         point_indexes = [point_indexes[-1]] + point_indexes[:-1]
 
     # Compute new label indexes
-    new_labels: dict = {}
+    new_labels: dict[str, int] = {}
     last_index = -1
     for label in label_order:
         new_index = point_indexes.index(labels[label])
@@ -121,8 +128,12 @@ def order_annulus_contour_points(annulus_point_coordinates, labels, label_order)
     return [new_annulus_point_coordinates, new_labels]
 
 
-def resample_annulus_contour_points(annulus_point_coordinates, labels, label_order,
-                                    resampled_number_of_points_per_segment):
+def resample_annulus_contour_points(
+    annulus_point_coordinates: FloatArray,
+    labels: dict[str, int],
+    label_order: list[str],
+    resampled_number_of_points_per_segment: int,
+) -> FloatArray:
     """Resample each contour segment to a fixed number of points (upstream logic)."""
     number_of_annulus_points = annulus_point_coordinates.shape[0]
     interpolated = np.zeros([len(label_order) * resampled_number_of_points_per_segment, 3])
@@ -150,7 +161,7 @@ def resample_annulus_contour_points(annulus_point_coordinates, labels, label_ord
     return interpolated
 
 
-def _rigid_transform_to(reference: np.ndarray, moving: np.ndarray) -> np.ndarray:
+def _rigid_transform_to(reference: FloatArray, moving: FloatArray) -> FloatArray:
     """4x4 rigid transform (rotation + translation, no scale) aligning ``moving`` to ``reference``.
 
     Kabsch algorithm — numpy replacement for vtkProcrustesAlignmentFilter with
@@ -173,7 +184,7 @@ def _rigid_transform_to(reference: np.ndarray, moving: np.ndarray) -> np.ndarray
     return transform
 
 
-def align_annulus_contours(all_annulus_point_coordinates: np.ndarray) -> np.ndarray:
+def align_annulus_contours(all_annulus_point_coordinates: FloatArray) -> FloatArray:
     """Rigidly align contours to the first contour, then shift to the cohort centroid.
 
     Same semantics as upstream ``get_annulus_to_mean_annulus_transforms`` +
@@ -194,7 +205,7 @@ def align_annulus_contours(all_annulus_point_coordinates: np.ndarray) -> np.ndar
     return aligned
 
 
-def compute_scale_factors(rows: list[dict], valve_type: str | None = None,
+def compute_scale_factors(rows: list[dict[str, str]], valve_type: str | None = None,
                           annulus_phases: list[str] | None = None) -> dict[str, float]:
     """Per-case relative scale factors (upstream logic; mean size normalized to cohort mean)."""
     annulus_filenames = get_unique_column_values(rows, "Filename")
@@ -203,6 +214,8 @@ def compute_scale_factors(rows: list[dict], valve_type: str | None = None,
 
     if annulus_phases is None:
         annulus_phases = get_unique_column_values(rows, "Phase")
+    if not annulus_phases:
+        raise ContourDataError("No rows with a Phase column value")
     if valve_type is None:
         valve_types = get_unique_column_values(rows, "Valve")
         if not valve_types:
@@ -238,14 +251,14 @@ def compute_scale_factors(rows: list[dict], valve_type: str | None = None,
 
 
 def analyze_cohort(
-    rows: list[dict],
+    rows: list[dict[str, str]],
     label_order: list[str],
     *,
     valve_type: str | None = None,
     annulus_phases: list[str] | None = None,
     number_of_points_per_segment: int = 30,
     normalize_size: bool = False,
-) -> dict:
+) -> dict[str, Any]:
     """Per-phase cohort mean annulus shape over exported contour rows.
 
     Returns per phase: the mean and standard deviation of the rigidly aligned
@@ -265,6 +278,8 @@ def analyze_cohort(
 
     if annulus_phases is None:
         annulus_phases = get_unique_column_values(rows, "Phase")
+    if not annulus_phases:
+        raise ContourDataError("No phases found (Phase column empty)")
     if valve_type is None:
         valve_types = get_unique_column_values(rows, "Valve")
         if not valve_types:
@@ -275,11 +290,11 @@ def analyze_cohort(
 
     number_of_annulus_segments = len(label_order)
     points_per_contour = number_of_annulus_segments * number_of_points_per_segment
-    phases_result: list[dict] = []
+    phases_result: list[dict[str, Any]] = []
     skipped_cases: list[str] = []
 
     for annulus_phase in annulus_phases:
-        collected: list[np.ndarray] = []
+        collected: list[FloatArray] = []
         phase_skipped: list[str] = []
         for annulus_filename in annulus_filenames:
             try:

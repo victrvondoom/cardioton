@@ -10,15 +10,15 @@ All implementations support the IIT Mandi Track A requirements for
 multimodal cardiovascular risk visualization and prediction.
 """
 
+from app.cardiotwin.multimodal.ensemble import (
+    EnsembleModel,
+    create_ensemble_from_models,
+)
 from app.cardiotwin.multimodal.fusion import (
     MultimodalFusionEngine,
     MultimodalInput,
     MultimodalPrediction,
     fuse_predictions,
-)
-from app.cardiotwin.multimodal.ensemble import (
-    EnsembleModel,
-    create_ensemble_from_models,
 )
 
 __all__ = [

@@ -301,7 +301,7 @@ export function CitationModal({ citation, onClose }: Props) {
       className="fixed inset-0 z-50 flex items-start justify-center pt-[10vh] px-4"
       onClick={onClose}
     >
-      <div className="absolute inset-0 bg-ink-primary/40 backdrop-blur-sm animate-slide-in-up" />
+      <div className="absolute inset-0 bg-ink-primary/40 animate-slide-in-up" />
 
       <div
         className="relative w-full max-w-2xl bg-surface-raised border border-surface-border rounded-2xl shadow-2xl overflow-hidden animate-slide-in-up"

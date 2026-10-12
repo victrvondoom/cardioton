@@ -32,7 +32,7 @@ def evaluate_guidelines(
                  and math.isfinite(value) and 0 <= value <= 1)
         if value is not None and not valid:
             raise ValueError(f"{vessel} FFR must be a finite value in [0, 1]")
-        result = value <= 0.80 if valid else None
+        result = value <= 0.80 if valid and value is not None else None
         if result:
             flagged.append(vessel)
         if not valid:

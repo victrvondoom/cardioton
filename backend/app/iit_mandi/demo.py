@@ -15,7 +15,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from typing import Any
 
-from app.cardiotwin.ecg import generate_synthetic_ecg, analyze_ecg
+from app.cardiotwin.ecg import analyze_ecg, generate_synthetic_ecg
 from app.cardiotwin.model import load_model
 from app.cardiotwin.multimodal.fusion import (
     MultimodalInput,
@@ -23,31 +23,31 @@ from app.cardiotwin.multimodal.fusion import (
     fuse_predictions,
 )
 from app.cardiotwin.wearables.simulation import generate_synthetic_wearable_stream
-from app.iit_mandi.scenarios import PatientScenario, get_scenario, create_synthetic_patient
+from app.iit_mandi.scenarios import PatientScenario, create_synthetic_patient, get_scenario
 
 
 @dataclass
-class IIT_MANDI_Demo:
+class IIT_MANDI_Demo:  # noqa: N801 - Public name used by existing callers.
     """Orchestrator for IIT Mandi Track A demonstration."""
-    
+
     scenario: PatientScenario
-    
+
     # Processing results
     ehr_prediction: dict[str, Any] | None = None
     ecg_analysis: dict[str, Any] | None = None
     wearable_analysis: dict[str, Any] | None = None
     multimodal_prediction: MultimodalPrediction | None = None
-    
+
     # Timing
     start_time: datetime = field(default_factory=lambda: datetime.now(UTC))
     end_time: datetime | None = None
-    
+
     def run(self, include_all_modalities: bool = True) -> dict[str, Any]:
         """Run the complete demonstration.
-        
+
         Args:
             include_all_modalities: Whether to include EHR, ECG, and wearable
-            
+
         Returns:
             Complete demonstration results
         """
@@ -58,7 +58,7 @@ class IIT_MANDI_Demo:
             "visualization": {},
             "evidence": {},
         }
-        
+
         # Step 1: EHR Processing
         if self.scenario.ehr_data and include_all_modalities:
             self.ehr_prediction = self._process_ehr()
@@ -68,7 +68,7 @@ class IIT_MANDI_Demo:
                 "timestamp": datetime.now(UTC).isoformat(timespec="seconds"),
             }
             results["predictions"]["ehr"] = self.ehr_prediction
-        
+
         # Step 2: ECG Processing
         if include_all_modalities:
             self.ecg_analysis = self._process_ecg()
@@ -79,7 +79,7 @@ class IIT_MANDI_Demo:
                 "timestamp": datetime.now(UTC).isoformat(timespec="seconds"),
             }
             results["predictions"]["ecg"] = self.ecg_analysis
-        
+
         # Step 3: Wearable Processing
         if include_all_modalities:
             self.wearable_analysis = self._process_wearable()
@@ -89,7 +89,7 @@ class IIT_MANDI_Demo:
                 "timestamp": datetime.now(UTC).isoformat(timespec="seconds"),
             }
             results["predictions"]["wearable"] = self.wearable_analysis
-        
+
         # Step 4: Multimodal Fusion
         self.multimodal_prediction = self._fuse_predictions(include_all_modalities)
         results["predictions"]["multimodal"] = self.multimodal_prediction.to_dict()
@@ -99,13 +99,13 @@ class IIT_MANDI_Demo:
             "missing_modalities": self.multimodal_prediction.missing_modalities,
             "timestamp": datetime.now(UTC).isoformat(timespec="seconds"),
         }
-        
+
         # Step 5: Prepare Visualization
         results["visualization"] = self._prepare_visualization()
-        
+
         # Step 6: Prepare Evidence Report
         results["evidence"] = self._prepare_evidence()
-        
+
         # Set end time
         self.end_time = datetime.now(UTC)
         results["timing"] = {
@@ -113,9 +113,9 @@ class IIT_MANDI_Demo:
             "end": self.end_time.isoformat(timespec="seconds"),
             "duration_seconds": (self.end_time - self.start_time).total_seconds(),
         }
-        
+
         return results
-    
+
     def _process_ehr(self) -> dict[str, Any]:
         """Process EHR data and get prediction."""
         try:
@@ -123,11 +123,10 @@ class IIT_MANDI_Demo:
             return model.predict(self.scenario.ehr_data)
         except Exception as e:
             return {"error": str(e), "status": "failed"}
-    
+
     def _process_ecg(self) -> dict[str, Any]:
         """Process ECG signal and get analysis."""
         try:
-            import numpy as np
             signal, metadata = generate_synthetic_ecg(
                 duration=10,
                 heart_rate=self.scenario.ecg_heart_rate,
@@ -137,7 +136,7 @@ class IIT_MANDI_Demo:
             return result.to_dict()
         except Exception as e:
             return {"error": str(e), "status": "failed"}
-    
+
     def _process_wearable(self) -> dict[str, Any]:
         """Process wearable data and get analysis."""
         try:
@@ -145,10 +144,10 @@ class IIT_MANDI_Demo:
                 duration_seconds=self.scenario.wearable_duration,
                 scenario=self.scenario.wearable_scenario,
             )
-            
-            from app.cardiotwin.wearables.processing import analyze_wearable_data
+
             from app.cardiotwin.wearables.models import WearableDataPoint
-            
+            from app.cardiotwin.wearables.processing import analyze_wearable_data
+
             # Convert to DataPoint objects
             wearable_dps = [
                 WearableDataPoint(
@@ -165,9 +164,9 @@ class IIT_MANDI_Demo:
                 )
                 for dp in data_points
             ]
-            
+
             features, prediction = analyze_wearable_data(wearable_dps)
-            
+
             return {
                 "features": features.to_dict(),
                 "prediction": prediction.to_dict(),
@@ -177,11 +176,10 @@ class IIT_MANDI_Demo:
             }
         except Exception as e:
             return {"error": str(e), "status": "failed"}
-    
+
     def _fuse_predictions(self, include_all: bool = True) -> MultimodalPrediction:
         """Fuse predictions from all modalities."""
         # Generate ECG signal for fusion
-        import numpy as np
         ecg_signal = None
         if include_all and self.scenario.ecg_heart_rate:
             signal, metadata = generate_synthetic_ecg(
@@ -190,7 +188,7 @@ class IIT_MANDI_Demo:
                 scenario=self.scenario.ecg_scenario,
             )
             ecg_signal = signal.tolist() if hasattr(signal, 'tolist') else list(signal)
-        
+
         # Generate wearable data for fusion
         wearable_data = []
         if include_all:
@@ -199,7 +197,7 @@ class IIT_MANDI_Demo:
                 scenario=self.scenario.wearable_scenario,
             )
             wearable_data = data_points
-        
+
         input_data = MultimodalInput(
             ehr_data=self.scenario.ehr_data if include_all else {},
             ecg_signal=ecg_signal,
@@ -207,16 +205,16 @@ class IIT_MANDI_Demo:
             wearable_data=wearable_data,
             patient_id=self.scenario.id,
         )
-        
+
         return fuse_predictions(input_data)
-    
+
     def _prepare_visualization(self) -> dict[str, Any]:
         """Prepare visualization data for the 3D view."""
         if self.multimodal_prediction is None:
             return {}
-        
+
         pred = self.multimodal_prediction
-        
+
         return {
             "cad_probability": round(pred.fused_cad_probability, 4),
             "vessels": {
@@ -244,7 +242,7 @@ class IIT_MANDI_Demo:
                 },
             },
         }
-    
+
     def _prepare_evidence(self) -> dict[str, Any]:
         """Prepare evidence report with provenance."""
         evidence = {
@@ -300,7 +298,7 @@ class IIT_MANDI_Demo:
             ],
             "disclaimer": "This demonstration uses synthetic patient data. All predictions are for illustrative purposes only and do not constitute medical advice or diagnosis.",
         }
-        
+
         return evidence
 
 
@@ -309,11 +307,11 @@ def run_demo_sequence(
     include_all_modalities: bool = True,
 ) -> dict[str, Any]:
     """Run the complete IIT Mandi Track A demonstration sequence.
-    
+
     Args:
         scenario_id: ID of the scenario to demonstrate
         include_all_modalities: Whether to include all modalities
-        
+
     Returns:
         Complete demonstration results
     """
@@ -321,7 +319,7 @@ def run_demo_sequence(
     scenario = get_scenario(scenario_id)
     if scenario is None:
         scenario = create_synthetic_patient(scenario_id)
-    
+
     # Create and run demo
     demo = IIT_MANDI_Demo(scenario=scenario)
     return demo.run(include_all_modalities=include_all_modalities)
@@ -330,7 +328,7 @@ def run_demo_sequence(
 @dataclass
 class DemoStep:
     """A single step in the demonstration sequence."""
-    
+
     step_number: int
     title: str
     description: str
@@ -338,7 +336,7 @@ class DemoStep:
     expected_result: str
     completed: bool = False
     result: dict[str, Any] | None = None
-    
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "step_number": self.step_number,
@@ -353,15 +351,15 @@ class DemoStep:
 
 class DemoSequence:
     """Sequenced demonstration for IIT Mandi Track A."""
-    
+
     def __init__(self, scenario_id: str = "high_risk_65m"):
         self.scenario_id = scenario_id
         self.steps: list[DemoStep] = []
         self.current_step = 0
-        
+
         # Initialize steps
         self._initialize_steps()
-    
+
     def _initialize_steps(self) -> None:
         """Initialize the demonstration steps."""
         self.steps = [
@@ -422,24 +420,24 @@ class DemoSequence:
                 expected_result="Complete evidence report with provenance",
             ),
         ]
-    
+
     def run_step(self, step_number: int) -> DemoStep:
         """Run a specific step in the sequence."""
         if step_number < 1 or step_number > len(self.steps):
             raise ValueError(f"Invalid step number: {step_number}")
-        
+
         step = self.steps[step_number - 1]
-        
+
         # Actually execute the step
         if step.step_number == 1:
-            from app.iit_mandi.scenarios import get_scenario, create_synthetic_patient
+            from app.iit_mandi.scenarios import create_synthetic_patient, get_scenario
             scenario = get_scenario(self.scenario_id) or create_synthetic_patient(self.scenario_id)
             step.result = scenario.to_dict()
-        
+
         elif step.step_number == 2:
             # This would process all modalities
             step.result = {"status": "completed", "message": "All modalities ingested"}
-        
+
         elif step.step_number == 3:
             from app.cardiotwin.model import load_model
             try:
@@ -452,10 +450,10 @@ class DemoSequence:
                 }
             except Exception as e:
                 step.result = {"error": str(e)}
-        
+
         elif step.step_number == 4:
-            from app.cardiotwin.ecg import generate_synthetic_ecg, analyze_ecg
-            import numpy as np
+
+            from app.cardiotwin.ecg import analyze_ecg, generate_synthetic_ecg
             try:
                 scenario = get_scenario(self.scenario_id) or create_synthetic_patient(self.scenario_id)
                 signal, _ = generate_synthetic_ecg(
@@ -470,24 +468,24 @@ class DemoSequence:
                 }
             except Exception as e:
                 step.result = {"error": str(e)}
-        
+
         elif step.step_number == 5:
-            from app.cardiotwin.wearables.simulation import generate_synthetic_wearable_stream
             from app.cardiotwin.wearables.processing import analyze_wearable_data
+            from app.cardiotwin.wearables.simulation import generate_synthetic_wearable_stream
             try:
                 scenario = get_scenario(self.scenario_id) or create_synthetic_patient(self.scenario_id)
                 data_points = generate_synthetic_wearable_stream(
                     duration_seconds=scenario.wearable_duration,
                     scenario=scenario.wearable_scenario,
                 )
-                features, prediction = analyze_wearable_data(data_points)
+                features, wearable_prediction = analyze_wearable_data(data_points)
                 step.result = {
-                    "stress_score": round(prediction.stress_score, 4),
-                    "afib_probability": round(prediction.afib_probability, 4),
+                    "stress_score": round(wearable_prediction.stress_score, 4),
+                    "afib_probability": round(wearable_prediction.afib_probability, 4),
                 }
             except Exception as e:
                 step.result = {"error": str(e)}
-        
+
         elif step.step_number == 6:
             try:
                 demo_result = run_demo_sequence(self.scenario_id, include_all_modalities=True)
@@ -497,31 +495,31 @@ class DemoSequence:
                 }
             except Exception as e:
                 step.result = {"error": str(e)}
-        
+
         elif step.step_number == 7:
             step.result = {
                 "message": "3D visualization ready",
                 "url": "/cardiotwin",
             }
-        
+
         elif step.step_number == 8:
             try:
                 demo_result = run_demo_sequence(self.scenario_id, include_all_modalities=True)
                 step.result = demo_result.get("evidence", {})
             except Exception as e:
                 step.result = {"error": str(e)}
-        
+
         step.completed = True
         self.current_step = step.step_number
-        
+
         return step
-    
+
     def run_all(self) -> list[DemoStep]:
         """Run all steps in the sequence."""
         for i in range(1, len(self.steps) + 1):
             self.run_step(i)
         return self.steps
-    
+
     def get_summary(self) -> dict[str, Any]:
         """Get a summary of the demonstration sequence."""
         completed = sum(1 for s in self.steps if s.completed)

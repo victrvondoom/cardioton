@@ -56,7 +56,7 @@ EXPERIMENTS = [
 ]
 
 
-def _patient_prediction(scenario_id: str) -> dict[str, Any]:
+def _patient_prediction(scenario_id: str) -> tuple[dict[str, Any], dict[str, Any]]:
     scenario = get_scenario(scenario_id)
     if scenario is None:
         raise ValueError(f"Unknown synthetic scenario: {scenario_id}")
@@ -212,7 +212,7 @@ def run_planet_to_city_to_heart(country_iso: str = "IN",
     }
 
 
-def run_experiment(experiment_id: str, **kwargs: Any) -> dict[str, Any]:
+def run_experiment(experiment_id: str, **kwargs) -> dict[str, Any]:
     if experiment_id == "earth_to_heart":
         return run_earth_to_heart(
             kwargs.get("country_iso", "IN"), kwargs.get("scenario_id", "high_risk_65m"),

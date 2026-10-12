@@ -180,11 +180,11 @@ export default function OahBridge() {
     <div className="mx-auto max-w-[1500px] space-y-5 p-5 lg:p-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-accent-cyan">OneAquaHealth · Track 7</p>
+          <p className="text-xs uppercase tracking-[0.18em] text-accent-brand">OneAquaHealth · Track 7</p>
           <h1 className="mt-2">One Health context explorer</h1>
           <p className="mt-2 max-w-3xl text-sm text-ink-muted">Step 1 · Inspect a synthetic environmental scenario, its location, weather context, evidence classification, and generated FHIR resources.</p>
         </div>
-        <Link to="/aquahealth/map" className="text-sm text-accent-cyan underline">Open AquaHealth map</Link>
+        <Link to="/aquahealth/map" className="text-sm text-accent-brand underline">Open AquaHealth map</Link>
       </header>
 
       <section aria-label="Select scenario" className={`${card} flex flex-wrap items-center gap-3`}>
@@ -195,7 +195,7 @@ export default function OahBridge() {
         {selected && <span className="text-xs text-ink-muted">{selected.grounding_statement}</span>}
       </section>
 
-      {error && <div role="alert" className="rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-300">{error}</div>}
+      {error && <div role="alert" className="rounded-lg border border-accent-red/40 bg-accent-red/10 p-3 text-sm text-accent-red">{error}</div>}
       {selected && <div className="grid gap-4 2xl:grid-cols-[minmax(0,1.6fr)_minmax(320px,.6fr)]">
         <section className={card}>
           <h2 className="mb-3 text-sm font-semibold text-ink-primary">1 · Real-world view: OneAquaHealth research cities</h2>
@@ -232,7 +232,7 @@ export default function OahBridge() {
                 setFocusMode("city");
                 setFocusKey((k) => k + 1);
               }}
-              className="rounded-md border border-accent-cyan/40 bg-accent-cyan/15 px-3 py-1.5 text-[11px] text-accent-cyan hover:bg-accent-cyan/25"
+              className="rounded-md border border-accent-brand/40 bg-accent-brand/10 px-3 py-1.5 text-[11px] text-accent-brand hover:bg-accent-brand/20"
             >
               Fly to {selected.city.split(" / ")[0]} exposure zone
             </button>
@@ -243,7 +243,7 @@ export default function OahBridge() {
                 setFocusMode("overview");
                 setFocusKey((k) => k + 1);
               }}
-              className="rounded-md border border-surface-border px-3 py-1.5 text-[11px] text-ink-body hover:border-accent-cyan"
+              className="rounded-md border border-surface-border px-3 py-1.5 text-[11px] text-ink-body hover:border-accent-brand"
             >
               All cities
             </button>
@@ -299,7 +299,7 @@ export default function OahBridge() {
         <section className={card}>
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div><h2 className="text-sm font-semibold text-ink-primary">4 · Six-tier standards validation</h2><p className="mt-1 text-xs text-ink-muted">Deterministic synthetic analysis · {run.run.engine} · {run.run.total_ms.toFixed(2)} ms</p></div>
-            <span className={`rounded-full px-3 py-1 text-xs ${run.validation_report.all_passed ? "bg-emerald-500/10 text-emerald-300" : "bg-red-500/10 text-red-300"}`}>{run.validation_report.summary.passed_checks}/{run.validation_report.summary.total_checks} checks passed</span>
+            <span className={`rounded-full px-3 py-1 text-xs ${run.validation_report.all_passed ? "bg-accent-green/10 text-accent-green" : "bg-accent-red/10 text-accent-red"}`}>{run.validation_report.summary.passed_checks}/{run.validation_report.summary.total_checks} checks passed</span>
           </div>
           <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
             {Object.entries(run.validation_report.tiers).map(([key, tier]) => {
@@ -320,21 +320,21 @@ export default function OahBridge() {
 
         <section className="grid gap-4 lg:grid-cols-2">
           <div className={card}>
-            <div className="flex items-start justify-between gap-3"><div><h2 className="text-sm font-semibold text-ink-primary">5 · Standards preview</h2><p className="mt-1 text-xs text-ink-muted">FHIR R4 collection Bundle · {run.bundle.entry.length} resources</p></div><a className="text-xs text-accent-cyan underline" href="/api/v1/oah-bridge/fhir/metadata" target="_blank" rel="noreferrer">CapabilityStatement</a></div>
+            <div className="flex items-start justify-between gap-3"><div><h2 className="text-sm font-semibold text-ink-primary">5 · Standards preview</h2><p className="mt-1 text-xs text-ink-muted">FHIR R4 collection Bundle · {run.bundle.entry.length} resources</p></div><a className="text-xs text-accent-brand underline" href="/api/v1/oah-bridge/fhir/metadata" target="_blank" rel="noreferrer">CapabilityStatement</a></div>
             <div className="mt-3 flex flex-wrap gap-2">{run.bundle.entry.map(({ resource }) => <span key={`${resource.resourceType}/${resource.id}`} className="rounded border border-surface-border px-2 py-1 text-[11px]">{resource.resourceType}/{resource.id}</span>)}</div>
             <p className="mt-3 text-xs text-ink-muted">Application-level pinned checks only. This is not official HL7 or OAH certification.</p>
           </div>
           <div className={card}>
             <h2 className="text-sm font-semibold text-ink-primary">6 · Informational clinical context</h2>
             <p className="mt-1 text-xs text-ink-muted">CDS Hooks response is informational and does not diagnose or recommend treatment.</p>
-            <button type="button" onClick={evaluate} disabled={busy} className="mt-3 rounded-md border border-accent-cyan/50 bg-accent-cyan/10 px-3 py-2 text-xs text-accent-cyan disabled:opacity-50">Evaluate synthetic demo context</button>
+            <button type="button" onClick={evaluate} disabled={busy} className="mt-3 rounded-md border border-accent-brand/50 bg-accent-brand/10 px-3 py-2 text-xs text-accent-brand disabled:opacity-50">Evaluate synthetic demo context</button>
             {cds && <div className="mt-3 space-y-2" aria-live="polite">{cds.cards.map((item, i) => <article key={`${item.summary}-${i}`} className="rounded-lg border border-surface-border p-3"><p className="text-sm text-ink-primary">{item.summary}</p><p className="mt-1 text-xs text-ink-muted">{item.detail}</p></article>)}<p className="text-[10px] text-ink-faint">Location source: {cds.location_source}</p></div>}
           </div>
         </section>
       </>}
-      <section className={`${card} flex flex-wrap items-center justify-between gap-4 border-accent-cyan/30`}>
+      <section className={`${card} flex flex-wrap items-center justify-between gap-4 border-accent-brand/30`}>
         <div><h2 className="text-sm font-semibold text-ink-primary">Continue to the governed exchange</h2><p className="mt-1 max-w-3xl text-xs text-ink-muted">This scenario explorer is an illustrative context step. It does not write its scenario into an exchange job. The Track 7 workbench runs the separate end-to-end flow: semantic mapping, human approval, validation, System B transfer, return, round-trip proof, and Evidence Passport.</p></div>
-        <Link to="/interop" className="shrink-0 rounded-md bg-accent-cyan px-4 py-2 text-sm font-semibold text-surface-bg">Open Track 7 exchange →</Link>
+        <Link to="/interop" className="shrink-0 rounded-md bg-accent-brand px-4 py-2 text-sm font-semibold text-[#171717] hover:bg-brand-600 hover:text-white">Open Track 7 exchange →</Link>
       </section>
       <p className="text-[11px] text-ink-faint">Synthetic demonstration only. Environmental signals are not patient diagnoses; possible associations remain subject to human review.</p>
     </div>

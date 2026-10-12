@@ -19,6 +19,7 @@ import { SLABadge } from "../components/SLABadge";
 import { StatusPill } from "../components/StatusPill";
 import { api, type CaseListItem } from "../lib/api";
 import { useAutoRefresh } from "../lib/useAutoRefresh";
+import { PixelStatus } from "../pixel/PixelStatus";
 import {
   PAYERS,
   STATUSES,
@@ -142,6 +143,11 @@ export default function Cases() {
             <span className="text-mono-tech nums-tabular text-ink-body">{activeCount}</span> active
             <span className="mx-2 text-ink-faint">·</span>
             <span className="text-mono-tech nums-tabular text-ink-body">{counts.appealed ?? 0}</span> in appeal
+            <span className="mx-2 text-ink-faint">·</span>
+            <span className="inline-flex items-center gap-1.5 text-mono-tech text-ink-muted" title="Cases refresh from the backend every 30 seconds">
+              <PixelStatus state="running" size={6} />
+              auto-refresh 30 s
+            </span>
             {loadError && (
               <>
                 <span className="mx-2 text-ink-faint">·</span>
@@ -164,7 +170,7 @@ export default function Cases() {
       <JourneyCases />
 
       {/* Filter bar */}
-      <div className="reveal-go bg-surface-raised border border-surface-border rounded-2xl mb-4 overflow-hidden" style={{ animationDelay: "60ms" }}>
+      <div className="reveal-go bg-surface-raised border border-surface-border rounded mb-4 overflow-hidden" style={{ animationDelay: "60ms" }}>
         <div className="flex flex-wrap items-center gap-1.5 p-3 border-b border-surface-border">
           {STATUS_PILLS.map((p) => (
             <button
@@ -172,7 +178,7 @@ export default function Cases() {
               type="button"
               onClick={() => setStatusFilter(p.value)}
               className={clsx(
-                "px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 flex items-center gap-1.5 active:scale-95",
+                "px-2.5 py-1 rounded text-xs font-medium transition-all duration-200 flex items-center gap-1.5 active:scale-95",
                 statusFilter === p.value
                   ? "bg-accent-brand text-ink-invert shadow-sm"
                   : "bg-surface-panel text-ink-body hover:bg-surface-raised-hi hover:-translate-y-0.5",
@@ -223,12 +229,12 @@ export default function Cases() {
 
       {/* Table */}
       <div
-        className="reveal-go bg-surface-raised border border-surface-border rounded-2xl overflow-hidden"
+        className="reveal-go bg-surface-raised border border-surface-border rounded overflow-hidden"
         style={{ animationDelay: "110ms" }}
       >
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-3 px-10 py-16 text-center reveal-go">
-            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-surface-panel border border-surface-border text-ink-faint animate-float-soft">
+            <div className="flex items-center justify-center w-12 h-12 rounded bg-surface-panel border border-surface-border text-ink-faint">
               <Inbox size={20} strokeWidth={1.5} />
             </div>
             <div>
@@ -420,9 +426,9 @@ function ConfidenceBar({
                             "bg-accent-brand";
   return (
     <div className="flex items-center gap-2">
-      <div className="flex-1 h-1.5 rounded-full bg-surface-border overflow-hidden">
+      <div className="flex-1 h-1.5 rounded bg-surface-border overflow-hidden">
         <div
-          className={clsx("h-full rounded-full", fill)}
+          className={clsx("h-full rounded", fill)}
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -525,12 +531,12 @@ function NewCaseModal({ onClose, onCreated }: NewCaseModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/50"
         onClick={onClose}
       />
 
       {/* Panel */}
-      <div className="relative z-10 w-full max-w-md bg-surface-panel border border-surface-border rounded-2xl shadow-2xl">
+      <div className="relative z-10 w-full max-w-md bg-surface-panel border border-surface-border rounded shadow-2xl">
         {/* Header */}
         <div className="flex items-start justify-between px-5 py-4 border-b border-surface-border">
           <div>

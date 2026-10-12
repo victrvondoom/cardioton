@@ -35,11 +35,11 @@ const REGIONS: Region[] = [
 ];
 
 const STATUS_HEX: Record<EcosystemStatus, string> = {
-  critical_signal: "#ef4444",
-  potential_stress: "#f59e0b",
-  watch: "#3b82f6",
-  healthy_signal: "#22c55e",
-  insufficient_data: "#94a3b8",
+  critical_signal: "#F0442B",
+  potential_stress: "#FFB400",
+  watch: "#39A9E8",
+  healthy_signal: "#59DFA6",
+  insufficient_data: "#96979E",
 };
 
 function regionAtCoordinate(longitude: number, latitude: number): RegionId {
@@ -51,7 +51,7 @@ function regionAtCoordinate(longitude: number, latitude: number): RegionId {
 
 function Metric({ label, value, icon, accent = "text-ink-primary" }: { label: string; value: string; icon: React.ReactNode; accent?: string }) {
   return (
-    <div className="min-w-0 rounded-xl border border-white/[0.08] bg-black/15 px-3 py-2.5 transition-colors hover:border-accent-cyan/25">
+    <div className="min-w-0 rounded border border-surface-border bg-surface-panel px-3 py-2.5 transition-colors hover:border-accent-cyan/30">
       <div className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-ink-muted">{icon}{label}</div>
       <div className={`mt-1 text-2xl font-semibold tabular-nums tracking-tight ${accent}`}>{value}</div>
     </div>
@@ -118,37 +118,36 @@ export default function GlobalControlCard({ region: controlledRegion, onRegionCh
   const elevatedSignals = regionPoints.filter((point) => point.status === "critical_signal" || point.status === "potential_stress").length;
 
   return (
-    <section aria-labelledby="global-control-title" className="relative isolate mb-6 overflow-hidden rounded-2xl border border-white/[0.1] bg-[linear-gradient(135deg,rgba(16,29,43,0.98),rgba(9,17,27,0.98)_58%,rgba(12,25,34,0.98))] p-4 shadow-[0_18px_60px_rgba(0,0,0,0.22)] sm:p-5">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-16 -top-28 -z-10 h-72 w-72 rounded-full bg-cyan-400/[0.08] blur-3xl" />
+    <section aria-labelledby="global-control-title" className="relative mb-6 overflow-hidden rounded border border-surface-border bg-surface-raised p-4 sm:p-5">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-accent-cyan">AquaHealth · Network overview</span>
-            <span className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider ${error ? "border-amber-300/20 bg-amber-300/[0.08] text-amber-200" : "border-emerald-300/20 bg-emerald-300/[0.08] text-emerald-200"}`}>
-              <span className={`h-1.5 w-1.5 rounded-full ${error ? "bg-amber-300" : "bg-emerald-300"}`} />{error ? data ? "Last known data" : "Unavailable" : mapFeed.loading ? data ? "Refreshing" : "Connecting" : "Data current"}
+            <span className={`inline-flex items-center gap-1.5 rounded border px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider ${error ? "border-accent-amber/40 bg-accent-amber/10 text-accent-amber" : "border-accent-green/40 bg-accent-green/10 text-accent-green"}`}>
+              <span className={`h-1.5 w-1.5 rounded ${error ? "bg-accent-amber" : "bg-accent-green"}`} />{error ? data ? "Last known data" : "Unavailable" : mapFeed.loading ? data ? "Refreshing" : "Connecting" : "Data current"}
             </span>
           </div>
-          <h2 id="global-control-title" className="mt-1.5 text-xl font-semibold tracking-tight text-white sm:text-2xl">Global Control</h2>
-          <p className="mt-1 max-w-2xl text-xs leading-relaxed text-slate-300">Explore mapped freshwater observations by region. Choose a region, or tap a location on the map or globe to update this view.</p>
+          <h2 id="global-control-title" className="mt-1.5 text-xl font-semibold tracking-tight text-ink-primary sm:text-2xl">Global Control</h2>
+          <p className="mt-1 max-w-2xl text-xs leading-relaxed text-ink-body">Explore mapped freshwater observations by region. Choose a region, or tap a location on the map or globe to update this view.</p>
         </div>
-        <div className="flex shrink-0 rounded-lg border border-white/10 bg-black/20 p-1" role="group" aria-label="Visualization mode">
-          <button type="button" aria-pressed={view === "map"} onClick={() => setView("map")} className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs text-slate-300 transition-all hover:text-white aria-pressed:bg-white/10 aria-pressed:text-white aria-pressed:shadow-sm"><MapIcon size={13} aria-hidden="true" />Map</button>
-          <button type="button" aria-pressed={view === "globe"} onClick={() => setView("globe")} className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs text-slate-300 transition-all hover:text-white aria-pressed:bg-white/10 aria-pressed:text-white aria-pressed:shadow-sm"><Globe2 size={13} aria-hidden="true" />3D Globe</button>
+        <div className="flex shrink-0 rounded border border-surface-border bg-surface-panel p-1" role="group" aria-label="Visualization mode">
+          <button type="button" aria-pressed={view === "map"} onClick={() => setView("map")} className="inline-flex items-center gap-1.5 rounded px-3 py-1.5 text-xs text-ink-body transition-colors hover:text-ink-primary aria-pressed:bg-accent-cyan/15 aria-pressed:text-ink-primary"><MapIcon size={13} aria-hidden="true" />Map</button>
+          <button type="button" aria-pressed={view === "globe"} onClick={() => setView("globe")} className="inline-flex items-center gap-1.5 rounded px-3 py-1.5 text-xs text-ink-body transition-colors hover:text-ink-primary aria-pressed:bg-accent-cyan/15 aria-pressed:text-ink-primary"><Globe2 size={13} aria-hidden="true" />3D Globe</button>
         </div>
       </div>
 
-      {error && <p role="status" className="mt-3 text-xs text-amber-200">Observation refresh unavailable: {error}{data ? ". Last successful observations remain visible." : ""}</p>}
+      {error && <p role="status" className="mt-3 text-xs text-accent-amber">Observation refresh unavailable: {error}{data ? ". Last successful observations remain visible." : ""}</p>}
 
       <div className="mt-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap gap-2" aria-label="Regional controls">
         <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter observations by macro-region">
           {([ ["amer", "AMER"], ["emea", "EMEA"], ["apac", "APAC"] ] as const).map(([id, label]) => (
-            <button key={id} type="button" aria-pressed={macro === id} onClick={() => changeMacro(id)} className="shrink-0 rounded-full border border-white/10 bg-white/[0.025] px-3 py-1.5 text-[11px] text-slate-300 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-cyan/40 hover:bg-accent-cyan/[0.08] hover:text-white active:translate-y-0 aria-pressed:border-accent-cyan/50 aria-pressed:bg-accent-cyan/15 aria-pressed:text-cyan-100">{label}</button>
+            <button key={id} type="button" aria-pressed={macro === id} onClick={() => changeMacro(id)} className="shrink-0 rounded border border-surface-border bg-surface-panel px-3 py-1.5 text-[11px] text-ink-body transition-colors hover:border-accent-cyan/40 hover:bg-accent-cyan/[0.08] hover:text-ink-primary aria-pressed:border-accent-cyan/50 aria-pressed:bg-accent-cyan/15 aria-pressed:text-ink-primary">{label}</button>
           ))}
         </div>
         <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter observations by region">
           {REGIONS.map((item) => (
-            <button key={item.id} type="button" aria-pressed={regionId === item.id} onClick={() => changeRegion(item.id)} className="shrink-0 rounded-full border border-white/10 bg-white/[0.025] px-3 py-1.5 text-[11px] text-slate-300 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-cyan/40 hover:bg-accent-cyan/[0.08] hover:text-white active:translate-y-0 aria-pressed:border-accent-cyan/50 aria-pressed:bg-accent-cyan/15 aria-pressed:text-cyan-100">
+            <button key={item.id} type="button" aria-pressed={regionId === item.id} onClick={() => changeRegion(item.id)} className="shrink-0 rounded border border-surface-border bg-surface-panel px-3 py-1.5 text-[11px] text-ink-body transition-colors hover:border-accent-cyan/40 hover:bg-accent-cyan/[0.08] hover:text-ink-primary aria-pressed:border-accent-cyan/50 aria-pressed:bg-accent-cyan/15 aria-pressed:text-ink-primary">
               {item.label}
             </button>
           ))}
@@ -156,18 +155,18 @@ export default function GlobalControlCard({ region: controlledRegion, onRegionCh
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <label className="relative min-w-[190px] flex-1 lg:max-w-[250px]">
-            <Search size={13} aria-hidden="true" className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search waterbody or reference" aria-label="Search observations" className="w-full rounded-lg border border-white/10 bg-black/20 py-2 pl-8 pr-3 text-xs text-white placeholder:text-slate-500 outline-none transition-colors focus:border-cyan-300/60" />
+            <Search size={13} aria-hidden="true" className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-ink-faint" />
+            <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search waterbody or reference" aria-label="Search observations" className="w-full rounded border border-surface-border bg-surface-bg py-2 pl-8 pr-3 text-xs text-ink-primary placeholder:text-ink-faint outline-none transition-colors focus:border-accent-cyan/60" />
           </label>
-          <button type="button" onClick={() => { setQuery(""); changeRegion("all"); }} className="inline-flex min-h-9 items-center gap-1.5 rounded-lg border border-cyan-200/20 bg-cyan-200/[0.07] px-3 text-[11px] font-medium text-cyan-100 transition-colors hover:bg-cyan-200/[0.13] focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-200"><RotateCcw size={12} aria-hidden="true" />Reset to global</button>
+          <button type="button" onClick={() => { setQuery(""); changeRegion("all"); }} className="inline-flex min-h-9 items-center gap-1.5 rounded border border-accent-cyan/30 bg-accent-cyan/10 px-3 text-[11px] font-medium text-accent-cyan transition-colors hover:bg-accent-cyan/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-cyan"><RotateCcw size={12} aria-hidden="true" />Reset to global</button>
         </div>
       </div>
 
-      <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[10px] text-slate-400"><Radio size={12} className="text-accent-cyan" aria-hidden="true" /><span>{scopeLabel}</span><span className="text-slate-600">/</span><span>{regionPoints.length} mapped observation{regionPoints.length === 1 ? "" : "s"}</span></div>
+      <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[10px] text-ink-muted"><Radio size={12} className="text-accent-cyan" aria-hidden="true" /><span>{scopeLabel}</span><span className="text-ink-faint">/</span><span>{regionPoints.length} mapped observation{regionPoints.length === 1 ? "" : "s"}</span></div>
 
       <div className="mt-3 grid gap-3 xl:grid-cols-[minmax(0,1.7fr)_minmax(250px,0.8fr)]">
-        <div className="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-[#07111c] shadow-inner">
-          <Suspense fallback={<div className="h-[300px] animate-pulse bg-white/[0.03] p-4 text-xs text-slate-400" role="status">Loading visualization…</div>}>
+        <div className="min-w-0 overflow-hidden rounded border border-surface-border bg-surface-bg">
+          <Suspense fallback={<div className="h-[300px] animate-pulse bg-surface-panel p-4 text-xs text-ink-muted" role="status">Loading visualization…</div>}>
             {view === "map" ? (
               <AquaHealthMapLibre points={regionPoints} selectedId={selectedId} onSelect={selectPoint} viewBounds={region.bounds} onCoordinateClick={handleMapClick} />
             ) : (
@@ -179,32 +178,32 @@ export default function GlobalControlCard({ region: controlledRegion, onRegionCh
         <div className="flex min-w-0 flex-col gap-3">
           <div className="grid grid-cols-2 gap-2">
             <Metric label="Observations" value={data ? String(regionPoints.length) : "—"} icon={<Activity size={11} />} />
-            <Metric label="Needs review" value={data ? String(needingReview) : "—"} icon={<ShieldCheck size={11} />} accent={needingReview ? "text-amber-200" : "text-ink-primary"} />
-            <Metric label="Elevated signals" value={data ? String(elevatedSignals) : "—"} icon={<Radio size={11} />} accent={elevatedSignals ? "text-rose-200" : "text-ink-primary"} />
-            <Metric label="Data presence" value={data ? (regionPoints.length ? "Mapped" : "No data") : "—"} icon={<Layers3 size={11} />} accent="text-cyan-100" />
+            <Metric label="Needs review" value={data ? String(needingReview) : "—"} icon={<ShieldCheck size={11} />} accent={needingReview ? "text-accent-amber" : "text-ink-primary"} />
+            <Metric label="Elevated signals" value={data ? String(elevatedSignals) : "—"} icon={<Radio size={11} />} accent={elevatedSignals ? "text-accent-red" : "text-ink-primary"} />
+            <Metric label="Data presence" value={data ? (regionPoints.length ? "Mapped" : "No data") : "—"} icon={<Layers3 size={11} />} accent="text-accent-cyan" />
           </div>
 
-          <div className="flex min-h-[76px] flex-1 flex-col justify-center rounded-xl border border-white/[0.08] bg-white/[0.025] p-3">
+          <div className="flex min-h-[76px] flex-1 flex-col justify-center rounded border border-surface-border bg-surface-panel p-3">
             {selectedPoint ? (
               <>
-                <div className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-400">Selected observation</div>
-                <div className="mt-1 truncate text-sm font-medium text-white">{selectedPoint.waterbody_name}</div>
-                <div className="mt-0.5 text-[10px] text-slate-400">{selectedPoint.reference} · {selectedPoint.status.replaceAll("_", " ")}</div>
-                <Link to={`/aquahealth/observations/${selectedPoint.observation_id}`} className="mt-1.5 inline-flex w-fit items-center gap-1 text-[10px] text-cyan-200 hover:text-white">Open record <ArrowUpRight size={11} aria-hidden="true" /></Link>
+                <div className="text-[9px] font-semibold uppercase tracking-[0.16em] text-ink-muted">Selected observation</div>
+                <div className="mt-1 truncate text-sm font-medium text-ink-primary">{selectedPoint.waterbody_name}</div>
+                <div className="mt-0.5 text-[10px] text-ink-faint">{selectedPoint.reference} · {selectedPoint.status.replaceAll("_", " ")}</div>
+                <Link to={`/aquahealth/observations/${selectedPoint.observation_id}`} className="mt-1.5 inline-flex w-fit items-center gap-1 text-[10px] text-accent-cyan hover:text-ink-primary">Open record <ArrowUpRight size={11} aria-hidden="true" /></Link>
               </>
             ) : (
               <>
-                <div className="text-[9px] font-semibold uppercase tracking-[0.16em] text-slate-400">Regional context</div>
-                <div className="mt-1 text-xs leading-relaxed text-slate-200">{regionPoints.length ? `${regionPoints.filter((point) => point.is_demo).length} demonstration · ${regionPoints.filter((point) => !point.is_demo).length} contributor records` : "No mapped observations in this region yet."}</div>
-                <p className="mt-1 text-[9px] text-slate-500">Signals are informational and require human review.</p>
+                <div className="text-[9px] font-semibold uppercase tracking-[0.16em] text-ink-muted">Regional context</div>
+                <div className="mt-1 text-xs leading-relaxed text-ink-body">{regionPoints.length ? `${regionPoints.filter((point) => point.is_demo).length} demonstration · ${regionPoints.filter((point) => !point.is_demo).length} contributor records` : "No mapped observations in this region yet."}</div>
+                <p className="mt-1 text-[9px] text-ink-faint">Signals are informational and require human review.</p>
               </>
             )}
           </div>
         </div>
       </div>
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[9px] text-slate-500">
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[9px] text-ink-faint">
         <span>Regional totals reflect mapped observations available to this account.</span>
-        <Link to="/aquahealth/map" className="inline-flex items-center gap-1 text-slate-300 transition-colors hover:text-accent-cyan">Open full map <ArrowUpRight size={11} aria-hidden="true" /></Link>
+        <Link to="/aquahealth/map" className="inline-flex items-center gap-1 text-ink-body transition-colors hover:text-accent-cyan">Open full map <ArrowUpRight size={11} aria-hidden="true" /></Link>
       </div>
     </section>
   );

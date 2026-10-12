@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { AtlasSpatial } from "./types";
 import type { Map as LibreMap, Marker as LibreMarker } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import "../../styles/maplibre-dark.css";
 import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 
 type Point=Record<string,unknown>;
@@ -22,7 +23,7 @@ export default function SpatialTwinMap({spatial,onEvidence}:{spatial:AtlasSpatia
       try{
         lib.setWorkerUrl(workerUrl);
         const lng=num(loc,"longitude"),lat=num(loc,"latitude");
-        map=new lib.Map({container:host.current,center:[lng,lat],zoom:11,attributionControl:false,style:{version:8,sources:{},layers:[{id:"offline-background",type:"background",paint:{"background-color":"#e7edf0"}}]}});
+        map=new lib.Map({container:host.current,center:[lng,lat],zoom:11,attributionControl:false,style:{version:8,sources:{},layers:[{id:"offline-background",type:"background",paint:{"background-color":"#0D0E10"}}]}});
         map.addControl(new lib.NavigationControl({showCompass:false}),"top-right");
         map.on("load",()=>{
           if(disposed||!map)return;

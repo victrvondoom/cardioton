@@ -10,38 +10,36 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from typing import Any
 
-import numpy as np
-
 
 @dataclass
 class WearableDataPoint:
     """Single wearable data point from a device."""
-    
+
     timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
-    
+
     # Heart rate data
     heart_rate: float | None = None  # bpm
-    
+
     # Heart rate variability
     rr_intervals: list[float] | None = None  # milliseconds
-    
+
     # Oxygen saturation
     spo2: float | None = None  # %
-    
+
     # Activity
     steps: int | None = None
     activity_level: float | None = None  # 0-1 scale
-    
+
     # Sleep (if available)
     sleep_stage: str | None = None  # "awake", "light", "deep", "rem"
-    
+
     # Device info
     device_id: str = ""
     device_type: str = ""
-    
+
     # Quality
     signal_quality: float = 1.0  # 0-1
-    
+
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for API serialization."""
         return {
@@ -61,37 +59,37 @@ class WearableDataPoint:
 @dataclass
 class WearableFeatures:
     """Extracted features from wearable data time series."""
-    
+
     # Basic statistics
     heart_rate_mean: float = 0.0
     heart_rate_std: float = 0.0
     heart_rate_min: float = 0.0
     heart_rate_max: float = 0.0
-    
+
     # HRV metrics
     rmssd: float = 0.0  # Root mean square of successive differences
     sdnn: float = 0.0  # Standard deviation of NN intervals
     hf_power: float = 0.0  # High frequency power (0.15-0.4 Hz)
     lf_power: float = 0.0  # Low frequency power (0.04-0.15 Hz)
     lf_hf_ratio: float = 0.0
-    
+
     # Activity metrics
     activity_mean: float = 0.0
     activity_std: float = 0.0
     steps_total: int = 0
-    
+
     # Oxygen
     spo2_mean: float = 0.0
     spo2_min: float = 0.0
-    
+
     # Time window
     window_start: datetime = field(default_factory=lambda: datetime.now(UTC))
     window_end: datetime = field(default_factory=lambda: datetime.now(UTC))
     window_duration_seconds: float = 0.0
-    
+
     # Data quality
     data_completeness: float = 1.0  # Fraction of expected data present
-    
+
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for API serialization."""
         return {
@@ -131,23 +129,23 @@ class WearableFeatures:
 @dataclass
 class WearablePrediction:
     """Predictions and anomalies from wearable data."""
-    
+
     # Stress level
     stress_score: float = 0.0  # 0-1, higher = more stress
-    
+
     # Arrhythmia detection
     afib_probability: float = 0.0
     afib_confidence: str = "low"
-    
+
     # Activity classification
     activity_state: str = "resting"  # "resting", "light", "moderate", "vigorous"
-    
+
     # Anomalies
     anomalies: list[str] = field(default_factory=list)
-    
+
     # Timing
     prediction_timestamp: datetime = field(default_factory=lambda: datetime.now(UTC))
-    
+
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for API serialization."""
         return {
@@ -163,27 +161,27 @@ class WearablePrediction:
 @dataclass
 class PatientWearableState:
     """Complete wearable state for a patient."""
-    
+
     patient_id: str = ""
-    
+
     # Current data
     current: WearableDataPoint | None = None
-    
+
     # Historical features (over different time windows)
     features_1min: WearableFeatures | None = None
     features_5min: WearableFeatures | None = None
     features_1hour: WearableFeatures | None = None
-    
+
     # Predictions
     predictions: WearablePrediction | None = None
-    
+
     # Trend analysis
     heart_rate_trend: str = "stable"  # "stable", "increasing", "decreasing", "variable"
     activity_trend: str = "stable"
-    
+
     # Last update
     last_update: datetime = field(default_factory=lambda: datetime.now(UTC))
-    
+
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for API serialization."""
         return {

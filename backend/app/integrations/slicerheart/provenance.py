@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 
 UPSTREAM_REPO = "https://github.com/SlicerHeart/SlicerHeart"
 UPSTREAM_SNAPSHOT = "master branch snapshot (zip download; no VCS metadata included)"
@@ -86,7 +87,7 @@ def snapshot_fingerprint() -> str:
     return accumulator.hexdigest()
 
 
-def provenance_summary() -> dict:
+def provenance_summary() -> dict[str, Any]:
     root = vendor_root()
     files = _fingerprint_files()
     return {

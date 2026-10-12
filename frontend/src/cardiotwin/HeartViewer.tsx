@@ -232,10 +232,10 @@ export default function HeartViewer(props: HeartViewerProps) {
   return (
     <div className="relative h-full w-full">
       <style>{`
-        .ct-vessel-tag{display:flex;gap:6px;align-items:baseline;padding:2px 8px;border-radius:999px;font:600 11px/1.4 var(--font-ui,system-ui);
-          background:rgb(15 23 42/.82);color:#fff;border:1px solid rgb(255 255 255/.25);white-space:nowrap;cursor:pointer}
+        .ct-vessel-tag{display:flex;gap:6px;align-items:baseline;padding:2px 8px;border-radius:2px;font:600 11px/1.4 var(--font-ui,system-ui);
+          background:rgb(var(--surface-raised) / .92);color:rgb(var(--ink-primary));border:1px solid rgb(var(--surface-border-hi));white-space:nowrap;cursor:pointer}
         .ct-vessel-tag span{font-variant-numeric:tabular-nums;font-weight:500;opacity:.92}
-        .ct-vessel-tag--sel{border-color:#22d3ee;box-shadow:0 0 0 2px rgb(34 211 238/.5)}
+        .ct-vessel-tag--sel{border-color:rgb(var(--pixel-blue));box-shadow:0 0 0 2px rgb(var(--pixel-blue) / .35)}
       `}</style>
       <SceneBoundary fallback={fallback}>
         <Canvas

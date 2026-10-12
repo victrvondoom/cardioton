@@ -1,7 +1,6 @@
 /**
- * Cmd+K search palette. Stub for now — opens a modal showing the demo
- * fixtures for quick navigation. Phase 11+ wires real fuzzy search across
- * cases, policies, agents.
+ * Keyboard search across actual workspace routes and locally available demo
+ * fixtures. This does not claim to search all patient records or agent runs.
  */
 import clsx from "clsx";
 import { ArrowRight, Search, X } from "lucide-react";
@@ -188,7 +187,7 @@ export function SearchPalette({ open, onClose }: Props) {
       onClick={closePalette}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-ink-primary/40 backdrop-blur-sm animate-slide-in-up" />
+      <div className="absolute inset-0 bg-ink-primary/40 animate-slide-in-up" />
 
       {/* Panel */}
       <div
@@ -206,7 +205,7 @@ export function SearchPalette({ open, onClose }: Props) {
             aria-label="Search workspace and demo cases"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search cases, policies, agents..."
+            placeholder="Search workspaces, tools, demo cases..."
             className="flex-1 bg-transparent outline-none text-sm text-ink-primary placeholder:text-ink-faint"
           />
           <button

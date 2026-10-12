@@ -511,7 +511,7 @@ export default function CesiumGlobe({
   }
 
   const button =
-    "flex items-center gap-1.5 rounded-md border border-white/20 bg-black/60 px-2.5 py-1.5 text-[11px] text-slate-100 backdrop-blur hover:border-cyan-300";
+    "flex items-center gap-1.5 rounded border border-surface-border bg-surface-raised/90 px-2.5 py-1.5 text-[11px] text-ink-body hover:border-accent-cyan/60";
 
   return (
     <div
@@ -521,7 +521,7 @@ export default function CesiumGlobe({
     >
       <div ref={container} className="absolute inset-0" />
       {status === "loading" && (
-        <div className="absolute inset-0 grid place-items-center text-xs text-slate-300">Loading the satellite globe…</div>
+        <div className="absolute inset-0 grid place-items-center text-xs text-ink-muted">Loading the satellite globe…</div>
       )}
       <div className="absolute left-3 top-3 z-10 flex flex-col items-start gap-1.5">
         <button type="button" onClick={flyOverview} className={button}>
@@ -540,11 +540,11 @@ export default function CesiumGlobe({
         </div>
       </div>
       {gpsMsg && (
-        <div role="status" className="absolute bottom-11 right-3 z-10 max-w-xs rounded-md bg-black/70 px-2.5 py-1.5 text-[11px] text-slate-100">
+        <div role="status" className="absolute bottom-11 right-3 z-10 max-w-xs rounded bg-surface-raised/90 px-2.5 py-1.5 text-[11px] text-ink-body">
           {gpsMsg}
         </div>
       )}
-      <div className="pointer-events-none absolute bottom-3 right-3 z-10 rounded bg-black/60 px-2 py-1 font-mono text-[10px] text-slate-200">
+      <div className="pointer-events-none absolute bottom-3 right-3 z-10 rounded bg-surface-raised/90 px-2 py-1 font-mono text-[10px] text-ink-body">
         <span ref={coordsRef}>Move over the globe</span>
       </div>
     </div>

@@ -17,42 +17,40 @@ from typing import Any
 
 import numpy as np
 
-from app.cardiotwin.schema import FEATURES, FEATURE_INDEX
-
 
 @dataclass
 class PatientScenario:
     """A synthetic patient scenario for demonstration."""
-    
+
     id: str
     name: str
     description: str
-    
+
     # Patient metadata
     age: int
     sex: str
-    
+
     # Clinical features (EHR data)
     ehr_data: dict[str, Any] = field(default_factory=dict)
-    
+
     # ECG scenario
     ecg_scenario: str = "normal"
     ecg_heart_rate: float = 72.0
-    
+
     # Wearable scenario
     wearable_scenario: str = "normal"
     wearable_duration: float = 300.0  # seconds
-    
+
     # Expected outcomes
     expected_cad_probability: float = 0.0
     expected_afib_probability: float = 0.0
-    
+
     # Demonstration focus
     focus_areas: list[str] = field(default_factory=list)
-    
+
     # Visualization preferences
     visualization: dict[str, Any] = field(default_factory=dict)
-    
+
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for API serialization."""
         return {
@@ -96,7 +94,7 @@ def _generate_basic_ehr_data(
         "BP": round(120 + np.random.random() * 20, 1),  # Systolic
         "PR": round(72 + np.random.random() * 10, 1),  # Pulse rate
     }
-    
+
     # Add risk factors
     if add_risk_factors:
         data["DM"] = 1 if random.random() > 0.7 else 0  # Diabetes
@@ -110,7 +108,7 @@ def _generate_basic_ehr_data(
         data["Current Smoker"] = 0
         data["FH"] = 0
         data["DLP"] = 0
-    
+
     # Add ECG findings
     if add_ecg_abnormalities:
         data["St Depression"] = 1 if random.random() > 0.8 else 0
@@ -120,7 +118,7 @@ def _generate_basic_ehr_data(
         data["St Depression"] = 0
         data["Tinversion"] = 0
         data["LVH"] = "N"
-    
+
     # Add lab values
     if add_lab_abnormalities:
         data["LDL"] = round(100 + np.random.random() * 80, 1)  # Elevated
@@ -132,15 +130,15 @@ def _generate_basic_ehr_data(
         data["HDL"] = round(45 + np.random.random() * 15, 1)
         data["TG"] = round(100 + np.random.random() * 40, 1)
         data["FBS"] = round(70 + np.random.random() * 20, 1)
-    
+
     # Add exam findings
     data["Typical Chest Pain"] = 1 if add_risk_factors and random.random() > 0.8 else 0
     data["Dyspnea"] = 1 if add_risk_factors and random.random() > 0.7 else 0
-    
+
     # Add echo findings
     data["EF-TTE"] = round(55 + np.random.random() * 20, 1) if add_risk_factors else round(60 + np.random.random() * 10, 1)
     data["Region RWMA"] = 2 if add_risk_factors and random.random() > 0.7 else 0
-    
+
     return data
 
 
@@ -170,7 +168,7 @@ IIT_MANDI_SCENARIOS: list[PatientScenario] = [
             "highlight": "normal_anatomy",
         },
     ),
-    
+
     PatientScenario(
         id="high_risk_65m",
         name="High-Risk 65-year-old Male",
@@ -195,7 +193,7 @@ IIT_MANDI_SCENARIOS: list[PatientScenario] = [
             "highlight": "high_risk_areas",
         },
     ),
-    
+
     PatientScenario(
         id="afib_72f",
         name="Atrial Fibrillation in 72-year-old Female",
@@ -221,7 +219,7 @@ IIT_MANDI_SCENARIOS: list[PatientScenario] = [
             "show_animation": True,
         },
     ),
-    
+
     PatientScenario(
         id="exercise_40m",
         name="Exercise Stress Test Simulation",
@@ -247,7 +245,7 @@ IIT_MANDI_SCENARIOS: list[PatientScenario] = [
             "show_realtime": True,
         },
     ),
-    
+
     PatientScenario(
         id="asymptomatic_55f",
         name="Asymptomatic High-Risk Female",
@@ -281,11 +279,11 @@ def create_synthetic_patient(
     custom_data: dict[str, Any] | None = None,
 ) -> PatientScenario:
     """Create a synthetic patient scenario.
-    
+
     Args:
         scenario_id: ID of a predefined scenario, or None for random
         custom_data: Optional custom EHR data
-        
+
     Returns:
         PatientScenario with synthetic data
     """
@@ -294,37 +292,34 @@ def create_synthetic_patient(
         for scenario in IIT_MANDI_SCENARIOS:
             if scenario.id == scenario_id:
                 return scenario
-        
+
         # If not found, create a random one
         raise ValueError(f"Scenario {scenario_id} not found")
-    
+
     # Create random scenario
     age = np.random.randint(30, 80)
     sex = np.random.choice(["Male", "Female"])
-    
+
     has_risk = np.random.random() > 0.5
     has_ecg_abnormal = np.random.random() > 0.7
     has_lab_abnormal = np.random.random() > 0.6
-    
+
     ehr_data = _generate_basic_ehr_data(
-        age, sex, 
+        age, sex,
         add_risk_factors=has_risk,
         add_ecg_abnormalities=has_ecg_abnormal,
         add_lab_abnormalities=has_lab_abnormal,
     )
-    
+
     # Select ECG scenario
     if has_risk and has_ecg_abnormal:
         ecg_scenario = np.random.choice(["afib", "stemi", "nstemi"])
     else:
         ecg_scenario = "normal"
-    
+
     # Select wearable scenario
-    if has_risk:
-        wearable_scenario = np.random.choice(["stress", "afib", "exercise"])
-    else:
-        wearable_scenario = "normal"
-    
+    wearable_scenario = np.random.choice(["stress", "afib", "exercise"]) if has_risk else "normal"
+
     return PatientScenario(
         id=f"random_{age}_{sex.lower()}",
         name=f"Random {age}-year-old {sex}",
@@ -347,29 +342,29 @@ def create_synthetic_patient(
 
 def generate_demo_scenarios(num_scenarios: int = 5) -> list[PatientScenario]:
     """Generate multiple demo scenarios.
-    
+
     Args:
         num_scenarios: Number of scenarios to generate
-        
+
     Returns:
         List of PatientScenario
     """
     scenarios = []
-    
+
     for i in range(num_scenarios):
         scenario = create_synthetic_patient()
         scenario.id = f"demo_{i+1}_{scenario.id}"
         scenarios.append(scenario)
-    
+
     return scenarios
 
 
 def get_scenario(scenario_id: str) -> PatientScenario | None:
     """Get a specific scenario by ID.
-    
+
     Args:
         scenario_id: Scenario ID
-        
+
     Returns:
         PatientScenario or None if not found
     """
@@ -381,7 +376,7 @@ def get_scenario(scenario_id: str) -> PatientScenario | None:
 
 def list_scenarios() -> list[dict[str, Any]]:
     """List all available scenarios.
-    
+
     Returns:
         List of scenario metadata
     """

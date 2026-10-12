@@ -43,7 +43,7 @@ class AnnulusShapeRequest(BaseModel):
 
 def _parse_rows(csv_text: str) -> list[dict[str, str]]:
     reader = csv.DictReader(io.StringIO(csv_text))
-    rows = []
+    rows: list[dict[str, str]] = []
     for raw in reader:
         if len(rows) >= MAX_CSV_ROWS:
             raise HTTPException(422, "Contour export exceeds the maximum row count")

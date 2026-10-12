@@ -1,7 +1,7 @@
 /** Scenario picker + grouped patient input form, generated from the backend feature catalog. */
 import clsx from "clsx";
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { CARD } from "./panels";
 import type { FeatureCatalog, FeatureSpec, PatientValues, Scenario } from "./types";
@@ -83,11 +83,21 @@ interface Props {
 export function PatientPanel({ catalog, scenarios, scenarioNote, activeScenario, patient, onScenario, onChange, onClear }: Props) {
   const [open, setOpen] = useState(false);
   const [more, setMore] = useState(false);
+  const scenarioRailRef = useRef<HTMLDivElement>(null);
   const active = scenarios.find((s) => s.id === activeScenario) ?? null;
+  useEffect(() => {
+    const rail = scenarioRailRef.current;
+    const selected = rail?.querySelector<HTMLButtonElement>('[aria-pressed="true"]');
+    if (!rail || !selected) return;
+    const railBounds = rail.getBoundingClientRect();
+    const selectedBounds = selected.getBoundingClientRect();
+    rail.scrollLeft += selectedBounds.left - railBounds.left - (railBounds.width - selectedBounds.width) / 2;
+  }, [activeScenario]);
   return (
     <section className={clsx(CARD, "p-3 space-y-3")} aria-label="Patient input" data-testid="patient-panel">
-      <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Demo scenarios">
-        <span className="text-[11px] uppercase tracking-wide text-ink-muted mr-1">Scenario</span>
+      <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-2 sm:grid-cols-[auto_minmax(0,1fr)_auto]">
+        <span className="text-[11px] uppercase tracking-wide text-ink-muted">Scenario</span>
+        <div ref={scenarioRailRef} className="flex min-w-0 items-center gap-1.5 overflow-x-auto whitespace-nowrap pb-1" role="group" aria-label="Demo scenarios">
         {scenarios.map((s) => (
           <button
             key={s.id}
@@ -97,22 +107,23 @@ export function PatientPanel({ catalog, scenarios, scenarioNote, activeScenario,
             data-testid={`scenario-${s.id}`}
             onClick={() => onScenario(s)}
             className={clsx(
-              "px-2.5 py-1 rounded-md border text-[12px] focus:outline-none focus:ring-2 focus:ring-accent-brand",
+              "shrink-0 px-2.5 py-1 rounded-md border text-[12px] focus:outline-none focus:ring-2 focus:ring-accent-brand",
               activeScenario === s.id ? "border-accent-brand bg-accent-brand/10 text-ink-primary" : "border-surface-border text-ink-body hover:border-accent-brand/60",
             )}
           >
             {s.id} · {s.title}
           </button>
         ))}
-        <button type="button" onClick={onClear} className="px-2 py-1 rounded-md text-[12px] text-ink-muted underline">
+        <button type="button" onClick={onClear} className="shrink-0 px-2 py-1 rounded-md text-[12px] text-ink-muted underline">
           Clear
         </button>
+        </div>
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           data-testid="toggle-form"
-          className="ml-auto inline-flex items-center gap-1 px-2.5 py-1 rounded-md border border-surface-border text-[12px] text-ink-body"
+          className="col-span-2 justify-self-end inline-flex shrink-0 items-center gap-1 px-2.5 py-1 rounded-md border border-surface-border text-[12px] text-ink-body sm:col-span-1"
         >
           Edit patient values <ChevronDown size={13} className={clsx(open && "rotate-180")} aria-hidden />
         </button>

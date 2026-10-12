@@ -17,7 +17,7 @@ from .service import explain, passport, provider_catalog, reconstruct_atlas, san
 router = APIRouter(prefix="/atlas", tags=["cardiotwin-atlas"])
 
 
-async def _run(function: Any, *args: Any, **kwargs: Any) -> dict[str, Any]:
+async def _run(function: Any, *args: Any, **kwargs) -> dict[str, Any]:
     try:
         return await run_in_threadpool(function, *args, **kwargs)
     except (ValueError, OverflowError, RecursionError) as exc:

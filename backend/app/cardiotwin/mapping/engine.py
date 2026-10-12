@@ -188,7 +188,7 @@ class EvidenceMappingEngine:
         def explicitly_randomized(record: EvidenceRecord) -> bool:
             design = record.trial_metadata.get("study_design", {})
             if isinstance(design, dict) and design.get("allocation"):
-                return design["allocation"] == "RANDOMIZED"
+                return bool(design["allocation"] == "RANDOMIZED")
             # Only explicit labels count; 'nonrandomized' must never match.
             label = record.study_design.strip().lower()
             return label in {"randomized controlled trial", "randomised controlled trial", "interventional (randomized)", "interventional (randomised)", "rct"}

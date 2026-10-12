@@ -37,6 +37,7 @@ import { coronaryContextFromPrediction } from "../cardiotwin/intelligence/corona
 import { CardioTelemetryHUD } from "../cardiotwin/CardioTelemetryHUD";
 import { VesselCrossSectionInspector } from "../cardiotwin/VesselCrossSectionInspector";
 import { HeartTeamConsensus } from "../cardiotwin/HeartTeamConsensus";
+import { PixelToHeart } from "../pixel/PixelToHeart";
 
 const HeartViewer = lazy(() => import("../cardiotwin/HeartViewer"));
 
@@ -59,6 +60,7 @@ export default function CardioTwin() {
   const [preset, setPreset] = useState<Record<string, number | string> | null>(null);
   const [stressMode, setStressMode] = useState(false);
   const [renderPipeline, setRenderPipeline] = useState<"webgl" | "vector">("webgl");
+  const [introDone, setIntroDone] = useState(false);
   const seq = useRef(0);
   const firstLoad = useRef(true);
   const pickTop = useRef(true); // after a scenario loads, select its highest-probability vessel
@@ -139,18 +141,18 @@ export default function CardioTwin() {
           </Link>
         </div>
         <SafetyBanner />
-        <Link to="/cardiotwin/intelligence" state={shown && !busy ? { coronaryContext: coronaryContextFromPrediction(shown, cfActive && !!cf && view === "perturbed") } : undefined} className={`${CARD} flex items-center justify-between gap-3 p-3 text-ink-primary hover:border-accent-brand`}>
-          <span><b className="text-sm">3D Cardiovascular Intelligence</b><span className="block text-xs text-ink-muted">Upload Cardiovascular Report · reviewed anatomy, environmental context and evidence replay</span></span>
-          <ArrowRight size={18} aria-hidden />
-        </Link>
-        <Link to="/cardiotwin/atlas" className={`${CARD} flex items-center justify-between gap-3 p-3 text-ink-primary hover:border-accent-brand`}>
-          <span><b className="text-sm">CardioTwin Atlas</b><span className="block text-xs text-ink-muted">Multimodal evidence graph, synchronized spatial replay and isolated research scenarios</span></span>
-          <ArrowRight size={18} aria-hidden />
-        </Link>
-        <Link to="/cardiotwin/hemo" className={`${CARD} flex items-center justify-between gap-3 p-3 text-ink-primary hover:border-accent-brand`}>
-          <span><b className="text-sm">CARDIO-HEMO TWIN</b><span className="block text-xs text-ink-muted">Longitudinal heart-failure evidence, hemodynamic transitions and as-of replay</span></span>
-          <ArrowRight size={18} aria-hidden />
-        </Link>
+        <nav aria-label="Related CardioTwin workspaces" className="flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-surface-border pb-3 text-xs">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-ink-muted">Continue in</span>
+          <Link to="/cardiotwin/intelligence" state={shown && !busy ? { coronaryContext: coronaryContextFromPrediction(shown, cfActive && !!cf && view === "perturbed") } : undefined} className="inline-flex items-center gap-1.5 text-ink-body hover:text-accent-brand focus-visible:ring-2 focus-visible:ring-accent-brand" title="Upload a cardiovascular report, review anatomy and replay evidence">
+            3D Cardiovascular Intelligence <ArrowRight size={13} aria-hidden />
+          </Link>
+          <Link to="/cardiotwin/atlas" className="inline-flex items-center gap-1.5 text-ink-body hover:text-accent-brand focus-visible:ring-2 focus-visible:ring-accent-brand" title="Multimodal evidence graph and spatial replay">
+            CardioTwin Atlas <ArrowRight size={13} aria-hidden />
+          </Link>
+          <Link to="/cardiotwin/hemo" className="inline-flex items-center gap-1.5 text-ink-body hover:text-accent-brand focus-visible:ring-2 focus-visible:ring-accent-brand" title="Longitudinal heart-failure evidence and hemodynamic replay">
+            Cardio-Hemo Twin <ArrowRight size={13} aria-hidden />
+          </Link>
+        </nav>
       </header>
 
       <ExposureContext exposureId={searchParams.get("exposure") ?? undefined} independentCardio />
@@ -176,16 +178,6 @@ export default function CardioTwin() {
             setCf(null);
             setCfActive(false);
           }}
-        />
-      )}
-
-      {shown && (
-        <CardioTelemetryHUD
-          patient={patient}
-          prediction={shown}
-          selectedTarget={selected}
-          stressMode={stressMode}
-          onToggleStress={setStressMode}
         />
       )}
 
@@ -282,6 +274,7 @@ export default function CardioTwin() {
                 Showing: <b>{view === "perturbed" ? "perturbed (sensitivity simulation)" : "baseline"}</b>
               </div>
             )}
+            {!introDone && <PixelToHeart cell={10} onDone={() => setIntroDone(true)} />}
           </div>
 
           {/* keyboard / screen-reader path to the same selection the 3D view offers */}
@@ -326,6 +319,16 @@ export default function CardioTwin() {
           )}
         </div>
       </div>
+
+      {shown && (
+        <CardioTelemetryHUD
+          patient={patient}
+          prediction={shown}
+          selectedTarget={selected}
+          stressMode={stressMode}
+          onToggleStress={setStressMode}
+        />
+      )}
 
       {catalog && pred && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

@@ -23,6 +23,7 @@ from app.cardiotwin.cross5 import (
     intersections,
     microphysics,
 )
+from app.cardiotwin.environment import service as environment_service
 
 router = APIRouter(prefix="/cross5", tags=["cross5"])
 
@@ -153,7 +154,7 @@ async def earth_environment(
 ) -> dict[str, Any]:
     try:
         return await earth.environment_context(latitude, longitude, day or earth.utc_today())
-    except earth.environment_service.ProviderUnavailableError as exc:
+    except environment_service.ProviderUnavailableError as exc:
         raise HTTPException(
             503,
             detail={

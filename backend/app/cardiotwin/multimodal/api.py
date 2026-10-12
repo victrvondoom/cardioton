@@ -7,16 +7,15 @@ at /api/v1/cardiotwin/multimodal.
 
 from __future__ import annotations
 
-import structlog
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+import structlog
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 
 from app.auth import get_current_user
 from app.cardiotwin.multimodal.fusion import (
     MultimodalInput,
-    MultimodalPrediction,
     fuse_predictions,
 )
 from app.cardiotwin.wearables.models import WearableDataPoint
@@ -28,12 +27,12 @@ router = APIRouter(prefix="/multimodal", tags=["cardiotwin_multimodal"])
 
 class MultimodalRequest(BaseModel):
     """Request body for multimodal prediction."""
-    
+
     ehr_data: dict[str, Any] = Field(
         default_factory=dict,
         description="EHR/clinical data as feature name-value pairs",
     )
-    
+
     ecg_signal: list[float] | None = Field(
         default=None,
         description="ECG signal values",
@@ -44,7 +43,7 @@ class MultimodalRequest(BaseModel):
         le=10000.0,
         description="ECG sampling rate in Hz",
     )
-    
+
     wearable_data: list[dict[str, Any]] = Field(
         default_factory=list,
         description="Wearable data points",
@@ -53,12 +52,12 @@ class MultimodalRequest(BaseModel):
 
 class MultimodalDemoRequest(BaseModel):
     """Request body for multimodal demonstration."""
-    
+
     scenario_id: str = Field(
         default="high_risk_65m",
         description="ID of the scenario to use for demo",
     )
-    
+
     include_all_modalities: bool = Field(
         default=True,
         description="Include EHR, ECG, and wearable data",
@@ -123,7 +122,7 @@ async def multimodal_prediction(
     _: dict[str, Any] = Depends(get_current_user)
 ) -> dict[str, Any]:
     """Make multimodal prediction combining available modalities.
-    
+
     This endpoint:
     1. Processes EHR data with the CAD model (if provided)
     2. Processes ECG signal for arrhythmia/ischemia detection (if provided)
@@ -147,7 +146,7 @@ async def multimodal_prediction(
             signal_quality=dp_dict.get("signal_quality", 1.0),
         )
         wearable_data_points.append(dp)
-    
+
     # Create input
     input_data = MultimodalInput(
         ehr_data=request.ehr_data,
@@ -155,12 +154,12 @@ async def multimodal_prediction(
         ecg_sampling_rate=request.ecg_sampling_rate,
         wearable_data=wearable_data_points,
     )
-    
+
     # Fuse predictions
     prediction = fuse_predictions(input_data)
-    
+
     METRICS.inc("multimodal_predictions_total")
-    
+
     log.info(
         "cardiotwin.multimodal.predict",
         ehr_features=len(request.ehr_data),
@@ -169,7 +168,7 @@ async def multimodal_prediction(
         fused_cad=round(prediction.fused_cad_probability, 4),
         modalities=prediction.available_modalities,
     )
-    
+
     return {
         "prediction": prediction.to_dict(),
         "input_summary": {
@@ -186,25 +185,25 @@ async def multimodal_demo(
     _: dict[str, Any] = Depends(get_current_user)
 ) -> dict[str, Any]:
     """Run multimodal demonstration with synthetic data.
-    
+
     This endpoint generates synthetic data for all requested modalities
     and demonstrates the complete multimodal fusion pipeline.
     """
-    from app.iit_mandi.scenarios import get_scenario, create_synthetic_patient
     from app.cardiotwin.ecg import generate_synthetic_ecg
     from app.cardiotwin.wearables.simulation import generate_synthetic_wearable_stream
-    
+    from app.iit_mandi.scenarios import create_synthetic_patient, get_scenario
+
     # Get scenario
     scenario = get_scenario(request.scenario_id)
     if scenario is None:
         scenario = create_synthetic_patient(request.scenario_id)
-    
+
     # Build input with synthetic data
     input_data = MultimodalInput(
         ehr_data=scenario.ehr_data if request.include_all_modalities else {},
         patient_id=scenario.id,
     )
-    
+
     if request.include_all_modalities:
         # Add ECG
         signal, _ = generate_synthetic_ecg(
@@ -214,19 +213,19 @@ async def multimodal_demo(
         )
         input_data.ecg_signal = signal.tolist()
         input_data.ecg_sampling_rate = 500.0
-        
+
         # Add wearable
         wearable_data = generate_synthetic_wearable_stream(
             duration_seconds=300.0,
             scenario=scenario.wearable_scenario,
         )
         input_data.wearable_data = wearable_data
-    
+
     # Fuse predictions
     prediction = fuse_predictions(input_data)
-    
+
     METRICS.inc("multimodal_demo_executions_total")
-    
+
     return {
         "scenario": scenario.to_dict(),
         "prediction": prediction.to_dict(),

@@ -6,12 +6,14 @@
  * workflow: case load, review queue, recent cases and outstanding issues.
  */
 import clsx from "clsx";
-import { AlertTriangle, ArrowRight, CheckCircle2, Plus, XCircle } from "lucide-react";
+import { ArrowRight, Plus, RefreshCw } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { RecentCasesRibbon } from "../components/RecentCasesRibbon";
 import { StatTile } from "../components/StatTile";
+import { PixelEcgTrace } from "../pixel/PixelEcgTrace";
+import { PixelStatus, type PixelStatusKind } from "../pixel/PixelStatus";
 import { api } from "../lib/api";
 import {
   buildNotifications,
@@ -21,12 +23,19 @@ import {
   type Notification,
 } from "../lib/liveFeed";
 import { useLive } from "../lib/useLive";
+import { requestLiveRefresh } from "../lib/liveUpdates";
 import { WORKSPACES } from "../workflow/workspaces";
 
 const VERDICT_TINT: Record<string, string> = {
   APPROVE: "bg-accent-green/10 text-accent-green border-accent-green/30",
   DENY:    "bg-accent-red/10   text-accent-red   border-accent-red/30",
   REFER:   "bg-accent-amber/10 text-accent-amber border-accent-amber/30",
+};
+
+const STATUS_STATE: Record<"ok" | "down" | "loading", PixelStatusKind> = {
+  ok: "completed",
+  down: "failed",
+  loading: "running",
 };
 
 function StatusItem({
@@ -38,18 +47,16 @@ function StatusItem({
   state: "ok" | "down" | "loading";
   detail: string;
 }) {
-  const Icon = state === "ok" ? CheckCircle2 : state === "down" ? XCircle : AlertTriangle;
+  const tone =
+    state === "ok" ? "border-surface-border bg-surface-raised text-ink-body"
+    : state === "down" ? "border-accent-red/30 bg-accent-red/5 text-accent-red"
+    : "border-surface-border bg-surface-raised text-ink-muted";
   return (
     <div
-      className={clsx(
-        "flex items-center gap-2 rounded-lg border px-3 py-2 text-[12px]",
-        state === "ok" && "border-surface-border bg-surface-raised text-ink-body",
-        state === "down" && "border-accent-red/30 bg-accent-red/5 text-accent-red",
-        state === "loading" && "border-surface-border bg-surface-raised text-ink-muted",
-      )}
+      className={clsx("flex items-center gap-2.5 rounded border px-3 py-2 text-[12px]", tone)}
       role="status"
     >
-      <Icon size={13} aria-hidden="true" className="shrink-0" />
+      <PixelStatus state={STATUS_STATE[state]} size={10} />
       <span className="min-w-0">
         <span className="font-medium">{label}</span>
         <span className="text-ink-muted"> — {detail}</span>
@@ -58,19 +65,19 @@ function StatusItem({
   );
 }
 
-function AttentionPanel({ items, loading }: { items: Notification[]; loading: boolean }) {
+function AttentionPanel({ items, loading, available }: { items: Notification[]; loading: boolean; available: boolean }) {
   return (
-    <div className="bg-surface-raised border border-surface-border rounded-2xl overflow-hidden h-full flex flex-col">
+    <div className="bg-surface-raised border border-surface-border rounded overflow-hidden h-full flex flex-col">
       <div className="flex items-center justify-between px-5 py-3 border-b border-surface-border">
         <h3 className="text-sm font-semibold text-ink-primary">Needs attention</h3>
         <span className="text-[10px] text-mono-tech text-ink-muted" data-testid="attention-count">
-          {items.length === 0 ? (loading ? "checking…" : "all clear") : `${items.length} item${items.length === 1 ? "" : "s"}`}
+          {items.length === 0 ? (loading ? "checking…" : available ? "all clear" : "unavailable") : `${items.length} item${items.length === 1 ? "" : "s"}`}
         </span>
       </div>
       <ul className="flex-1 divide-y divide-surface-border" data-testid="attention-list">
         {items.length === 0 && (
           <li className="px-5 py-8 text-center text-[12px] text-ink-muted" data-testid="attention-empty">
-            {loading ? "Checking system state…" : "No outstanding issues. Cases awaiting review appear here."}
+            {loading ? "Checking system state…" : available ? "No outstanding issues. Cases awaiting review appear here." : "Could not check all sources. Refresh to retry."}
           </li>
         )}
         {items.map((n) => (
@@ -100,6 +107,7 @@ export default function Dashboard() {
   const fixtureFeed = useLive(api.listFixtures);
   const fixtures = fixtureFeed.data;
   const [creating, setCreating] = useState<string | null>(null);
+  const [createError, setCreateError] = useState<string | null>(null);
   const valueFeed = useLive(api.getOrgValue);
   const orgValue = valueFeed.data?.db_unavailable ? null : valueFeed.data;
   const snapshotFeed = useLive(fetchSnapshot, [], 60_000);
@@ -118,11 +126,13 @@ export default function Dashboard() {
 
   async function startDemo(name: string) {
     setCreating(name);
+    setCreateError(null);
     try {
       const { case_id } = await api.createFromFixture(name);
       navigate(`/cases/${case_id}`);
-    } catch {
+    } catch (error) {
       setCreating(null);
+      setCreateError(error instanceof Error ? error.message : "Could not create the case. Please try again.");
     }
   }
 
@@ -155,14 +165,25 @@ export default function Dashboard() {
             Case load, review queue and outstanding issues across the organisation.
           </p>
         </div>
+        <div className="flex flex-wrap items-center gap-2">
+        <button type="button" onClick={() => requestLiveRefresh()} disabled={valueFeed.loading || snapshotFeed.loading} className="inline-flex items-center gap-2 rounded border border-surface-border px-3.5 py-2 text-[13px] text-ink-primary disabled:opacity-50">
+          <RefreshCw size={14} aria-hidden="true" className={valueFeed.loading || snapshotFeed.loading ? "animate-spin" : undefined} />
+          Refresh dashboard
+        </button>
         <Link
           to="/intake"
-          className="inline-flex items-center gap-2 rounded-lg bg-accent-brand px-3.5 py-2 text-[13px] font-medium text-ink-invert hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand"
+          className="inline-flex items-center gap-2 rounded bg-accent-brand px-3.5 py-2 text-[13px] font-medium text-ink-invert hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-brand"
         >
           <Plus size={14} aria-hidden="true" />
           New patient case
         </Link>
+        </div>
       </header>
+
+      {/* Stepped pixel ECG strip — decorative rhythm, grid-aligned with the page */}
+      <div className="mb-6 overflow-hidden rounded border border-surface-border bg-surface-panel px-4 py-3" aria-hidden="true">
+        <PixelEcgTrace beats={6} width={960} height={40} color="orange" animate />
+      </div>
 
       {/* Operational status — measured deployment state, not decoration. */}
       <section aria-label="System status" className="mb-6 grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-4">
@@ -181,11 +202,11 @@ export default function Dashboard() {
         />
         <StatusItem
           label="Case storage"
-          state={snapshotFeed.loading ? "loading" : health?.case_storage_configured === false ? "down" : "ok"}
+          state={snapshotFeed.loading ? "loading" : !health || health.case_storage_configured === false ? "down" : "ok"}
           detail={
             snapshotFeed.loading
               ? "checking…"
-              : health?.case_storage_configured === false
+              : !health ? "status unavailable" : health.case_storage_configured === false
                 ? "not connected — case counts unknown"
                 : "connected"
           }
@@ -247,16 +268,17 @@ export default function Dashboard() {
       {/* Recent cases + outstanding issues. */}
       <section className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-4 mb-6">
         <RecentCasesRibbon />
-        <AttentionPanel items={attention} loading={snapshotFeed.loading} />
+        <AttentionPanel items={attention} loading={snapshotFeed.loading} available={!!(snapshot.health && snapshot.cases && snapshot.agents && snapshot.onco && snapshot.cardio)} />
       </section>
 
       {/* Synthetic demo cases — creates a real case from a fixture, then opens it. */}
       {fixtures && fixtures.length > 0 && (
-        <section className="bg-surface-raised border border-surface-border rounded-2xl px-5 py-4" aria-label="Synthetic demo cases">
+        <section className="bg-surface-raised border border-surface-border rounded px-5 py-4" aria-label="Synthetic demo cases">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-[12px] font-medium text-ink-primary">Synthetic demo cases</span>
             <span className="text-[11px] text-ink-muted">Creates a real case from a fixture record, then opens it.</span>
           </div>
+          {createError && <p role="alert" className="mt-3 text-sm text-accent-red">{createError}</p>}
           <div className="mt-3 flex flex-wrap items-center gap-2">
             {fixtures.map((f) => (
               <button
@@ -264,7 +286,7 @@ export default function Dashboard() {
                 type="button"
                 onClick={() => startDemo(f.name)}
                 disabled={creating !== null}
-                className={`text-xs text-mono-tech px-2.5 py-1 rounded-full border transition-colors disabled:opacity-50 ${VERDICT_TINT[f.expected_verdict] ?? ""}`}
+                className={`text-xs text-mono-tech px-2.5 py-1 rounded-sm border transition-colors disabled:opacity-50 ${VERDICT_TINT[f.expected_verdict] ?? ""}`}
                 title={f.label}
               >
                 {creating === f.name ? "starting…" : f.expected_verdict}

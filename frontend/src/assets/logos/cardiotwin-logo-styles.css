@@ -1,0 +1,94 @@
+/* CardioTwin Logo Styles */
+/* Color Palette - Pixel-Geometric Design System */
+
+:root {
+  /* Primary Colors */
+  --cardiotwin-red-primary: #ff4757;
+  --cardiotwin-red-secondary: #ff6b81;
+  --cardiotwin-red-light: #ff8fa3;
+  --cardiotwin-orange-accent: #ffa502;
+  --cardiotwin-orange-light: #ffb347;
+
+  /* Background */
+  --cardiotwin-bg-dark: #0a0a0a;
+  --cardiotwin-bg-darker: #050505;
+
+  /* Text */
+  --cardiotwin-text-primary: #ffffff;
+  --cardiotwin-text-secondary: #cccccc;
+  --cardiotwin-text-accent: #ffa502;
+}
+
+/* Logo Container */
+.cardiotwin-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Full Logo (with text) */
+.cardiotwin-logo-full {
+  width: 400px;
+  height: 300px;
+}
+
+/* Icon Only (for favicon, small spaces) */
+.cardiotwin-logo-icon {
+  width: 64px;
+  height: 64px;
+}
+
+/* Responsive Sizing */
+.cardiotwin-logo-small {
+  width: 200px;
+  height: 150px;
+}
+
+.cardiotwin-logo-medium {
+  width: 300px;
+  height: 225px;
+}
+
+.cardiotwin-logo-large {
+  width: 500px;
+  height: 375px;
+}
+
+/* Text Styling */
+.cardiotwin-logo-text {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 600;
+  color: var(--cardiotwin-red-primary);
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.cardiotwin-logo-tagline {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 0.6rem;
+  color: var(--cardiotwin-orange-accent);
+  text-align: center;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Animation (optional - pixel particle style) */
+@keyframes pulse-evidence {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.cardiotwin-logo .evidence-node {
+  animation: pulse-evidence 2s ease-in-out infinite;
+}
+
+/* Dark Theme Compatibility */
+.dark-theme .cardiotwin-logo-text {
+  color: var(--cardiotwin-red-primary);
+}
+
+.light-theme .cardiotwin-logo-text {
+  color: var(--cardiotwin-red-primary);
+}

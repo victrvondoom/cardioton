@@ -27,7 +27,7 @@ Classification = Literal[
 Runtime = Literal["fastapi_python", "slicer_runtime", "static_assets", "slicer_cpp_build"]
 Status = Literal["wired", "available_via_bridge", "documented_only", "not_integrated"]
 
-SPEED: dict[str, tuple[Runtime, str]] = {
+SPEED: dict[Runtime, str] = {
     "fastapi_python": "Runs in the CardioTon backend process.",
     "slicer_runtime": "Requires a 3D Slicer runtime; exposed through the bridge job contract only.",
     "static_assets": "Static resources; convertible or reference material.",

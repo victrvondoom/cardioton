@@ -27,6 +27,15 @@ export function ExposureContext({
   const error = context.error;
   const records = !error && context.data?.identity === identity ? context.data.records : [];
   const loading = context.loading;
+  if (independentCardio && !patientId && !caseId && !exposureId) {
+    return (
+      <section className="my-3 flex flex-wrap items-center gap-x-4 gap-y-1 border-y border-surface-border py-2 text-xs" aria-label="One Health exposure context">
+        <strong className="font-medium text-ink-primary">Environmental evidence</strong>
+        <span className="flex-1 text-ink-muted">This is an independent scenario: CAD inputs are not matched to a patient or exposure record; no environmental inference or score adjustment is made.</span>
+        <Link className="font-medium text-accent-brand hover:underline" to="/onehealth">Open Track 7 workbench →</Link>
+      </section>
+    );
+  }
   return (
     <section
       className="rounded-xl border border-accent-cyan/30 bg-accent-cyan/5 p-4 my-4"

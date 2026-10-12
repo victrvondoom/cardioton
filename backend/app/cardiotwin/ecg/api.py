@@ -6,28 +6,24 @@ This module is part of CardioTwin and mounted at /api/v1/cardiotwin/ecg.
 
 from __future__ import annotations
 
-import structlog
 from typing import Any
 
+import structlog
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
 from app.auth import get_current_user
 from app.cardiotwin.ecg.features import (
-    ECGFeatures,
     extract_ecg_features,
     generate_synthetic_ecg,
 )
 from app.cardiotwin.ecg.models import (
-    ECGAnalysisResult,
     analyze_ecg,
     get_ecg_model,
 )
 from app.cardiotwin.ecg.signals import (
-    DEFAULT_SAMPLING_RATE,
     detect_qrs_complexes,
     filter_ecg,
-    normalize_ecg,
 )
 from app.oncotwin.observability import METRICS
 
@@ -37,7 +33,7 @@ router = APIRouter(prefix="/ecg", tags=["cardiotwin_ecg"])
 
 class ECGSignalRequest(BaseModel):
     """Request body for ECG signal analysis."""
-    
+
     signal: list[float] | None = Field(
         default=None,
         description="Raw ECG signal values",
@@ -58,7 +54,7 @@ class ECGSignalRequest(BaseModel):
 
 class SyntheticECGRequest(BaseModel):
     """Request body for synthetic ECG generation."""
-    
+
     duration: float = Field(
         default=10.0,
         ge=1.0,
@@ -110,19 +106,19 @@ async def analyze_ecg_signal(
 ) -> dict[str, Any]:
     """Analyze ECG signal and return comprehensive results."""
     import numpy as np
-    
+
     if request.signal is None or len(request.signal) < 100:
         raise HTTPException(
             status_code=400,
             detail={"error": "Signal too short", "min_length": 100},
         )
-    
-    signal = np.array(request.signal, dtype=np.float32)
+
+    signal = np.array(request.signal, dtype=np.float64)
     result = analyze_ecg(signal, request.sampling_rate)
-    
+
     METRICS.inc("ecg_analyses_total")
     METRICS.observe_ms("ecg_analysis_ms", result.duration * 1000)
-    
+
     log.info(
         "cardiotwin.ecg.analyze",
         signal_length=result.signal_length,
@@ -130,7 +126,7 @@ async def analyze_ecg_signal(
         sampling_rate=request.sampling_rate,
         heart_rate=round(result.features.get("heart_rate", 0), 2),
     )
-    
+
     return result.to_dict()
 
 
@@ -141,18 +137,18 @@ async def extract_ecg_features_endpoint(
 ) -> dict[str, Any]:
     """Extract ECG features without predictions."""
     import numpy as np
-    
+
     if request.signal is None or len(request.signal) < 100:
         raise HTTPException(
             status_code=400,
             detail={"error": "Signal too short", "min_length": 100},
         )
-    
-    signal = np.array(request.signal, dtype=np.float32)
+
+    signal = np.array(request.signal, dtype=np.float64)
     features = extract_ecg_features(signal, request.sampling_rate, request.lead)
-    
+
     METRICS.inc("ecg_feature_extractions_total")
-    
+
     return {
         "features": features.to_dict(),
         "signal_metadata": {
@@ -178,9 +174,9 @@ async def generate_synthetic_ecg_signal(
         noise_level=request.noise_level,
         random_seed=request.random_seed,
     )
-    
+
     METRICS.inc("ecg_synthetic_generations_total")
-    
+
     return {
         "signal": signal.tolist(),
         "metadata": metadata,
@@ -194,16 +190,16 @@ async def filter_ecg_signal_endpoint(
 ) -> dict[str, Any]:
     """Apply filtering to ECG signal."""
     import numpy as np
-    
+
     if request.signal is None or len(request.signal) < 100:
         raise HTTPException(
             status_code=400,
             detail={"error": "Signal too short", "min_length": 100},
         )
-    
-    signal = np.array(request.signal, dtype=np.float32)
+
+    signal = np.array(request.signal, dtype=np.float64)
     filtered = filter_ecg(signal, request.sampling_rate)
-    
+
     return {
         "filtered_signal": filtered.tolist(),
         "metadata": {
@@ -221,19 +217,19 @@ async def detect_peaks_endpoint(
 ) -> dict[str, Any]:
     """Detect R-peaks and compute basic intervals."""
     import numpy as np
-    
+
     if request.signal is None or len(request.signal) < 100:
         raise HTTPException(
             status_code=400,
             detail={"error": "Signal too short", "min_length": 100},
         )
-    
-    signal = np.array(request.signal, dtype=np.float32)
+
+    signal = np.array(request.signal, dtype=np.float64)
     filtered = filter_ecg(signal, request.sampling_rate)
     qrs_data = detect_qrs_complexes(filtered, request.sampling_rate)
-    
+
     METRICS.inc("ecg_peak_detections_total")
-    
+
     return {
         "detection": {
             "r_peaks": [int(p) for p in qrs_data['r_peaks']],

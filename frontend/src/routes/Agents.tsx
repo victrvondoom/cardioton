@@ -9,7 +9,7 @@
  * health metrics that prove the system is enterprise-grade.
  */
 import clsx from "clsx";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Activity,
   Cpu,
@@ -41,6 +41,10 @@ import { getJson } from "../lib/agentsApi";
 import { useLive } from "../lib/useLive";
 import { useAutoRefresh } from "../lib/useAutoRefresh";
 
+import { usePrefersReducedMotion } from "../pixel/hooks";
+import { PixelFlow, type PixelFlowHandle, type PixelFlowLane } from "../pixel/PixelFlow";
+import { PixelStatus, type PixelStatusKind } from "../pixel/PixelStatus";
+
 interface AgentRun {
   id: string;
   case_id: string;
@@ -53,11 +57,11 @@ interface AgentRun {
   error_text: string | null;
 }
 
-const STATE_DOT: Record<AgentState, string> = {
-  healthy: "bg-accent-green",
-  running: "bg-accent-brand animate-pulse-soft",
-  error:   "bg-accent-red",
-  idle:    "bg-ink-faint",
+const STATE_PIXEL: Record<AgentState, PixelStatusKind> = {
+  healthy: "completed",
+  running: "running",
+  error:   "failed",
+  idle:    "idle",
 };
 
 const STATE_LABEL: Record<AgentState, string> = {
@@ -131,12 +135,12 @@ export default function Agents() {
       </header>
 
       {manifest.error && (
-        <div role="alert" data-testid="agents-manifest-error" className="mb-4 rounded-lg border border-accent-red/40 bg-accent-red/10 px-3 py-2 text-sm">
+        <div role="alert" data-testid="agents-manifest-error" className="mb-4 rounded border border-accent-red/40 bg-accent-red/10 px-3 py-2 text-sm">
           Could not load the agent manifest: {manifest.error} <button type="button" className="underline" onClick={manifest.reload}>Retry</button>
         </div>
       )}
       {metrics.error && (
-        <div role="alert" data-testid="agents-metrics-error" className="mb-4 rounded-lg border border-accent-amber/40 bg-accent-amber/10 px-3 py-2 text-sm">
+        <div role="alert" data-testid="agents-metrics-error" className="mb-4 rounded border border-accent-amber/40 bg-accent-amber/10 px-3 py-2 text-sm">
           Live metrics unavailable ({metrics.error}). Agent definitions below are still current; run statistics show “—”.
         </div>
       )}
@@ -150,13 +154,18 @@ export default function Agents() {
       {manifest.data && (
         <>
           {/* DAG visual */}
-          <section className="bg-surface-raised border border-surface-border rounded-2xl p-5 mb-6">
+          <section className="bg-surface-raised border border-surface-border rounded p-5 mb-6">
             <div className="flex items-center gap-2 mb-3">
               <Network size={16} className="text-accent-brand" />
               <h3 className="text-sm font-semibold text-ink-primary">LangGraph DAG</h3>
               <span className="text-[10px] text-compact text-ink-muted">compiled from the running graph</span>
+              <span className="ml-auto flex items-center gap-3">
+                <PixelStatus state="idle" size={8} showLabel label="idle" />
+                <PixelStatus state="running" size={8} showLabel label="running" />
+                <PixelStatus state="failed" size={8} showLabel label="error" />
+              </span>
             </div>
-            <DagVisual agents={agents} graph={manifest.data.graph} />
+            <DagVisual agents={agents} graph={manifest.data.graph} metrics={metrics.data} />
             {conditionalBranches(manifest.data.graph).length > 0 && (
               <p className="mt-2 text-[11px] text-mono-tech text-ink-muted" data-testid="dag-branches">
                 Conditional branches: {conditionalBranches(manifest.data.graph).join(" · ")}
@@ -187,7 +196,7 @@ export default function Agents() {
 
 function MCPSection({ tools, endpoint, spec }: { tools: McpTool[]; endpoint: string; spec: string }) {
   return (
-    <section className="mt-6 bg-surface-raised border border-surface-border rounded-2xl overflow-hidden">
+    <section className="mt-6 bg-surface-raised border border-surface-border rounded overflow-hidden">
       <div className="px-5 py-3 border-b border-surface-border flex items-center justify-between">
         <div className="flex items-center gap-2 min-w-0">
           <Plug size={16} className="text-accent-cyan" />
@@ -280,21 +289,32 @@ function MCPSection({ tools, endpoint, spec }: { tools: McpTool[]; endpoint: str
 // DAG visual (pure SVG)
 // =============================================================================
 
-function DagVisual({ agents, graph }: { agents: AgentView[]; graph: PipelineGraph | null }) {
+const DAG_NODE_W = 120;
+const DAG_GAP = 20;
+const DAG_NODE_Y = 50;
+const DAG_NODE_H = 56;
+const DAG_PAD = 20;
+const DAG_VIEW_H = 130;
+
+/** An agent is executing when the metrics gauge reports live invocations. */
+const agentRunning = (a: AgentView): boolean => a.state === "running" || (a.metrics?.running ?? 0) > 0;
+
+function DagVisual({ agents, graph, metrics }: { agents: AgentView[]; graph: PipelineGraph | null; metrics: MetricsReport | null }) {
+  const reducedMotion = usePrefersReducedMotion();
   const conditionalInto = new Set((graph?.edges ?? []).filter((e) => e.conditional).map((e) => e.target));
-  const nodeY = 50;
-  const nodeWidth = 120;
-  const nodeHeight = 56;
-  const gap = 20;
-  const totalWidth = agents.length * (nodeWidth + gap) - gap + 40;
-  const appealsX = (agents.length - 1) * (nodeWidth + gap) + 20;
+  const nodeY = DAG_NODE_Y;
+  const nodeWidth = DAG_NODE_W;
+  const nodeHeight = DAG_NODE_H;
+  const gap = DAG_GAP;
+  const totalWidth = agents.length * (nodeWidth + gap) - gap + 2 * DAG_PAD;
+  const appealsX = (agents.length - 1) * (nodeWidth + gap) + DAG_PAD;
 
   return (
-    <div className="overflow-x-auto">
+    <div className="relative overflow-x-auto">
       <svg
-        viewBox={`0 0 ${totalWidth} 130`}
+        viewBox={`0 0 ${totalWidth} ${DAG_VIEW_H}`}
         className="min-w-[640px] w-full"
-        style={{ height: 130 }}
+        style={{ height: DAG_VIEW_H }}
       >
         {/* Edges */}
         {agents.slice(0, -1).map((_, i) => {
@@ -361,8 +381,8 @@ function DagVisual({ agents, graph }: { agents: AgentView[]; graph: PipelineGrap
                 y={nodeY}
                 width={nodeWidth}
                 height={nodeHeight}
-                rx={8}
-                ry={8}
+                rx={2}
+                ry={2}
                 fill={fill}
                 stroke={stroke}
                 strokeWidth={1.5}
@@ -387,17 +407,18 @@ function DagVisual({ agents, graph }: { agents: AgentView[]; graph: PipelineGrap
               >
                 {a.display.split(" ")[1] ?? ""}
               </text>
-              <circle
-                cx={x + 12}
-                cy={nodeY + 12}
-                r={4}
+              <rect
+                x={x + 8}
+                y={nodeY + 8}
+                width={8}
+                height={8}
                 fill={stroke}
                 opacity={a.state === "running" ? 1 : 0.7}
               >
-                {a.state === "running" && (
+                {a.state === "running" && !reducedMotion && (
                   <animate attributeName="opacity" values="1;0.4;1" dur="1.6s" repeatCount="indefinite" />
                 )}
-              </circle>
+              </rect>
               <text
                 x={x + nodeWidth - 8}
                 y={nodeY + 14}
@@ -423,7 +444,86 @@ function DagVisual({ agents, graph }: { agents: AgentView[]; graph: PipelineGrap
           END
         </text>
       </svg>
+      <DagFlowOverlay agents={agents} totalWidth={totalWidth} metrics={metrics} />
     </div>
+  );
+}
+
+// =============================================================================
+// Event-driven particle flow over the DAG
+// =============================================================================
+
+function DagFlowOverlay({
+  agents,
+  totalWidth,
+  metrics,
+}: {
+  agents: AgentView[];
+  totalWidth: number;
+  metrics: MetricsReport | null;
+}) {
+  const flowRef = useRef<PixelFlowHandle>(null);
+  const lanes = useMemo<PixelFlowLane[]>(
+    () =>
+      agents.slice(0, -1).map((a, i) => ({
+        y: DAG_NODE_Y + DAG_NODE_H / 2,
+        fromX: (i + 1) * (DAG_NODE_W + DAG_GAP),
+        toX: (i + 1) * (DAG_NODE_W + DAG_GAP) + DAG_GAP,
+        // Work flows along an edge while either endpoint is executing. The
+        // metrics API exposes a per-agent running gauge — that gauge is the
+        // only signal animated here; nothing is fabricated.
+        active: agentRunning(a) || agentRunning(agents[i + 1]),
+        color: "orange",
+        rate: 6,
+      })),
+    [agents],
+  );
+  const baseline = useRef<{
+    window: number | null;
+    byAgent: Record<string, { errors: number; invocations: number }>;
+  }>({ window: null, byAgent: {} });
+
+  // Diff each fresh metrics poll against the previous one: error deltas spawn
+  // red bursts at the failing node, invocation deltas spawn completion
+  // pulses. The first poll (and every window switch) only re-baselines.
+  useEffect(() => {
+    if (!metrics) return;
+    const flow = flowRef.current;
+    const snapshot: Record<string, { errors: number; invocations: number }> = {};
+    for (const a of agents) {
+      const m = metrics.agents[a.id];
+      snapshot[a.id] = { errors: m?.errors ?? 0, invocations: m?.invocations ?? 0 };
+    }
+    if (baseline.current.window !== metrics.window_hours) {
+      baseline.current = { window: metrics.window_hours, byAgent: snapshot };
+      return;
+    }
+    for (let i = 0; i < agents.length; i++) {
+      const prev = baseline.current.byAgent[agents[i].id];
+      if (!prev) continue;
+      const cur = snapshot[agents[i].id];
+      const center = flow?.project(
+        i * (DAG_NODE_W + DAG_GAP) + DAG_PAD + DAG_NODE_W / 2,
+        DAG_NODE_Y + DAG_NODE_H / 2,
+      );
+      if (!center) continue;
+      if (cur.errors > prev.errors) {
+        flow?.emit(center.x, center.y, "red", Math.min(12, (cur.errors - prev.errors) * 2));
+      } else if (cur.invocations > prev.invocations) {
+        flow?.emit(center.x, center.y, "blue", Math.min(6, cur.invocations - prev.invocations));
+      }
+    }
+    baseline.current.byAgent = snapshot;
+  }, [metrics, agents]);
+
+  return (
+    <PixelFlow
+      ref={flowRef}
+      lanes={lanes}
+      viewWidth={totalWidth}
+      viewHeight={DAG_VIEW_H}
+      className="w-[max(100%,640px)]"
+    />
   );
 }
 
@@ -533,12 +633,12 @@ function AgentMetaCard({ agent, windowLabel }: { agent: AgentView; windowLabel: 
   }, [agent.id, contractRunning]);
 
   return (
-    <div className="bg-surface-raised border border-surface-border rounded-2xl overflow-hidden">
+    <div className="bg-surface-raised border border-surface-border rounded overflow-hidden">
       <div className="flex items-center justify-between px-5 py-3 border-b border-surface-border">
         <div className="flex items-center gap-3">
           <span className="text-xs text-mono-tech text-ink-faint">{String(agent.index).padStart(2, "0")}</span>
           <h3 className="font-semibold text-ink-primary">{agent.display}</h3>
-          <span className={clsx("w-1.5 h-1.5 rounded-full", STATE_DOT[agent.state])} />
+          <PixelStatus state={STATE_PIXEL[agent.state]} size={8} />
           <span className="text-[10px] text-compact text-ink-muted">
             {STATE_LABEL[agent.state]}
           </span>
@@ -743,7 +843,7 @@ function AgentMetaCard({ agent, windowLabel }: { agent: AgentView; windowLabel: 
           onClick={() => setPromptOpen(false)}
         >
           <div
-            className="bg-surface-raised border border-surface-border rounded-2xl w-full max-w-3xl max-h-[80vh] flex flex-col overflow-hidden"
+            className="bg-surface-raised border border-surface-border rounded w-full max-w-3xl max-h-[80vh] flex flex-col overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="px-5 py-3 border-b border-surface-border flex items-center justify-between gap-3">

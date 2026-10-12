@@ -73,14 +73,14 @@ def analyze_missingness_bounds(
     """Separate calibration availability from heuristic missing-data sensitivity."""
     missing = [f for f in dict.fromkeys(all_features)
                if provided_features.get(f) is None or provided_features.get(f) == ""]
-    ranking = [{
+    ranking: list[dict[str, Any]] = [{
         "feature": f,
         "uncertainty_contribution_pct": round(FEATURE_SENSITIVITY.get(f, 0.06) * 100, 1),
         "priority": "RESEARCH_REVIEW",
         "clinical_recommendation": None,
         "interpretation": "Illustrative sensitivity weight; clinical value of acquiring this input is unvalidated.",
     } for f in missing]
-    ranking.sort(key=lambda item: item["uncertainty_contribution_pct"], reverse=True)
+    ranking.sort(key=lambda item: float(item["uncertainty_contribution_pct"]), reverse=True)
     bounded: dict[str, Any] = {}
     for target, probability in baseline_predictions.items():
         scores = (calibration_scores_by_target or {}).get(target, ())

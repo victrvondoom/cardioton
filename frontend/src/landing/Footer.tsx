@@ -4,51 +4,40 @@ import { DOMAINS } from "./tokens";
 
 export default function Footer() {
   return (
-    <footer
-      style={{
-        position: "relative",
-        zIndex: 1,
-        borderTop: "1px solid var(--overlay-border-soft)",
-        padding: "3rem 1.5rem 2rem",
-        fontFamily: "var(--font-mono)",
-        fontSize: "0.75rem",
-        color: "var(--bone)",
-        opacity: 0.7,
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1100px",
-          margin: "0 auto",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "2.5rem",
-          justifyContent: "space-between",
-        }}
-      >
+    <footer className="pl-footer">
+      <div className="pl-footer-inner">
         <div>
-          <div style={{ marginBottom: "0.6rem", letterSpacing: "0.08em" }}>CARDIOTON</div>
-          <div style={{ opacity: 0.6, maxWidth: "280px", lineHeight: 1.6 }}>
+          <div className="pl-footer-brand">
+            <span className="pl-brand-mark" aria-hidden="true">
+              <i /><i /><i /><i />
+            </span>
+            CARDIOTON
+          </div>
+          <div className="pl-footer-note">
             You treat patients. We&rsquo;ll take the calls &mdash; prior authorization
             across {DOMAINS.length} cancer programs.
           </div>
         </div>
-        <div style={{ display: "flex", gap: "3rem", flexWrap: "wrap" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-            <span style={{ opacity: 0.5, marginBottom: "0.25rem" }}>PRODUCT</span>
-            <a href="#how-it-works" className="aperture-nav-link">How it works</a>
-            <a href="#live-status" className="aperture-nav-link">Live status</a>
-            <a href="#metrics" className="aperture-nav-link">Metrics</a>
+        <div className="pl-footer-cols">
+          <div className="pl-footer-col">
+            <span>Product</span>
+            <a href="#how-it-works">How it works</a>
+            <a href="#live-status">Live status</a>
+            <a href="#metrics">Metrics</a>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-            <span style={{ opacity: 0.5, marginBottom: "0.25rem" }}>ACCOUNT</span>
-            <Link to="/login" className="aperture-nav-link">Sign in</Link>
-            <Link to="/signup" className="aperture-nav-link">Sign up</Link>
+          <div className="pl-footer-col">
+            <span>Account</span>
+            <Link to="/login">Sign in</Link>
+            <Link to="/signup">Sign up</Link>
           </div>
         </div>
       </div>
-      <div style={{ maxWidth: "1100px", margin: "2rem auto 0", opacity: 0.4 }}>
+      <div className="pl-footer-legal">
         &copy; {new Date().getFullYear()} CARDIOTON.
+      </div>
+      {/* Horizontal warm bands — the cohesive pixel ending. */}
+      <div className="pl-colorband" aria-hidden="true">
+        <i /><i /><i /><i /><i />
       </div>
     </footer>
   );

@@ -46,7 +46,7 @@ SCALE_BANDS = [
 ]
 
 
-def hrv_features(rr_intervals_ms: list[float]) -> dict[str, float]:
+def hrv_features(rr_intervals_ms: list[float]) -> dict[str, float | int | str]:
     """Windowed HRV features with documented formulas.
 
     mean_HR = 60000 / mean(RR); SDNN = std(RR); RMSSD = sqrt(mean(diff(RR)²)).
@@ -110,10 +110,10 @@ def synthetic_timeline(scenario: str = "normal", hours: float = 48.0,
         scenario=scenario,
         random_seed=random_seed,
     )
-    hourly = [
+    hourly: list[dict[str, Any]] = [
         {
             "timestamp": (start + timedelta(hours=i)).isoformat(),
-            "heart_rate_bpm": round(point.heart_rate, 1),
+            "heart_rate_bpm": round(point.heart_rate, 1) if point.heart_rate is not None else None,
             "spo2_pct": round(point.spo2, 1) if point.spo2 else None,
             "activity": point.activity_level,
             "sleep_stage": point.sleep_stage,
@@ -127,9 +127,9 @@ def synthetic_timeline(scenario: str = "normal", hours: float = 48.0,
         scenario=scenario,
         random_seed=random_seed,
     )
-    rr_series = [p.heart_rate for p in rr_dense]
+    rr_series = [p.heart_rate for p in rr_dense if p.heart_rate is not None]
     hrv_windows = []
-    for w in range(0, min(30, len(rr_dense) - 6), 6):
+    for w in range(0, min(30, len(rr_series) - 6), 6):
         window = rr_series[w : w + 6]
         rr_ms = [60000.0 / hr for hr in window]
         hrv_windows.append(
@@ -143,12 +143,13 @@ def synthetic_timeline(scenario: str = "normal", hours: float = 48.0,
     daily = []
     for day in range(int(math.ceil(hours / 24))):
         day_points = hourly[day * 24 : (day + 1) * 24]
-        sleeping = [p for p in day_points if p["sleep_stage"] == "deep" or p["sleep_stage"] == "light"]
+        sleeping = [p for p in day_points if p["sleep_stage"] in {"deep", "light"}]
+        heart_rates = [float(p["heart_rate_bpm"]) for p in day_points if p["heart_rate_bpm"] is not None]
         daily.append(
             {
                 "date": (start + timedelta(days=day)).date().isoformat(),
                 "mean_heart_rate_bpm": round(
-                    sum(p["heart_rate_bpm"] for p in day_points) / max(1, len(day_points)), 1
+                    sum(heart_rates) / max(1, len(heart_rates)), 1
                 ),
                 "sleep_samples": len(sleeping),
                 "label": "simulated aggregate",

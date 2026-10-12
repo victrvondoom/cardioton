@@ -10,18 +10,15 @@ PRODUCT_NAME = "CARDIOTON"
 
 REQUIRED_SECTIONS = (
     "Start here",
-    "One connected evidence journey",
-    "OneAquaHealth Track 7 — Digital Health Standards",
-    "From environmental evidence to human-health context",
-    "Seven-agent oncology workflow",
-    "NVIDIA and model governance",
-    "Oncology, OncoTwin and CardioTwin in depth",
-    "Standards, validation and technical proof",
-    "Monitoring, observability and verification",
-    "Deployment: one application, several modes",
-    "Verification commands",
-    "Repository map",
-    "Limits and next validation work",
+    "Cardio Track A — Multimodal Hackathon",
+    "Cardiovascular workspace",
+    "Multimodal CardioTwin",
+    "Cardio Track A demo flow",
+    "Evidence, review and provenance",
+    "Architecture and model governance",
+    "Run locally",
+    "Verification",
+    "Research scope and limits",
 )
 
 

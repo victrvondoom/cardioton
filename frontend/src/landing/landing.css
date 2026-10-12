@@ -1,235 +1,590 @@
 /* =============================================================================
-   Landing page ("aperture") styles.
+   Landing page — pixel-native CardioTwin identity.
 
-   Scoped entirely under .aperture-root so the marketing surface can run its own
-   dark palette without touching the app's light/dark design tokens. Fonts reuse
-   families already loaded in index.html — no new network requests.
+   Scoped under .pixel-landing so the marketing surface shares the app's
+   geometry (squares, hairlines, the five-colour pixel ramp) without touching
+   app tokens. Near-black canvas, tight geometric sans headlines, colour carried
+   by pixel compositions — no gradients, no glass, no rounded cards.
    ============================================================================= */
 
-.aperture-root {
-  --void: #050505;
-  --ink: #101010;
-  --bone: #ececec;
-  --cyan: #e8e8e8;
-  --violet: #8a8a8a;
-  --ember: #6f6f6f;
+.pixel-landing {
+  --void: #0D0E10;
+  --panel: #141518;
+  --panel-2: #1B1C20;
+  --line: #292A2E;
+  --line-hi: #404147;
+  --bone: #F7F7F4;
+  --body: #C9CACE;
+  --muted: #96979E;
+  --faint: #707178;
+  --p-red: #F0442B;
+  --p-orange: #FF7900;
+  --p-yellow: #FFB400;
+  --p-blue: #39A9E8;
+  --p-green: #59DFA6;
 
-  /* Overlay tints derived from the palette above — used for glass panels,
-     borders, and the selection highlight. Flipped alongside the six base
-     colors under [data-theme="light"] so every surface inverts together. */
-  --overlay-strong: rgba(255, 255, 255, 0.25);
-  --overlay-glass-bg: rgba(16, 16, 16, 0.55);
-  --overlay-glass-border: rgba(236, 236, 236, 0.09);
-  --overlay-border: rgba(236, 236, 236, 0.2);
-  --overlay-border-soft: rgba(236, 236, 236, 0.08);
-  --overlay-border-faint: rgba(236, 236, 236, 0.15);
-  --overlay-glow: rgba(255, 255, 255, 0.28);
-  --scrim-strong: rgba(5, 5, 5, 0.86);
-  --scrim-mid: rgba(5, 5, 5, 0.6);
-  --scrim-soft: rgba(5, 5, 5, 0.26);
-  --scrim-edge: rgba(5, 5, 5, 0.72);
-
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", "Geist Mono", ui-monospace, Menlo, monospace;
-  --font-display: "Source Serif 4", Georgia, serif;
 
   position: relative;
   min-height: 100vh;
   background: var(--void);
-  color: var(--bone);
-  font-family: "Outfit", system-ui, sans-serif;
-
-  /* `clip`, not `hidden`: `overflow-x: hidden` makes this an implicit scroll
-     container, which breaks the sticky nav inside it. */
+  color: var(--body);
+  font-family: var(--font-sans);
   overflow-x: clip;
 }
 
-/* Light mode — same structure, inverted palette. Applied via a data
-   attribute (not prefers-color-scheme) because the choice is the user's
-   explicit toggle, persisted in localStorage via lib/theme.ts, not the OS
-   setting. */
-.aperture-root[data-theme="light"] {
-  --void: #ffffff;
-  --ink: #f4f4f4;
-  --bone: #101010;
-  --cyan: #1a1a1a;
-  --violet: #5a5a5a;
-  --ember: #787878;
-
-  --overlay-strong: rgba(16, 16, 16, 0.14);
-  --overlay-glass-bg: rgba(255, 255, 255, 0.6);
-  --overlay-glass-border: rgba(16, 16, 16, 0.1);
-  --overlay-border: rgba(16, 16, 16, 0.16);
-  --overlay-border-soft: rgba(16, 16, 16, 0.1);
-  --overlay-border-faint: rgba(16, 16, 16, 0.14);
-  --overlay-glow: rgba(16, 16, 16, 0.12);
-  --scrim-strong: rgba(255, 255, 255, 0.86);
-  --scrim-mid: rgba(255, 255, 255, 0.6);
-  --scrim-soft: rgba(255, 255, 255, 0.26);
-  --scrim-edge: rgba(255, 255, 255, 0.72);
+.pixel-landing[data-theme="light"] {
+  --void: #FAFAF8;
+  --panel: #FFFFFF;
+  --panel-2: #F1F1EE;
+  --line: #E4E4E0;
+  --line-hi: #C6C6C0;
+  --bone: #141518;
+  --body: #3F4046;
+  --muted: #6E6F76;
+  --faint: #9A9BA2;
+  --p-red: #D63A22;
+  --p-orange: #E85D00;
+  --p-yellow: #C77F00;
+  --p-blue: #1D7FB8;
+  --p-green: #178A5F;
 }
 
-.aperture-root ::selection {
-  background: var(--overlay-strong);
-}
-
-/* Frosted panel used by the nav, metric cards, and code blocks. */
-.aperture-glass {
-  background: var(--overlay-glass-bg);
-  border: 1px solid var(--overlay-glass-border);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-}
-
-.aperture-nav-link {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
+.pixel-landing ::selection {
+  background: rgba(255, 121, 0, 0.3);
   color: var(--bone);
-  opacity: 0.6;
+}
+
+.pixel-landing a {
   text-decoration: none;
-  transition: opacity 180ms ease, color 180ms ease;
+  color: inherit;
 }
 
-.aperture-nav-link:hover {
-  opacity: 1;
-  color: var(--cyan);
+/* Faint engineering grid behind the hero. */
+.pl-grid-bg {
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M8 0H0V8' fill='none' stroke='%23F7F7F4' stroke-opacity='.035'/%3E%3C/svg%3E");
+  background-size: 8px 8px;
+}
+.pixel-landing[data-theme="light"] .pl-grid-bg {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M8 0H0V8' fill='none' stroke='%23141518' stroke-opacity='.045'/%3E%3C/svg%3E");
 }
 
-.aperture-root a {
-  text-decoration: none;
+/* ---------- Navigation ---------- */
+.pl-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem clamp(1rem, 4vw, 2.5rem);
+  border-bottom: 1px solid var(--line);
+  background: rgba(13, 14, 16, 0.94);
+  flex-wrap: wrap;
+}
+.pixel-landing[data-theme="light"] .pl-nav {
+  background: rgba(250, 250, 248, 0.85);
+}
+.pl-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--bone);
+}
+.pl-brand-mark {
+  display: grid;
+  grid-template-columns: repeat(2, 5px);
+  grid-template-rows: repeat(2, 5px);
+  gap: 1px;
+}
+.pl-brand-mark i { display: block; }
+.pl-brand-mark i:nth-child(1) { background: var(--p-red); }
+.pl-brand-mark i:nth-child(2) { background: var(--p-orange); }
+.pl-brand-mark i:nth-child(3) { background: var(--p-yellow); }
+.pl-brand-mark i:nth-child(4) { background: var(--p-orange); }
+.pl-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  flex-wrap: wrap;
+}
+.pl-nav-link {
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+  transition: color 160ms ease;
+}
+.pl-nav-link:hover {
+  color: var(--bone);
 }
 
-/* --- Scroll reveal (replaces framer-motion whileInView) --------------------
-   Elements start hidden and are revealed by an IntersectionObserver adding
-   .is-visible. Under prefers-reduced-motion they are simply visible. */
-.aperture-reveal {
+/* ---------- Buttons — square, flat, one accent ---------- */
+.pl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  padding: 0.7rem 1.25rem;
+  border: 1px solid var(--line-hi);
+  border-radius: 2px;
+  color: var(--bone);
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease;
+}
+.pl-btn:hover {
+  border-color: var(--p-orange);
+  color: var(--bone);
+}
+.pl-btn-primary {
+  background: var(--p-orange);
+  border-color: var(--p-orange);
+  color: #0D0E10;
+}
+.pl-btn-primary:hover {
+  background: #FF8E26;
+  border-color: #FF8E26;
+  color: #0D0E10;
+}
+.pixel-landing[data-theme="light"] .pl-btn-primary {
+  color: #FFFFFF;
+}
+.pl-btn-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+.pl-btn-icon:hover {
+  color: var(--bone);
+  border-color: var(--line-hi);
+}
+
+/* ---------- Hero ---------- */
+.pl-hero {
+  position: relative;
+  z-index: 1;
+  min-height: calc(100vh - 58px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5rem 1.5rem 6rem;
+}
+.pl-hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 880px;
+  margin: 0 auto;
+  text-align: center;
+  width: 100%;
+}
+.pl-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.6rem;
+}
+.pl-kicker::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--p-orange);
+}
+.pl-h1 {
+  font-family: var(--font-sans);
+  font-size: clamp(2.6rem, 7vw, 5.2rem);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+  color: var(--bone);
+  margin: 0 0 1.4rem;
+  text-wrap: balance;
+}
+.pl-h1 .pl-accent {
+  color: var(--p-orange);
+}
+.pl-lede {
+  font-size: clamp(0.95rem, 1.6vw, 1.12rem);
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 560px;
+  margin: 0 auto 2.4rem;
+}
+.pl-cta-row {
+  display: flex;
+  gap: 0.9rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.pl-statusline {
+  position: absolute;
+  bottom: 1.6rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  padding: 0 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--faint);
+}
+.pl-scroll-cue {
+  position: absolute;
+  bottom: 4.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.pl-hero-side {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 0;
+  opacity: 0.9;
+}
+.pl-hero-side--left { left: clamp(1rem, 4vw, 4rem); }
+.pl-hero-side--right { right: clamp(1rem, 4vw, 4rem); }
+@media (max-width: 1100px) {
+  .pl-hero-side { display: none; }
+}
+
+/* ---------- Sections ---------- */
+.pl-section {
+  position: relative;
+  z-index: 1;
+  padding: 6rem 1.5rem;
+  scroll-margin-top: 4.5rem;
+}
+.pl-section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.pl-section-head {
+  text-align: center;
+  margin-bottom: 2.75rem;
+}
+.pl-h2 {
+  font-family: var(--font-sans);
+  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--bone);
+  margin: 0 0 0.8rem;
+  text-wrap: balance;
+}
+.pl-section-sub {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 560px;
+  margin: 0 auto;
+}
+.pl-divider {
+  position: relative;
+  height: 1px;
+  background: var(--line);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.pl-divider::before,
+.pl-divider::after {
+  content: "";
+  position: absolute;
+  top: -3.5px;
+  width: 8px;
+  height: 8px;
+  background: var(--line-hi);
+}
+.pl-divider::before { left: 0; }
+.pl-divider::after { right: 0; }
+
+/* Flat metric cells — hairline-separated, square. */
+.pl-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--panel);
+}
+.pl-metric {
+  padding: 1.6rem 1.25rem;
+  text-align: center;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.pl-metric:nth-last-child(-n + 1) { border-bottom: none; }
+.pl-metric-value {
+  font-family: var(--font-sans);
+  font-size: 1.9rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: var(--bone);
+  margin-bottom: 0.45rem;
+}
+.pl-metric-value .pl-metric-accent { color: var(--p-orange); }
+.pl-metric-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* How-it-works — numbered square steps. */
+.pl-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+.pl-step {
+  background: var(--panel);
+  padding: 1.5rem;
+}
+.pl-step-n {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--p-orange);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pl-step-n::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: var(--p-orange);
+}
+.pl-step h3 {
+  font-size: 1.02rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--bone);
+  margin: 0 0 0.45rem;
+}
+.pl-step p {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* Live status panel — mono, hairline. */
+.pl-panel {
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--panel);
+  padding: 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+.pl-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  color: var(--faint);
+}
+.pl-panel pre {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: var(--body);
+}
+.pl-link-btn {
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 0.3rem 0.6rem;
+  color: var(--body);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: border-color 160ms ease, color 160ms ease;
+}
+.pl-link-btn:hover { border-color: var(--line-hi); color: var(--bone); }
+
+/* Chips (integrations) — square tags. */
+.pl-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-bottom: 1.75rem;
+}
+.pl-chip {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 0.45rem 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--body);
+  background: var(--panel);
+}
+
+/* Trust marks — compact hairline cards. */
+.pl-marks {
+  display: flex;
+  gap: 0.9rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.pl-mark {
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 0.6rem 1rem;
+  text-align: left;
+  background: var(--panel);
+}
+.pl-mark-label {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--bone);
+}
+.pl-mark-status {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
+
+/* ---------- Footer — pixel composition + warm colour bands ---------- */
+.pl-footer {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid var(--line);
+  padding: 3rem 1.5rem 2rem;
+  font-size: 0.78rem;
+}
+.pl-footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+  justify-content: space-between;
+}
+.pl-footer-brand {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--bone);
+  margin-bottom: 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.pl-footer-note {
+  color: var(--muted);
+  max-width: 300px;
+  line-height: 1.6;
+}
+.pl-footer-cols {
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+.pl-footer-col span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 0.6rem;
+}
+.pl-footer-col a {
+  display: block;
+  color: var(--muted);
+  padding: 0.2rem 0;
+  transition: color 160ms ease;
+}
+.pl-footer-col a:hover { color: var(--bone); }
+.pl-footer-legal {
+  max-width: 1100px;
+  margin: 2rem auto 0;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+/* Horizontal warm bands — the cohesive pixel ending. */
+.pl-colorband {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  height: 8px;
+  margin-top: 2.5rem;
+}
+.pl-colorband i { display: block; }
+.pl-colorband i:nth-child(1) { background: var(--p-red); }
+.pl-colorband i:nth-child(2) { background: var(--p-orange); }
+.pl-colorband i:nth-child(3) { background: var(--p-yellow); }
+.pl-colorband i:nth-child(4) { background: var(--p-blue); }
+.pl-colorband i:nth-child(5) { background: var(--p-green); }
+
+/* ---------- Scroll reveal (pixel-flavoured) ---------- */
+.pl-reveal {
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(10px);
   transition:
-    opacity 550ms cubic-bezier(0.16, 1, 0.3, 1),
-    transform 550ms cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 520ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
   transition-delay: var(--reveal-delay, 0ms);
 }
-
-.aperture-reveal.is-visible {
+.pl-reveal.is-visible {
   opacity: 1;
   transform: none;
 }
 
+.pl-spin { animation: pl-spin 900ms linear infinite; }
+@keyframes pl-spin { to { transform: rotate(360deg); } }
+
 @media (prefers-reduced-motion: reduce) {
-  .aperture-reveal {
+  .pl-reveal {
     opacity: 1;
     transform: none;
     transition: none;
   }
-}
-
-.aperture-spin {
-  animation: aperture-spin 900ms linear infinite;
-}
-
-@keyframes aperture-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Slow drift on the SVG backdrop (the no-WebGL path). */
-.aperture-backdrop-drift {
-  transform-origin: 50% 50%;
-  animation: aperture-drift 26s ease-in-out infinite alternate;
-}
-
-@keyframes aperture-drift {
-  from {
-    transform: translateY(-8px) rotate(-1.4deg);
-  }
-  to {
-    transform: translateY(8px) rotate(1.4deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .aperture-backdrop-drift {
-    animation: none;
-  }
-}
-
-/* On narrow screens the headline sits directly over the backdrop facet;
-   fade it back so the type stays legible. */
-@media (max-width: 640px) {
-  .aperture-backdrop-drift {
-    opacity: 0.45;
-  }
-}
-
-/* The helix layer drifts slower and further than the foreground facet, which
-   is what sells the depth: near things move more than far things. */
-.aperture-backdrop-helix {
-  transform-origin: 50% 50%;
-  animation: aperture-helix-drift 42s ease-in-out infinite alternate;
-}
-
-@keyframes aperture-helix-drift {
-  from {
-    transform: translate3d(-18px, 6px, 0) rotate(-0.5deg);
-  }
-  to {
-    transform: translate3d(18px, -6px, 0) rotate(0.5deg);
-  }
-}
-
-/* --- Scrolling ------------------------------------------------------------
-   The page scrolls natively -- no wheel interception, no transform-driven
-   fake scroller, no sticky section that can trap you. The "smooth" part is
-   two things: browser-native smoothing for in-page anchor jumps, and the
-   damped signal in useScrollProgress that the 3D camera reads, so the scene
-   glides instead of snapping on every wheel tick.
-
-   scroll-behavior is set on <html> because that is the scrolling element;
-   :has() keeps it scoped to the landing route, and browsers without :has()
-   simply keep their default jump-to-anchor. */
-html:has(.aperture-root) {
-  scroll-behavior: smooth;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html:has(.aperture-root) {
-    scroll-behavior: auto;
-  }
-
-  .aperture-backdrop-helix {
-    animation: none;
-  }
-}
-
-/* Anchored sections clear the sticky nav instead of hiding under it. */
-.aperture-root section[id] {
-  scroll-margin-top: 5rem;
-}
-
-/* Legibility scrim between the WebGL canvas (z-index 0) and the page sections
-   (z-index 1). Darkens the centre of the viewport, where the copy sits, and
-   the top and bottom edges, where the nav and footer sit, while leaving the
-   periphery open so the scene still reads. This is what lets the background
-   be genuinely detailed without ever fighting the text. */
-.aperture-scrim {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(
-      1250px 760px at 50% 46%,
-      var(--scrim-strong) 0%,
-      var(--scrim-mid) 38%,
-      var(--scrim-soft) 62%,
-      transparent 82%
-    ),
-    linear-gradient(
-      to bottom,
-      var(--scrim-edge) 0%,
-      transparent 16%,
-      transparent 84%,
-      var(--scrim-strong) 100%
-    );
 }

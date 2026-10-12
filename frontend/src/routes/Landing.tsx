@@ -1,21 +1,16 @@
 /**
  * / — public marketing landing page.
  *
- * Ported from the Next.js "aperture" landing (frontend/LANDING/landing) onto
- * this app's stack: react-router links instead of next/link, and an
- * IntersectionObserver Reveal instead of framer-motion. The react-three-fiber
- * scene is the real one from the original design — see landing/Aperture3D.tsx.
- * Runs its own dark palette, scoped under .aperture-root so it never touches
- * the app's theme tokens.
+ * Pixel-native CardioTwin identity: near-black canvas, tight geometric sans
+ * headlines, original square compositions, an interactive pixel-particle
+ * field, and hairline section dividers. Runs its own scoped palette under
+ * .pixel-landing (see landing/landing.css) that follows the app's dark/light
+ * choice so a visitor who flips theme doesn't get flipped back.
  *
- * Reachable signed-out; signed-in visitors get "Go to dashboard" CTAs instead
- * of sign-up prompts.
+ * Reachable signed-out; signed-in visitors get "Enter the workspace" CTAs.
  */
-import { Component, Suspense, lazy, useEffect } from "react";
-import type { ReactNode } from "react";
+import { useEffect } from "react";
 
-import { ApertureProvider, useAperture } from "../landing/ApertureContext";
-import ApertureBackdrop from "../landing/ApertureBackdrop";
 import FinalCTA from "../landing/FinalCTA";
 import Footer from "../landing/Footer";
 import Hero from "../landing/Hero";
@@ -26,99 +21,40 @@ import Metrics from "../landing/Metrics";
 import Nav from "../landing/Nav";
 import ProblemSection from "../landing/ProblemSection";
 import TrustSection from "../landing/TrustSection";
-import { useDeviceTier } from "../landing/useDeviceTier";
 import { useTheme } from "../lib/theme";
 import "../landing/landing.css";
 
-// three + fiber + drei are a large slice of the bundle and are useless to
-// anyone who gets the static backdrop, so they load as their own chunk.
-const Aperture3D = lazy(() => import("../landing/Aperture3D"));
-
-/**
- * If the 3D chunk fails to load or the scene throws, fall back to the static
- * backdrop instead of taking the page down with it.
- *
- * Without this, a lazy-import failure (a stale chunk hash after a deploy, a
- * flaky network, a blocked request) propagates to the root and renders a blank
- * document — the background is decoration, and decoration must never be able
- * to break the page.
- */
-class ApertureBoundary extends Component<
-  { children: ReactNode; theme: "dark" | "light" },
-  { failed: boolean }
-> {
-  state = { failed: false };
-
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-
-  componentDidCatch(error: unknown) {
-    console.warn("[aperture] 3D scene unavailable, using static backdrop:", error);
-  }
-
-  render() {
-    if (this.state.failed) return <ApertureBackdrop theme={this.props.theme} />;
-    return this.props.children;
-  }
-}
-
-/**
- * Picks the background: the WebGL scene on capable hardware, the static SVG
- * backdrop otherwise (no WebGL, few cores, small viewport, or reduced motion).
- * ApertureBackdrop doubles as the Suspense fallback, so the page is never
- * blank while the 3D chunk downloads.
- */
-function ApertureStage({ theme }: { theme: "dark" | "light" }) {
-  const tier = useDeviceTier();
-  const { scrollYProgress, pulse } = useAperture();
-
-  if (tier !== "high") return <ApertureBackdrop theme={theme} />;
-
-  return (
-    <ApertureBoundary theme={theme}>
-      <Suspense fallback={<ApertureBackdrop theme={theme} />}>
-        <Aperture3D scrollYProgress={scrollYProgress} pulse={pulse} theme={theme} />
-      </Suspense>
-    </ApertureBoundary>
-  );
-}
-
 export default function Landing() {
-  // The landing page follows the same light/dark choice as the rest of the
-  // app (lib/theme.ts) instead of always running dark, so a visitor who
-  // switches to light doesn't get flipped back to dark when they land here.
   const { theme } = useTheme();
 
   // Paint the document background to match so overscroll doesn't flash the
   // opposite color, and undo it on the way out so app routes are unaffected.
   useEffect(() => {
     const previous = document.body.style.backgroundColor;
-    document.body.style.backgroundColor = theme === "light" ? "#ffffff" : "#050505";
+    document.body.style.backgroundColor = theme === "light" ? "#FAFAF8" : "#0D0E10";
     return () => {
       document.body.style.backgroundColor = previous;
     };
   }, [theme]);
 
   return (
-    <ApertureProvider>
-      <div className="aperture-root" data-theme={theme}>
-        <ApertureStage theme={theme} />
-        {/* Legibility scrim. The scene is allowed to be busy at the edges;
-            this keeps the middle, where the copy lives, dark enough to read
-            against. Sits between the canvas and the sections. */}
-        <div className="aperture-scrim" aria-hidden="true" />
-        <Nav />
-        <Hero />
-        <ProblemSection />
-        <HowItWorks />
-        <LiveStatus />
-        <Metrics />
-        <Integrations />
-        <TrustSection />
-        <FinalCTA />
-        <Footer />
-      </div>
-    </ApertureProvider>
+    <div className="pixel-landing" data-theme={theme}>
+      <Nav />
+      <Hero />
+      <div className="pl-divider" aria-hidden="true" />
+      <ProblemSection />
+      <div className="pl-divider" aria-hidden="true" />
+      <HowItWorks />
+      <div className="pl-divider" aria-hidden="true" />
+      <LiveStatus />
+      <div className="pl-divider" aria-hidden="true" />
+      <Metrics />
+      <div className="pl-divider" aria-hidden="true" />
+      <Integrations />
+      <div className="pl-divider" aria-hidden="true" />
+      <TrustSection />
+      <FinalCTA />
+      <Footer />
+    </div>
   );
 }

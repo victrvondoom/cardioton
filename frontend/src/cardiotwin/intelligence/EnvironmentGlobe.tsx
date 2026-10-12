@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Map, Marker, NavigationControl, setWorkerUrl, type GeoJSONSource } from "maplibre-gl";
 import workerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import "maplibre-gl/dist/maplibre-gl.css";
+import "../../styles/maplibre-dark.css";
 import type { ContextLocation, EnvironmentLayer } from "./environmentApi";
 
 setWorkerUrl(workerUrl);
@@ -23,7 +24,7 @@ export default function EnvironmentGlobe({ locations, active, layer, hour, onSel
     if (!container.current) return;
     let instance: Map;
     try {
-      instance = new Map({ container: container.current, style: "https://tiles.openfreemap.org/styles/liberty", center: [45, 18], zoom: 1.4, attributionControl: {} });
+      instance = new Map({ container: container.current, style: "https://tiles.openfreemap.org/styles/dark", center: [45, 18], zoom: 1.4, attributionControl: {} });
       map.current = instance;
       instance.addControl(new NavigationControl(), "top-right");
       instance.on("load", () => {

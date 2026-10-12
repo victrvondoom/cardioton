@@ -8,7 +8,7 @@ import clsx from "clsx";
 import { AlertTriangle, CheckCircle2, Info, ShieldAlert } from "lucide-react";
 import { useState } from "react";
 
-import { BAND_LABEL, RAMP_STOPS, pct, probabilityColor } from "./vesselMapping";
+import { BAND_LABEL, pct, probabilityColor } from "./vesselMapping";
 import {
   TARGETS,
   VESSELS,
@@ -21,7 +21,7 @@ import {
   type Warning,
 } from "./types";
 
-export const CARD = "rounded-xl border border-surface-border bg-surface-raised";
+export const CARD = "rounded border border-surface-border bg-surface-raised";
 
 export function SafetyBanner({ compact = false }: { compact?: boolean }) {
   return (
@@ -30,7 +30,7 @@ export function SafetyBanner({ compact = false }: { compact?: boolean }) {
       aria-label="Clinical safety disclaimer"
       data-testid="cardiotwin-disclaimer"
       className={clsx(
-        "flex items-start gap-2 rounded-lg border border-accent-amber/50 bg-accent-amber/10 text-ink-primary",
+        "flex items-start gap-2 rounded border border-accent-amber/50 bg-accent-amber/10 text-ink-primary",
         compact ? "px-2.5 py-1.5 text-[11px]" : "px-3 py-2 text-[12.5px]",
       )}
     >
@@ -44,13 +44,22 @@ export function SafetyBanner({ compact = false }: { compact?: boolean }) {
   );
 }
 
+const RAMP_TILES = 24;
+
 export function Legend() {
-  const grad = `linear-gradient(90deg, ${RAMP_STOPS.map((s) => `rgb(${s.rgb.join(",")}) ${s.p * 100}%`).join(", ")})`;
   return (
     <div className="text-[11px] text-ink-muted space-y-1.5" aria-label="Visual encoding legend">
       <div className="flex items-center gap-2">
         <span className="w-28 shrink-0">Estimated probability</span>
-        <span className="h-2.5 flex-1 rounded-full" style={{ background: grad }} />
+        <span className="flex flex-1 items-center gap-px overflow-hidden" aria-hidden="true">
+          {Array.from({ length: RAMP_TILES }, (_, i) => (
+            <span
+              key={i}
+              className="h-2.5 w-2.5 shrink-0"
+              style={{ background: probabilityColor(i / (RAMP_TILES - 1)) }}
+            />
+          ))}
+        </span>
         <span className="tabular-nums">0 → 100%</span>
       </div>
       <div className="flex flex-wrap gap-x-4 gap-y-1">
@@ -274,7 +283,7 @@ export function WarningList({ warnings }: { warnings: Warning[] }) {
           key={w.code}
           data-testid={`warning-${w.code}`}
           className={clsx(
-            "flex gap-2 rounded-lg border px-3 py-2 text-[12px]",
+            "flex gap-2 rounded border px-3 py-2 text-[12px]",
             w.severity === "high"
               ? "border-accent-red/50 bg-accent-red/10"
               : w.severity === "medium"

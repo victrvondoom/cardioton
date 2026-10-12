@@ -510,8 +510,8 @@ from app.api import (  # noqa: E402
 from app.api import (  # noqa: E402
     web_push as web_push_api,
 )
-from app.integrations.slicerheart.api import router as slicerheart_router  # noqa: E402
 from app.api.cross5 import router as cross5_router  # noqa: E402
+from app.integrations.slicerheart.api import router as slicerheart_router  # noqa: E402
 from app.integrations.trizetto.router import router as trizetto_router  # noqa: E402
 from app.mcp.server import router as mcp_router  # noqa: E402
 

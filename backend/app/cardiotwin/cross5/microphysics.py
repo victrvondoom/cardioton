@@ -204,7 +204,7 @@ def simulate_vessel(
     }
 
 
-def compare_scenarios(vessel_id: str, stenosis_values: list[float], **kwargs: Any) -> dict[str, Any]:
+def compare_scenarios(vessel_id: str, stenosis_values: list[float], **kwargs) -> dict[str, Any]:
     """Reproducible hypothetical-geometry comparison curve (FFR index vs stenosis)."""
     if not stenosis_values:
         raise ValueError("Provide at least one stenosis value")

@@ -1,142 +1,93 @@
+/**
+ * Landing hero — pixel-native CardioTwin identity.
+ *
+ * Near-black full viewport, one large tightly-tracked geometric headline, one
+ * supporting sentence, one primary action. Original square compositions frame
+ * the message on both edges; an interactive square-particle field and a
+ * stepped ECG trace run behind the copy. All motion is staggered and settles
+ * — no bouncing, no loops on the text.
+ */
 import { Link } from "react-router-dom";
 
 import { useAuth } from "../components/AuthContext";
+import { HEART_BITMAP } from "../pixel/bitmaps";
+import { PixelCluster } from "../pixel/PixelCluster";
+import { PixelEcgTrace } from "../pixel/PixelEcgTrace";
+import { PixelField } from "../pixel/PixelField";
+import { PixelMosaic } from "../pixel/PixelMosaic";
+import { PixelStaircase } from "../pixel/PixelStaircase";
 import Reveal from "./Reveal";
 import { useSystemHealth } from "./useSystemHealth";
-
-const primaryCta = {
-  fontFamily: "var(--font-mono)",
-  fontSize: "0.85rem",
-  padding: "0.85rem 1.5rem",
-  borderRadius: "6px",
-  background: "var(--cyan)",
-  color: "var(--void)",
-  fontWeight: 600,
-  boxShadow: "0 0 28px var(--overlay-glow)",
-} as const;
-
-const secondaryCta = {
-  fontFamily: "var(--font-mono)",
-  fontSize: "0.85rem",
-  padding: "0.85rem 1.5rem",
-  borderRadius: "6px",
-  border: "1px solid var(--overlay-border)",
-  color: "var(--bone)",
-} as const;
 
 export default function Hero() {
   const { health, capabilities, latencyMs, loading, error, updatedAt } = useSystemHealth();
   const { user } = useAuth();
 
   return (
-    <section
-      style={{
-        position: "relative",
-        zIndex: 1,
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        padding: "6rem 1.5rem 8rem",
-      }}
-    >
-      <div style={{ maxWidth: "760px", margin: "0 auto", textAlign: "center" }}>
-        <Reveal
-          as="p"
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "0.78rem",
-            letterSpacing: "0.14em",
-            color: "var(--cyan)",
-            marginBottom: "1.25rem",
-          }}
-        >
-          CARDIOTON / ONE CONNECTED EVIDENCE JOURNEY
+    <section className="pl-hero">
+      {/* Interactive square-particle field + engineering grid */}
+      <div className="pl-grid-bg absolute inset-0" aria-hidden="true" />
+      <PixelField className="opacity-70" density={0.8} maxParticles={70} aria-hidden="true" />
+
+      {/* Edge compositions — original CardioTwin pixel structures */}
+      <div className="pl-hero-side pl-hero-side--left" aria-hidden="true">
+        <PixelStaircase steps={6} cell={18} animate />
+        <div className="mt-4">
+          <PixelMosaic cols={7} rows={4} density={0.5} seed={11} cell={10} animate />
+        </div>
+      </div>
+      <div className="pl-hero-side pl-hero-side--right" aria-hidden="true">
+        <PixelCluster map={HEART_BITMAP} cell={12} animate staggerMs={18} ariaLabel="Pixel heart composition" />
+      </div>
+
+      <div className="pl-hero-inner">
+        <Reveal as="p" className="pl-kicker">
+          CARDIOTON / CARDIOVASCULAR DIGITAL TWIN
         </Reveal>
 
-        <Reveal
-          as="h1"
-          delay={80}
-          style={{
-            fontFamily: "var(--font-display)",
-            fontSize: "clamp(2.6rem, 6vw, 4.4rem)",
-            lineHeight: 1.08,
-            fontWeight: 400,
-            color: "var(--bone)",
-            marginBottom: "1rem",
-          }}
-        >
-          From Evidence to Action.
+        <Reveal as="h1" className="pl-h1" delay={90}>
+          Understand the heart.
           <br />
-          One Connected Clinical Journey.
+          Before the <span className="pl-accent">next heartbeat</span>.
         </Reveal>
 
-        <Reveal
-          as="p"
-          delay={140}
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: "clamp(1rem, 2vw, 1.25rem)",
-            letterSpacing: "0.01em",
-            color: "var(--cyan)",
-            marginBottom: "1.5rem",
-          }}
-        >
-          One Health Interoperability Gateway
+        <Reveal as="p" className="pl-lede" delay={180}>
+          One connected workspace where cardiac models, live agent runs and
+          traceable evidence meet — built on a square, honest grid.
         </Reveal>
 
-        <Reveal
-          as="p"
-          delay={200}
-          style={{
-            fontSize: "1.05rem",
-            lineHeight: 1.65,
-            color: "var(--bone)",
-            opacity: 0.85,
-            marginBottom: "2.25rem",
-          }}
-        >
-          CARDIOTON connects intake, evidence, interoperability, review, clinical context and follow-up in one traceable workflow.
-        </Reveal>
-
-        <Reveal
-          delay={260}
-          style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}
-        >
+        <Reveal as="div" className="pl-cta-row" delay={260}>
           {user ? (
-            <Link to="/dashboard" style={primaryCta}>
-              Go to dashboard
+            <Link to="/dashboard" className="pl-btn pl-btn-primary">
+              Enter the workspace
             </Link>
           ) : (
             <>
-              <Link to="/signup" style={primaryCta}>
-                Sign up
+              <Link to="/signup" className="pl-btn pl-btn-primary">
+                Create an account
               </Link>
-              <Link to="/login" style={secondaryCta}>
+              <Link to="/login" className="pl-btn">
                 Sign in
               </Link>
             </>
           )}
-          <a href="#how-it-works" style={secondaryCta}>
+          <a href="#how-it-works" className="pl-btn">
             See how it works
           </a>
         </Reveal>
+
+        {/* Stepped ECG strip — decorative rhythm under the message */}
+        <Reveal as="div" className="mt-10 mx-auto max-w-xl" delay={340} aria-hidden="true">
+          <PixelEcgTrace beats={3} width={480} height={56} color="orange" animate />
+        </Reveal>
       </div>
 
-      <div
-        style={{
-          position: "absolute",
-          bottom: "2rem",
-          left: 0,
-          right: 0,
-          textAlign: "center",
-          padding: "0 1.5rem",
-          fontFamily: "var(--font-mono)",
-          fontSize: "0.78rem",
-          color: "var(--bone)",
-          opacity: 0.55,
-        }}
-      >
+      <div className="pl-scroll-cue" aria-hidden="true">
+        <PixelStaircase steps={3} cell={6} animate={false} colors={["orange", "yellow", "red"]} />
+        <span>Scroll</span>
+      </div>
+
+      <div className="pl-statusline">
         {error ? (
           `Live status unavailable${updatedAt ? ` · last successful check ${new Date(updatedAt).toLocaleTimeString()}` : ""}`
         ) : loading && !health ? (

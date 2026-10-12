@@ -46,7 +46,7 @@ export function StatTile({
   extra,
 }: Props) {
   return (
-    <div className="card-premium bg-surface-raised border border-surface-border rounded-2xl p-5 flex flex-col gap-2 hover:border-accent-brand/40">
+    <div className="bg-surface-raised border border-surface-border rounded p-5 flex flex-col gap-2 hover:border-accent-brand/50 transition-colors">
       <div className="text-compact text-[10px] text-ink-muted">
         {eyebrow}
       </div>
@@ -67,9 +67,9 @@ export function StatTile({
       )}
 
       {gauge !== undefined && (
-        <div className="mt-1 h-1.5 w-full bg-surface-border rounded-full overflow-hidden">
+        <div className="mt-1 h-1.5 w-full bg-surface-border overflow-hidden">
           <div
-            className="h-full bg-accent-brand rounded-full transition-all"
+            className="h-full bg-accent-brand transition-all"
             style={{ width: `${Math.max(0, Math.min(100, gauge))}%` }}
           />
         </div>

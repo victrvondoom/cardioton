@@ -7,9 +7,9 @@ import type {
 } from "./api";
 
 export const INPUT =
-  "mt-1 block w-full rounded-lg border border-surface-border bg-surface-panel px-3 py-2 text-sm text-ink-primary focus:outline-none focus:ring-2 focus:ring-accent-cyan";
+  "mt-1 block w-full rounded-lg border border-surface-border bg-surface-panel px-3 py-2 text-sm text-ink-primary focus:outline-none focus:ring-2 focus:ring-accent-brand";
 export const BUTTON =
-  "rounded-lg border border-accent-cyan/40 bg-accent-cyan/10 px-3 py-2 text-xs text-accent-cyan disabled:opacity-40 hover:bg-accent-cyan/20 focus:outline-none focus:ring-2 focus:ring-accent-cyan";
+  "rounded-lg border border-accent-brand/40 bg-accent-brand/10 px-3 py-2 text-xs font-medium text-accent-brand disabled:opacity-40 hover:bg-accent-brand/20 focus:outline-none focus:ring-2 focus:ring-accent-brand";
 export function Field({
   label,
   children,

@@ -76,7 +76,8 @@ async def create_passport_endpoint(
     except ModelArtifactError as exc:
         raise HTTPException(503, "CardioTwin model artifact is unavailable") from exc
     except (LeakageError, RecordValidationError) as exc:
-        raise HTTPException(422, {"error": type(exc).__name__, "problems": exc.problems}) from exc
+        problems = exc.problems if isinstance(exc, RecordValidationError) else [str(exc)]
+        raise HTTPException(422, {"error": type(exc).__name__, "problems": problems}) from exc
 
     # 1. Hemodynamics
     vessel_stenoses = {

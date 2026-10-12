@@ -147,14 +147,14 @@ function Workbench() {
     }
   }
   return (
-    <div className="p-4 sm:p-7 max-w-[1500px] mx-auto space-y-5">
-      <header className="rounded-2xl border border-accent-cyan/30 bg-gradient-to-br from-accent-cyan/10 via-surface-raised to-surface-panel p-6 sm:p-8">
-        <div className="flex flex-wrap items-start justify-between gap-4">
+    <div className="p-4 sm:p-6 max-w-[1500px] mx-auto space-y-4">
+      <header className="border-b border-surface-border pb-5">
+        <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <div className="text-mono-tech text-[10px] tracking-widest text-accent-cyan">
+            <div className="text-compact text-[10px] tracking-widest text-accent-brand">
               PRIMARY TRACK 7 · DIGITAL HEALTH STANDARDS
             </div>
-            <h1 className="text-display text-3xl text-ink-primary mt-2">
+            <h1 className="text-display-secondary text-3xl text-ink-primary mt-2">
               CARDIOTON / One Health
             </h1>
             <p className="text-sm text-ink-body mt-2">
@@ -166,7 +166,7 @@ function Workbench() {
               clinical judgment stays with the reviewer.
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2" aria-label="Evidence actions">
             <Link className={BUTTON} to="/interop">
               Start Track 7 Interoperability Demo
             </Link>
@@ -187,7 +187,7 @@ function Workbench() {
             </button>
           </div>
         </div>
-        <div className="mt-5 flex flex-wrap gap-2 text-[10px] text-ink-muted">
+        <div className="mt-4 flex flex-wrap gap-2 text-[10px] text-ink-muted">
           <Chip>FHIR R4 target · pinned OAH draft</Chip>
           <Chip>Consent, review and evidence travel together</Chip>
           <Chip>
@@ -264,17 +264,18 @@ function Workbench() {
       )}
       {records.length > 0 && (
         <div className="grid xl:grid-cols-[260px_minmax(0,1fr)] gap-5">
-          <aside className="space-y-2" aria-label="Exposure records">
+          <aside className="space-y-2 xl:sticky xl:top-36 xl:self-start" aria-label="Exposure records">
             <h2 className="text-xs text-ink-muted px-1">
               EVIDENCE RECORDS · {records.length}
             </h2>
+            <div className="space-y-2 xl:max-h-[calc(100dvh_-_11rem)] xl:overflow-y-auto xl:pr-1">
             {records.map((r) => (
               <button
                 key={r.id}
                 disabled={busy}
                 aria-pressed={selected?.id === r.id}
                 onClick={() => setQuery({ record: r.id })}
-                className={`w-full text-left rounded-xl border p-4 ${selected?.id === r.id ? "border-accent-cyan bg-accent-cyan/10" : "border-surface-border bg-surface-raised"}`}
+                className={`w-full text-left rounded-xl border px-3 py-3 transition-colors ${selected?.id === r.id ? "border-accent-brand bg-accent-brand/10" : "border-surface-border bg-surface-raised hover:border-surface-border-hi"}`}
               >
                 <div className="text-[10px] text-accent-amber">
                   {r.synthetic
@@ -292,6 +293,7 @@ function Workbench() {
                 </div>
               </button>
             ))}
+            </div>
           </aside>
           <main className="min-w-0 space-y-4">
             {selectedId && !selected && (

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="none">
+  <!-- CardioTwin Logo - Dual Hearts with Evidence Continuity -->
+
+  <!-- Left Heart (Patient Heart) -->
+  <path d="M100 150 C100 100, 150 50, 200 100 C250 50, 300 100, 300 150 C300 200, 250 250, 200 250 C150 250, 100 200, 100 150 Z"
+        fill="#ff4757" stroke="#ff6b81" stroke-width="2"/>
+
+  <!-- Right Heart (Digital Twin Heart) -->
+  <path d="M300 150 C300 100, 350 50, 400 100 C450 50, 500 100, 500 150 C500 200, 450 250, 400 250 C350 250, 300 200, 300 150 Z"
+        fill="#ff6b81" stroke="#ff8fa3" stroke-width="2" opacity="0.9"/>
+
+  <!-- Connecting Evidence Path (Temporal Continuity) -->
+  <path d="M200 150 Q250 120, 300 150" stroke="#ffa502" stroke-width="4" fill="none" stroke-dasharray="5,5"/>
+
+  <!-- Evidence Nodes (Multi-agent orchestration points) -->
+  <circle cx="170" cy="130" r="8" fill="#ffa502"/>
+  <circle cx="230" cy="140" r="8" fill="#ffa502"/>
+  <circle cx="270" cy="130" r="8" fill="#ffa502"/>
+
+  <!-- Central Evidence Hub -->
+  <circle cx="250" cy="150" r="12" fill="#ffa502" opacity="0.8"/>
+
+  <!-- CardioTwin Text -->
+  <text x="250" y="280" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        font-size="28" font-weight="600" fill="#ff4757" text-anchor="middle">
+    CARDIOTWIN
+  </text>
+
+  <!-- Tagline -->
+  <text x="250" y="310" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+        font-size="12" fill="#ffa502" text-anchor="middle" letter-spacing="1">
+    Cardiovascular Intelligence Workspace
+  </text>
+</svg>

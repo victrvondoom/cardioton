@@ -1,4 +1,4 @@
-﻿/** Compact workspaces with every tool retained in desktop and mobile navigation. */
+/** Compact workspaces with every tool retained in desktop and mobile navigation. */
 import clsx from "clsx";
 import { ChevronDown, ChevronLeft, ChevronRight, Info, LogOut, Menu, Search, X } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -115,7 +115,8 @@ export function Sidenav() {
           const badge = home.liveBadge ? liveCounts[home.liveBadge] : null;
           return <div key={workspace.id} role="group" aria-label={`${workspace.label} workspace`}>
             <div className={clsx("flex items-center rounded-lg", selected && "bg-accent-brand/10")}>
-              <NavLink to={workspace.href} end aria-label={workspace.label} title={`${workspace.label}: ${workspace.summary}`} className={clsx("flex min-h-10 min-w-0 flex-1 items-center gap-2.5 rounded-lg px-2.5 text-xs font-medium focus-visible:ring-2 focus-visible:ring-accent-brand", selected ? "text-accent-brand" : "text-ink-body hover:bg-surface-raised hover:text-ink-primary")}>
+              <NavLink to={workspace.href} end aria-label={workspace.label} title={`${workspace.label}: ${workspace.summary}`} className={clsx("relative flex min-h-10 min-w-0 flex-1 items-center gap-2.5 rounded px-2.5 text-xs font-medium focus-visible:ring-2 focus-visible:ring-accent-brand", selected ? "bg-accent-brand/10 text-accent-brand" : "text-ink-body hover:bg-surface-raised hover:text-ink-primary")}>
+                {selected && <span aria-hidden="true" className="absolute left-0 top-1/2 h-3 w-[3px] -translate-y-1/2 bg-accent-brand" />}
                 <Icon size={17} aria-hidden="true" className="shrink-0" />
                 {!collapsed && <><span className="min-w-0 flex-1 truncate">{workspace.label}</span>{badge !== null && <span className="rounded bg-surface-border px-1.5 py-0.5 text-[10px] text-ink-muted">{badge}</span>}</>}
               </NavLink>
@@ -129,14 +130,14 @@ export function Sidenav() {
       </nav>
       <div className="space-y-1 border-t border-surface-border p-2">
         <div className="flex min-h-10 items-center gap-2 px-1 text-xs">
-          {!collapsed && <><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-brand/15 text-[10px] font-semibold text-accent-brand" aria-hidden="true">{initials}</span><div className="min-w-0 flex-1"><div className="truncate font-medium text-ink-primary">{user?.full_name || user?.email || "—"}</div><div className="truncate text-[9px] uppercase tracking-wide text-ink-muted">{role}{user?.organization_name && ` · ${user.organization_name}`}</div></div></>}
+          {!collapsed && <><span className="flex h-7 w-7 shrink-0 items-center justify-center rounded bg-accent-brand/15 text-[10px] font-semibold text-accent-brand" aria-hidden="true">{initials}</span><div className="min-w-0 flex-1"><div className="truncate font-medium text-ink-primary">{user?.full_name || user?.email || "—"}</div><div className="truncate text-[9px] uppercase tracking-wide text-ink-muted">{role}{user?.organization_name && ` · ${user.organization_name}`}</div></div></>}
           <button type="button" onClick={() => setAboutOpen(true)} className="rounded p-2 text-ink-muted hover:bg-surface-raised hover:text-ink-primary focus-visible:ring-2 focus-visible:ring-accent-brand" aria-label="About CARDIOTON (build version, deployment mode, feature flags)" title="About CARDIOTON"><Info size={14} aria-hidden="true" /></button>
         </div>
         <button type="button" onClick={logout} aria-label="Sign out of CARDIOTON" title="Sign out" className="flex w-full items-center justify-center gap-2 rounded-md border border-surface-border px-2 py-2 text-xs text-ink-muted hover:bg-accent-red/10 hover:text-accent-red focus-visible:ring-2 focus-visible:ring-accent-red/40"><LogOut size={14} aria-hidden="true" />{!collapsed && <span>Sign out</span>}</button>
       </div>
     </aside>
 
-    <nav aria-label="Quick navigation" className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-surface-border bg-surface-panel/95 px-1 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_rgba(0,0,0,0.12)] backdrop-blur md:hidden">
+    <nav aria-label="Quick navigation" className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-surface-border bg-surface-panel/95 px-1 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_rgba(0,0,0,0.12)] md:hidden">
       {WORKSPACES.slice(0, 4).map((workspace) => {
         const Icon = workspace.icon;
         const selected = currentWorkspace?.id === workspace.id;
@@ -164,7 +165,8 @@ function NavItemRow({ item, liveCounts, chips, onNavigate }: { item: WorkspaceLi
   const chip = chips[item.href] ?? null;
   const badge = item.liveBadge ? liveCounts[item.liveBadge] : null;
   const Icon = item.icon;
-  return <NavLink data-nav-description={item.description} title={item.description ? `${item.label}: ${item.description}` : item.label} aria-label={item.label} aria-current={active ? "page" : undefined} to={item.href} end onClick={onNavigate} className={clsx("group relative flex min-h-8 min-w-0 items-center gap-2 rounded-md px-2 py-1.5 text-[11px] transition-colors focus-visible:ring-2 focus-visible:ring-accent-brand", active ? "bg-accent-brand/10 font-medium text-accent-brand" : "text-ink-muted hover:bg-surface-raised hover:text-ink-primary")}>
+  return <NavLink data-nav-description={item.description} title={item.description ? `${item.label}: ${item.description}` : item.label} aria-label={item.label} aria-current={active ? "page" : undefined} to={item.href} end onClick={onNavigate} className={clsx("group relative flex min-h-8 min-w-0 items-center gap-2 rounded-sm px-2 py-1.5 text-[11px] transition-colors focus-visible:ring-2 focus-visible:ring-accent-brand", active ? "bg-accent-brand/10 font-medium text-accent-brand" : "text-ink-muted hover:bg-surface-raised hover:text-ink-primary")}>
+    {active && <span aria-hidden="true" className="absolute left-0 top-1/2 h-2 w-[3px] -translate-y-1/2 bg-accent-brand" />}
     <Icon size={13} aria-hidden="true" className="shrink-0" /><span className="min-w-0 flex-1 truncate">{item.label}</span>
     {chip && <span data-testid={`chip-${item.href}`} className="rounded bg-accent-cyan/10 px-1 py-0.5 text-[9px] text-accent-cyan">{chip}</span>}
     {badge !== null && <span className={clsx("rounded px-1.5 py-0.5 text-[10px]", active ? "bg-accent-brand text-ink-invert" : "bg-surface-border text-ink-muted")}>{badge}</span>}

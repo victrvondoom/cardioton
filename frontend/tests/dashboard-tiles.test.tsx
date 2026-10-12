@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -68,6 +68,21 @@ describe("Dashboard is an operational entry point, not a showcase", () => {
     mount();
     await waitFor(() => expect(screen.getByText("count unavailable")).toBeTruthy()); // awaiting-review tile
     expect(screen.getAllByText("—").length).toBeGreaterThan(0); // every unavailable metric is an explicit dash
-    await waitFor(() => expect(screen.getByTestId("attention-count").textContent).toBe("all clear"));
+    await waitFor(() => expect(screen.getByTestId("attention-count").textContent).toBe("unavailable"));
+    expect(screen.getByText(/— status unavailable/)).toBeTruthy();
+  });
+
+  it("refreshes metrics on demand and reports failed case creation", async () => {
+    vi.mocked(api.getOrgValue).mockResolvedValue(rollup());
+    vi.mocked(api.listFixtures).mockResolvedValue([{ name: "example", label: "Example", expected_verdict: "APPROVE" }] as never);
+    vi.mocked(api.createFromFixture).mockRejectedValue(new Error("Case storage unavailable"));
+    mount();
+    await waitFor(() => expect(screen.getByText("14")).toBeTruthy());
+    await waitFor(() => expect(screen.getByRole("button", { name: "Refresh dashboard" }).hasAttribute("disabled")).toBe(false));
+    vi.mocked(api.getOrgValue).mockResolvedValue(rollup({ cases_total: 15 }));
+    fireEvent.click(screen.getByRole("button", { name: "Refresh dashboard" }));
+    await waitFor(() => expect(screen.getByText("15")).toBeTruthy());
+    fireEvent.click(screen.getByRole("button", { name: "APPROVE" }));
+    await waitFor(() => expect(screen.getByRole("alert").textContent).toContain("Case storage unavailable"));
   });
 });

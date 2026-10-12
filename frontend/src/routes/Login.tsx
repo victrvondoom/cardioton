@@ -1,8 +1,9 @@
-﻿/**
+/**
  * /login — email + password sign-in.
  *
- * Polished pre-demo: ClinCase mark (public/clincase-mark.svg), ambient glow,
- * and one-click demo accounts so evaluators can land in a workspace without typing.
+ * Polished pre-demo: ClinCase mark (public/clincase-mark.svg), flat pixel
+ * geometry accents, and one-click demo accounts so evaluators can land in a
+ * workspace without typing.
  */
 import { Loader2, LogIn, Moon, ShieldCheck, Sparkles, Sun } from "lucide-react";
 import { useState } from "react";
@@ -11,6 +12,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext";
 import { useTheme } from "../lib/theme";
 import { SpatialBackdrop } from "../components/SpatialBackdrop";
+import { PixelCluster } from "../pixel/PixelCluster";
+import { PixelStaircase } from "../pixel/PixelStaircase";
+import { HEART_BITMAP } from "../pixel/bitmaps";
 
 const DEMO_ACCOUNTS = [
   { email: "admin@clincase.health", role: "Admin", desc: "Full access" },
@@ -83,7 +87,7 @@ export default function Login() {
   }
 
   return (
-    <div className="spatial-auth relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden bg-gradient-to-br from-surface-bg via-surface-bg to-accent-brand/[0.04]">
+    <div className="spatial-auth relative min-h-screen flex items-center justify-center px-4 py-12 overflow-hidden bg-surface-bg">
       <SpatialBackdrop />
       {/* ---- Theme toggle ---- */}
       <button
@@ -98,24 +102,14 @@ export default function Login() {
         {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
       </button>
 
-      {/* ---- Ambient backdrop blobs (turned up to obvious) ---- */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      >
-        <div className="absolute -top-40 -left-40 w-[720px] h-[720px] rounded-full bg-accent-brand/40 blur-[100px] motion-safe:animate-pulse [animation-duration:6s]" />
-        <div className="absolute top-32 -right-40 w-[640px] h-[640px] rounded-full bg-accent-cyan/40 blur-[100px] motion-safe:animate-pulse [animation-duration:7s] [animation-delay:1s]" />
-        <div className="absolute -bottom-40 left-1/3 w-[560px] h-[560px] rounded-full bg-accent-violet/40 blur-[100px] motion-safe:animate-pulse [animation-duration:8s] [animation-delay:2s]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-accent-brand/15 blur-[160px] motion-safe:animate-pulse [animation-duration:10s] [animation-delay:3s]" />
-        {/* Visible dot grid */}
-        <div
-          className="absolute inset-0 opacity-[0.10]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)",
-            backgroundSize: "28px 28px",
-          }}
-        />
+      {/* ---- Flat pixel geometry accents ---- */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute right-8 top-28 hidden opacity-70 sm:block">
+          <PixelCluster map={HEART_BITMAP} cell={8} animate staggerMs={14} />
+        </div>
+        <div className="absolute bottom-8 left-8 hidden sm:block">
+          <PixelStaircase steps={5} cell={8} />
+        </div>
       </div>
 
       <div className="relative w-full max-w-md">
@@ -126,15 +120,6 @@ export default function Login() {
           aria-label="CARDIOTON home"
         >
           <div className="relative">
-            {/* Two-layer pulsing halo — unmissable */}
-            <div
-              className="absolute inset-0 rounded-full bg-accent-brand/70 blur-3xl scale-[1.9] motion-safe:animate-pulse [animation-duration:3s]"
-              aria-hidden="true"
-            />
-            <div
-              className="absolute inset-0 rounded-full bg-accent-cyan/50 blur-2xl scale-[1.5] group-hover:scale-[2] transition-transform duration-500"
-              aria-hidden="true"
-            />
             <img
               src="/clincase-mark.svg"
               alt="CARDIOTON"
@@ -154,7 +139,7 @@ export default function Login() {
         </Link>
 
         {/* ---- Card ---- */}
-        <div className="spatial-card relative bg-surface-raised/95 backdrop-blur-sm border border-surface-border rounded-2xl p-7 shadow-2xl shadow-accent-brand/5">
+        <div className="spatial-card relative bg-surface-raised border border-surface-border rounded p-7">
           <h1 className="text-display-secondary text-xl text-ink-primary mb-1">
             Sign in to your workspace
           </h1>

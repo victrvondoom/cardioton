@@ -1,41 +1,44 @@
 /**
  * Landing-page design tokens + copy.
  *
- * The landing page runs its own "aperture" palette (dark or light), separate
- * from the app's light/dark theme tokens — it is a marketing surface, not app
- * chrome, but it now follows the same theme choice (see lib/theme.ts) so a
- * visitor who flips to light doesn't land back on a dark page after signing
- * in. Colors live here (TS) as well as in landing.css (CSS vars) because the
- * inline SVG backdrop and the WebGL scene need them as literal values, not
- * CSS custom properties.
+ * The landing page runs the pixel-native CardioTwin identity: near-black
+ * canvas, five-colour pixel ramp, geometric sans. Colours live here (TS) as
+ * well as in landing.css (CSS vars) because canvas-based pixel layers need
+ * them as literal values, not CSS custom properties.
  */
 
-export const apertureColorsDark = {
-  void: "#050505",
-  ink: "#101010",
-  bone: "#ececec",
-  cyan: "#e8e8e8",
-  violet: "#8a8a8a",
-  ember: "#6f6f6f",
+export const pixelColorsDark = {
+  void: "#0D0E10",
+  panel: "#141518",
+  bone: "#F7F7F4",
+  muted: "#96979E",
+  red: "#F0442B",
+  orange: "#FF7900",
+  yellow: "#FFB400",
+  blue: "#39A9E8",
+  green: "#59DFA6",
 } as const;
 
-export const apertureColorsLight = {
-  void: "#ffffff",
-  ink: "#f4f4f4",
-  bone: "#101010",
-  cyan: "#1a1a1a",
-  violet: "#5a5a5a",
-  ember: "#787878",
+export const pixelColorsLight = {
+  void: "#FAFAF8",
+  panel: "#FFFFFF",
+  bone: "#141518",
+  muted: "#6E6F76",
+  red: "#D63A22",
+  orange: "#E85D00",
+  yellow: "#C77F00",
+  blue: "#1D7FB8",
+  green: "#178A5F",
 } as const;
 
-export type ApertureTheme = "dark" | "light";
+export type PixelLandingTheme = "dark" | "light";
 
-export function getApertureColors(theme: ApertureTheme) {
-  return theme === "light" ? apertureColorsLight : apertureColorsDark;
+export function getPixelLandingColors(theme: PixelLandingTheme) {
+  return theme === "light" ? pixelColorsLight : pixelColorsDark;
 }
 
-/** @deprecated Use `getApertureColors(theme)` — kept for any stray import. */
-export const apertureColors = apertureColorsDark;
+/** @deprecated Use `getPixelLandingColors(theme)` — kept for any stray import. */
+export const apertureColors = pixelColorsDark;
 
 /** The six steps a prior-auth request passes through inside ClinCase. */
 export const LIFECYCLE_STEPS = [

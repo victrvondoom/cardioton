@@ -10,17 +10,7 @@ from pathlib import PurePosixPath
 from typing import Any
 
 from fastapi import HTTPException
-from pypdf import PdfReader
-
-try:
-    from pypdf import apply_configuration
-except ImportError:
-    try:
-        from pypdf.config import apply_configuration
-    except ImportError:
-        from contextlib import nullcontext
-        def apply_configuration(**kwargs):
-            return nullcontext()
+from pypdf import PdfReader, apply_configuration
 from pypdf.generic import DictionaryObject, IndirectObject, StreamObject
 
 MAX_BYTES = 8 * 1024 * 1024

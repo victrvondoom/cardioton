@@ -111,7 +111,7 @@ FRAMES: dict[FrameId, dict[str, Any]] = {
 
 def frame_registry() -> dict[str, Any]:
     return {
-        "frames": [FRAMES[frame] for frame in ("cardiotwin", "cardioearth", "cardioflow", "cardiochronos", "cardiocity")],
+        "frames": list(FRAMES.values()),
         "notice": (
             "Frames are linked through a typed evidence model, never physically merged. "
             "Quantities from different frames are combined only via documented mathematical relations."

@@ -1,4 +1,7 @@
 import { Activity, Flame, Heart, ShieldAlert } from "lucide-react";
+
+import { PixelEcgTrace } from "../pixel/PixelEcgTrace";
+
 import type { PatientValues, Prediction, TargetId } from "./types";
 
 interface CardioTelemetryHUDProps {
@@ -15,7 +18,7 @@ export function CardioTelemetryHUD({ patient, prediction, selectedTarget, stress
   const probability = prediction ? (selectedTarget === "CAD" ? prediction.cad.probability : prediction.vessels[selectedTarget].probability) : null;
 
   return (
-    <section className="rounded-xl border border-surface-border bg-surface-raised p-4 cardio-card-glow space-y-3.5">
+    <section className="rounded border border-surface-border bg-surface-raised p-4 space-y-3.5">
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-surface-border/60 pb-2.5">
         <div className="flex items-center gap-2">
           <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent-brand/10 text-accent-brand"><Activity size={16} /></span>
@@ -38,9 +41,16 @@ export function CardioTelemetryHUD({ patient, prediction, selectedTarget, stress
         <ShieldAlert size={16} className="shrink-0 text-accent-amber" />
         <p><b>Illustrative waveform only — not a patient ECG.</b> The scenario toggle changes no patient measurement or model probability. It does not represent stress testing or physiological telemetry.</p>
       </div>
-      <svg viewBox="0 0 480 72" role="img" aria-label="Illustrative decorative waveform, not a patient ECG" className="w-full h-16 rounded-lg border border-surface-border bg-surface-panel">
-        <path d="M0 36 H70 l8 -5 8 10 10 -18 10 26 10 -13 H190 l8 -5 8 10 10 -18 10 26 10 -13 H340 l8 -5 8 10 10 -18 10 26 10 -13 H480" fill="none" stroke="currentColor" strokeWidth="2" className="text-accent-brand" />
-      </svg>
+      <div className="rounded border border-surface-border bg-surface-panel p-2">
+        <PixelEcgTrace
+          beats={3}
+          width={480}
+          height={56}
+          color="orange"
+          animate
+          ariaLabel="Illustrative decorative waveform, not a patient ECG"
+        />
+      </div>
     </section>
   );
 }

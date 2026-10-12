@@ -14,10 +14,10 @@ class ReadmeContractTests(unittest.TestCase):
 
     def test_heading_name_appearing_in_body_is_insufficient(self):
         content = README.read_text(encoding="utf-8").replace(
-            "## Monitoring, observability and verification", "Monitoring, observability and verification"
+            "## Verification", "Verification"
         )
         self.assertIn(
-            "README must contain one heading: Monitoring, observability and verification",
+            "README must contain one heading: Verification",
             check_readme(content),
         )
 
@@ -28,7 +28,7 @@ class ReadmeContractTests(unittest.TestCase):
     def test_empty_section_is_rejected(self):
         content = README.read_text(encoding="utf-8")
         start = content.index("## Start here")
-        end = content.index("## One connected evidence journey", start)
+        end = content.index("## Cardiovascular workspace", start)
         content = content[:start] + "## Start here\n\n" + content[end:]
         self.assertIn("README section needs explanatory content: Start here", check_readme(content))
 

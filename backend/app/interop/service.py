@@ -378,7 +378,7 @@ def validate(bundle: dict[str, Any]) -> dict[str, Any]:
             h = decoded["history"]
             if h and (not h["consent_recorded"] or decoded["consent_withdrawn"]):
                 extra.append("Patient-linked transfer requires active recorded consent")
-    if base_valid and not extra:
+    if base_valid and not extra and decoded is not None:
         record = ExposureRecord(
             organization_id="roundtrip",
             observation_id=decoded["source_observation_id"],

@@ -99,7 +99,7 @@ class MultiAgentOrchestrator:
             task_type="source_grounded_research_brief", inputs={"query": query},
             expected_output_schema="cardiotwin-research-brief-v1",
             allowed_tools=["public_source_search", "normalize_and_ingest", "map_categories", "verify_snapshot", "inspect_metadata_gaps", "build_passport"],
-            timeout_seconds=45, max_retries=len(configured) * source_retry_limit,
+            timeout_seconds=45, retry_count=0, max_retries=len(configured) * source_retry_limit,
             source_retry_limit=source_retry_limit, requires_human_review=True,
             human_review_reason="Metadata and lexical mappings do not establish scientific validity or clinical advice.",
         ).model_dump(mode="json")
@@ -108,8 +108,9 @@ class MultiAgentOrchestrator:
         task["retry_policy"] = "Each configured source may retry once; max_retries is the sum of those per-source retry limits."
         task, created = self.repository.reserve_task(task, scope, idempotency_key)
         if not created:
-            if task["result_artifacts"].get("response"):
-                return task["result_artifacts"]["response"]
+            stored_response = task["result_artifacts"].get("response")
+            if isinstance(stored_response, dict):
+                return stored_response
             raise ResearchExecutionError(task["task_id"], "task_in_progress_or_failed")
         started = time.monotonic()
         task.update(status=TaskStatus.RUNNING.value, started_at=now())
@@ -128,13 +129,14 @@ class MultiAgentOrchestrator:
         try:
             if configured - {"clinicaltrials", "europe_pmc"}:
                 raise SourceRetrievalError("configuration", "unsupported_source")
-            connectors = {"clinicaltrials": ClinicalTrialsConnector(live=True).search_trials,
-                          "europe_pmc": PubMedConnector(live=True).search_publications}
             for source in sorted(configured):
                 for attempt in range(task["source_retry_limit"] + 1):
                     check_deadline()
                     try:
-                        retrieved = connectors[source](query, limit=10)
+                        if source == "clinicaltrials":
+                            retrieved = ClinicalTrialsConnector(live=True).search_trials(query, limit=10)
+                        else:
+                            retrieved = PubMedConnector(live=True).search_publications(query, limit=10)
                         check_deadline()
                         summary = self.repository.ingest(retrieved)
                         check_deadline()

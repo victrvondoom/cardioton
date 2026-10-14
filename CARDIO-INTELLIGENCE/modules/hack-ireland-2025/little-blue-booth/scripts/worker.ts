@@ -1,3 +1,3 @@
-import '../src/server/api/reasoning_bots/worker';
+import '../src/server/workers';
 
 console.log('Worker started'); 

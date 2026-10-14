@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./App.css";
+import "./cardio_risk_3d__frontend_src__app.css";
 
 const initialData = {
   Age: "",

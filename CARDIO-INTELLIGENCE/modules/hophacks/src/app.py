@@ -11,7 +11,11 @@ from bson.objectid import ObjectId
 from flask import (Flask, flash, jsonify, make_response, redirect,
                    render_template, request, send_file, url_for)
 
-from code_lookup import extract_medical_terms_from_text, find_medical_codes
+from code_lookup import (
+    extract_medical_terms_from_text,
+    find_medical_codes,
+    generate_medical_codes_from_transcript,
+)
 from database import Database
 from pdf_generator_direct import PDFGeneratorDirect
 
@@ -589,6 +593,8 @@ def enhance_medical_codes(structured_data, transcript):
     This ensures we have medical codes even if Gemini didn't provide them.
     """
     try:
+        fallback_codes = generate_medical_codes_from_transcript(transcript)
+
         # Enhance diagnoses if they're missing codes or empty
         if "diagnoses" in structured_data:
             existing_diagnoses = structured_data["diagnoses"]
@@ -1689,7 +1695,7 @@ def generate_claim():
         structured_data = fix_form_specific_data_issues(structured_data, form_type)
 
         # Validate form data before PDF generation
-        validation_result = self._validate_form_data(structured_data, form_type)
+        validation_result = _validate_form_data(structured_data, form_type)
         
         # Notify PDF generation about validation results
         from agent_communication import create_agent_communicator, MessageType
@@ -2413,7 +2419,7 @@ Provide a concise, accurate response:"""
             except Exception as e:
                 print(f"Error logging chatbot interaction to Contextus: {e}")
                 # Send error notification to all agents
-                self._notify_error_to_agents("contextus_logging_error", str(e), patient_id)
+                _notify_error_to_agents("contextus_logging_error", str(e), patient_id)
         
         # Determine which AI agent was used
         ai_agent_used = "CMSAssistantAgent"

@@ -66,6 +66,9 @@ GCS_FOLDER_PREFIX = "chest-xrays/"  # Folder inside bucket
 assert os.path.exists(DATASET_JSON_PATH), f"❌ dataset_cxr_primary.json not found at {DATASET_JSON_PATH}"
 assert os.path.exists(IMAGES_FOLDER_PATH), f"❌ images folder not found at {IMAGES_FOLDER_PATH}"
 
+with open(DATASET_JSON_PATH, encoding="utf-8") as f:
+    dataset = json.load(f)
+
 print(f"✅ Dataset JSON: {DATASET_JSON_PATH}")
 print(f"✅ Images Folder: {IMAGES_FOLDER_PATH}")
 print(f"☁️  GCS Bucket: gs://{GCS_BUCKET_NAME}/{GCS_FOLDER_PREFIX}")

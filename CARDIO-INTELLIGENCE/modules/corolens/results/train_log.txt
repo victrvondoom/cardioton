@@ -1,0 +1,8 @@
+[corolens] development 242 / held-out test 61 patients, 55 features
+[corolens] nested CV (outer 5x2) ...
+  CAD: logreg_l1     test AUC 0.906 F1 0.897 coverage 0.902
+  LAD: random_forest test AUC 0.910 F1 0.880 coverage 0.951
+  LCX: random_forest test AUC 0.730 F1 0.500 coverage 0.934
+  RCA: logreg_l1     test AUC 0.699 F1 0.439 coverage 0.852
+[corolens] CAD vs any-vessel agreement on test: 0.902
+[corolens] done in 356.1 s; model bundle 0.72 MB

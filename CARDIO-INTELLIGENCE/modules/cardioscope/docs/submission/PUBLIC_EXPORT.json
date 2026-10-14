@@ -1,0 +1,57 @@
+{
+  "archival_baseline_commit": "5df5782045067967e8b3a4d348d4f26112a73548",
+  "source": "current owner-approved working tree; fresh public history without archival .git",
+  "excluded_organizer_files": [
+    "Problem Statements.pdf",
+    "Track A.pdf",
+    "Track B.pdf",
+    "Track C.pdf",
+    "Track D.pdf",
+    "Multimodal AI Hackathon 2026 - Submission Guidelines.pdf",
+    "Multimodal AI Hackathon 2026 - Prize Pool.pdf"
+  ],
+  "adaptations": [
+    {
+      "path": "artifacts/experiments/v21-multitask-20261003-01/checks/foundation.txt",
+      "change": "personal checkout path replaced with <ARCHIVAL_ROOT>; historical transcript/result text otherwise unchanged",
+      "archival_sha256": "fd6436a4b04bff27ecffcb199f8fef6bcbefc082583c9c88551b2beb189b89f3",
+      "public_sha256": "2e7de64c396ffa56f40a1582cbf59f7af0bcbf41039b196bd5624233740190d6"
+    },
+    {
+      "path": "artifacts/experiments/v21-multitask-20261003-01/checks/frontend-tests.txt",
+      "change": "personal checkout path replaced with <ARCHIVAL_ROOT>; historical transcript/result text otherwise unchanged",
+      "archival_sha256": "b07600ad38735b717f7da5207745d25118b2d192c2c8d2624c91c960ba73b273",
+      "public_sha256": "b385ef9425428fa48be6bba89ec5083f876dad042fd6aa5b43046a111b599442"
+    },
+    {
+      "path": "PLAN.md",
+      "change": "organizer-PDF links now reference supplied organizer-hosted URLs; documents remain excluded"
+    },
+    {
+      "path": "docs/submission/HACKATHON_REFERENCE.md",
+      "change": "organizer-PDF links now reference supplied organizer-hosted URLs; documents remain excluded"
+    }
+  ],
+  "archival_tag": "cardioscope-v1.0.0 (retained only in archival history)",
+  "public_tag": "v1.0.0 (new export history)",
+  "report_sha256": "07316f0748a72fc11c679a42c83798cce320e6818b55e7d899c60dc6128f4e2e",
+  "holdout_evaluation": false,
+  "reserved_outcome_decoding": false,
+  "real_data_training": false,
+  "local_verification": {
+    "runtime_53_pins": true,
+    "protected_256_archive_manifest_tag_match": true,
+    "safe_python_tests": 43,
+    "frontend_tests": 75,
+    "typescript_lint_production_build": "PASS",
+    "documentation_links": 184,
+    "path_secret_scan": "PASS; whole reviewed export text; no user-specific absolute paths",
+    "report_pages": 6,
+    "report_matches_approved_archival_bytes": true,
+    "docker": "Not run; Docker daemon unavailable",
+    "python_setup": "make install using an already installed exact Python 3.12.14; no venv or node_modules copied",
+    "model_training": false,
+    "reserved_outcome_decoding": false,
+    "holdout_evaluation": false
+  }
+}

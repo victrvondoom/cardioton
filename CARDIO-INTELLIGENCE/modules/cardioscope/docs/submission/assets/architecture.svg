@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="680" viewBox="0 0 1080 680" role="img" aria-labelledby="title desc"><title id="title">CardioScope frozen V1 architecture</title><desc id="desc">Runtime validates a 55-feature profile and applies four frozen pipelines. Model outputs feed SHAP and reference anatomy in the React interface. Saved aggregate evaluation is a separate evidence input. Development nested cross-validation, freezing and one-time holdout precede runtime; there is no live training.</desc><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#007f83"/></marker></defs><rect width="1080" height="680" fill="#fff"/><style>text{font-family:Arial,Helvetica,sans-serif;fill:#102c39}.head{font-weight:700;font-size:18px}.small{font-size:15px}.label{font-size:13px;fill:#526570}.line{fill:none;stroke:#007f83;stroke-width:2;marker-end:url(#arrow)}</style><text x="36" y="36" class="head">CardioScope / frozen V1</text><text x="36" y="63" class="label">Runtime inference — no training, threshold tuning or holdout evaluation</text>
+<rect x="36" y="90" width="195" height="95" rx="8" fill="#edf5f5" stroke="#cedfe3"/>
+<text x="51" y="118" class="head">55-feature profile</text>
+<text x="51" y="142" class="small">Explicit source schema</text>
+<text x="51" y="162" class="small">No hidden defaults</text>
+<rect x="270" y="90" width="195" height="95" rx="8" fill="#edf5f5" stroke="#cedfe3"/>
+<text x="285" y="118" class="head">FastAPI validation</text>
+<text x="285" y="142" class="small">Schema / categories</text>
+<text x="285" y="162" class="small">Target fields excluded</text>
+<rect x="505" y="90" width="230" height="95" rx="8" fill="#edf5f5" stroke="#cedfe3"/>
+<text x="520" y="118" class="head">4 frozen pipelines</text>
+<text x="520" y="142" class="small">CAD / LAD: logistic</text>
+<text x="520" y="162" class="small">LCX / RCA: forest</text>
+<rect x="775" y="90" width="265" height="95" rx="8" fill="#edf5f5" stroke="#cedfe3"/>
+<text x="790" y="118" class="head">4 model probabilities</text>
+<text x="790" y="142" class="small">Separate classifier outputs</text>
+<text x="790" y="162" class="small">Fixed threshold 0.5</text>
+<path d="M231,137 H266" class="line"/>
+<path d="M465,137 H501" class="line"/>
+<path d="M735,137 H771" class="line"/>
+<rect x="535" y="225" width="230" height="108" rx="8" fill="#edf5f5" stroke="#cedfe3"/>
+<text x="550" y="253" class="head">SHAP</text>
+<text x="550" y="277" class="small">100 development records</text>
+<text x="550" y="297" class="small">Log-odds or probability</text>
+<text x="550" y="317" class="small">55 features / reconstruction</text>
+<rect x="805" y="225" width="235" height="108" rx="8" fill="#edf5f5" stroke="#cedfe3"/>
+<text x="820" y="253" class="head">Reference 3D anatomy</text>
+<text x="820" y="277" class="small">Heart + LAD / LCX / RCA</text>
+<text x="820" y="297" class="small">83 verified OBJ leaves</text>
+<text x="820" y="317" class="small">Selection / color / controls</text>
+<path d="M890,185 V205 H650 V221" class="line"/>
+<path d="M925,185 V221" class="line"/>
+<rect x="36" y="225" width="430" height="108" rx="8" fill="#edf5f5" stroke="#cedfe3"/>
+<text x="51" y="253" class="head">Saved aggregate Evidence</text>
+<text x="51" y="277" class="small">303 total / 242 development / 61 final holdout</text>
+<text x="51" y="297" class="small">Frozen results, uncertainty and limitations</text>
+<text x="51" y="317" class="small">No evaluation triggered by the interface</text>
+<rect x="300" y="375" width="540" height="95" rx="8" fill="#edf5f5" stroke="#cedfe3"/>
+<text x="315" y="403" class="head">React + TypeScript interface</text>
+<text x="315" y="427" class="small">Predictions / anatomy / explanations / evidence</text>
+<text x="315" y="447" class="small">Visible educational disclaimer and explicit failure states</text>
+<path d="M250,333 V421 H296" class="line"/>
+<path d="M650,333 V371" class="line"/>
+<path d="M920,333 V421 H844" class="line"/>
+<text x="36" y="512" class="label">Offline preparation / evaluation — completed before runtime</text>
+<rect x="36" y="535" width="223" height="90" rx="8" fill="#edf5f5" stroke="#cedfe3"/>
+<text x="51" y="563" class="head">242 development</text>
+<text x="51" y="587" class="small">Fold-fitted preprocessing</text>
+<text x="51" y="607" class="small">Locked 5 outer / 3 inner</text>
+<rect x="298" y="535" width="223" height="90" rx="8" fill="#edf5f5" stroke="#cedfe3"/>
+<text x="313" y="563" class="head">Development selection</text>
+<text x="313" y="587" class="small">Inner scores + locked rule</text>
+<text x="313" y="607" class="small">No outer-score tuning</text>
+<rect x="560" y="535" width="223" height="90" rx="8" fill="#edf5f5" stroke="#cedfe3"/>
+<text x="575" y="563" class="head">Freeze V1</text>
+<text x="575" y="587" class="small">Fit all 242 / fingerprint</text>
+<text x="575" y="607" class="small">Threshold fixed at 0.5</text>
+<rect x="822" y="535" width="223" height="90" rx="8" fill="#edf5f5" stroke="#cedfe3"/>
+<text x="837" y="563" class="head">61-record test once</text>
+<text x="837" y="587" class="small">Same-source holdout</text>
+<text x="837" y="607" class="small">Consumed; never retuned</text>
+<path d="M259,578 H294" class="line"/>
+<path d="M521,578 H556" class="line"/>
+<path d="M783,578 H818" class="line"/>
+<text x="36" y="660" class="label">Reference anatomy only. Uncalibrated model outputs. Research / educational prototype, not a diagnostic replacement.</text></svg>

@@ -1,0 +1,712 @@
+{
+  "dataset_zip_sha256": "e97af1a18733d64fa88caa0628e5fe7ce6b2e26ec4c7ee03baade92a6f1470e8",
+  "feature_order": [
+    "Age",
+    "Weight",
+    "Length",
+    "Sex",
+    "BMI",
+    "DM",
+    "HTN",
+    "Current Smoker",
+    "EX-Smoker",
+    "FH",
+    "Obesity",
+    "CRF",
+    "CVA",
+    "Airway disease",
+    "Thyroid Disease",
+    "CHF",
+    "DLP",
+    "BP",
+    "PR",
+    "Edema",
+    "Weak Peripheral Pulse",
+    "Lung rales",
+    "Systolic Murmur",
+    "Diastolic Murmur",
+    "Typical Chest Pain",
+    "Dyspnea",
+    "Function Class",
+    "Atypical",
+    "Nonanginal",
+    "Exertional CP",
+    "LowTH Ang",
+    "Q Wave",
+    "St Elevation",
+    "St Depression",
+    "Tinversion",
+    "LVH",
+    "Poor R Progression",
+    "BBB",
+    "FBS",
+    "CR",
+    "TG",
+    "LDL",
+    "HDL",
+    "BUN",
+    "ESR",
+    "HB",
+    "K",
+    "Na",
+    "WBC",
+    "Lymph",
+    "Neut",
+    "PLT",
+    "EF-TTE",
+    "Region RWMA",
+    "VHD"
+  ],
+  "features": [
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "Age",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "Weight",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "Length",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "Fmale",
+        "Male"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "Sex",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "number",
+      "name": "BMI",
+      "required": true,
+      "storage_dtype": "float64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "DM",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "HTN",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "Current Smoker",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "EX-Smoker",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "FH",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "Obesity",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "CRF",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "CVA",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "Airway disease",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "Thyroid Disease",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "CHF",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "DLP",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "BP",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "PR",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "Edema",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "Weak Peripheral Pulse",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "Lung rales",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "Systolic Murmur",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "Diastolic Murmur",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "Typical Chest Pain",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "Dyspnea",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "Function Class",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "Atypical",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "Nonanginal",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "Exertional CP",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "LowTH Ang",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "Q Wave",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "St Elevation",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "St Depression",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "Tinversion",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "LVH",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "N",
+        "Y"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "Poor R Progression",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "LBBB",
+        "N",
+        "RBBB"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "BBB",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "FBS",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "number",
+      "name": "CR",
+      "required": true,
+      "storage_dtype": "float64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "TG",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "LDL",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "number",
+      "name": "HDL",
+      "required": true,
+      "storage_dtype": "float64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "BUN",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "ESR",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "number",
+      "name": "HB",
+      "required": true,
+      "storage_dtype": "float64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "number",
+      "name": "K",
+      "required": true,
+      "storage_dtype": "float64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "Na",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "WBC",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "Lymph",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "Neut",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "PLT",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "EF-TTE",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": null,
+      "categories_source": null,
+      "kind": "integer",
+      "name": "Region RWMA",
+      "required": true,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "undocumented"
+    },
+    {
+      "categories": [
+        "Moderate",
+        "N",
+        "Severe",
+        "mild"
+      ],
+      "categories_source": "development partition only",
+      "kind": "category",
+      "name": "VHD",
+      "required": true,
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "undocumented"
+    }
+  ],
+  "forbidden_feature_aliases": [
+    "Cath",
+    "CAD",
+    "overall CAD",
+    "overall CAD status",
+    "LAD",
+    "LCX",
+    "RCA"
+  ],
+  "missing_input_policy": "reject; no imputation has been fitted",
+  "preprocessing_fitted": false,
+  "schema_version": 1,
+  "targets": {
+    "CAD": {
+      "column": "Cath",
+      "negative_class": "Normal",
+      "positive_class": "CAD"
+    },
+    "LAD": {
+      "column": "LAD",
+      "negative_class": "Normal",
+      "positive_class": "Stenotic"
+    },
+    "LCX": {
+      "column": "LCX",
+      "negative_class": "Normal",
+      "positive_class": "Stenotic"
+    },
+    "RCA": {
+      "column": "RCA",
+      "negative_class": "Normal",
+      "positive_class": "Stenotic"
+    }
+  },
+  "workbook_sha256": "739343245c2ba578b541370217531750d8e936022f928b83e0d91756caa3ff0b"
+}

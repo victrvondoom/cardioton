@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "browser_desktop_and_narrow": true,
+    "frontend_tests": 62,
+    "immutable_files_unchanged": 241,
+    "production_build": true,
+    "python_tests": 123,
+    "ruff": true,
+    "safe_data_anatomy_saved_evaluation": true,
+    "typescript": true
+  },
+  "explanation_configuration_fingerprint": "aca7177ff9aeb4a6a817e73247f42eaf8cf7cf14d853c895b3491efddcf7ca80",
+  "files_sha256": {
+    "artifacts/explanations/v1/background.json": "d0b134ca26640dde8edd3d777a710197140a6aedc63e3be07e8991f5488edb57",
+    "backend/app.py": "ce75157c2cc017ee39d3d7f3c40c7020e0e557cc3c9cb1c6c39a6efb369da517",
+    "backend/benchmark_explanations.py": "8143e9655a70781630e591bfbd6e6e2f10e4c32976023e7240cad9f73346a584",
+    "backend/contracts.py": "f9dca846dd54149e6dc34568b746fadd4e0b37b9ef3356d0b258c47e8a7e4c99",
+    "backend/explanations.py": "0774d5a5a7270a22d1ab851689306cce4244c1df2c1a4a806ff7ecb6ca6f537d",
+    "config/explanations-core-constraints.txt": "c392c757dc3ad26f01a9746e7f35faa06e43c3ddb2405c02d7c898754dad62b4",
+    "config/explanations-runtime.in": "e6b6679ba416b39d859da333cdfcbccc966f83596145b68e8eb58f4e6616fe62",
+    "config/explanations-runtime.lock.txt": "d7e77af04adbfd74e7ecc11b9bc8f6fa6d229be81327a797d1568ade795fdd3f",
+    "config/explanations_v1.json": "d13ff0af0e77184e7b51fd735df62e34cb458b9ab9c728c80318f39d45e03dfc",
+    "frontend/src/App.tsx": "e258b9d081df62eac7713616381dcc08cc162c4eff585ece5491aab3557af25d",
+    "frontend/src/ExplanationPanel.tsx": "757cfa4bdec81cc92851d0b496c695cfac2121274be995308d41a2453cb6f6ab",
+    "frontend/src/__tests__/explanations.test.tsx": "360ed1f6334d6be8fdc6f5215bb41ca2c02abf71d77028975cc58557b8a14fc4",
+    "frontend/src/api.ts": "9c798972963fde9f73660dbc6d7b6e2c5846ce1de7326e9e5c18d838c2a3a9b3",
+    "frontend/src/explanations.ts": "1078f8da53b89cd83a691290a76352e22fd6f063516d2744870ced34d65527e3",
+    "tests/test_explanations.py": "929e07358a6add706223d37695b7e417eec76045084c1d1b6d0d8c8024279a04"
+  },
+  "model_version": "d955d81c63c3d1402766c7891fa8015919b737f36a7efb7e0130686c98e4bdcd",
+  "phase": 6
+}

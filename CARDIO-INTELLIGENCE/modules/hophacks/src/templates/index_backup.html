@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedRelay - Medical Billing Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loading {
+            display: none;
+        }
+        .loading.show {
+            display: block;
+        }
+        .download-link {
+            display: none;
+        }
+        .download-link.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        {% include 'navigation.html' %}
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-4 p-4 rounded-md {% if category == 'error' %}bg-red-50 text-red-700 border border-red-200{% elif category == 'success' %}bg-green-50 text-green-700 border border-green-200{% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">Clinical Transcript Processor</h2>
+            <p class="text-lg text-gray-600">Transform clinical conversations into CMS-1500 claim forms</p>
+        </div>
+
+        <!-- Main Form -->
+        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
+            <div class="mb-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Clinical Transcript Input</h2>
+                <p class="text-gray-600 mb-4">
+                    Paste your doctor-patient conversation transcript below. Our AI will automatically extract patient information, diagnoses, and procedures to generate a complete CMS-1500 claim form.
+                </p>
+            </div>
+
+            <form id="transcriptForm" class="space-y-6">
+                <div>
+                    <label for="transcript" class="block text-sm font-medium text-gray-700 mb-2">
+                        Clinical Transcript
+                    </label>
+                    <textarea
+                        id="transcript"
+                        name="transcript"
+                        rows="12"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="Paste your clinical conversation transcript here...
+
+Example:
+Doctor: Good morning, Sarah. What brings you in today?
+Patient: I've been having a sore throat and fever for the past few days.
+Doctor: Let me examine you. I can see some redness in your throat. I'll do a rapid strep test to check for strep throat.
+Patient: Okay, that sounds good.
+Doctor: The test came back positive for strep throat. I'll prescribe you some antibiotics and recommend rest and fluids.
+Patient: Thank you, doctor."
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <button
+                        type="submit"
+                        id="generateBtn"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition duration-200 flex items-center"
+                    >
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Generate Claim Form
+                    </button>
+
+                    <div class="text-sm text-gray-500">
+                        <span id="statusText">Ready to process</span>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Loading Indicator -->
+            <div id="loadingIndicator" class="loading mt-6">
+                <div class="flex items-center justify-center">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <span class="ml-3 text-gray-600">Processing transcript with AI...</span>
+                </div>
+            </div>
+
+            <!-- Download Link -->
+            <div id="downloadSection" class="download-link mt-6">
+                <div class="bg-green-50 border border-green-200 rounded-md p-4">
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <h3 class="text-lg font-medium text-green-800">Claim Form Generated Successfully!</h3>
+                            <p class="text-green-700">Your CMS-1500 claim form is ready for download.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a
+                            id="downloadLink"
+                            href="#"
+                            download="cms1500_claim.pdf"
+                            class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md transition duration-200"
+                        >
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Download PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="hidden mt-6">
+                <div class="bg-red-50 border border-red-200 rounded-md p-4">
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <h3 class="text-lg font-medium text-red-800">Error Processing Request</h3>
+                            <p id="errorText" class="text-red-700">An error occurred while processing your request.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="max-w-4xl mx-auto mt-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">How It Works</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-800 mb-2">1. Paste Transcript</h3>
+                    <p class="text-gray-600">Simply paste your doctor-patient conversation into the text area.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-800 mb-2">2. AI Processing</h3>
+                    <p class="text-gray-600">Our AI extracts patient info, diagnoses, and procedures automatically.</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-800 mb-2">3. Download PDF</h3>
+                    <p class="text-gray-600">Get your complete CMS-1500 claim form ready for submission.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('transcriptForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const transcript = document.getElementById('transcript').value;
+            const generateBtn = document.getElementById('generateBtn');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const downloadSection = document.getElementById('downloadSection');
+            const errorMessage = document.getElementById('errorMessage');
+            const statusText = document.getElementById('statusText');
+            
+            // Reset UI
+            errorMessage.classList.add('hidden');
+            downloadSection.classList.remove('show');
+            loadingIndicator.classList.add('show');
+            generateBtn.disabled = true;
+            statusText.textContent = 'Processing...';
+            
+            try {
+                const response = await fetch('/generate-claim', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ transcript: transcript })
+                });
+                
+                if (response.ok) {
+                    // Get the PDF blob
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    
+                    // Set up download link
+                    const downloadLink = document.getElementById('downloadLink');
+                    downloadLink.href = url;
+                    
+                    // Show success UI
+                    loadingIndicator.classList.remove('show');
+                    downloadSection.classList.add('show');
+                    statusText.textContent = 'Ready to process';
+                } else {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to generate claim form');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Show error UI
+                loadingIndicator.classList.remove('show');
+                errorMessage.classList.remove('hidden');
+                document.getElementById('errorText').textContent = error.message;
+                statusText.textContent = 'Error occurred';
+            } finally {
+                generateBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

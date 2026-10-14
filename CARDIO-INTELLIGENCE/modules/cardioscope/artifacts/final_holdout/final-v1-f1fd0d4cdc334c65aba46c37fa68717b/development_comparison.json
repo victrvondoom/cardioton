@@ -1,0 +1,478 @@
+{
+  "CAD": {
+    "accuracy": {
+      "development_nested_cv_mean": 0.8264455782312925,
+      "development_outer_min_max": [
+        0.7755102040816326,
+        0.8775510204081632
+      ],
+      "development_outer_sample_sd": 0.03706595490728587,
+      "final_holdout": 0.8524590163934426,
+      "holdout_minus_development_mean": 0.02601343816215007,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "average_precision": {
+      "development_nested_cv_mean": 0.9686341995626009,
+      "development_outer_min_max": [
+        0.9488047492514855,
+        0.9822325753094577
+      ],
+      "development_outer_sample_sd": 0.013539956671880815,
+      "final_holdout": 0.9599893180905119,
+      "holdout_minus_development_mean": -0.008644881472088972,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "balanced_accuracy": {
+      "development_nested_cv_mean": 0.7404912734324499,
+      "development_outer_min_max": [
+        0.6071428571428571,
+        0.8714285714285714
+      ],
+      "development_outer_sample_sd": 0.09793288670132594,
+      "final_holdout": 0.8145994832041343,
+      "holdout_minus_development_mean": 0.07410820977168442,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "brier_score": {
+      "development_nested_cv_mean": 0.11902916148440064,
+      "development_outer_min_max": [
+        0.09415708759051473,
+        0.13583511138115562
+      ],
+      "development_outer_sample_sd": 0.018068939249201492,
+      "final_holdout": 0.10406985557246183,
+      "holdout_minus_development_mean": -0.014959305911938808,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "f1": {
+      "development_nested_cv_mean": 0.8866251386666445,
+      "development_outer_min_max": [
+        0.8641975308641975,
+        0.9117647058823529
+      ],
+      "development_outer_sample_sd": 0.01802698406150117,
+      "final_holdout": 0.896551724137931,
+      "holdout_minus_development_mean": 0.009926585471286553,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "pr_auc": {
+      "development_nested_cv_mean": 0.9680206065946418,
+      "development_outer_min_max": [
+        0.9472641373706026,
+        0.9819707732109255
+      ],
+      "development_outer_sample_sd": 0.014049529279120319,
+      "final_holdout": 0.9594208253674666,
+      "holdout_minus_development_mean": -0.008599781227175196,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "precision": {
+      "development_nested_cv_mean": 0.8432028840724491,
+      "development_outer_min_max": [
+        0.7608695652173914,
+        0.9393939393939394
+      ],
+      "development_outer_sample_sd": 0.06979941409835934,
+      "final_holdout": 0.8863636363636364,
+      "holdout_minus_development_mean": 0.04316075229118721,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "recall": {
+      "development_nested_cv_mean": 0.9425210084033614,
+      "development_outer_min_max": [
+        0.8857142857142857,
+        1.0
+      ],
+      "development_outer_sample_sd": 0.057147800082803506,
+      "final_holdout": 0.9069767441860465,
+      "holdout_minus_development_mean": -0.035544264217314936,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "roc_auc": {
+      "development_nested_cv_mean": 0.9262581955859266,
+      "development_outer_min_max": [
+        0.9010989010989011,
+        0.9551020408163264
+      ],
+      "development_outer_sample_sd": 0.019852644761632655,
+      "final_holdout": 0.9134366925064599,
+      "holdout_minus_development_mean": -0.012821503079466723,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    }
+  },
+  "LAD": {
+    "accuracy": {
+      "development_nested_cv_mean": 0.7606292517006803,
+      "development_outer_min_max": [
+        0.7142857142857143,
+        0.875
+      ],
+      "development_outer_sample_sd": 0.06519952148539991,
+      "final_holdout": 0.7213114754098361,
+      "holdout_minus_development_mean": -0.03931777629084421,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "average_precision": {
+      "development_nested_cv_mean": 0.8737620417178409,
+      "development_outer_min_max": [
+        0.8153236612899005,
+        0.9521130644506222
+      ],
+      "development_outer_sample_sd": 0.05755794639746617,
+      "final_holdout": 0.8871199711163188,
+      "holdout_minus_development_mean": 0.013357929398477908,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "balanced_accuracy": {
+      "development_nested_cv_mean": 0.7491755250194452,
+      "development_outer_min_max": [
+        0.6810344827586207,
+        0.8693284936479129
+      ],
+      "development_outer_sample_sd": 0.07071936797179924,
+      "final_holdout": 0.7099567099567099,
+      "holdout_minus_development_mean": -0.03921881506273528,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "brier_score": {
+      "development_nested_cv_mean": 0.16671474381497817,
+      "development_outer_min_max": [
+        0.10679129950450879,
+        0.19740880060361252
+      ],
+      "development_outer_sample_sd": 0.03690114618655144,
+      "final_holdout": 0.16670862999035824,
+      "holdout_minus_development_mean": -6.113824619929931e-06,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "f1": {
+      "development_nested_cv_mean": 0.801294272122312,
+      "development_outer_min_max": [
+        0.7636363636363637,
+        0.896551724137931
+      ],
+      "development_outer_sample_sd": 0.05436734648849031,
+      "final_holdout": 0.7671232876712328,
+      "holdout_minus_development_mean": -0.034170984451079134,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "pr_auc": {
+      "development_nested_cv_mean": 0.8709024528765873,
+      "development_outer_min_max": [
+        0.8111086382063406,
+        0.9508636017155767
+      ],
+      "development_outer_sample_sd": 0.059004838975311974,
+      "final_holdout": 0.8854020423406358,
+      "holdout_minus_development_mean": 0.014499589464048501,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "precision": {
+      "development_nested_cv_mean": 0.794182139699381,
+      "development_outer_min_max": [
+        0.7142857142857143,
+        0.896551724137931
+      ],
+      "development_outer_sample_sd": 0.06684740282637587,
+      "final_holdout": 0.7,
+      "holdout_minus_development_mean": -0.09418213969938105,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": false,
+      "within_development_observed_outer_range": false
+    },
+    "recall": {
+      "development_nested_cv_mean": 0.8125615763546797,
+      "development_outer_min_max": [
+        0.7241379310344828,
+        0.896551724137931
+      ],
+      "development_outer_sample_sd": 0.07126063151843944,
+      "final_holdout": 0.8484848484848485,
+      "holdout_minus_development_mean": 0.03592327213016877,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "roc_auc": {
+      "development_nested_cv_mean": 0.8259048483277158,
+      "development_outer_min_max": [
+        0.7535714285714286,
+        0.9437386569872958
+      ],
+      "development_outer_sample_sd": 0.07726402964095444,
+      "final_holdout": 0.8474025974025974,
+      "holdout_minus_development_mean": 0.021497749074881556,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    }
+  },
+  "LCX": {
+    "accuracy": {
+      "development_nested_cv_mean": 0.6447278911564627,
+      "development_outer_min_max": [
+        0.6326530612244898,
+        0.6666666666666666
+      ],
+      "development_outer_sample_sd": 0.0139226156977781,
+      "final_holdout": 0.6065573770491803,
+      "holdout_minus_development_mean": -0.03817051410728234,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": false,
+      "within_development_observed_outer_range": false
+    },
+    "average_precision": {
+      "development_nested_cv_mean": 0.6427035676019665,
+      "development_outer_min_max": [
+        0.5969138324929231,
+        0.6956946785013525
+      ],
+      "development_outer_sample_sd": 0.04251969000107846,
+      "final_holdout": 0.535243069352992,
+      "holdout_minus_development_mean": -0.10746049824897441,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": false,
+      "within_development_observed_outer_range": false
+    },
+    "balanced_accuracy": {
+      "development_nested_cv_mean": 0.5912704174228675,
+      "development_outer_min_max": [
+        0.5359649122807018,
+        0.6787658802177858
+      ],
+      "development_outer_sample_sd": 0.05994068111505931,
+      "final_holdout": 0.5365990990990991,
+      "holdout_minus_development_mean": -0.05467131832376837,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "brier_score": {
+      "development_nested_cv_mean": 0.2172796306243828,
+      "development_outer_min_max": [
+        0.2106638318317644,
+        0.22791284100940623
+      ],
+      "development_outer_sample_sd": 0.006678607531566406,
+      "final_holdout": 0.22237460996296993,
+      "holdout_minus_development_mean": 0.00509497933858713,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "f1": {
+      "development_nested_cv_mean": 0.38574447174447174,
+      "development_outer_min_max": [
+        0.18181818181818182,
+        0.6363636363636364
+      ],
+      "development_outer_sample_sd": 0.1943621732014564,
+      "final_holdout": 0.29411764705882354,
+      "holdout_minus_development_mean": -0.0916268246856482,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "pr_auc": {
+      "development_nested_cv_mean": 0.6288311272927449,
+      "development_outer_min_max": [
+        0.578415555677378,
+        0.6855602729381316
+      ],
+      "development_outer_sample_sd": 0.04410004536971099,
+      "final_holdout": 0.5189395283458003,
+      "holdout_minus_development_mean": -0.10989159894694467,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": false,
+      "within_development_observed_outer_range": false
+    },
+    "precision": {
+      "development_nested_cv_mean": 0.6097777777777778,
+      "development_outer_min_max": [
+        0.5555555555555556,
+        0.6666666666666666
+      ],
+      "development_outer_sample_sd": 0.054740690622940985,
+      "final_holdout": 0.5,
+      "holdout_minus_development_mean": -0.10977777777777775,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": false,
+      "within_development_observed_outer_range": false
+    },
+    "recall": {
+      "development_nested_cv_mean": 0.34736842105263155,
+      "development_outer_min_max": [
+        0.10526315789473684,
+        0.7368421052631579
+      ],
+      "development_outer_sample_sd": 0.2724669285377849,
+      "final_holdout": 0.20833333333333334,
+      "holdout_minus_development_mean": -0.1390350877192982,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "roc_auc": {
+      "development_nested_cv_mean": 0.7237265577737447,
+      "development_outer_min_max": [
+        0.660617059891107,
+        0.7477313974591652
+      ],
+      "development_outer_sample_sd": 0.035889503154072785,
+      "final_holdout": 0.6722972972972973,
+      "holdout_minus_development_mean": -0.05142926047644747,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": false,
+      "within_development_observed_outer_range": true
+    }
+  },
+  "RCA": {
+    "accuracy": {
+      "development_nested_cv_mean": 0.6780612244897959,
+      "development_outer_min_max": [
+        0.6122448979591837,
+        0.7291666666666666
+      ],
+      "development_outer_sample_sd": 0.04629807262469102,
+      "final_holdout": 0.6721311475409836,
+      "holdout_minus_development_mean": -0.005930076948812313,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "average_precision": {
+      "development_nested_cv_mean": 0.6424545358345188,
+      "development_outer_min_max": [
+        0.6046890344130533,
+        0.7090011395199651
+      ],
+      "development_outer_sample_sd": 0.04024486885746852,
+      "final_holdout": 0.5329718399366258,
+      "holdout_minus_development_mean": -0.10948269589789306,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": false,
+      "within_development_observed_outer_range": false
+    },
+    "balanced_accuracy": {
+      "development_nested_cv_mean": 0.6375559588626739,
+      "development_outer_min_max": [
+        0.5719298245614035,
+        0.7388888888888889
+      ],
+      "development_outer_sample_sd": 0.07153557600064227,
+      "final_holdout": 0.5803571428571428,
+      "holdout_minus_development_mean": -0.05719881600553112,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "brier_score": {
+      "development_nested_cv_mean": 0.2104627043627377,
+      "development_outer_min_max": [
+        0.20235777605831662,
+        0.2218658537096303
+      ],
+      "development_outer_sample_sd": 0.007309935422578697,
+      "final_holdout": 0.20658174330987855,
+      "holdout_minus_development_mean": -0.00388096105285915,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "f1": {
+      "development_nested_cv_mean": 0.4949369080312877,
+      "development_outer_min_max": [
+        0.32,
+        0.6829268292682927
+      ],
+      "development_outer_sample_sd": 0.15921761423993236,
+      "final_holdout": 0.375,
+      "holdout_minus_development_mean": -0.1199369080312877,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "pr_auc": {
+      "development_nested_cv_mean": 0.6290603172131323,
+      "development_outer_min_max": [
+        0.5864208908659088,
+        0.6998085134653154
+      ],
+      "development_outer_sample_sd": 0.043247946336004886,
+      "final_holdout": 0.504037081550002,
+      "holdout_minus_development_mean": -0.12502323566313023,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": false,
+      "within_development_observed_outer_range": false
+    },
+    "precision": {
+      "development_nested_cv_mean": 0.6444842284739982,
+      "development_outer_min_max": [
+        0.5,
+        0.8
+      ],
+      "development_outer_sample_sd": 0.10821316783149827,
+      "final_holdout": 0.5454545454545454,
+      "holdout_minus_development_mean": -0.09902968301945281,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "recall": {
+      "development_nested_cv_mean": 0.4631578947368421,
+      "development_outer_min_max": [
+        0.21052631578947367,
+        0.7777777777777778
+      ],
+      "development_outer_sample_sd": 0.24405660494025827,
+      "final_holdout": 0.2857142857142857,
+      "holdout_minus_development_mean": -0.1774436090225564,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": true,
+      "within_development_observed_outer_range": true
+    },
+    "roc_auc": {
+      "development_nested_cv_mean": 0.7344948578342407,
+      "development_outer_min_max": [
+        0.7035087719298245,
+        0.7703703703703704
+      ],
+      "development_outer_sample_sd": 0.027247653390262493,
+      "final_holdout": 0.6976190476190476,
+      "holdout_minus_development_mean": -0.03687581021519315,
+      "interpretation": "Descriptive only; outer range/SD are not a confidence interval or a significance test",
+      "within_development_mean_plus_minus_one_sd": false,
+      "within_development_observed_outer_range": false
+    }
+  }
+}

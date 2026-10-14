@@ -1,0 +1,47 @@
+{
+  "cad": { "probability": 0.82, "ci_low": 0.70, "ci_high": 0.91, "label": "CAD likely", "confidence": "high" },
+  "vessels": {
+    "LAD": { "probability": 0.78, "ci_low": 0.55, "ci_high": 0.92, "confidence": "medium" },
+    "LCX": { "probability": 0.35, "ci_low": 0.18, "ci_high": 0.60, "confidence": "low" },
+    "RCA": { "probability": 0.66, "ci_low": 0.58, "ci_high": 0.74, "confidence": "high" }
+  },
+  "groups_used": ["base", "ecg", "labs"],
+  "explanations": {
+    "CAD": {
+      "summary": "Age, hypertension and ST depression pushed the risk up; a normal ejection fraction pulled it down.",
+      "top_factors": [
+        { "feature": "Age", "value": 62, "shap": 0.14, "direction": "increases", "sentence": "Age (62) increases the predicted risk." },
+        { "feature": "HTN", "value": 1, "shap": 0.09, "direction": "increases", "sentence": "Hypertension increases the predicted risk." },
+        { "feature": "ST Depression", "value": 1, "shap": 0.07, "direction": "increases", "sentence": "ST depression on the ECG increases the predicted risk." },
+        { "feature": "EF-TTE", "value": 55, "shap": -0.05, "direction": "decreases", "sentence": "Ejection fraction (55) decreases the predicted risk." }
+      ]
+    },
+    "LAD": {
+      "summary": "Age and ST depression pushed the LAD risk up.",
+      "top_factors": [
+        { "feature": "Age", "value": 62, "shap": 0.11, "direction": "increases", "sentence": "Age (62) increases the predicted risk." },
+        { "feature": "ST Depression", "value": 1, "shap": 0.08, "direction": "increases", "sentence": "ST depression on the ECG increases the predicted risk." }
+      ]
+    },
+    "LCX": {
+      "summary": "No single factor dominates the LCX estimate.",
+      "top_factors": [
+        { "feature": "Age", "value": 62, "shap": 0.04, "direction": "increases", "sentence": "Age (62) increases the predicted risk." }
+      ]
+    },
+    "RCA": {
+      "summary": "Hypertension raised the RCA risk.",
+      "top_factors": [
+        { "feature": "HTN", "value": 1, "shap": 0.07, "direction": "increases", "sentence": "Hypertension increases the predicted risk." }
+      ]
+    }
+  },
+  "next_best_test": {
+    "recommended_group": "echo",
+    "ranking": [
+      { "group": "echo", "expected_uncertainty_reduction": 0.12 }
+    ]
+  },
+  "vitals": { "BP": 140, "PR": 78, "BMI": 27.4 },
+  "disclaimer": "For decision support and educational use only. Not a substitute for formal diagnostic imaging or clinical judgement."
+}

@@ -1,0 +1,35 @@
+
+schema clinical_data {
+  document clinical_data {
+    field pat type string {
+      indexing: summary | index
+    }
+    field data type string {
+      indexing: summary | index
+    }
+
+    field image_embedding type tensor<float>(d[512]) {
+      attribute {
+        distance-metric: angular
+      }
+        indexing: attribute | summary | index
+    }
+  }
+  fieldset default {
+    fields: pat, data
+  }
+  rank-profile default {
+     inputs {
+      query(query_vec) tensor<float>(d[512]) 
+    }
+  first-phase { 
+      expression: closeness(image_embedding)
+    }
+  }
+
+  rank-profile clinical {
+    first-phase {
+      expression: nativeRank
+    }
+  }
+}

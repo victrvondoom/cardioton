@@ -1,0 +1,11 @@
+{
+  "audit.json": "2cbd115e511e4895a41c4168127ee296b43b5a33b9a7db07d30e600e47605837",
+  "checksums.json": "81daa99e5f96c470b03ace419dc4fea02948542b519dba007829e03c7d12022a",
+  "operating_points.png": "d295f2cf33596f1a467797e30ddec014789f12734fb42770aaf95384d8f0430e",
+  "outer_metrics.csv": "bf00bc282e0e57f0e532b8c3962d175c4b92cd4fd93cf9be62b371ca1d7b7c46",
+  "paired_comparisons.csv": "2b0db39b21c2cabc8cd01afcd9c49a132230a3fc17346c40e61b417e8cf52ced",
+  "paired_comparisons.json": "1453d961e9e635e4efcb45e72c933212b3a9abb96a293f8178ef1de6f8d2ece3",
+  "reproduction.json": "e1803f3c30a202d389ecd2629f3fb0b3fb58594ec22d6be557bb857c876b0048",
+  "summary.json": "a2a2f511afbae12aa51d3c787f6e98c16b8efeab148e299fed5f80b181ad31c4",
+  "verification.json": "6b6f4dd280e02ae45c866ee408a17a6bfd4b54e6a283589244040f999dc01282"
+}

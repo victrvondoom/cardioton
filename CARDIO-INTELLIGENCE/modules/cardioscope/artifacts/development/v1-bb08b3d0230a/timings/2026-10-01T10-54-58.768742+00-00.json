@@ -1,0 +1,63 @@
+{
+  "phase": "DEVELOPMENT_ONLY",
+  "platform": "macOS-27.2-arm64-arm-64bit",
+  "processor": "arm",
+  "reproduction": true,
+  "targets": {
+    "CAD": {
+      "nested_cv_seconds": 8.636501791996125,
+      "prediction": {
+        "batch_median_ms": 4.022438002721174,
+        "batch_records": 242,
+        "batch_repetitions": 10,
+        "profile_source": "first locked development record; no holdout inputs",
+        "single_median_ms": 3.5997710001538508,
+        "single_p95_ms": 3.780523247041856,
+        "single_profile_repetitions": 100
+      },
+      "selected_fit_seconds": 0.010178166994592175
+    },
+    "LAD": {
+      "nested_cv_seconds": 8.781781958001375,
+      "prediction": {
+        "batch_median_ms": 4.143146001297282,
+        "batch_records": 242,
+        "batch_repetitions": 10,
+        "profile_source": "first locked development record; no holdout inputs",
+        "single_median_ms": 3.6579999978130218,
+        "single_p95_ms": 3.828918456201791,
+        "single_profile_repetitions": 100
+      },
+      "selected_fit_seconds": 0.010240666000754572
+    },
+    "LCX": {
+      "nested_cv_seconds": 8.926909374997194,
+      "prediction": {
+        "batch_median_ms": 6.149395998363616,
+        "batch_records": 242,
+        "batch_repetitions": 10,
+        "profile_source": "first locked development record; no holdout inputs",
+        "single_median_ms": 5.2704584995808546,
+        "single_p95_ms": 5.488083648742759,
+        "single_profile_repetitions": 100
+      },
+      "selected_fit_seconds": 0.04265033300180221
+    },
+    "RCA": {
+      "nested_cv_seconds": 8.868550375002087,
+      "prediction": {
+        "batch_median_ms": 6.16272899787873,
+        "batch_records": 242,
+        "batch_repetitions": 10,
+        "profile_source": "first locked development record; no holdout inputs",
+        "single_median_ms": 5.254729501757538,
+        "single_p95_ms": 6.612097903052919,
+        "single_profile_repetitions": 100
+      },
+      "selected_fit_seconds": 0.04336370799865108
+    }
+  },
+  "total_nested_cv_seconds": 35.21374349999678,
+  "training_configuration_sha256": "bb08b3d0230a6cd00b40ee13f84977a70bbdf0e0ca5e78b5ac9c0ab7be11722c",
+  "utc": "2026-10-01T10:54:58.768742+00:00"
+}

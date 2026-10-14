@@ -1,0 +1,70 @@
+TAP version 13
+# Subtest: JS encoding of raw held-out records equals the Python model matrix
+ok 1 - JS encoding of raw held-out records equals the Python model matrix
+  ---
+  duration_ms: 3.361328
+  ...
+# Subtest: JS raw and calibrated probabilities match scikit-learn on all 61 held-out patients
+ok 2 - JS raw and calibrated probabilities match scikit-learn on all 61 held-out patients
+  ---
+  duration_ms: 7.562665
+  ...
+# Subtest: JS TreeSHAP matches the shap library (TreeExplainer) to 1e-9
+ok 3 - JS TreeSHAP matches the shap library (TreeExplainer) to 1e-9
+  ---
+  duration_ms: 262.707829
+  ...
+# Subtest: explanations are locally accurate (base + sum(phi) = model output)
+ok 4 - explanations are locally accurate (base + sum(phi) = model output)
+  ---
+  duration_ms: 22.566719
+  ...
+# Subtest: conformal sets: confident predictions give one label, uncertain give both
+ok 5 - conformal sets: confident predictions give one label, uncertain give both
+  ---
+  duration_ms: 1.501007
+  ...
+# Subtest: predict() returns all four targets and fills missing fields from defaults
+ok 6 - predict() returns all four targets and fills missing fields from defaults
+  ---
+  duration_ms: 22.587977
+  ...
+# Subtest: findNumbers keeps thousands separators and decimal points
+ok 7 - findNumbers keeps thousands separators and decimal points
+  ---
+  duration_ms: 2.486634
+  ...
+# Subtest: tagNote marks every number with an id without changing the text otherwise
+ok 8 - tagNote marks every number with an id without changing the text otherwise
+  ---
+  duration_ms: 0.227569
+  ...
+# Subtest: buildRequest asks one question per field, with a 'none' escape for numbers
+ok 9 - buildRequest asks one question per field, with a 'none' escape for numbers
+  ---
+  duration_ms: 0.78732
+  ...
+# Subtest: parseAnswers copies the selected number verbatim and normalises units in code
+ok 10 - parseAnswers copies the selected number verbatim and normalises units in code
+  ---
+  duration_ms: 0.680237
+  ...
+# Subtest: extract retries on 429 and never sends the key anywhere but the TypeSafe endpoint
+ok 11 - extract retries on 429 and never sends the key anywhere but the TypeSafe endpoint
+  ---
+  duration_ms: 503.022931
+  ...
+# Subtest: extract refuses to run without a server-side key
+ok 12 - extract refuses to run without a server-side key
+  ---
+  duration_ms: 0.950644
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 663.369219

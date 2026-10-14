@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+/* Design tokens: design-system/cardioscope/MASTER.md + pages/dark-theme.md (purple brand per product owner) */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-manrope: "Manrope", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-cabin: "Cabin", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --color-primary: #7b39fc;
+  --color-primary-hover: #8d55fd;
+  --color-primary-soft: #a484d7;
+  --color-plum: #2b2344;
+  --color-plum-hover: #3a3058;
+  --color-ink: #0b0814;
+  --color-cta: #7b39fc;
+  --color-cta-hover: #8d55fd;
+  --color-cta-ink: #fafafa;
+  --color-brand-300: #c4b5fd;
+  --color-brand-400: #a78bfa;
+  --color-brand-500: #7b39fc;
+  --color-brand-700: #5b21b6;
+  /* dashboard surfaces: the landing CTA look - ink base, plum mid-tones, purple glow from the top */
+  --color-page-top: #0e0a1a;
+  --color-page: #0b0814;
+  --color-surface: #120d22;
+  --color-surface-2: rgb(255 255 255 / 0.05);
+  --color-surface-3: rgb(255 255 255 / 0.08);
+  --animate-accordion-down: accordion-down 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-accordion-up: accordion-up 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-marquee: marquee 38s linear infinite;
+}
+
+@keyframes accordion-down { from { height: 0; opacity: 0.4; } to { height: var(--radix-accordion-content-height); opacity: 1; } }
+@keyframes accordion-up { from { height: var(--radix-accordion-content-height); opacity: 1; } to { height: 0; opacity: 0.4; } }
+@keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes sheet-in-right { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes sheet-out-right { from { transform: translateX(0); } to { transform: translateX(100%); } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes pop-in { from { opacity: 0; transform: translateY(4px) scale(0.98); } to { opacity: 1; transform: none; } }
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+input[type="range"] { accent-color: #8d55fd; }
+
+/* Visible keyboard focus everywhere (MASTER: clear focus rings 3-4px) */
+:focus-visible {
+  outline: 3px solid #a78bfa;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+button, a, summary, [role="tab"], [role="radio"], label:has(input) { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+
+.text-gradient {
+  background: linear-gradient(100deg, #c4b5fd 0%, #a78bfa 40%, #7b39fc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Frosted glass surface used across landing and dashboard */
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+.glass-strong {
+  background: rgba(20, 14, 38, 0.72);
+  border: 1px solid rgba(164, 132, 215, 0.22);
+  backdrop-filter: blur(22px) saturate(150%);
+  -webkit-backdrop-filter: blur(22px) saturate(150%);
+}
+
+/* Dashboard cards: same recipe as the landing "Try it with a real patient" card - a purple glow
+   from the top fading through plum into ink, with a thin purple border. */
+.card-surface {
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(123, 57, 252, 0.16) 0%, rgba(43, 35, 68, 0.42) 50%, rgba(11, 8, 20, 0.88) 100%),
+    rgba(11, 8, 20, 0.6);
+  border: 1px solid rgba(123, 57, 252, 0.26);
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+  box-shadow: inset 0 1px 0 rgba(196, 181, 253, 0.07), 0 24px 60px -30px rgba(4, 2, 12, 0.95);
+}
+.card-surface-strong {
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(123, 57, 252, 0.22) 0%, rgba(43, 35, 68, 0.75) 50%, rgba(11, 8, 20, 0.96) 100%),
+    rgba(11, 8, 20, 0.85);
+  border: 1px solid rgba(123, 57, 252, 0.35);
+  backdrop-filter: blur(24px) saturate(130%);
+  -webkit-backdrop-filter: blur(24px) saturate(130%);
+}
+/* thin visible scrollbar: tells the user the results strip / card scrolls */
+.strip-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(164, 132, 215, 0.35) transparent; }
+.strip-scrollbar::-webkit-scrollbar { height: 6px; width: 6px; }
+.strip-scrollbar::-webkit-scrollbar-thumb { background: rgba(164, 132, 215, 0.35); border-radius: 9999px; }
+.strip-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+}
+/* subtle sweep used on primary CTAs */
+.btn-shimmer { position: relative; overflow: hidden; isolation: isolate; }
+.btn-shimmer::after {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.28) 50%, transparent 70%);
+  background-size: 250% 100%; animation: shimmer 3.2s ease-in-out infinite;
+}
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }

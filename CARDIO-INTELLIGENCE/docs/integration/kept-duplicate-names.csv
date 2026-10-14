@@ -1,0 +1,1491 @@
+path,why the name is kept
+README.md,repository front page: code hosts and editors open README.md at the root
+core/.dockerignore,dotfile configuration read by name
+core/.env.example,dotfile configuration read by name
+core/.github/workflows/ci.yml,tool reads this folder's files by name
+core/.gitignore,dotfile configuration read by name
+core/.kiro/README.md,tool reads this folder's files by name
+core/.kiro/specs/appeals_drafter/design.md,tool reads this folder's files by name
+core/.kiro/specs/appeals_drafter/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/appeals_drafter/sub_agents/counter_evidence_finder/design.md,tool reads this folder's files by name
+core/.kiro/specs/appeals_drafter/sub_agents/counter_evidence_finder/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/appeals_drafter/sub_agents/counter_evidence_finder/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/appeals_drafter/sub_agents/letter_composer/design.md,tool reads this folder's files by name
+core/.kiro/specs/appeals_drafter/sub_agents/letter_composer/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/appeals_drafter/sub_agents/letter_composer/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/appeals_drafter/sub_agents/nccn_reference_specialist/design.md,tool reads this folder's files by name
+core/.kiro/specs/appeals_drafter/sub_agents/nccn_reference_specialist/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/appeals_drafter/sub_agents/nccn_reference_specialist/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/appeals_drafter/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/clinical_extractor/design.md,tool reads this folder's files by name
+core/.kiro/specs/clinical_extractor/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/clinical_extractor/sub_agents/biomarker_specialist/design.md,tool reads this folder's files by name
+core/.kiro/specs/clinical_extractor/sub_agents/biomarker_specialist/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/clinical_extractor/sub_agents/biomarker_specialist/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/clinical_extractor/sub_agents/fhir_resource_validator/design.md,tool reads this folder's files by name
+core/.kiro/specs/clinical_extractor/sub_agents/fhir_resource_validator/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/clinical_extractor/sub_agents/fhir_resource_validator/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/clinical_extractor/sub_agents/phi_sanitizer/design.md,tool reads this folder's files by name
+core/.kiro/specs/clinical_extractor/sub_agents/phi_sanitizer/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/clinical_extractor/sub_agents/phi_sanitizer/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/clinical_extractor/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/decision_composer/design.md,tool reads this folder's files by name
+core/.kiro/specs/decision_composer/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/decision_composer/sub_agents/citation_linker/design.md,tool reads this folder's files by name
+core/.kiro/specs/decision_composer/sub_agents/citation_linker/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/decision_composer/sub_agents/citation_linker/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/decision_composer/sub_agents/rationale_writer/design.md,tool reads this folder's files by name
+core/.kiro/specs/decision_composer/sub_agents/rationale_writer/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/decision_composer/sub_agents/rationale_writer/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/decision_composer/sub_agents/verdict_synthesizer/design.md,tool reads this folder's files by name
+core/.kiro/specs/decision_composer/sub_agents/verdict_synthesizer/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/decision_composer/sub_agents/verdict_synthesizer/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/decision_composer/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/denial_forecaster/design.md,tool reads this folder's files by name
+core/.kiro/specs/denial_forecaster/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/denial_forecaster/sub_agents/appeal_path_recommender/design.md,tool reads this folder's files by name
+core/.kiro/specs/denial_forecaster/sub_agents/appeal_path_recommender/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/denial_forecaster/sub_agents/appeal_path_recommender/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/denial_forecaster/sub_agents/probability_estimator/design.md,tool reads this folder's files by name
+core/.kiro/specs/denial_forecaster/sub_agents/probability_estimator/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/denial_forecaster/sub_agents/probability_estimator/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/denial_forecaster/sub_agents/reason_predictor/design.md,tool reads this folder's files by name
+core/.kiro/specs/denial_forecaster/sub_agents/reason_predictor/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/denial_forecaster/sub_agents/reason_predictor/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/denial_forecaster/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/necessity_reasoner/design.md,tool reads this folder's files by name
+core/.kiro/specs/necessity_reasoner/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/necessity_reasoner/sub_agents/confidence_calibrator/design.md,tool reads this folder's files by name
+core/.kiro/specs/necessity_reasoner/sub_agents/confidence_calibrator/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/necessity_reasoner/sub_agents/confidence_calibrator/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/necessity_reasoner/sub_agents/criterion_splitter/design.md,tool reads this folder's files by name
+core/.kiro/specs/necessity_reasoner/sub_agents/criterion_splitter/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/necessity_reasoner/sub_agents/criterion_splitter/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/necessity_reasoner/sub_agents/evidence_matcher/design.md,tool reads this folder's files by name
+core/.kiro/specs/necessity_reasoner/sub_agents/evidence_matcher/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/necessity_reasoner/sub_agents/evidence_matcher/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/necessity_reasoner/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/patient_communicator/design.md,tool reads this folder's files by name
+core/.kiro/specs/patient_communicator/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/patient_communicator/sub_agents/action_step_writer/design.md,tool reads this folder's files by name
+core/.kiro/specs/patient_communicator/sub_agents/action_step_writer/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/patient_communicator/sub_agents/action_step_writer/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/patient_communicator/sub_agents/empathy_layer/design.md,tool reads this folder's files by name
+core/.kiro/specs/patient_communicator/sub_agents/empathy_layer/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/patient_communicator/sub_agents/empathy_layer/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/patient_communicator/sub_agents/reading_level_tuner/design.md,tool reads this folder's files by name
+core/.kiro/specs/patient_communicator/sub_agents/reading_level_tuner/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/patient_communicator/sub_agents/reading_level_tuner/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/patient_communicator/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/design.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/sub_agents/citation_resolver/design.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/sub_agents/citation_resolver/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/sub_agents/citation_resolver/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/sub_agents/keyword_filter/design.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/sub_agents/keyword_filter/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/sub_agents/keyword_filter/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/sub_agents/llm_reranker/design.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/sub_agents/llm_reranker/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/sub_agents/llm_reranker/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/sub_agents/q_business_retriever/design.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/sub_agents/q_business_retriever/requirements.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/sub_agents/q_business_retriever/tasks.md,tool reads this folder's files by name
+core/.kiro/specs/policy_retriever/tasks.md,tool reads this folder's files by name
+core/Dockerfile,Docker build file
+core/LICENSE,referenced by bare name (no extension) in module code
+core/Makefile,build system reads it by name
+core/archive/legacy/ClinCase/frontend/.gitignore,dotfile configuration read by name
+core/archive/legacy/ClinCase/frontend/index.html,web entry page or file requested at a fixed URL
+core/archive/legacy/ClinCase/frontend/package-lock.json,JavaScript tooling finds it by name
+core/archive/legacy/ClinCase/frontend/package.json,JavaScript tooling finds it by name
+core/archive/legacy/ClinCase/frontend/postcss.config.js,tool configuration discovered by name
+core/archive/legacy/ClinCase/frontend/public/.well-known/security.txt,web entry page or file requested at a fixed URL
+core/archive/legacy/ClinCase/frontend/public/clincase-mark.svg,module code builds '.svg' file names at run time (core/frontend/tests/cross5-studio.test.tsx:237)
+core/archive/legacy/ClinCase/frontend/src/components/RequireAuth.tsx,"still referenced by its old name in core/backend/app/api/architecture.py:98, which could not be rewritten safely"
+core/archive/legacy/ClinCase/frontend/src/components/Sidenav.tsx,"still referenced by its old name in core/backend/app/compliance/control_library.py:65, which could not be rewritten safely"
+core/archive/legacy/ClinCase/frontend/src/landing/landing.css,module code builds '.css' file names at run time (core/frontend/src/globe/cesiumLoader.ts:39)
+core/archive/legacy/ClinCase/frontend/src/routes/Architecture.tsx,"still referenced by its old name in core/backend/app/api/architecture.py:28, which could not be rewritten safely"
+core/archive/legacy/ClinCase/frontend/src/routes/CaseDetail.tsx,"still referenced by its old name in core/backend/app/api/architecture.py:92, which could not be rewritten safely"
+core/archive/legacy/ClinCase/frontend/src/routes/Compliance.tsx,"still referenced by its old name in core/backend/app/api/architecture.py:94, which could not be rewritten safely"
+core/archive/legacy/ClinCase/frontend/src/routes/Dashboard.tsx,"still referenced by its old name in core/backend/app/api/architecture.py:91, which could not be rewritten safely"
+core/archive/legacy/ClinCase/frontend/src/routes/Industrialize.tsx,"still referenced by its old name in core/backend/app/api/architecture.py:95, which could not be rewritten safely"
+core/archive/legacy/ClinCase/frontend/src/routes/ROI.tsx,"still referenced by its old name in core/backend/app/api/architecture.py:93, which could not be rewritten safely"
+core/archive/legacy/ClinCase/frontend/src/styles/index.css,module code builds '.css' file names at run time (core/frontend/src/globe/cesiumLoader.ts:39)
+core/archive/legacy/ClinCase/frontend/tailwind.config.ts,tool configuration discovered by name
+core/archive/legacy/ClinCase/frontend/tsconfig.json,TypeScript compiler configuration
+core/archive/legacy/ClinCase/frontend/tsconfig.node.json,TypeScript compiler configuration
+core/archive/legacy/ClinCase/frontend/vite.config.ts,tool configuration discovered by name
+core/archive/legacy/frontend_BACKUP/.gitignore,dotfile configuration read by name
+core/archive/legacy/frontend_BACKUP/index.html,web entry page or file requested at a fixed URL
+core/archive/legacy/frontend_BACKUP/package-lock.json,JavaScript tooling finds it by name
+core/archive/legacy/frontend_BACKUP/package.json,JavaScript tooling finds it by name
+core/archive/legacy/frontend_BACKUP/postcss.config.js,tool configuration discovered by name
+core/archive/legacy/frontend_BACKUP/tailwind.config.ts,tool configuration discovered by name
+core/archive/legacy/frontend_BACKUP/tsconfig.json,TypeScript compiler configuration
+core/archive/legacy/frontend_BACKUP/tsconfig.node.json,TypeScript compiler configuration
+core/archive/legacy/frontend_BACKUP/vite.config.ts,tool configuration discovered by name
+core/backend/.dockerignore,dotfile configuration read by name
+core/backend/.vercelignore,dotfile configuration read by name
+core/backend/Dockerfile,Docker build file
+core/backend/app/__init__.py,Python tooling finds it by name
+core/backend/app/agents/__init__.py,Python tooling finds it by name
+core/backend/app/agents/appeals_drafter/__init__.py,Python tooling finds it by name
+core/backend/app/agents/appeals_drafter/node.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/appeals_drafter/orchestrator.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/appeals_drafter/schemas.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/appeals_drafter/sub_agents/__init__.py,Python tooling finds it by name
+core/backend/app/agents/clinical_extractor/__init__.py,Python tooling finds it by name
+core/backend/app/agents/clinical_extractor/node.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/clinical_extractor/orchestrator.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/clinical_extractor/schemas.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/clinical_extractor/sub_agents/__init__.py,Python tooling finds it by name
+core/backend/app/agents/decision_composer/__init__.py,Python tooling finds it by name
+core/backend/app/agents/decision_composer/node.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/decision_composer/orchestrator.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/decision_composer/schemas.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/decision_composer/sub_agents/__init__.py,Python tooling finds it by name
+core/backend/app/agents/denial_forecaster/__init__.py,Python tooling finds it by name
+core/backend/app/agents/denial_forecaster/node.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/denial_forecaster/orchestrator.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/denial_forecaster/schemas.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/denial_forecaster/sub_agents/__init__.py,Python tooling finds it by name
+core/backend/app/agents/framework/__init__.py,Python tooling finds it by name
+core/backend/app/agents/framework/agent.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/framework/cache.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/framework/models.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/intake/__init__.py,Python tooling finds it by name
+core/backend/app/agents/intake/engines/__init__.py,Python tooling finds it by name
+core/backend/app/agents/intake/engines/base.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/intake/engines/registry.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/intake/errors.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/intake/pipeline/__init__.py,Python tooling finds it by name
+core/backend/app/agents/intake/pipeline/base.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/intake/pipeline/extract.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/intake/pipeline/orchestrator.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/intake/pipeline/preprocess.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/intake/pipeline/validate.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/manifest.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/necessity_reasoner/__init__.py,Python tooling finds it by name
+core/backend/app/agents/necessity_reasoner/node.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/necessity_reasoner/orchestrator.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/necessity_reasoner/schemas.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/necessity_reasoner/sub_agents/__init__.py,Python tooling finds it by name
+core/backend/app/agents/patient_communicator/__init__.py,Python tooling finds it by name
+core/backend/app/agents/patient_communicator/node.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/patient_communicator/orchestrator.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/patient_communicator/schemas.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/patient_communicator/sub_agents/__init__.py,Python tooling finds it by name
+core/backend/app/agents/policy_retriever/__init__.py,Python tooling finds it by name
+core/backend/app/agents/policy_retriever/node.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/policy_retriever/orchestrator.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/policy_retriever/schemas.py,its package is imported by a computed module name (core/backend/app/agents/manifest.py:44)
+core/backend/app/agents/policy_retriever/sub_agents/__init__.py,Python tooling finds it by name
+core/backend/app/analytics/__init__.py,Python tooling finds it by name
+core/backend/app/api/__init__.py,Python tooling finds it by name
+core/backend/app/api/demo.py,"still referenced by its old name in core/frontend/tests/atlas.test.tsx:70, which could not be rewritten safely"
+core/backend/app/api/intake.py,"still referenced by its old name in core/backend/tests/test_intake_case_payload.py:16, which could not be rewritten safely"
+core/backend/app/aquahealth/__init__.py,Python tooling finds it by name
+core/backend/app/aquahealth/agents/__init__.py,Python tooling finds it by name
+core/backend/app/aquahealth/demo.py,"still referenced by its old name in core/backend/tests/aquahealth/test_aquahealth.py:19, which could not be rewritten safely"
+core/backend/app/aquahealth/evaluation.py,"still referenced by its old name in core/backend/tests/aquahealth/test_aquahealth.py:19, which could not be rewritten safely"
+core/backend/app/aquahealth/fhir/__init__.py,Python tooling finds it by name
+core/backend/app/aquahealth/fhir/mapping.py,"still referenced by its old name in core/backend/tests/aquahealth/test_aquahealth.py:20, which could not be rewritten safely"
+core/backend/app/aquahealth/service.py,"still referenced by its old name in core/backend/tests/aquahealth/test_aquahealth.py:19, which could not be rewritten safely"
+core/backend/app/aquahealth/store.py,"still referenced by its old name in core/backend/tests/aquahealth/test_aquahealth.py:19, which could not be rewritten safely"
+core/backend/app/auth/__init__.py,Python tooling finds it by name
+core/backend/app/authz/__init__.py,Python tooling finds it by name
+core/backend/app/business_value/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/agents/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/analytics/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/anatomy/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/anatomy/repository.py,"still referenced by its old name in core/backend/app/api/cardio_anatomy.py:17, which could not be rewritten safely"
+core/backend/app/cardiotwin/api/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/artifacts/evaluation.json,module code builds '.json' file names at run time (core/backend/tests/onehealth/test_onehealth.py:166)
+core/backend/app/cardiotwin/atlas/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/atlas/api.py,"still referenced by its old name in core/.kiro/hooks/architecture-boundary-check.sh:32, which could not be rewritten safely"
+core/backend/app/cardiotwin/atlas/demo.py,"still referenced by its old name in core/frontend/tests/atlas.test.tsx:70, which could not be rewritten safely"
+core/backend/app/cardiotwin/atlas/schema.py,"still referenced by its old name in core/backend/app/cardiotwin/models/__init__.py:10, which could not be rewritten safely"
+core/backend/app/cardiotwin/connectors/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/connectors/adapters.py,"still referenced by its old name in core/backend/tests/cardiotwin/test_global_intelligence.py:15, which could not be rewritten safely"
+core/backend/app/cardiotwin/cross5/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/ecg/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/ecg/api.py,"still referenced by its old name in core/.kiro/hooks/architecture-boundary-check.sh:32, which could not be rewritten safely"
+core/backend/app/cardiotwin/ecg/signals.py,"still referenced by its old name in core/backend/app/oncotwin/simulator/physiology.py:23, which could not be rewritten safely"
+core/backend/app/cardiotwin/environment/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/environment/service.py,"still referenced by its old name in core/backend/tests/cardiotwin/test_environment.py:15, which could not be rewritten safely"
+core/backend/app/cardiotwin/evidence/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/evidence/api.py,"still referenced by its old name in core/.kiro/hooks/architecture-boundary-check.sh:32, which could not be rewritten safely"
+core/backend/app/cardiotwin/evidence/schema.py,"still referenced by its old name in core/backend/app/cardiotwin/models/__init__.py:10, which could not be rewritten safely"
+core/backend/app/cardiotwin/hemodynamics/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/hemodynamics/api.py,"still referenced by its old name in core/.kiro/hooks/architecture-boundary-check.sh:32, which could not be rewritten safely"
+core/backend/app/cardiotwin/hemodynamics/counterfactual.py,"still referenced by its old name in core/backend/app/oncotwin/core__app_oncotwin__runtime.py:1378, which could not be rewritten safely"
+core/backend/app/cardiotwin/hemodynamics/demo.py,"still referenced by its old name in core/frontend/tests/atlas.test.tsx:70, which could not be rewritten safely"
+core/backend/app/cardiotwin/hemodynamics/schema.py,"still referenced by its old name in core/backend/app/cardiotwin/models/__init__.py:10, which could not be rewritten safely"
+core/backend/app/cardiotwin/interop/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/mapping/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/model.py,"still referenced by its old name in core/frontend/src/cardiotwin/core__src_cardiotwin__types.ts:1, which could not be rewritten safely"
+core/backend/app/cardiotwin/models/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/multimodal/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/multimodal/api.py,"still referenced by its old name in core/.kiro/hooks/architecture-boundary-check.sh:32, which could not be rewritten safely"
+core/backend/app/cardiotwin/schema.py,"still referenced by its old name in core/backend/app/cardiotwin/models/__init__.py:10, which could not be rewritten safely"
+core/backend/app/cardiotwin/services/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/tests/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/wearables/__init__.py,Python tooling finds it by name
+core/backend/app/cardiotwin/wearables/api.py,"still referenced by its old name in core/.kiro/hooks/architecture-boundary-check.sh:32, which could not be rewritten safely"
+core/backend/app/compliance/__init__.py,Python tooling finds it by name
+core/backend/app/data/__init__.py,Python tooling finds it by name
+core/backend/app/db.py,"still referenced by its old name in core/backend/tests/onehealth/test_onehealth.py:16, which could not be rewritten safely"
+core/backend/app/downstream/__init__.py,Python tooling finds it by name
+core/backend/app/events/__init__.py,Python tooling finds it by name
+core/backend/app/events/dlq.py,"still referenced by its old name in core/backend/app/api/core__app_api__dlq.py:15, which could not be rewritten safely"
+core/backend/app/graph/__init__.py,Python tooling finds it by name
+core/backend/app/iit_mandi/__init__.py,Python tooling finds it by name
+core/backend/app/iit_mandi/demo.py,"still referenced by its old name in core/frontend/tests/atlas.test.tsx:70, which could not be rewritten safely"
+core/backend/app/integrations/__init__.py,Python tooling finds it by name
+core/backend/app/integrations/amazon_q/__init__.py,Python tooling finds it by name
+core/backend/app/integrations/kiro/__init__.py,Python tooling finds it by name
+core/backend/app/integrations/slicerheart/__init__.py,Python tooling finds it by name
+core/backend/app/integrations/slicerheart/api.py,"still referenced by its old name in core/.kiro/hooks/architecture-boundary-check.sh:32, which could not be rewritten safely"
+core/backend/app/integrations/trizetto/__init__.py,Python tooling finds it by name
+core/backend/app/interop/__init__.py,Python tooling finds it by name
+core/backend/app/interop/adapters.py,"still referenced by its old name in core/backend/app/api/interop.py:14, which could not be rewritten safely"
+core/backend/app/interop/repository.py,"still referenced by its old name in core/backend/app/api/interop.py:14, which could not be rewritten safely"
+core/backend/app/interop/service.py,"still referenced by its old name in core/backend/app/interop/core__app_interop__adapters.py:5, which could not be rewritten safely"
+core/backend/app/jobs/__init__.py,Python tooling finds it by name
+core/backend/app/jobs/queue.py,"still referenced by its old name in core/backend/app/core__backend_app__main.py:156, which could not be rewritten safely"
+core/backend/app/journey/__init__.py,Python tooling finds it by name
+core/backend/app/journey/automation.py,"still referenced by its old name in core/backend/app/api/journey.py:18, which could not be rewritten safely"
+core/backend/app/llm/__init__.py,Python tooling finds it by name
+core/backend/app/main.py,"still referenced by its old name in core/backend/app/cardiotwin/api/case_routes.py:7, which could not be rewritten safely"
+core/backend/app/mcp/__init__.py,Python tooling finds it by name
+core/backend/app/models/__init__.py,Python tooling finds it by name
+core/backend/app/oahbridge/__init__.py,Python tooling finds it by name
+core/backend/app/oahbridge/service.py,"still referenced by its old name in core/backend/app/api/oah_bridge.py:29, which could not be rewritten safely"
+core/backend/app/observability/__init__.py,Python tooling finds it by name
+core/backend/app/oncotwin/__init__.py,Python tooling finds it by name
+core/backend/app/oncotwin/agents/__init__.py,Python tooling finds it by name
+core/backend/app/oncotwin/agents/graph.py,listed by name in its package __init__.py
+core/backend/app/oncotwin/demo.py,"still referenced by its old name in core/frontend/tests/atlas.test.tsx:70, which could not be rewritten safely"
+core/backend/app/oncotwin/engine/__init__.py,Python tooling finds it by name
+core/backend/app/oncotwin/features/__init__.py,Python tooling finds it by name
+core/backend/app/oncotwin/fhir/__init__.py,Python tooling finds it by name
+core/backend/app/oncotwin/intel/__init__.py,Python tooling finds it by name
+core/backend/app/oncotwin/intel/counterfactual.py,"still referenced by its old name in core/backend/app/oncotwin/core__app_oncotwin__runtime.py:1378, which could not be rewritten safely"
+core/backend/app/oncotwin/intel/explain.py,"still referenced by its old name in core/backend/tests/cardiotwin/test_atlas.py:19, which could not be rewritten safely"
+core/backend/app/oncotwin/ml/__init__.py,Python tooling finds it by name
+core/backend/app/oncotwin/ml/model.py,"still referenced by its old name in core/frontend/src/cardiotwin/core__src_cardiotwin__types.ts:1, which could not be rewritten safely"
+core/backend/app/oncotwin/ml/train.py,named inside data record core/backend/app/oncotwin/ml/artifacts/horizon_survival_v1.json
+core/backend/app/oncotwin/mlops/__init__.py,Python tooling finds it by name
+core/backend/app/oncotwin/research/__init__.py,Python tooling finds it by name
+core/backend/app/oncotwin/runtime.py,"still referenced by its old name in core/backend/app/api/oncotwin_intel.py:26, which could not be rewritten safely"
+core/backend/app/oncotwin/safety/__init__.py,Python tooling finds it by name
+core/backend/app/oncotwin/signals.py,"still referenced by its old name in core/backend/app/oncotwin/simulator/physiology.py:23, which could not be rewritten safely"
+core/backend/app/oncotwin/simulator/__init__.py,Python tooling finds it by name
+core/backend/app/oncotwin/simulator/cohort.py,named inside data record core/backend/app/oncotwin/ml/artifacts/deterioration_lr_v1.json
+core/backend/app/onehealth/__init__.py,Python tooling finds it by name
+core/backend/app/onehealth/evidence.py,"still referenced by its old name in core/backend/tests/onehealth/test_onehealth.py:17, which could not be rewritten safely"
+core/backend/app/onehealth/fhir.py,"still referenced by its old name in core/backend/tests/onehealth/test_onehealth.py:17, which could not be rewritten safely"
+core/backend/app/onehealth/passport.py,"still referenced by its old name in core/backend/app/api/interop.py:25, which could not be rewritten safely"
+core/backend/app/onehealth/repository.py,"still referenced by its old name in core/backend/tests/onehealth/test_onehealth.py:17, which could not be rewritten safely"
+core/backend/app/policy_catalog.py,"still referenced by its old name in core/backend/app/api/ops.py:89, which could not be rewritten safely"
+core/backend/app/prompts/appeals_drafter/orchestrator.txt,module code builds '.txt' file names at run time (core/backend/scripts/cardio_intelligence_demo_files.py:31)
+core/backend/app/prompts/clinical_extractor/orchestrator.txt,module code builds '.txt' file names at run time (core/backend/scripts/cardio_intelligence_demo_files.py:31)
+core/backend/app/prompts/decision_composer/orchestrator.txt,module code builds '.txt' file names at run time (core/backend/scripts/cardio_intelligence_demo_files.py:31)
+core/backend/app/prompts/necessity_reasoner/orchestrator.txt,module code builds '.txt' file names at run time (core/backend/scripts/cardio_intelligence_demo_files.py:31)
+core/backend/app/render/__init__.py,Python tooling finds it by name
+core/backend/app/review/__init__.py,Python tooling finds it by name
+core/backend/app/review/queue.py,"still referenced by its old name in core/ops/k8s/worker-deployment.yaml:32, which could not be rewritten safely"
+core/backend/app/twin/__init__.py,Python tooling finds it by name
+core/backend/app/verification/__init__.py,Python tooling finds it by name
+core/backend/app/workers/__init__.py,Python tooling finds it by name
+core/backend/data/cardiotwin/z_alizadeh_sani_extension.csv,module code builds '.csv' file names at run time (core/backend/tests/interop/test_gateway.py:356)
+core/backend/data/interop/validation/summary.json,module code builds '.json' file names at run time (core/backend/tests/onehealth/test_onehealth.py:166)
+core/backend/db/schema.sql,module code builds '.sql' file names at run time (core/.github/scripts/check_supabase_migrations.py:21)
+core/backend/pyproject.toml,Python tooling finds it by name
+core/backend/requirements.txt,pip requirements file
+core/backend/scripts/__init__.py,Python tooling finds it by name
+core/backend/tests/__init__.py,Python tooling finds it by name
+core/backend/tests/agents/__init__.py,Python tooling finds it by name
+core/backend/tests/agents/sub/__init__.py,Python tooling finds it by name
+core/backend/tests/analytics/__init__.py,Python tooling finds it by name
+core/backend/tests/analytics/conftest.py,Python tooling finds it by name
+core/backend/tests/api/__init__.py,Python tooling finds it by name
+core/backend/tests/aquahealth/__init__.py,Python tooling finds it by name
+core/backend/tests/business_value/__init__.py,Python tooling finds it by name
+core/backend/tests/business_value/conftest.py,Python tooling finds it by name
+core/backend/tests/cardiotwin/__init__.py,Python tooling finds it by name
+core/backend/tests/cardiotwin/conftest.py,Python tooling finds it by name
+core/backend/tests/conftest.py,Python tooling finds it by name
+core/backend/tests/deploy/__init__.py,Python tooling finds it by name
+core/backend/tests/fixtures/__init__.py,Python tooling finds it by name
+core/backend/tests/framework/__init__.py,Python tooling finds it by name
+core/backend/tests/integrations/__init__.py,Python tooling finds it by name
+core/backend/tests/oahbridge/__init__.py,Python tooling finds it by name
+core/backend/tests/oncotwin/__init__.py,Python tooling finds it by name
+core/backend/tests/oncotwin/conftest.py,Python tooling finds it by name
+core/backend/tests/policies/__init__.py,Python tooling finds it by name
+core/backend/tests/policies/conftest.py,Python tooling finds it by name
+core/backend/tests/review/__init__.py,Python tooling finds it by name
+core/backend/tests/review/conftest.py,Python tooling finds it by name
+core/backend/tests/runs/__init__.py,Python tooling finds it by name
+core/backend/tests/runs/conftest.py,Python tooling finds it by name
+core/backend/tests/security/__init__.py,Python tooling finds it by name
+core/backend/tests/security/conftest.py,Python tooling finds it by name
+core/backend/tests/twin/conftest.py,Python tooling finds it by name
+core/backend/vercel.json,JavaScript tooling finds it by name
+core/docker-compose.yml,Docker Compose file
+core/frontend/.dockerignore,dotfile configuration read by name
+core/frontend/.gitignore,dotfile configuration read by name
+core/frontend/Dockerfile,Docker build file
+core/frontend/index.html,web entry page or file requested at a fixed URL
+core/frontend/package-lock.json,JavaScript tooling finds it by name
+core/frontend/package.json,JavaScript tooling finds it by name
+core/frontend/postcss.config.js,tool configuration discovered by name
+core/frontend/public/.well-known/security.txt,web entry page or file requested at a fixed URL
+core/frontend/public/clincase-mark.svg,module code builds '.svg' file names at run time (core/frontend/tests/cross5-studio.test.tsx:237)
+core/frontend/public/manifest.json,web entry page or file requested at a fixed URL
+core/frontend/src/cardiotwin/cardiac/ECGViewer.tsx,"still referenced by its old name in core/frontend/src/cardiotwin/cardiac/core__cardiotwin_cardiac__ECGViewer.tsx:4, which could not be rewritten safely"
+core/frontend/src/cardiotwin/cardiac/FeedbackForm.tsx,"still referenced by its old name in core/frontend/src/cardiotwin/cardiac/core__cardiotwin_cardiac__FeedbackForm.tsx:4, which could not be rewritten safely"
+core/frontend/src/cardiotwin/evidence/CaseProfileView.tsx,"still referenced by its old name in core/frontend/src/cardiotwin/evidence/core__cardiotwin_evidence__CaseProfileView.tsx:4, which could not be rewritten safely"
+core/frontend/src/cardiotwin/evidence/MatchCard.tsx,"still referenced by its old name in core/frontend/src/cardiotwin/evidence/core__cardiotwin_evidence__MatchCard.tsx:4, which could not be rewritten safely"
+core/frontend/src/cardiotwin/evidence/UploadDropzone.tsx,"still referenced by its old name in core/frontend/src/cardiotwin/evidence/core__cardiotwin_evidence__UploadDropzone.tsx:4, which could not be rewritten safely"
+core/frontend/src/components/RequireAuth.tsx,"still referenced by its old name in core/backend/app/api/architecture.py:98, which could not be rewritten safely"
+core/frontend/src/components/Sidenav.tsx,"still referenced by its old name in core/backend/app/compliance/control_library.py:65, which could not be rewritten safely"
+core/frontend/src/landing/landing.css,module code builds '.css' file names at run time (core/frontend/src/globe/cesiumLoader.ts:39)
+core/frontend/src/routes/Architecture.tsx,"still referenced by its old name in core/backend/app/api/architecture.py:28, which could not be rewritten safely"
+core/frontend/src/routes/CaseDetail.tsx,"still referenced by its old name in core/backend/app/api/architecture.py:92, which could not be rewritten safely"
+core/frontend/src/routes/Compliance.tsx,"still referenced by its old name in core/backend/app/api/architecture.py:94, which could not be rewritten safely"
+core/frontend/src/routes/Dashboard.tsx,"still referenced by its old name in core/backend/app/api/architecture.py:91, which could not be rewritten safely"
+core/frontend/src/routes/Industrialize.tsx,"still referenced by its old name in core/backend/app/api/architecture.py:95, which could not be rewritten safely"
+core/frontend/src/routes/ROI.tsx,"still referenced by its old name in core/backend/app/api/architecture.py:93, which could not be rewritten safely"
+core/frontend/src/styles/index.css,module code builds '.css' file names at run time (core/frontend/src/globe/cesiumLoader.ts:39)
+core/frontend/tailwind.config.ts,tool configuration discovered by name
+core/frontend/tsconfig.json,TypeScript compiler configuration
+core/frontend/tsconfig.node.json,TypeScript compiler configuration
+core/frontend/vite.config.ts,tool configuration discovered by name
+core/frontend/vitest.config.ts,tool configuration discovered by name
+core/k8s/api.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/k8s/configmap.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/k8s/frontend.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/k8s/kustomization.yaml,deployment or ML platform reads it by name
+core/k8s/namespace.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/k8s/networkpolicies.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/k8s/receiver.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/k8s/remote/api.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/k8s/remote/configmap.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/k8s/remote/frontend.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/k8s/remote/kustomization.yaml,deployment or ML platform reads it by name
+core/k8s/remote/namespace.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/k8s/remote/networkpolicies.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/k8s/remote/receiver.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/k8s/remote/serviceaccounts.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/k8s/serviceaccounts.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/ops/aws/agentcore/deployment.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/ops/k8s/pgbouncer/configmap.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/ops/k8s/pgbouncer/deployment.yaml,module code builds '.yaml' file names at run time (core/backend/tests/security/test_deploy_config.py:107)
+core/ops/terraform/audit-export/kinesis.tf,referenced by bare name (no extension) in module code
+core/ops/terraform/cdc-stream/kinesis.tf,referenced by bare name (no extension) in module code
+core/package-lock.json,JavaScript tooling finds it by name
+core/render.yaml,deployment or ML platform reads it by name
+modules/aortavision-3d/.gitignore,dotfile configuration read by name
+modules/aortavision-3d/README.md,"still referenced by its old name in modules/aortavision-3d/scripts/check_metrics_consistency.py:1, which could not be rewritten safely"
+modules/aortavision-3d/backend/.env.example,dotfile configuration read by name
+modules/aortavision-3d/backend/README.md,"still referenced by its old name in modules/aortavision-3d/scripts/check_metrics_consistency.py:1, which could not be rewritten safely"
+modules/aortavision-3d/backend/__init__.py,Python tooling finds it by name
+modules/aortavision-3d/backend/requirements.txt,pip requirements file
+modules/aortavision-3d/dataset/dataset.csv,named inside data record modules/aortavision-3d/model/serialized/model_metadata.json
+modules/aortavision-3d/frontend/.env.example,dotfile configuration read by name
+modules/aortavision-3d/frontend/.gitignore,dotfile configuration read by name
+modules/aortavision-3d/frontend/index.html,web entry page or file requested at a fixed URL
+modules/aortavision-3d/frontend/package-lock.json,JavaScript tooling finds it by name
+modules/aortavision-3d/frontend/package.json,JavaScript tooling finds it by name
+modules/aortavision-3d/frontend/postcss.config.js,tool configuration discovered by name
+modules/aortavision-3d/frontend/tailwind.config.js,tool configuration discovered by name
+modules/aortavision-3d/frontend/vite.config.js,tool configuration discovered by name
+modules/aortavision-3d/model/requirements.txt,pip requirements file
+modules/aortavision-3d/model/serialized/model_metadata.json,module code builds '.json' file names at run time (modules/aortavision-3d/frontend/src/pages/Home.jsx:12)
+modules/aortavision-3d/model/serialized/preprocessor.joblib,named inside data record modules/aortavision-3d/metrics/final_xgb_optimization_report.txt
+modules/arterylens/backend/requirements.txt,pip requirements file
+modules/arterylens/extention of Z-Alizadeh sani dataset.xlsx,module code builds '.xlsx' file names at run time (modules/arterylens/train.py:63)
+modules/arterylens/frontend/dist/index.html,web entry page or file requested at a fixed URL
+modules/arterylens/frontend/index.html,web entry page or file requested at a fixed URL
+modules/arterylens/frontend/package-lock.json,JavaScript tooling finds it by name
+modules/arterylens/frontend/package.json,JavaScript tooling finds it by name
+modules/arterylens/frontend/postcss.config.js,tool configuration discovered by name
+modules/arterylens/frontend/tailwind.config.js,tool configuration discovered by name
+modules/arterylens/frontend/tsconfig.json,TypeScript compiler configuration
+modules/arterylens/frontend/vite.config.ts,tool configuration discovered by name
+modules/arterylens/models/schema.json,module code builds '.json' file names at run time (modules/arterylens/frontend/dist/assets/index-f6pihVLB.js:3949)
+modules/arterylens/reports/confusion_matrices.png,module code builds '.png' file names at run time (modules/arterylens/train.py:224)
+modules/arterylens/reports/metrics.json,module code builds '.json' file names at run time (modules/arterylens/frontend/dist/assets/index-f6pihVLB.js:3949)
+modules/arterylens/reports/shap_summary_CAD.png,module code builds '.png' file names at run time (modules/arterylens/train.py:224)
+modules/arterylens/reports/shap_summary_LAD.png,module code builds '.png' file names at run time (modules/arterylens/train.py:224)
+modules/arterylens/reports/shap_summary_LCX.png,module code builds '.png' file names at run time (modules/arterylens/train.py:224)
+modules/arterylens/reports/shap_summary_RCA.png,module code builds '.png' file names at run time (modules/arterylens/train.py:224)
+modules/arterylens/requirements.txt,pip requirements file
+modules/axxess/.env.example,dotfile configuration read by name
+modules/axxess/.gitignore,dotfile configuration read by name
+modules/axxess/.vscode/settings.json,tool reads this folder's files by name
+modules/axxess/app.json,JavaScript tooling finds it by name
+modules/axxess/app/(tabs)/_layout.tsx,Expo Router: the file name is the route
+modules/axxess/app/(tabs)/index.tsx,Expo Router: the file name is the route
+modules/axxess/app/(tabs)/settings.tsx,Expo Router: the file name is the route
+modules/axxess/app/_layout.tsx,Expo Router: the file name is the route
+modules/axxess/app/modal.tsx,Expo Router: the file name is the route
+modules/axxess/assets/images/icon.png,Next.js metadata file convention
+modules/axxess/package-lock.json,JavaScript tooling finds it by name
+modules/axxess/package.json,JavaScript tooling finds it by name
+modules/axxess/tsconfig.json,TypeScript compiler configuration
+modules/cad-detection-3d-heart/.env.example,dotfile configuration read by name
+modules/cad-detection-3d-heart/.gitignore,dotfile configuration read by name
+modules/cardia-atlas/.dockerignore,dotfile configuration read by name
+modules/cardia-atlas/.gitignore,dotfile configuration read by name
+modules/cardia-atlas/Dockerfile,Docker build file
+modules/cardia-atlas/app/static/index.html,web entry page or file requested at a fixed URL
+modules/cardia-atlas/app/static/style.css,module code builds '.css' file names at run time (modules/cardia-atlas/app/main.py:33)
+modules/cardia-atlas/app/static/vendor/OrbitControls.js,"still referenced by its old name in modules/cardia-atlas/app/static/vendor/cardia_atlas__static_vendor__OrbitControls.js:86, which could not be rewritten safely"
+modules/cardia-atlas/app/static/vendor/three.core.js,"still referenced by its old name in modules/cardia-atlas/scripts/vendor-three.mjs:11, which could not be rewritten safely"
+modules/cardia-atlas/app/static/vendor/three.module.js,"still referenced by its old name in modules/cardia-atlas/scripts/vendor-three.mjs:10, which could not be rewritten safely"
+modules/cardia-atlas/artifacts/evaluation.json,module code builds '.json' file names at run time (modules/cardia-atlas/app/static/vendor/three.core.js:43957)
+modules/cardia-atlas/artifacts/features.json,module code builds '.json' file names at run time (modules/cardia-atlas/app/static/vendor/three.core.js:43957)
+modules/cardia-atlas/package-lock.json,JavaScript tooling finds it by name
+modules/cardia-atlas/package.json,JavaScript tooling finds it by name
+modules/cardia-atlas/render.yaml,deployment or ML platform reads it by name
+modules/cardia-atlas/requirements.txt,pip requirements file
+modules/cardio-inspection/.gitignore,dotfile configuration read by name
+modules/cardio-inspection/data/.gitkeep,"still referenced by its old name in modules/cardio-inspection/.gitignore:6, which could not be rewritten safely"
+modules/cardio-inspection/models/.gitkeep,"still referenced by its old name in modules/cardio-inspection/.gitignore:6, which could not be rewritten safely"
+modules/cardio-risk-3d/frontend/.gitignore,dotfile configuration read by name
+modules/cardio-risk-heart-3d/.gitignore,dotfile configuration read by name
+modules/cardio-risk-heart-3d/artifacts/feature_schema.json,module code builds '.json' file names at run time (modules/cardio-risk-heart-3d/cardio_ml/anatomy.py:368)
+modules/cardio-risk-heart-3d/artifacts/heart.glb,module code builds '.glb' file names at run time (modules/cardio-risk-heart-3d/blender/serve_preview.py:19)
+modules/cardio-risk-heart-3d/artifacts/metrics.json,module code builds '.json' file names at run time (modules/cardio-risk-heart-3d/cardio_ml/anatomy.py:368)
+modules/cardio-risk-heart-3d/artifacts/models/cad.joblib,module code builds '.joblib' file names at run time (modules/cardio-risk-heart-3d/cardio_ml/predict.py:25)
+modules/cardio-risk-heart-3d/artifacts/models/lad.joblib,module code builds '.joblib' file names at run time (modules/cardio-risk-heart-3d/cardio_ml/predict.py:25)
+modules/cardio-risk-heart-3d/artifacts/models/lcx.joblib,module code builds '.joblib' file names at run time (modules/cardio-risk-heart-3d/cardio_ml/predict.py:25)
+modules/cardio-risk-heart-3d/artifacts/models/rca.joblib,module code builds '.joblib' file names at run time (modules/cardio-risk-heart-3d/cardio_ml/predict.py:25)
+modules/cardio-risk-heart-3d/artifacts/split.json,module code builds '.json' file names at run time (modules/cardio-risk-heart-3d/cardio_ml/anatomy.py:368)
+modules/cardio-risk-heart-3d/artifacts/thresholds.json,module code builds '.json' file names at run time (modules/cardio-risk-heart-3d/cardio_ml/anatomy.py:368)
+modules/cardio-risk-heart-3d/cardio_ml/__init__.py,Python tooling finds it by name
+modules/cardio-risk-heart-3d/cardio_ml/data.py,class module referenced inside pickled artifact modules/cardio-risk-heart-3d/artifacts/shap_background.joblib
+modules/cardio-risk-heart-3d/cardio_ml/features.py,class module referenced inside pickled artifact modules/cardio-risk-heart-3d/artifacts/models/lcx.joblib
+modules/cardio-risk-heart-3d/cardio_ml/models.py,class module referenced inside pickled artifact modules/cardio-risk-heart-3d/artifacts/models/cad.joblib
+modules/cardio-risk-heart-3d/data/extention of Z-Alizadeh sani dataset.xlsx,module code builds '.xlsx' file names at run time (modules/cardio-risk-heart-3d/cardio_ml/data.py:44)
+modules/cardio-risk-heart-3d/pyproject.toml,Python tooling finds it by name
+modules/cardio-risk-heart-3d/requirements.txt,pip requirements file
+modules/cardio/.dockerignore,dotfile configuration read by name
+modules/cardio/.gitignore,dotfile configuration read by name
+modules/cardio/backend/app/__init__.py,Python tooling finds it by name
+modules/cardio/backend/pyproject.toml,Python tooling finds it by name
+modules/cardio/deploy/Dockerfile,Docker build file
+modules/cardio/frontend/index.html,web entry page or file requested at a fixed URL
+modules/cardio/frontend/package-lock.json,JavaScript tooling finds it by name
+modules/cardio/frontend/package.json,JavaScript tooling finds it by name
+modules/cardio/frontend/tsconfig.json,TypeScript compiler configuration
+modules/cardio/frontend/vercel.json,JavaScript tooling finds it by name
+modules/cardio/frontend/vite.config.ts,tool configuration discovered by name
+modules/cardio/ml/cardioscope_ml/__init__.py,Python tooling finds it by name
+modules/cardio/ml/cardioscope_ml/calibration.py,class module referenced inside pickled artifact modules/cardio/models/rca.joblib
+modules/cardio/ml/cardioscope_ml/config.py,"still referenced by its old name in modules/cardio/ml/tests/test_data_config.py:6, which could not be rewritten safely"
+modules/cardio/ml/cardioscope_ml/explain.py,class module referenced inside pickled artifact modules/cardio/models/rca.joblib
+modules/cardio/ml/configs/features.yaml,referenced by bare name (no extension) in module code
+modules/cardio/ml/configs/targets.yaml,referenced by bare name (no extension) in module code
+modules/cardio/ml/pyproject.toml,Python tooling finds it by name
+modules/cardio/models/cad.joblib,module code builds '.joblib' file names at run time (modules/cardio/ml/tests/test_pipeline.py:19)
+modules/cardio/models/lad.joblib,module code builds '.joblib' file names at run time (modules/cardio/ml/tests/test_pipeline.py:19)
+modules/cardio/models/lcx.joblib,module code builds '.joblib' file names at run time (modules/cardio/ml/tests/test_pipeline.py:19)
+modules/cardio/models/rca.joblib,module code builds '.joblib' file names at run time (modules/cardio/ml/tests/test_pipeline.py:19)
+modules/cardio/render.yaml,deployment or ML platform reads it by name
+modules/cardio/requirements.txt,pip requirements file
+modules/cardio/shared/vessels.json,referenced by bare name (no extension) in module code
+modules/cardiolens-track-a/.gitignore,dotfile configuration read by name
+modules/cardiolens-track-a/requirements.txt,pip requirements file
+modules/cardioscope/.dockerignore,dotfile configuration read by name
+modules/cardioscope/.gitattributes,dotfile configuration read by name
+modules/cardioscope/.github/workflows/ci.yml,tool reads this folder's files by name
+modules/cardioscope/.gitignore,dotfile configuration read by name
+modules/cardioscope/.python-version,dotfile configuration read by name
+modules/cardioscope/Dockerfile,Docker build file
+modules/cardioscope/LICENSE,named inside data record modules/cardioscope/docs/submission/POLISH_VERIFICATION.json
+modules/cardioscope/Makefile,build system reads it by name
+modules/cardioscope/README.md,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/THIRD_PARTY_NOTICES.md,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/artifacts/data/audit.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/data/feature_manifest.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/data/split.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/development/v1-bb08b3d0230a/models/CAD.joblib,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/development/v1-bb08b3d0230a/models/LAD.joblib,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/development/v1-bb08b3d0230a/models/LCX.joblib,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/development/v1-bb08b3d0230a/models/LCX.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/development/v1-bb08b3d0230a/models/RCA.joblib,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/development/v1-bb08b3d0230a/models/RCA.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/development/v1-bb08b3d0230a/provenance.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/development/v1-bb08b3d0230a/results.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/experiments/v2-lcx-rca-20261003-01/.gitattributes,dotfile configuration read by name
+modules/cardioscope/artifacts/experiments/v2-lcx-rca-20261003-01/audit.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/experiments/v2-lcx-rca-20261003-01/checksums.json,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/artifacts/experiments/v2-lcx-rca-20261003-01/results.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/experiments/v2-lcx-rca-20261003-01/summary.json,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/artifacts/experiments/v2-lcx-rca-20261003-01/v2-candidate/LCX.joblib,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/experiments/v2-lcx-rca-20261003-01/v2-candidate/LCX.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/experiments/v2-lcx-rca-20261003-01/v2-candidate/RCA.joblib,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/experiments/v2-lcx-rca-20261003-01/v2-candidate/RCA.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/experiments/v2-lcx-rca-20261003-01/verification.json,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/artifacts/experiments/v21-multitask-20261003-01/audit.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/experiments/v21-multitask-20261003-01/checksums.json,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/artifacts/experiments/v21-multitask-20261003-01/results.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/explanations/v1/background.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/final_holdout/final-v1-f1fd0d4cdc334c65aba46c37fa68717b/confusion_matrices.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/final_holdout/final-v1-f1fd0d4cdc334c65aba46c37fa68717b/figures/roc.png,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/final_holdout/final-v1-f1fd0d4cdc334c65aba46c37fa68717b/protocol.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/final_holdout/final-v1-f1fd0d4cdc334c65aba46c37fa68717b/provenance.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/final_holdout/final-v1-f1fd0d4cdc334c65aba46c37fa68717b/results.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/artifacts/models/.gitkeep,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/assets/anatomy/manifest.json,web entry page or file requested at a fixed URL
+modules/cardioscope/backend/__init__.py,Python tooling finds it by name
+modules/cardioscope/backend/app.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/backend/contracts.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/backend/evidence.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/backend/inference.py,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/config/anatomy.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/config/split.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/data/raw/uci-411/extention of Z-Alizadeh sani dataset.xlsx,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/data/raw/uci-411/provenance.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/docs/anatomy/VERIFICATION.md,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/docs/explanations/BROWSER_TARGETS.json,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/docs/explanations/IMPLEMENTATION_VERIFICATION.json,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/docs/integration/IMMUTABLE_INPUTS.json,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/docs/product/BROWSER_TARGETS.json,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/docs/product/IMPLEMENTATION_VERIFICATION.json,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/docs/submission/DEMO_SCRIPT.md,named inside data record modules/cardioscope/docs/submission/POLISH_VERIFICATION.json
+modules/cardioscope/docs/submission/DEVPOST.md,named inside data record modules/cardioscope/docs/submission/POLISH_VERIFICATION.json
+modules/cardioscope/docs/submission/SUBMISSION_CHECKLIST.md,named inside data record modules/cardioscope/docs/submission/POLISH_VERIFICATION.json
+modules/cardioscope/docs/submission/VERIFICATION.json,named inside data record modules/cardioscope/docs/submission/POLISH_VERIFICATION.json
+modules/cardioscope/docs/submission/assets/architecture.svg,module code builds '.svg' file names at run time (modules/cardioscope/ml/plots.py:24)
+modules/cardioscope/frontend/index.html,web entry page or file requested at a fixed URL
+modules/cardioscope/frontend/package-lock.json,JavaScript tooling finds it by name
+modules/cardioscope/frontend/package.json,JavaScript tooling finds it by name
+modules/cardioscope/frontend/src/App.tsx,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/frontend/src/PatientForm.tsx,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/frontend/src/__tests__/anatomy.test.ts,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/frontend/src/__tests__/api.test.ts,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/frontend/src/anatomy/AnatomyViewer.tsx,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/frontend/src/api.ts,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/frontend/src/main.tsx,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/frontend/src/profile.ts,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/frontend/src/style.css,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/frontend/tsconfig.json,TypeScript compiler configuration
+modules/cardioscope/frontend/vite.config.ts,tool configuration discovered by name
+modules/cardioscope/frontend/vitest.config.ts,tool configuration discovered by name
+modules/cardioscope/ml/__init__.py,Python tooling finds it by name
+modules/cardioscope/ml/anatomy.py,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/ml/common.py,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/ml/data.py,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/ml/metrics.py,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/ml/models.py,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/ml/plots.py,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/ml/splits.py,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/ml/train.py,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/pyproject.toml,Python tooling finds it by name
+modules/cardioscope/reports/.gitkeep,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/research/__init__.py,Python tooling finds it by name
+modules/cardioscope/research/ruff.toml,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/research/v21_multitask/__init__.py,Python tooling finds it by name
+modules/cardioscope/research/v21_multitask/audit.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/research/v21_multitask/core.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/research/v21_multitask/preregister.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/research/v21_multitask/protocol.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/research/v21_multitask/protocol.sha256,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/research/v21_multitask/report.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/research/v21_multitask/requirements.in,pip requirements file
+modules/cardioscope/research/v21_multitask/requirements.lock.txt,pip requirements file
+modules/cardioscope/research/v21_multitask/run.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/research/v21_multitask/tests/test_experiment.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/research/v2_lcx_rca/__init__.py,Python tooling finds it by name
+modules/cardioscope/research/v2_lcx_rca/audit.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/research/v2_lcx_rca/core.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/research/v2_lcx_rca/preregister.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/research/v2_lcx_rca/protocol.json,named inside data record modules/cardioscope/docs/product/IMMUTABLE_INPUTS.json
+modules/cardioscope/research/v2_lcx_rca/protocol.sha256,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/research/v2_lcx_rca/report.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/research/v2_lcx_rca/requirements.in,pip requirements file
+modules/cardioscope/research/v2_lcx_rca/requirements.lock.txt,pip requirements file
+modules/cardioscope/research/v2_lcx_rca/run.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/research/v2_lcx_rca/tests/test_experiment.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/tests/conftest.py,Python tooling finds it by name
+modules/cardioscope/tests/test_anatomy.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/tests/test_api.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/tests/test_data.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/tests/test_hardening.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardioscope/tests/test_inference.py,named inside data record modules/cardioscope/research/v21_multitask/protocol.json
+modules/cardiosight-3d/.gitignore,dotfile configuration read by name
+modules/cardiosight-3d/api/requirements.txt,pip requirements file
+modules/cardiosight-3d/models/background.json,module code builds '.json' file names at run time (modules/cardiosight-3d/api/train.py:98)
+modules/cardiosight-3d/models/metrics.json,module code builds '.json' file names at run time (modules/cardiosight-3d/api/train.py:98)
+modules/cardiosight-3d/web/.gitignore,dotfile configuration read by name
+modules/cardiosight-3d/web/app/evaluation/page.tsx,Next.js App Router file convention
+modules/cardiosight-3d/web/app/layout.tsx,Next.js App Router file convention
+modules/cardiosight-3d/web/app/page.tsx,Next.js App Router file convention
+modules/cardiosight-3d/web/next-env.d.ts,generated and read by Next.js
+modules/cardiosight-3d/web/package-lock.json,JavaScript tooling finds it by name
+modules/cardiosight-3d/web/package.json,JavaScript tooling finds it by name
+modules/cardiosight-3d/web/postcss.config.js,tool configuration discovered by name
+modules/cardiosight-3d/web/tailwind.config.js,tool configuration discovered by name
+modules/cardiosight-3d/web/tsconfig.json,TypeScript compiler configuration
+modules/cardiospatial-3d/.gitignore,dotfile configuration read by name
+modules/cardiospatial-3d/frontend/index.html,web entry page or file requested at a fixed URL
+modules/cardiospatial-3d/requirements.txt,pip requirements file
+modules/cardiotwin/.dockerignore,dotfile configuration read by name
+modules/cardiotwin/.gitattributes,dotfile configuration read by name
+modules/cardiotwin/.github/workflows/ci.yml,tool reads this folder's files by name
+modules/cardiotwin/.gitignore,dotfile configuration read by name
+modules/cardiotwin/Makefile,build system reads it by name
+modules/cardiotwin/README.md,"still referenced by its old name in modules/cardiotwin/scripts/dev.ps1:15, which could not be rewritten safely"
+modules/cardiotwin/anatomy/README.md,"still referenced by its old name in modules/cardiotwin/scripts/dev.ps1:15, which could not be rewritten safely"
+modules/cardiotwin/anatomy/config/anatomy.json,module code builds '.json' file names at run time (modules/cardiotwin/frontend/src/features/landing/landingMetrics.ts:336)
+modules/cardiotwin/anatomy/package-lock.json,JavaScript tooling finds it by name
+modules/cardiotwin/anatomy/package.json,JavaScript tooling finds it by name
+modules/cardiotwin/anatomy/pytest.ini,Python tooling finds it by name
+modules/cardiotwin/anatomy/tests/conftest.py,Python tooling finds it by name
+modules/cardiotwin/backend/Dockerfile,Docker build file
+modules/cardiotwin/backend/README.md,"still referenced by its old name in modules/cardiotwin/scripts/dev.ps1:15, which could not be rewritten safely"
+modules/cardiotwin/backend/app/__init__.py,Python tooling finds it by name
+modules/cardiotwin/backend/app/main.py,"still referenced by its old name in modules/cardiotwin/ml/src/cardiotwin_ml/analysis/__main__.py:3, which could not be rewritten safely"
+modules/cardiotwin/backend/app/models.py,class module referenced inside pickled artifact modules/cardiotwin/ml/artifacts/cardiotwin_models.joblib
+modules/cardiotwin/backend/app/predictors/__init__.py,Python tooling finds it by name
+modules/cardiotwin/backend/app/routers/__init__.py,Python tooling finds it by name
+modules/cardiotwin/backend/app/routers/cohort.py,"still referenced by its old name in modules/cardiotwin/backend/app/routers/__init__.py:5, which could not be rewritten safely"
+modules/cardiotwin/backend/app/routers/predict.py,"still referenced by its old name in modules/cardiotwin/backend/app/routers/__init__.py:5, which could not be rewritten safely"
+modules/cardiotwin/backend/pyproject.toml,Python tooling finds it by name
+modules/cardiotwin/backend/requirements-dev.txt,pip requirements file
+modules/cardiotwin/backend/requirements.txt,pip requirements file
+modules/cardiotwin/backend/tests/conftest.py,Python tooling finds it by name
+modules/cardiotwin/data/README.md,"still referenced by its old name in modules/cardiotwin/scripts/dev.ps1:15, which could not be rewritten safely"
+modules/cardiotwin/data/raw/extention of Z-Alizadeh sani dataset.xlsx,module code builds '.xlsx' file names at run time (modules/cardiotwin/ml/src/cardiotwin_ml/data.py:69)
+modules/cardiotwin/docker-compose.yml,Docker Compose file
+modules/cardiotwin/docs/MODEL_CARD.md,"still referenced by its old name in modules/cardiotwin/frontend/src/features/methodology/MethodologyPage.tsx:48, which could not be rewritten safely"
+modules/cardiotwin/docs/figures/calibration.png,module code builds '.png' file names at run time (modules/cardiotwin/frontend/src/features/performance/charts/ChartModule.tsx:71)
+modules/cardiotwin/docs/figures/confusion_matrices.png,module code builds '.png' file names at run time (modules/cardiotwin/frontend/src/features/performance/charts/ChartModule.tsx:71)
+modules/cardiotwin/docs/media/diagrams/architecture.svg,module code builds '.svg' file names at run time (modules/cardiotwin/frontend/src/features/performance/charts/ChartModule.tsx:71)
+modules/cardiotwin/frontend/.env.example,dotfile configuration read by name
+modules/cardiotwin/frontend/README.md,"still referenced by its old name in modules/cardiotwin/scripts/dev.ps1:15, which could not be rewritten safely"
+modules/cardiotwin/frontend/index.html,web entry page or file requested at a fixed URL
+modules/cardiotwin/frontend/package-lock.json,JavaScript tooling finds it by name
+modules/cardiotwin/frontend/package.json,JavaScript tooling finds it by name
+modules/cardiotwin/frontend/postcss.config.js,tool configuration discovered by name
+modules/cardiotwin/frontend/public/anatomy/manifest.json,web entry page or file requested at a fixed URL
+modules/cardiotwin/frontend/public/anatomy/vessels.json,named inside data record modules/cardiotwin/frontend/public/anatomy/manifest.json
+modules/cardiotwin/frontend/public/favicon.svg,module code builds '.svg' file names at run time (modules/cardiotwin/frontend/src/features/performance/charts/ChartModule.tsx:71)
+modules/cardiotwin/frontend/public/model/cardiotwin_models.joblib,module code builds '.joblib' file names at run time (modules/cardiotwin/scripts/tests/test_runtime_requirements.py:66)
+modules/cardiotwin/frontend/public/model/cohort.json,module code builds '.json' file names at run time (modules/cardiotwin/frontend/src/features/landing/landingMetrics.ts:336)
+modules/cardiotwin/frontend/public/model/fixtures.json,module code builds '.json' file names at run time (modules/cardiotwin/frontend/src/features/landing/landingMetrics.ts:336)
+modules/cardiotwin/frontend/public/model/metrics.json,named inside data record modules/cardiotwin/ml/artifacts/metrics_summary.json
+modules/cardiotwin/frontend/public/model/metrics_summary.json,module code builds '.json' file names at run time (modules/cardiotwin/frontend/src/features/landing/landingMetrics.ts:336)
+modules/cardiotwin/frontend/public/model/model.json,named inside data record modules/cardiotwin/ml/artifacts/metrics.json
+modules/cardiotwin/frontend/public/model/schema.json,module code builds '.json' file names at run time (modules/cardiotwin/frontend/src/features/landing/landingMetrics.ts:336)
+modules/cardiotwin/frontend/src/features/report/README.md,"still referenced by its old name in modules/cardiotwin/scripts/dev.ps1:15, which could not be rewritten safely"
+modules/cardiotwin/frontend/src/inference/README.md,"still referenced by its old name in modules/cardiotwin/scripts/dev.ps1:15, which could not be rewritten safely"
+modules/cardiotwin/frontend/src/styles/globals.css,module code builds '.css' file names at run time (modules/cardiotwin/backend/app/frontend.py:25)
+modules/cardiotwin/frontend/src/styles/tokens.css,module code builds '.css' file names at run time (modules/cardiotwin/backend/app/frontend.py:25)
+modules/cardiotwin/frontend/src/three/fx/README.md,"still referenced by its old name in modules/cardiotwin/scripts/dev.ps1:15, which could not be rewritten safely"
+modules/cardiotwin/frontend/tailwind.config.ts,tool configuration discovered by name
+modules/cardiotwin/frontend/tsconfig.app.json,TypeScript compiler configuration
+modules/cardiotwin/frontend/tsconfig.json,TypeScript compiler configuration
+modules/cardiotwin/frontend/tsconfig.node.json,TypeScript compiler configuration
+modules/cardiotwin/frontend/vite.config.ts,tool configuration discovered by name
+modules/cardiotwin/ml/README.md,"still referenced by its old name in modules/cardiotwin/scripts/dev.ps1:15, which could not be rewritten safely"
+modules/cardiotwin/ml/artifacts/cardiotwin_models.joblib,module code builds '.joblib' file names at run time (modules/cardiotwin/scripts/tests/test_runtime_requirements.py:66)
+modules/cardiotwin/ml/artifacts/cohort.json,module code builds '.json' file names at run time (modules/cardiotwin/frontend/src/features/landing/landingMetrics.ts:336)
+modules/cardiotwin/ml/artifacts/fixtures.json,module code builds '.json' file names at run time (modules/cardiotwin/frontend/src/features/landing/landingMetrics.ts:336)
+modules/cardiotwin/ml/artifacts/metrics.json,named inside data record modules/cardiotwin/ml/artifacts/metrics_summary.json
+modules/cardiotwin/ml/artifacts/metrics_summary.json,module code builds '.json' file names at run time (modules/cardiotwin/frontend/src/features/landing/landingMetrics.ts:336)
+modules/cardiotwin/ml/artifacts/model.json,named inside data record modules/cardiotwin/ml/artifacts/metrics.json
+modules/cardiotwin/ml/artifacts/schema.json,module code builds '.json' file names at run time (modules/cardiotwin/frontend/src/features/landing/landingMetrics.ts:336)
+modules/cardiotwin/ml/configs/features.yaml,referenced by bare name (no extension) in module code
+modules/cardiotwin/ml/configs/targets.yaml,referenced by bare name (no extension) in module code
+modules/cardiotwin/ml/pyproject.toml,Python tooling finds it by name
+modules/cardiotwin/ml/requirements.txt,pip requirements file
+modules/cardiotwin/ml/src/cardiotwin_ml/__init__.py,Python tooling finds it by name
+modules/cardiotwin/ml/src/cardiotwin_ml/analysis/__init__.py,Python tooling finds it by name
+modules/cardiotwin/ml/src/cardiotwin_ml/config.py,class module referenced inside pickled artifact modules/cardiotwin/ml/artifacts/cardiotwin_models.joblib
+modules/cardiotwin/ml/src/cardiotwin_ml/data.py,"still referenced by its old name in modules/cardiotwin/ml/tests/conftest.py:11, which could not be rewritten safely"
+modules/cardiotwin/ml/src/cardiotwin_ml/ensemble.py,class module referenced inside pickled artifact modules/cardiotwin/ml/artifacts/cardiotwin_models.joblib
+modules/cardiotwin/ml/src/cardiotwin_ml/inference.py,"still referenced by its old name in modules/cardiotwin/backend/Dockerfile:79, which could not be rewritten safely"
+modules/cardiotwin/ml/src/cardiotwin_ml/metrics.py,class module referenced inside pickled artifact modules/cardiotwin/ml/artifacts/cardiotwin_models.joblib
+modules/cardiotwin/ml/src/cardiotwin_ml/models.py,class module referenced inside pickled artifact modules/cardiotwin/ml/artifacts/cardiotwin_models.joblib
+modules/cardiotwin/ml/src/cardiotwin_ml/preprocess.py,class module referenced inside pickled artifact modules/cardiotwin/ml/artifacts/cardiotwin_models.joblib
+modules/cardiotwin/ml/src/cardiotwin_ml/train.py,"still referenced by its old name in modules/cardiotwin/ml/tests/test_determinism.py:11, which could not be rewritten safely"
+modules/cardiotwin/ml/tests/conftest.py,Python tooling finds it by name
+modules/cardiotwin/scripts/README.md,"still referenced by its old name in modules/cardiotwin/scripts/dev.ps1:15, which could not be rewritten safely"
+modules/cardiotwin/scripts/requirements-dev.txt,pip requirements file
+modules/cardiotwin/scripts/ruff.toml,referenced by bare name (no extension) in module code
+modules/cardiotwin/scripts/tests/conftest.py,Python tooling finds it by name
+modules/cardiovascular-risk-viz-and-prediction/.dockerignore,dotfile configuration read by name
+modules/cardiovascular-risk-viz-and-prediction/.gitattributes,dotfile configuration read by name
+modules/cardiovascular-risk-viz-and-prediction/.gitignore,dotfile configuration read by name
+modules/cardiovascular-risk-viz-and-prediction/Dockerfile,Docker build file
+modules/cardiovascular-risk-viz-and-prediction/README.md,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/.gitignore:70, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/agents.md,AI agent tooling reads it by name
+modules/cardiovascular-risk-viz-and-prediction/apps/api/app/__init__.py,Python tooling finds it by name
+modules/cardiovascular-risk-viz-and-prediction/apps/api/app/extraction/__init__.py,Python tooling finds it by name
+modules/cardiovascular-risk-viz-and-prediction/apps/api/app/extraction/parsers/__init__.py,Python tooling finds it by name
+modules/cardiovascular-risk-viz-and-prediction/apps/api/app/schemas/__init__.py,Python tooling finds it by name
+modules/cardiovascular-risk-viz-and-prediction/apps/api/app/services/__init__.py,Python tooling finds it by name
+modules/cardiovascular-risk-viz-and-prediction/apps/web/index.html,web entry page or file requested at a fixed URL
+modules/cardiovascular-risk-viz-and-prediction/apps/web/postcss.config.js,tool configuration discovered by name
+modules/cardiovascular-risk-viz-and-prediction/apps/web/public/apple-touch-icon.png,web entry page or file requested at a fixed URL
+modules/cardiovascular-risk-viz-and-prediction/apps/web/public/favicon.ico,web entry page or file requested at a fixed URL
+modules/cardiovascular-risk-viz-and-prediction/apps/web/public/icon-192.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/apps/web/public/icon-512-maskable.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/apps/web/public/icon-512.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/apps/web/public/models/heart_coronary_optimized.glb,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/optimize_mesh.mjs:133, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/apps/web/src/design/tokens.css,module code builds '.css' file names at run time (modules/cardiovascular-risk-viz-and-prediction/scripts/check_style.py:155)
+modules/cardiovascular-risk-viz-and-prediction/apps/web/src/index.css,module code builds '.css' file names at run time (modules/cardiovascular-risk-viz-and-prediction/scripts/check_style.py:155)
+modules/cardiovascular-risk-viz-and-prediction/apps/web/tailwind.config.js,tool configuration discovered by name
+modules/cardiovascular-risk-viz-and-prediction/apps/web/tsconfig.json,TypeScript compiler configuration
+modules/cardiovascular-risk-viz-and-prediction/apps/web/vite.config.ts,tool configuration discovered by name
+modules/cardiovascular-risk-viz-and-prediction/assets/3d/optimized/heart_coronary_optimized.glb,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/optimize_mesh.mjs:133, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docker-compose.yml,Docker Compose file
+modules/cardiovascular-risk-viz-and-prediction/docs/dev-sample-reports/lab_partial.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/dev-sample-reports/lab_si_units.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/README.md,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/.gitignore:70, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/high_risk_lad/blood_lab_report.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:58, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/high_risk_lad/blood_lab_report.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/high_risk_lad/ecg_report.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:56, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/high_risk_lad/ecg_report.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/high_risk_lad/echo_report.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:57, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/high_risk_lad/echo_report.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/high_risk_lad/outpatient_note.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:59, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/high_risk_lad/outpatient_note.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/normal/blood_lab_report.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:58, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/normal/blood_lab_report.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/normal/ecg_report.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:56, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/normal/ecg_report.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/normal/echo_report.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:57, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/normal/echo_report.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/normal/outpatient_note.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:59, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/normal/outpatient_note.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/rca_ischemia/blood_lab_report.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:58, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/rca_ischemia/blood_lab_report.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/rca_ischemia/ecg_report.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:56, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/rca_ischemia/ecg_report.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/rca_ischemia/echo_report.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:57, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/rca_ischemia/echo_report.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/rca_ischemia/outpatient_note.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:59, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/rca_ischemia/outpatient_note.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/triple_vessel/blood_lab_report.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:58, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/triple_vessel/blood_lab_report.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/triple_vessel/ecg_report.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:56, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/triple_vessel/ecg_report.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/triple_vessel/echo_report.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:57, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/triple_vessel/echo_report.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/triple_vessel/outpatient_note.pdf,"still referenced by its old name in modules/cardiovascular-risk-viz-and-prediction/scripts/roundtrip_reports.py:59, which could not be rewritten safely"
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/presets/triple_vessel/outpatient_note.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/high_risk_lad/ecg_impression_only.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/high_risk_lad/ecg_impression_only.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/high_risk_lad/ehr_narrative.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/high_risk_lad/ehr_narrative.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/high_risk_lad/lab_partial.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/high_risk_lad/lab_partial.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/high_risk_lad/lab_si_units.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/high_risk_lad/lab_si_units.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/normal/ecg_impression_only.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/normal/ecg_impression_only.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/normal/ehr_narrative.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/normal/ehr_narrative.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/normal/lab_partial.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/normal/lab_partial.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/normal/lab_si_units.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/normal/lab_si_units.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/rca_ischemia/ecg_impression_only.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/rca_ischemia/ecg_impression_only.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/rca_ischemia/ehr_narrative.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/rca_ischemia/ehr_narrative.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/rca_ischemia/lab_partial.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/rca_ischemia/lab_partial.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/rca_ischemia/lab_si_units.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/rca_ischemia/lab_si_units.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/triple_vessel/ecg_impression_only.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/triple_vessel/ecg_impression_only.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/triple_vessel/ehr_narrative.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/triple_vessel/ehr_narrative.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/triple_vessel/lab_partial.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/triple_vessel/lab_partial.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/triple_vessel/lab_si_units.pdf,referenced by bare name (no extension) in module code
+modules/cardiovascular-risk-viz-and-prediction/docs/sample-reports/variants/triple_vessel/lab_si_units.tex,LaTeX resolves \input and \bibliography by name
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/dark/enter_data_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/dark/enter_data_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/dark/model_info_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/dark/model_info_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/dark/reports_patient_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/dark/reports_patient_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/dark/reports_technical_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/dark/reports_technical_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/dark/results_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/dark/results_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/dark/welcome_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/dark/welcome_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/enter_data_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/enter_data_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/light/enter_data_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/light/enter_data_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/light/model_info_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/light/model_info_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/light/reports_patient_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/light/reports_patient_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/light/reports_technical_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/light/reports_technical_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/light/results_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/light/results_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/light/welcome_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/light/welcome_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/model_info_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/model_info_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/monitor/data_entry_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/monitor/data_entry_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/monitor/model_info_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/monitor/model_info_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/monitor/predict_overlay_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/monitor/predict_overlay_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/monitor/reports_clinician_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/monitor/reports_clinician_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/monitor/reports_patient_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/monitor/reports_patient_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/monitor/results_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/monitor/results_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/monitor/welcome_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/monitor/welcome_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/paper/data_entry_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/paper/data_entry_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/paper/model_info_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/paper/model_info_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/paper/predict_overlay_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/paper/predict_overlay_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/paper/reports_clinician_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/paper/reports_clinician_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/paper/reports_patient_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/paper/reports_patient_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/paper/results_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/paper/results_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/paper/welcome_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/paper/welcome_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/reports_patient_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/reports_patient_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/reports_technical_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/reports_technical_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/results_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/results_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/clinical_data_states_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/clinical_data_states_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/clinical_data_states_768.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/confirm_dialog_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/confirm_dialog_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/confirm_dialog_768.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/reports_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/reports_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/reports_768.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/transition_mid_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/transition_mid_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/transition_mid_768.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/welcome_fresh_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/welcome_fresh_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/welcome_fresh_768.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/welcome_in_progress_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/welcome_in_progress_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/monitor/welcome_in_progress_768.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/clinical_data_states_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/clinical_data_states_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/clinical_data_states_768.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/confirm_dialog_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/confirm_dialog_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/confirm_dialog_768.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/reports_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/reports_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/reports_768.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/transition_mid_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/transition_mid_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/transition_mid_768.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/welcome_fresh_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/welcome_fresh_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/welcome_fresh_768.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/welcome_in_progress_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/welcome_in_progress_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round2/paper/welcome_in_progress_768.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round4/viewer-baseline/back.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round4/viewer-baseline/front.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round4/viewer-baseline/left.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round4/viewer-baseline/right.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round4/viewer-before/back.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round4/viewer-before/front.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round4/viewer-before/left.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/round4/viewer-before/right.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/welcome_1440.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/docs/screenshots/welcome_375.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/models/preprocessor.joblib,module code builds '.joblib' file names at run time (modules/cardiovascular-risk-viz-and-prediction/scripts/train.py:438)
+modules/cardiovascular-risk-viz-and-prediction/package-lock.json,JavaScript tooling finds it by name
+modules/cardiovascular-risk-viz-and-prediction/package.json,JavaScript tooling finds it by name
+modules/cardiovascular-risk-viz-and-prediction/public/apple-touch-icon.png,web entry page or file requested at a fixed URL
+modules/cardiovascular-risk-viz-and-prediction/public/favicon.ico,web entry page or file requested at a fixed URL
+modules/cardiovascular-risk-viz-and-prediction/public/icon-192.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/public/icon-512-maskable.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/public/icon-512.png,module code builds '.png' file names at run time (modules/cardiovascular-risk-viz-and-prediction/e2e/full_flow.spec.cjs:56)
+modules/cardiovascular-risk-viz-and-prediction/pytest.ini,Python tooling finds it by name
+modules/cardiovascular-risk-viz-and-prediction/render.yaml,deployment or ML platform reads it by name
+modules/cardiovascular-risk-viz-and-prediction/requirements-dev.txt,pip requirements file
+modules/cardiovascular-risk-viz-and-prediction/requirements.txt,pip requirements file
+modules/cardiovascular-risk-viz-and-prediction/scripts/sample_reports/data.py,class module referenced inside pickled artifact modules/cardiovascular-risk-viz-and-prediction/models/shap_explainers.joblib
+modules/cardiovision-3d/.gitignore,dotfile configuration read by name
+modules/cardiovision-3d/backend/requirements.txt,pip requirements file
+modules/cardiovision-3d/frontend/index.html,web entry page or file requested at a fixed URL
+modules/cardiovision-3d/frontend/package-lock.json,JavaScript tooling finds it by name
+modules/cardiovision-3d/frontend/package.json,JavaScript tooling finds it by name
+modules/cardiovision-3d/frontend/postcss.config.js,tool configuration discovered by name
+modules/cardiovision-3d/frontend/tailwind.config.js,tool configuration discovered by name
+modules/cardiovision-3d/frontend/vite.config.js,tool configuration discovered by name
+modules/cardiovision-3d/package.json,JavaScript tooling finds it by name
+modules/case-twin/.dockerignore,dotfile configuration read by name
+modules/case-twin/.gitignore,dotfile configuration read by name
+modules/case-twin/Dockerfile,Docker build file
+modules/case-twin/backend/.dockerignore,dotfile configuration read by name
+modules/case-twin/backend/Dockerfile,Docker build file
+modules/case-twin/backend/requirements.txt,pip requirements file
+modules/case-twin/dist/index.html,web entry page or file requested at a fixed URL
+modules/case-twin/index.html,web entry page or file requested at a fixed URL
+modules/case-twin/medsiglip_inference_endpoint/requirements.txt,pip requirements file
+modules/case-twin/package-lock.json,JavaScript tooling finds it by name
+modules/case-twin/package.json,JavaScript tooling finds it by name
+modules/case-twin/postcss.config.js,tool configuration discovered by name
+modules/case-twin/src/index.css,module code builds '.css' file names at run time (modules/case-twin/dist/assets/index-DDlMyzul.js:292)
+modules/case-twin/tailwind.config.ts,tool configuration discovered by name
+modules/case-twin/tsconfig.app.json,TypeScript compiler configuration
+modules/case-twin/tsconfig.json,TypeScript compiler configuration
+modules/case-twin/tsconfig.node.json,TypeScript compiler configuration
+modules/case-twin/vite.config.js,tool configuration discovered by name
+modules/case-twin/vite.config.ts,tool configuration discovered by name
+modules/corolens/.gitignore,dotfile configuration read by name
+modules/corolens/.vercelignore,dotfile configuration read by name
+modules/corolens/corolens/__init__.py,Python tooling finds it by name
+modules/corolens/package.json,JavaScript tooling finds it by name
+modules/corolens/requirements.txt,pip requirements file
+modules/corolens/results/metrics.json,module code builds '.json' file names at run time (modules/corolens/server.mjs:9)
+modules/corolens/vercel.json,JavaScript tooling finds it by name
+modules/corolens/web/index.html,web entry page or file requested at a fixed URL
+modules/corolens/web/model/metrics.json,module code builds '.json' file names at run time (modules/corolens/server.mjs:9)
+modules/corolens/web/style.css,module code builds '.css' file names at run time (modules/corolens/server.mjs:9)
+modules/corolens/web/vendor/three/OrbitControls.js,"still referenced by its old name in modules/corolens/web/vendor/three/corolens__vendor_three__OrbitControls.js:86, which could not be rewritten safely"
+modules/coronarytwin/.dockerignore,dotfile configuration read by name
+modules/coronarytwin/.github/workflows/ci.yml,tool reads this folder's files by name
+modules/coronarytwin/.gitignore,dotfile configuration read by name
+modules/coronarytwin/Dockerfile,Docker build file
+modules/coronarytwin/Makefile,build system reads it by name
+modules/coronarytwin/README.md,"still referenced by its old name in modules/coronarytwin/scripts/make_sample_csvs.py:336, which could not be rewritten safely"
+modules/coronarytwin/app/__init__.py,Python tooling finds it by name
+modules/coronarytwin/app/db.py,class module referenced inside pickled artifact modules/coronarytwin/artifacts/casebase.joblib
+modules/coronarytwin/app/main.py,"still referenced by its old name in modules/coronarytwin/tests/test_specialities.py:181, which could not be rewritten safely"
+modules/coronarytwin/app/registry.py,"still referenced by its old name in modules/coronarytwin/tests/test_coronarytwin__tests__test_api.py:8, which could not be rewritten safely"
+modules/coronarytwin/app/schemas.py,"still referenced by its old name in modules/coronarytwin/tests/test_extensibility.py:53, which could not be rewritten safely"
+modules/coronarytwin/artifacts/demo_patients.json,module code builds '.json' file names at run time (modules/coronarytwin/tests/test_contract.py:9)
+modules/coronarytwin/artifacts/feature_manifest.json,named inside data record modules/coronarytwin/artifacts/registry.json
+modules/coronarytwin/artifacts/metrics.json,module code builds '.json' file names at run time (modules/coronarytwin/tests/test_contract.py:9)
+modules/coronarytwin/artifacts/models/.gitkeep,"still referenced by its old name in modules/coronarytwin/.gitignore:10, which could not be rewritten safely"
+modules/coronarytwin/artifacts/models/cad.joblib,named inside data record modules/coronarytwin/artifacts/registry.json
+modules/coronarytwin/artifacts/models/lad.joblib,named inside data record modules/coronarytwin/artifacts/registry.json
+modules/coronarytwin/artifacts/models/lcx.joblib,named inside data record modules/coronarytwin/artifacts/registry.json
+modules/coronarytwin/artifacts/models/rca.joblib,named inside data record modules/coronarytwin/artifacts/registry.json
+modules/coronarytwin/artifacts/registry.json,module code builds '.json' file names at run time (modules/coronarytwin/tests/test_contract.py:9)
+modules/coronarytwin/csv/README.md,"still referenced by its old name in modules/coronarytwin/scripts/make_sample_csvs.py:336, which could not be rewritten safely"
+modules/coronarytwin/csv/manifest.json,web entry page or file requested at a fixed URL
+modules/coronarytwin/data/processed/.gitkeep,"still referenced by its old name in modules/coronarytwin/.gitignore:10, which could not be rewritten safely"
+modules/coronarytwin/data/raw/.gitkeep,"still referenced by its old name in modules/coronarytwin/.gitignore:10, which could not be rewritten safely"
+modules/coronarytwin/deploy/huggingface/Dockerfile,Docker build file
+modules/coronarytwin/deploy/huggingface/README.md,"still referenced by its old name in modules/coronarytwin/scripts/make_sample_csvs.py:336, which could not be rewritten safely"
+modules/coronarytwin/docker-compose.yml,Docker Compose file
+modules/coronarytwin/docs/.gitkeep,"still referenced by its old name in modules/coronarytwin/.gitignore:10, which could not be rewritten safely"
+modules/coronarytwin/docs/figures/calibration.png,module code builds '.png' file names at run time (modules/coronarytwin/src/extract.py:36)
+modules/coronarytwin/docs/figures/readme/hero.png,module code builds '.png' file names at run time (modules/coronarytwin/src/extract.py:36)
+modules/coronarytwin/docs/figures/roc.png,module code builds '.png' file names at run time (modules/coronarytwin/src/extract.py:36)
+modules/coronarytwin/docs/figures/shap_summary_cad.png,module code builds '.png' file names at run time (modules/coronarytwin/src/extract.py:36)
+modules/coronarytwin/docs/figures/shap_summary_lad.png,module code builds '.png' file names at run time (modules/coronarytwin/src/extract.py:36)
+modules/coronarytwin/docs/figures/shap_summary_lcx.png,module code builds '.png' file names at run time (modules/coronarytwin/src/extract.py:36)
+modules/coronarytwin/docs/figures/shap_summary_rca.png,module code builds '.png' file names at run time (modules/coronarytwin/src/extract.py:36)
+modules/coronarytwin/features.yaml,referenced by bare name (no extension) in module code
+modules/coronarytwin/fixtures/demo_patients.json,module code builds '.json' file names at run time (modules/coronarytwin/tests/test_contract.py:9)
+modules/coronarytwin/fixtures/features.json,module code builds '.json' file names at run time (modules/coronarytwin/tests/test_contract.py:9)
+modules/coronarytwin/notebooks/.gitkeep,"still referenced by its old name in modules/coronarytwin/.gitignore:10, which could not be rewritten safely"
+modules/coronarytwin/render.yaml,deployment or ML platform reads it by name
+modules/coronarytwin/requirements.txt,pip requirements file
+modules/coronarytwin/src/__init__.py,Python tooling finds it by name
+modules/coronarytwin/src/config.py,"still referenced by its old name in modules/coronarytwin/app/coronarytwin__app__registry.py:14, which could not be rewritten safely"
+modules/coronarytwin/src/conformal.py,"still referenced by its old name in modules/coronarytwin/app/coronarytwin__app__predict.py:21, which could not be rewritten safely"
+modules/coronarytwin/src/data.py,class module referenced inside pickled artifact modules/coronarytwin/artifacts/casebase.joblib
+modules/coronarytwin/src/evaluate.py,"still referenced by its old name in modules/coronarytwin/tests/test_coronarytwin__tests__test_models.py:9, which could not be rewritten safely"
+modules/coronarytwin/src/experiments.py,"still referenced by its old name in modules/coronarytwin/tests/test_specialities.py:138, which could not be rewritten safely"
+modules/coronarytwin/src/explain.py,"still referenced by its old name in modules/coronarytwin/app/coronarytwin__app__registry.py:14, which could not be rewritten safely"
+modules/coronarytwin/src/extract.py,"still referenced by its old name in modules/coronarytwin/tests/test_extract.py:10, which could not be rewritten safely"
+modules/coronarytwin/src/leakage_guard.py,"still referenced by its old name in modules/coronarytwin/tests/test_coronarytwin__tests__test_leakage.py:5, which could not be rewritten safely"
+modules/coronarytwin/src/models.py,"still referenced by its old name in modules/coronarytwin/tests/test_explain.py:8, which could not be rewritten safely"
+modules/coronarytwin/src/train.py,"still referenced by its old name in modules/coronarytwin/tests/test_coronarytwin__tests__test_models.py:9, which could not be rewritten safely"
+modules/coronarytwin/tests/conftest.py,Python tooling finds it by name
+modules/coronarytwin/web/Dockerfile,Docker build file
+modules/coronarytwin/web/index.html,web entry page or file requested at a fixed URL
+modules/coronarytwin/web/package-lock.json,JavaScript tooling finds it by name
+modules/coronarytwin/web/package.json,JavaScript tooling finds it by name
+modules/coronarytwin/web/playwright.config.ts,tool configuration discovered by name
+modules/coronarytwin/web/src/anatomy.json,module code builds '.json' file names at run time (modules/coronarytwin/tests/test_contract.py:9)
+modules/coronarytwin/web/tsconfig.json,TypeScript compiler configuration
+modules/coronarytwin/web/vercel.json,JavaScript tooling finds it by name
+modules/coronarytwin/web/vite.config.ts,tool configuration discovered by name
+modules/cortwin/.gitattributes,dotfile configuration read by name
+modules/cortwin/.github/workflows/ci.yml,tool reads this folder's files by name
+modules/cortwin/.gitignore,dotfile configuration read by name
+modules/cortwin/AGENTS.md,AI agent tooling reads it by name
+modules/cortwin/Makefile,build system reads it by name
+modules/cortwin/Project/Contracts.md,referenced by bare name (no extension) in module code
+modules/cortwin/README.md,"still referenced by its old name in modules/cortwin/web/src/copy/copyLint.ts:8, which could not be rewritten safely"
+modules/cortwin/api/README.md,"still referenced by its old name in modules/cortwin/web/src/copy/copyLint.ts:8, which could not be rewritten safely"
+modules/cortwin/assets/fallback/heart_tubes.glb,module code builds '.glb' file names at run time (modules/cortwin/tools/mesh/inspect.mjs:179)
+modules/cortwin/assets/ready/heart.glb,named inside data record modules/cortwin/web/public/manifest.json
+modules/cortwin/config/features.json,module code builds '.json' file names at run time (modules/cortwin/web/src/validation/sourceScan.test.ts:41)
+modules/cortwin/config/registry.json,named inside data record modules/cortwin/web/public/manifest.json
+modules/cortwin/data/raw/extention of Z-Alizadeh sani dataset.xlsx,named inside data record modules/cortwin/data/CHECKSUMS.txt
+modules/cortwin/model.json,named inside data record modules/cortwin/web/public/manifest.json
+modules/cortwin/pipeline/__init__.py,Python tooling finds it by name
+modules/cortwin/pipeline/calibration.py,its package is imported by a computed module name (modules/cortwin/tests/test_leakage_boundary.py:127)
+modules/cortwin/pipeline/config.py,listed by name in its package __init__.py
+modules/cortwin/pipeline/dataset.py,listed by name in its package __init__.py
+modules/cortwin/pipeline/errors.py,listed by name in its package __init__.py
+modules/cortwin/pipeline/manifest.py,its package is imported by a computed module name (modules/cortwin/tests/test_leakage_boundary.py:127)
+modules/cortwin/pipeline/metrics.py,class module referenced inside pickled artifact modules/cortwin/pipeline/artifacts/deployed_model.joblib
+modules/cortwin/pipeline/schema.py,listed by name in its package __init__.py
+modules/cortwin/pipeline/train.py,its package is imported by a computed module name (modules/cortwin/tests/test_leakage_boundary.py:127)
+modules/cortwin/pipeline/validate.py,its package is imported by a computed module name (modules/cortwin/tests/test_leakage_boundary.py:127)
+modules/cortwin/pyproject.toml,Python tooling finds it by name
+modules/cortwin/requirements.lock.txt,pip requirements file
+modules/cortwin/requirements.txt,pip requirements file
+modules/cortwin/results.json,named inside data record modules/cortwin/web/public/manifest.json
+modules/cortwin/tests/conftest.py,Python tooling finds it by name
+modules/cortwin/tests/fixtures/golden.json,named inside data record modules/cortwin/web/public/manifest.json
+modules/cortwin/tools/mesh/README.md,"still referenced by its old name in modules/cortwin/web/src/copy/copyLint.ts:8, which could not be rewritten safely"
+modules/cortwin/tools/mesh/bench/index.html,web entry page or file requested at a fixed URL
+modules/cortwin/tools/mesh/package-lock.json,JavaScript tooling finds it by name
+modules/cortwin/tools/mesh/package.json,JavaScript tooling finds it by name
+modules/cortwin/tools/qa/README.md,"still referenced by its old name in modules/cortwin/web/src/copy/copyLint.ts:8, which could not be rewritten safely"
+modules/cortwin/web/index.html,web entry page or file requested at a fixed URL
+modules/cortwin/web/package-lock.json,JavaScript tooling finds it by name
+modules/cortwin/web/package.json,JavaScript tooling finds it by name
+modules/cortwin/web/playwright.config.ts,tool configuration discovered by name
+modules/cortwin/web/public/fixtures/golden.json,named inside data record modules/cortwin/web/public/manifest.json
+modules/cortwin/web/public/manifest.json,web entry page or file requested at a fixed URL
+modules/cortwin/web/public/model.json,named inside data record modules/cortwin/web/public/manifest.json
+modules/cortwin/web/public/models/heart.glb,named inside data record modules/cortwin/web/public/manifest.json
+modules/cortwin/web/public/models/heart_tubes.glb,module code builds '.glb' file names at run time (modules/cortwin/tools/mesh/inspect.mjs:179)
+modules/cortwin/web/public/registry.json,named inside data record modules/cortwin/web/public/manifest.json
+modules/cortwin/web/public/results.json,named inside data record modules/cortwin/web/public/manifest.json
+modules/cortwin/web/src/design/fonts.css,module code builds '.css' file names at run time (modules/cortwin/web/e2e/perf.spec.ts:1055)
+modules/cortwin/web/src/design/tokens.css,module code builds '.css' file names at run time (modules/cortwin/web/e2e/perf.spec.ts:1055)
+modules/cortwin/web/src/domain/parity.test.ts,named inside data record modules/cortwin/web/src/domain/parity-report.json
+modules/cortwin/web/tsconfig.json,TypeScript compiler configuration
+modules/cortwin/web/vite.config.ts,tool configuration discovered by name
+modules/cortwin/web/vitest.config.ts,tool configuration discovered by name
+modules/cv-risk-viz-prediction/.gitignore,dotfile configuration read by name
+modules/cv-risk-viz-prediction/backend/app/__init__.py,Python tooling finds it by name
+modules/cv-risk-viz-prediction/backend/app/api/__init__.py,Python tooling finds it by name
+modules/cv-risk-viz-prediction/backend/app/core/__init__.py,Python tooling finds it by name
+modules/cv-risk-viz-prediction/backend/app/schemas/__init__.py,Python tooling finds it by name
+modules/cv-risk-viz-prediction/backend/app/services/__init__.py,Python tooling finds it by name
+modules/cv-risk-viz-prediction/backend/ml/__init__.py,Python tooling finds it by name
+modules/cv-risk-viz-prediction/backend/models/cad.joblib,module code builds '.joblib' file names at run time (modules/cv-risk-viz-prediction/backend/app/services/registry.py:38)
+modules/cv-risk-viz-prediction/backend/models/checksums.json,module code builds '.json' file names at run time (modules/cv-risk-viz-prediction/backend/ml/train.py:179)
+modules/cv-risk-viz-prediction/backend/models/feature_schema.json,module code builds '.json' file names at run time (modules/cv-risk-viz-prediction/backend/ml/train.py:179)
+modules/cv-risk-viz-prediction/backend/models/lad.joblib,module code builds '.joblib' file names at run time (modules/cv-risk-viz-prediction/backend/app/services/registry.py:38)
+modules/cv-risk-viz-prediction/backend/models/lcx.joblib,module code builds '.joblib' file names at run time (modules/cv-risk-viz-prediction/backend/app/services/registry.py:38)
+modules/cv-risk-viz-prediction/backend/models/manifest.json,web entry page or file requested at a fixed URL
+modules/cv-risk-viz-prediction/backend/models/metrics.json,module code builds '.json' file names at run time (modules/cv-risk-viz-prediction/backend/ml/train.py:179)
+modules/cv-risk-viz-prediction/backend/models/rca.joblib,module code builds '.joblib' file names at run time (modules/cv-risk-viz-prediction/backend/app/services/registry.py:38)
+modules/cv-risk-viz-prediction/backend/models/thresholds.json,module code builds '.json' file names at run time (modules/cv-risk-viz-prediction/backend/ml/train.py:179)
+modules/cv-risk-viz-prediction/backend/requirements.txt,pip requirements file
+modules/cv-risk-viz-prediction/backend/tests/__init__.py,Python tooling finds it by name
+modules/cv-risk-viz-prediction/frontend/.gitignore,dotfile configuration read by name
+modules/cv-risk-viz-prediction/frontend/.oxlintrc.json,dotfile configuration read by name
+modules/cv-risk-viz-prediction/frontend/index.html,web entry page or file requested at a fixed URL
+modules/cv-risk-viz-prediction/frontend/package-lock.json,JavaScript tooling finds it by name
+modules/cv-risk-viz-prediction/frontend/package.json,JavaScript tooling finds it by name
+modules/cv-risk-viz-prediction/frontend/tsconfig.app.json,TypeScript compiler configuration
+modules/cv-risk-viz-prediction/frontend/tsconfig.json,TypeScript compiler configuration
+modules/cv-risk-viz-prediction/frontend/tsconfig.node.json,TypeScript compiler configuration
+modules/cv-risk-viz-prediction/frontend/vite.config.ts,tool configuration discovered by name
+modules/epicast/.easignore,dotfile configuration read by name
+modules/epicast/.gitignore,dotfile configuration read by name
+modules/epicast/Dockerfile,Docker build file
+modules/epicast/mobile/.easignore,dotfile configuration read by name
+modules/epicast/mobile/App.js,React Native / Expo entry point
+modules/epicast/mobile/android/.gitignore,dotfile configuration read by name
+modules/epicast/mobile/android/app/build.gradle,build system reads it by name
+modules/epicast/mobile/android/app/src/debug/AndroidManifest.xml,build system reads it by name
+modules/epicast/mobile/android/app/src/debugOptimized/AndroidManifest.xml,build system reads it by name
+modules/epicast/mobile/android/app/src/main/AndroidManifest.xml,build system reads it by name
+modules/epicast/mobile/android/app/src/main/res/mipmap-hdpi/ic_launcher.webp,native Android project: resource and class names
+modules/epicast/mobile/android/app/src/main/res/mipmap-hdpi/ic_launcher_round.webp,native Android project: resource and class names
+modules/epicast/mobile/android/app/src/main/res/mipmap-mdpi/ic_launcher.webp,native Android project: resource and class names
+modules/epicast/mobile/android/app/src/main/res/mipmap-mdpi/ic_launcher_round.webp,native Android project: resource and class names
+modules/epicast/mobile/android/app/src/main/res/mipmap-xhdpi/ic_launcher.webp,native Android project: resource and class names
+modules/epicast/mobile/android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.webp,native Android project: resource and class names
+modules/epicast/mobile/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.webp,native Android project: resource and class names
+modules/epicast/mobile/android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp,native Android project: resource and class names
+modules/epicast/mobile/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp,native Android project: resource and class names
+modules/epicast/mobile/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp,native Android project: resource and class names
+modules/epicast/mobile/android/app/src/main/res/values-night/colors.xml,native Android project: resource and class names
+modules/epicast/mobile/android/app/src/main/res/values/colors.xml,native Android project: resource and class names
+modules/epicast/mobile/android/build.gradle,build system reads it by name
+modules/epicast/mobile/app.json,JavaScript tooling finds it by name
+modules/epicast/mobile/assets/adaptive-icon.png,module code builds '.png' file names at run time (modules/epicast/src/api/app.py:423)
+modules/epicast/mobile/assets/icon.png,Next.js metadata file convention
+modules/epicast/mobile/ios/.gitignore,dotfile configuration read by name
+modules/epicast/mobile/ios/EpiCast/Images.xcassets/AppIcon.appiconset/Contents.json,native iOS project
+modules/epicast/mobile/ios/EpiCast/Images.xcassets/Contents.json,native iOS project
+modules/epicast/mobile/ios/EpiCast/Images.xcassets/SplashScreenBackground.colorset/Contents.json,native iOS project
+modules/epicast/mobile/ios/EpiCast/Images.xcassets/SplashScreenLegacy.imageset/Contents.json,native iOS project
+modules/epicast/mobile/package-lock.json,JavaScript tooling finds it by name
+modules/epicast/mobile/package.json,JavaScript tooling finds it by name
+modules/epicast/requirements.txt,pip requirements file
+modules/epicast/src/__init__.py,Python tooling finds it by name
+modules/epicast/src/agents/__init__.py,Python tooling finds it by name
+modules/epicast/src/api/__init__.py,Python tooling finds it by name
+modules/epicast/src/data/__init__.py,Python tooling finds it by name
+modules/epicast/src/models/__init__.py,Python tooling finds it by name
+modules/epicast/src/utils/__init__.py,Python tooling finds it by name
+modules/grok-app/.gitignore,dotfile configuration read by name
+modules/grok-app/AGENTS.md,AI agent tooling reads it by name
+modules/grok-app/CLAUDE.md,AI agent tooling reads it by name
+modules/grok-app/app/agent/page.tsx,Next.js App Router file convention
+modules/grok-app/app/api/dashboard-chat/route.ts,Next.js App Router file convention
+modules/grok-app/app/api/guidance/route.ts,Next.js App Router file convention
+modules/grok-app/app/api/guidance/stream/route.ts,Next.js App Router file convention
+modules/grok-app/app/api/kpi/history/route.ts,Next.js App Router file convention
+modules/grok-app/app/api/kpi/latest/route.ts,Next.js App Router file convention
+modules/grok-app/app/api/realtime-token/route.ts,Next.js App Router file convention
+modules/grok-app/app/api/remember/route.ts,Next.js App Router file convention
+modules/grok-app/app/api/tools/lookup-patient/route.ts,Next.js App Router file convention
+modules/grok-app/app/api/tools/recall/route.ts,Next.js App Router file convention
+modules/grok-app/app/api/transcripts/[id]/route.ts,Next.js App Router file convention
+modules/grok-app/app/api/transcripts/route.ts,Next.js App Router file convention
+modules/grok-app/app/api/trend-summary/route.ts,Next.js App Router file convention
+modules/grok-app/app/call/[id]/page.tsx,Next.js App Router file convention
+modules/grok-app/app/caretaker/page.tsx,Next.js App Router file convention
+modules/grok-app/app/dashboard/page.tsx,Next.js App Router file convention
+modules/grok-app/app/favicon.ico,web entry page or file requested at a fixed URL
+modules/grok-app/app/landing/page.tsx,Next.js App Router file convention
+modules/grok-app/app/layout.tsx,Next.js App Router file convention
+modules/grok-app/app/page.tsx,Next.js App Router file convention
+modules/grok-app/app/personalization/page.tsx,Next.js App Router file convention
+modules/grok-app/app/phone/page.tsx,Next.js App Router file convention
+modules/grok-app/app/transcripts/page.tsx,Next.js App Router file convention
+modules/grok-app/next-env.d.ts,generated and read by Next.js
+modules/grok-app/next.config.ts,tool configuration discovered by name
+modules/grok-app/package.json,JavaScript tooling finds it by name
+modules/grok-app/postcss.config.mjs,tool configuration discovered by name
+modules/grok-app/public/file.svg,module code builds '.svg' file names at run time (modules/grok-app/components/ai-elements/model-selector.tsx:186)
+modules/grok-app/public/globe.svg,module code builds '.svg' file names at run time (modules/grok-app/components/ai-elements/model-selector.tsx:186)
+modules/grok-app/public/next.svg,module code builds '.svg' file names at run time (modules/grok-app/components/ai-elements/model-selector.tsx:186)
+modules/grok-app/public/vercel.svg,module code builds '.svg' file names at run time (modules/grok-app/components/ai-elements/model-selector.tsx:186)
+modules/grok-app/public/window.svg,module code builds '.svg' file names at run time (modules/grok-app/components/ai-elements/model-selector.tsx:186)
+modules/grok-app/tsconfig.json,TypeScript compiler configuration
+modules/hack-ireland-2025/.gitignore,dotfile configuration read by name
+modules/hack-ireland-2025/little-blue-booth/.env.example,dotfile configuration read by name
+modules/hack-ireland-2025/little-blue-booth/.gitignore,dotfile configuration read by name
+modules/hack-ireland-2025/little-blue-booth/.vscode/settings.json,tool reads this folder's files by name
+modules/hack-ireland-2025/little-blue-booth/next-env.d.ts,generated and read by Next.js
+modules/hack-ireland-2025/little-blue-booth/package-lock.json,JavaScript tooling finds it by name
+modules/hack-ireland-2025/little-blue-booth/package.json,JavaScript tooling finds it by name
+modules/hack-ireland-2025/little-blue-booth/postcss.config.js,tool configuration discovered by name
+modules/hack-ireland-2025/little-blue-booth/prisma/migrations/20250222212244_init/migration.sql,migration history: discovered by folder and name
+modules/hack-ireland-2025/little-blue-booth/prisma/migrations/20250222221445_make_analysis_status_fields_optional/migration.sql,migration history: discovered by folder and name
+modules/hack-ireland-2025/little-blue-booth/public/favicon.ico,web entry page or file requested at a fixed URL
+modules/hack-ireland-2025/little-blue-booth/scripts/requirements.txt,pip requirements file
+modules/hack-ireland-2025/little-blue-booth/src/app/admin/conversations/page.tsx,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/admin/layout.tsx,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/admin/page.tsx,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/admin/users/[userId]/page.tsx,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/admin/users/page.tsx,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/api/check_heart/route.ts,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/api/conversation/route.ts,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/api/generate-summary/route.ts,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/api/google-fit/callback/route.ts,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/api/google-fit/route.ts,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/api/presigned-url/route.ts,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/api/session/[sessionId]/end/page.tsx,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/api/session/route.ts,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/api/sessions/[sessionId]/route.ts,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/api/tavily-search/route.ts,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/api/trpc/[trpc]/route.ts,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/api/upload/route.ts,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/api/video_analysis/route.ts,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/emergency_number/page.tsx,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/layout.tsx,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/page.tsx,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/session/[sessionId]/end/page.tsx,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/settings/page.tsx,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/sign-in/[[...sign-in]]/page.tsx,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/test/page.tsx,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/app/tv/page.tsx,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/src/pages/api/socket.ts,Next.js pages router: the file name is the route
+modules/hack-ireland-2025/little-blue-booth/src/server/api/generate-summary/route.ts,Next.js App Router file convention
+modules/hack-ireland-2025/little-blue-booth/tailwind.config.ts,tool configuration discovered by name
+modules/hack-ireland-2025/little-blue-booth/tsconfig.json,TypeScript compiler configuration
+modules/heartai/.gitignore,dotfile configuration read by name
+modules/heartai/api/.gitignore,dotfile configuration read by name
+modules/heartai/api/app/__init__.py,Python tooling finds it by name
+modules/heartai/api/app/main.py,"still referenced by its old name in modules/heartai/src/treehacks/bin/heartai__src_treehacks_bin__fastapi:5, which could not be rewritten safely"
+modules/heartai/api/requirements.txt,pip requirements file
+modules/heartai/api/treehacks/bin/activate,"still referenced by its old name in modules/heartai/src/vespa_test.ipynb:140, which could not be rewritten safely"
+modules/heartai/api/treehacks/bin/fastapi,"still referenced by its old name in modules/heartai/api/requirements.txt:1, which could not be rewritten safely"
+modules/heartai/api/treehacks/bin/pip,"still referenced by its old name in modules/heartai/modeling/visualize.ipynb:9, which could not be rewritten safely"
+modules/heartai/api/treehacks/bin/python,"still referenced by its old name in modules/heartai/api/treehacks/bin/heartai__treehacks_bin__normalizer:1, which could not be rewritten safely"
+modules/heartai/api/treehacks/bin/python3,"still referenced by its old name in modules/heartai/modeling/visualize.ipynb:814, which could not be rewritten safely"
+modules/heartai/api/treehacks/bin/python3.11,"still referenced by its old name in modules/heartai/api/treehacks/pyvenv.cfg:4, which could not be rewritten safely"
+modules/heartai/api/treehacks/bin/uvicorn,"still referenced by its old name in modules/heartai/api/requirements.txt:2, which could not be rewritten safely"
+modules/heartai/api/treehacks/bin/vespa,"still referenced by its old name in modules/heartai/api2/vespa-app/Dockerfile:1, which could not be rewritten safely"
+modules/heartai/api/treehacks/pyvenv.cfg,module code builds '.cfg' file names at run time (modules/heartai/src/treehacks/bin/Activate.ps1:135)
+modules/heartai/api2/.gitignore,dotfile configuration read by name
+modules/heartai/api2/main.py,"still referenced by its old name in modules/heartai/src/treehacks/bin/heartai__src_treehacks_bin__fastapi:5, which could not be rewritten safely"
+modules/heartai/api2/requirements.txt,pip requirements file
+modules/heartai/api2/treehacks/bin/activate,"still referenced by its old name in modules/heartai/src/vespa_test.ipynb:140, which could not be rewritten safely"
+modules/heartai/api2/treehacks/bin/fastapi,"still referenced by its old name in modules/heartai/api/requirements.txt:1, which could not be rewritten safely"
+modules/heartai/api2/treehacks/bin/pip,"still referenced by its old name in modules/heartai/modeling/visualize.ipynb:9, which could not be rewritten safely"
+modules/heartai/api2/treehacks/bin/python,"still referenced by its old name in modules/heartai/api/treehacks/bin/heartai__treehacks_bin__normalizer:1, which could not be rewritten safely"
+modules/heartai/api2/treehacks/bin/python3,"still referenced by its old name in modules/heartai/modeling/visualize.ipynb:814, which could not be rewritten safely"
+modules/heartai/api2/treehacks/bin/python3.11,"still referenced by its old name in modules/heartai/api/treehacks/pyvenv.cfg:4, which could not be rewritten safely"
+modules/heartai/api2/treehacks/bin/uvicorn,"still referenced by its old name in modules/heartai/api/requirements.txt:2, which could not be rewritten safely"
+modules/heartai/api2/treehacks/bin/vespa,"still referenced by its old name in modules/heartai/api2/vespa-app/Dockerfile:1, which could not be rewritten safely"
+modules/heartai/api2/treehacks/pyvenv.cfg,module code builds '.cfg' file names at run time (modules/heartai/src/treehacks/bin/Activate.ps1:135)
+modules/heartai/api2/vespa-app/Dockerfile,Docker build file
+modules/heartai/src/.gitignore,dotfile configuration read by name
+modules/heartai/src/main.py,"still referenced by its old name in modules/heartai/src/treehacks/bin/heartai__src_treehacks_bin__fastapi:5, which could not be rewritten safely"
+modules/heartai/src/treehacks/bin/activate,"still referenced by its old name in modules/heartai/src/vespa_test.ipynb:140, which could not be rewritten safely"
+modules/heartai/src/treehacks/bin/fastapi,"still referenced by its old name in modules/heartai/api/requirements.txt:1, which could not be rewritten safely"
+modules/heartai/src/treehacks/bin/pip,"still referenced by its old name in modules/heartai/modeling/visualize.ipynb:9, which could not be rewritten safely"
+modules/heartai/src/treehacks/bin/python,"still referenced by its old name in modules/heartai/api/treehacks/bin/heartai__treehacks_bin__normalizer:1, which could not be rewritten safely"
+modules/heartai/src/treehacks/bin/python3,"still referenced by its old name in modules/heartai/modeling/visualize.ipynb:814, which could not be rewritten safely"
+modules/heartai/src/treehacks/bin/python3.11,"still referenced by its old name in modules/heartai/api/treehacks/pyvenv.cfg:4, which could not be rewritten safely"
+modules/heartai/src/treehacks/bin/uvicorn,"still referenced by its old name in modules/heartai/api/requirements.txt:2, which could not be rewritten safely"
+modules/heartai/src/treehacks/bin/vespa,"still referenced by its old name in modules/heartai/api2/vespa-app/Dockerfile:1, which could not be rewritten safely"
+modules/heartai/src/treehacks/pyvenv.cfg,module code builds '.cfg' file names at run time (modules/heartai/src/treehacks/bin/Activate.ps1:135)
+modules/heartai/web/.gitignore,dotfile configuration read by name
+modules/heartai/web/next-env.d.ts,generated and read by Next.js
+modules/heartai/web/next.config.ts,tool configuration discovered by name
+modules/heartai/web/package-lock.json,JavaScript tooling finds it by name
+modules/heartai/web/package.json,JavaScript tooling finds it by name
+modules/heartai/web/postcss.config.mjs,tool configuration discovered by name
+modules/heartai/web/public/next.svg,referenced by bare name (no extension) in module code
+modules/heartai/web/src/app/about/page.tsx,Next.js App Router file convention
+modules/heartai/web/src/app/ai-agent/page.tsx,Next.js App Router file convention
+modules/heartai/web/src/app/docs/page.tsx,Next.js App Router file convention
+modules/heartai/web/src/app/favicon.ico,web entry page or file requested at a fixed URL
+modules/heartai/web/src/app/layout.tsx,Next.js App Router file convention
+modules/heartai/web/src/app/page.tsx,Next.js App Router file convention
+modules/heartai/web/src/app/results/page.tsx,Next.js App Router file convention
+modules/heartai/web/src/app/upload/page.tsx,Next.js App Router file convention
+modules/heartai/web/tailwind.config.ts,tool configuration discovered by name
+modules/heartai/web/tsconfig.json,TypeScript compiler configuration
+modules/hophacks/.gitignore,dotfile configuration read by name
+modules/hophacks/.python-version,dotfile configuration read by name
+modules/hophacks/requirements.txt,pip requirements file
+modules/hophacks/src/__init__.py,Python tooling finds it by name
+modules/hophacks/src/app.py,"still referenced by its old name in modules/hophacks/hophacks__main.py:37, which could not be rewritten safely"
+modules/hophacks/src/application_images/main_background.png,module code builds '.png' file names at run time (modules/hophacks/src/application_images/convert_pdf_to_png.py:49)
+modules/hophacks/src/static/images/main_background.png,module code builds '.png' file names at run time (modules/hophacks/src/application_images/convert_pdf_to_png.py:49)
+modules/hophacks/src/templates/index.html,web entry page or file requested at a fixed URL
+modules/multimodal-ai-hackathon-project/.gitignore,dotfile configuration read by name
+modules/multimodal-ai-hackathon-project/backend/__init__.py,Python tooling finds it by name
+modules/multimodal-ai-hackathon-project/data/processed/dataset.csv,module code builds '.csv' file names at run time (modules/multimodal-ai-hackathon-project/ml/data.py:40)
+modules/multimodal-ai-hackathon-project/frontend/.gitignore,dotfile configuration read by name
+modules/multimodal-ai-hackathon-project/frontend/.oxlintrc.json,dotfile configuration read by name
+modules/multimodal-ai-hackathon-project/frontend/backend/__init__.py,Python tooling finds it by name
+modules/multimodal-ai-hackathon-project/frontend/index.html,web entry page or file requested at a fixed URL
+modules/multimodal-ai-hackathon-project/frontend/package-lock.json,JavaScript tooling finds it by name
+modules/multimodal-ai-hackathon-project/frontend/package.json,JavaScript tooling finds it by name
+modules/multimodal-ai-hackathon-project/frontend/vite.config.js,tool configuration discovered by name
+modules/multimodal-ai-hackathon-project/ml/__init__.py,Python tooling finds it by name
+modules/multimodal-ai-hackathon-project/ml/evaluate.py,"still referenced by its old name in modules/multimodal-ai-hackathon-project/scripts/multimodal_ai_hackathon_project__scripts__train_baseline.py:14, which could not be rewritten safely"
+modules/multimodal-ai-hackathon-project/models/cad.joblib,module code builds '.joblib' file names at run time (modules/multimodal-ai-hackathon-project/scripts/train_final.py:104)
+modules/multimodal-ai-hackathon-project/models/lad.joblib,module code builds '.joblib' file names at run time (modules/multimodal-ai-hackathon-project/scripts/train_final.py:104)
+modules/multimodal-ai-hackathon-project/models/lcx.joblib,module code builds '.joblib' file names at run time (modules/multimodal-ai-hackathon-project/scripts/train_final.py:104)
+modules/multimodal-ai-hackathon-project/models/rca.joblib,module code builds '.joblib' file names at run time (modules/multimodal-ai-hackathon-project/scripts/train_final.py:104)
+modules/multimodal-ai-hackathon-project/pytest.ini,Python tooling finds it by name
+modules/multimodal-ai-hackathon-project/requirements.txt,pip requirements file
+modules/multimodal-ai-hackathon-project/tests/conftest.py,Python tooling finds it by name
+modules/multimodal-hackathon-2026/.gitignore,dotfile configuration read by name
+modules/multimodal-hackathon-2026/AGENTS.md,AI agent tooling reads it by name
+modules/multimodal-hackathon-2026/backend/app/__init__.py,Python tooling finds it by name
+modules/multimodal-hackathon-2026/backend/app/routers/__init__.py,Python tooling finds it by name
+modules/multimodal-hackathon-2026/backend/app/services/__init__.py,Python tooling finds it by name
+modules/multimodal-hackathon-2026/backend/app/services/fusion.py,"still referenced by its old name in modules/multimodal-hackathon-2026/backend/scripts/demo_cohort.py:16, which could not be rewritten safely"
+modules/multimodal-hackathon-2026/backend/package-lock.json,JavaScript tooling finds it by name
+modules/multimodal-hackathon-2026/backend/requirements.txt,pip requirements file
+modules/multimodal-hackathon-2026/frontend/.gitignore,dotfile configuration read by name
+modules/multimodal-hackathon-2026/frontend/AGENTS.md,AI agent tooling reads it by name
+modules/multimodal-hackathon-2026/frontend/app/favicon.ico,web entry page or file requested at a fixed URL
+modules/multimodal-hackathon-2026/frontend/app/globals.css,module code builds '.css' file names at run time (modules/multimodal-hackathon-2026/frontend/next.config.ts:9)
+modules/multimodal-hackathon-2026/frontend/app/layout.tsx,Next.js App Router file convention
+modules/multimodal-hackathon-2026/frontend/app/page.tsx,Next.js App Router file convention
+modules/multimodal-hackathon-2026/frontend/eslint.config.mjs,tool configuration discovered by name
+modules/multimodal-hackathon-2026/frontend/next.config.ts,tool configuration discovered by name
+modules/multimodal-hackathon-2026/frontend/package-lock.json,JavaScript tooling finds it by name
+modules/multimodal-hackathon-2026/frontend/package.json,JavaScript tooling finds it by name
+modules/multimodal-hackathon-2026/frontend/public/next.svg,referenced by bare name (no extension) in module code
+modules/multimodal-hackathon-2026/frontend/tsconfig.json,TypeScript compiler configuration
+modules/multimodal-hackathon-track-a/.dockerignore,dotfile configuration read by name
+modules/multimodal-hackathon-track-a/.gitattributes,dotfile configuration read by name
+modules/multimodal-hackathon-track-a/.github/workflows/ci.yml,tool reads this folder's files by name
+modules/multimodal-hackathon-track-a/.gitignore,dotfile configuration read by name
+modules/multimodal-hackathon-track-a/Dockerfile,Docker build file
+modules/multimodal-hackathon-track-a/README.md,"still referenced by its old name in modules/multimodal-hackathon-track-a/frontend/vendor/three/examples/jsm/loaders/GLTFLoader.js:704, which could not be rewritten safely"
+modules/multimodal-hackathon-track-a/artifacts/final_evaluation/confusion_matrices.json,module code builds '.json' file names at run time (modules/multimodal-hackathon-track-a/frontend/vendor/three/build/three.module.min.js:6)
+modules/multimodal-hackathon-track-a/backend/__init__.py,Python tooling finds it by name
+modules/multimodal-hackathon-track-a/backend/app/__init__.py,Python tooling finds it by name
+modules/multimodal-hackathon-track-a/backend/app/main.py,"still referenced by its old name in modules/multimodal-hackathon-track-a/backend/tests/test_security.py:7, which could not be rewritten safely"
+modules/multimodal-hackathon-track-a/backend/requirements.txt,pip requirements file
+modules/multimodal-hackathon-track-a/backend/tests/conftest.py,Python tooling finds it by name
+modules/multimodal-hackathon-track-a/frontend/index.html,web entry page or file requested at a fixed URL
+modules/multimodal-hackathon-track-a/frontend/vendor/README.md,"still referenced by its old name in modules/multimodal-hackathon-track-a/frontend/vendor/three/examples/jsm/loaders/GLTFLoader.js:704, which could not be rewritten safely"
+modules/multimodal-hackathon-track-a/frontend/vendor/gsap/package.json,JavaScript tooling finds it by name
+modules/multimodal-hackathon-track-a/frontend/vendor/three/examples/jsm/controls/OrbitControls.js,"still referenced by its old name in modules/multimodal-hackathon-track-a/frontend/js/scene/heart-scene.js:4, which could not be rewritten safely"
+modules/multimodal-hackathon-track-a/ml/__init__.py,Python tooling finds it by name
+modules/safetyconnect/.env.example,dotfile configuration read by name
+modules/safetyconnect/.gitignore,dotfile configuration read by name
+modules/safetyconnect/AGENTS.md,AI agent tooling reads it by name
+modules/safetyconnect/CLAUDE.md,AI agent tooling reads it by name
+modules/safetyconnect/eslint.config.mjs,tool configuration discovered by name
+modules/safetyconnect/next-env.d.ts,generated and read by Next.js
+modules/safetyconnect/next.config.ts,tool configuration discovered by name
+modules/safetyconnect/package-lock.json,JavaScript tooling finds it by name
+modules/safetyconnect/package.json,JavaScript tooling finds it by name
+modules/safetyconnect/postcss.config.mjs,tool configuration discovered by name
+modules/safetyconnect/public/next.svg,referenced by bare name (no extension) in module code
+modules/safetyconnect/src/app/api/inngest/route.ts,Next.js App Router file convention
+modules/safetyconnect/src/app/favicon.ico,web entry page or file requested at a fixed URL
+modules/safetyconnect/src/app/feedback/[recall]/page.tsx,Next.js App Router file convention
+modules/safetyconnect/src/app/layout.tsx,Next.js App Router file convention
+modules/safetyconnect/src/app/page.tsx,Next.js App Router file convention
+modules/safetyconnect/tailwind.config.ts,tool configuration discovered by name
+modules/safetyconnect/tsconfig.json,TypeScript compiler configuration
+modules/slicerheart/.gitignore,dotfile configuration read by name
+modules/slicerheart/AnnulusShapeAnalyzer/CMakeLists.txt,build system reads it by name
+modules/slicerheart/AsdVsdDeviceSimulator/AsdVsdDevices/__init__.py,Python tooling finds it by name
+modules/slicerheart/AsdVsdDeviceSimulator/AsdVsdDevices/devices.py,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/AsdVsdDeviceSimulator/CMakeLists.txt,build system reads it by name
+modules/slicerheart/AsdVsdDeviceSimulator/Resources/Icons/icons.psd,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/AsdVsdDeviceSimulator/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/AsdVsdDeviceSimulator/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/BafflePlanner/CMakeLists.txt,build system reads it by name
+modules/slicerheart/BafflePlanner/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/BafflePlanner/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/CMakeLists.txt,build system reads it by name
+modules/slicerheart/CardiacDeviceSimulator/CMakeLists.txt,build system reads it by name
+modules/slicerheart/CardiacDeviceSimulator/CardiacDeviceSimulatorUtils/__init__.py,Python tooling finds it by name
+modules/slicerheart/CardiacDeviceSimulator/CardiacDeviceSimulatorUtils/devices.py,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/CardiacDeviceSimulator/Resources/Icons/icons.psd,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/CardiacDeviceSimulator/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/CardiacDeviceSimulator/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/CardiacDeviceSimulatorExtender/CMakeLists.txt,build system reads it by name
+modules/slicerheart/CardiacDeviceSimulatorExtender/CardiacSimulatorDevices/__init__.py,Python tooling finds it by name
+modules/slicerheart/CardiacDeviceSimulatorExtender/CardiacSimulatorDevices/devices.py,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/CardiacDeviceSimulatorExtender/Resources/Icons/icons.psd,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/CartoExport/CMakeLists.txt,build system reads it by name
+modules/slicerheart/CartoExport/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/CartoExport/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ConformalTextureMapping/CMakeLists.txt,build system reads it by name
+modules/slicerheart/DicomUltrasoundPlugin/CMakeLists.txt,build system reads it by name
+modules/slicerheart/Docs/OrificeArea.png,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/Docs/Philips4dUsDicomPatcher.png,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/EAMapReader/CMakeLists.txt,build system reads it by name
+modules/slicerheart/EchoVolumeRender/CMakeLists.txt,build system reads it by name
+modules/slicerheart/EchoVolumeRender/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/EchoVolumeRender/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/FEBioMeshIO/CMakeLists.txt,build system reads it by name
+modules/slicerheart/FluoroFlowCalculator/CMakeLists.txt,build system reads it by name
+modules/slicerheart/FluoroFlowCalculator/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/FluoroFlowCalculator/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/GeUsMovieReader/CMakeLists.txt,build system reads it by name
+modules/slicerheart/GeUsMovieReader/Logic/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ImportExportSimulationModel/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ImportMimics/CMakeLists.txt,build system reads it by name
+modules/slicerheart/KretzFileReader/CMakeLists.txt,build system reads it by name
+modules/slicerheart/KretzFileReader/Logic/CMakeLists.txt,build system reads it by name
+modules/slicerheart/LICENSE,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/LeafletAnalysis/CMakeLists.txt,build system reads it by name
+modules/slicerheart/LeafletAnalysis/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/LeafletAnalysis/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/LeafletMoldGenerator/CMakeLists.txt,build system reads it by name
+modules/slicerheart/LeafletMoldGenerator/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/LeafletMoldGenerator/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/OrificeArea/CMakeLists.txt,build system reads it by name
+modules/slicerheart/OrificeArea/Resources/Icons/OrificeArea.png,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/OrificeArea/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/OrificeArea/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/PDAQuantification/CMakeLists.txt,build system reads it by name
+modules/slicerheart/PDAQuantification/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/PDAQuantification/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/PhaseSymmetryFilter/CMakeLists.txt,build system reads it by name
+modules/slicerheart/Philips4dUsDicomPatcher/CMakeLists.txt,build system reads it by name
+modules/slicerheart/Philips4dUsDicomPatcher/Resources/Icons/Philips4dUsDicomPatcher.png,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/Philips4dUsDicomPatcher/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/Philips4dUsDicomPatcher/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/Philips4dUsReader/CMakeLists.txt,build system reads it by name
+modules/slicerheart/Philips4dUsReader/Logic/CMakeLists.txt,build system reads it by name
+modules/slicerheart/README.md,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/Reconstruct4DCineMRI/CMakeLists.txt,build system reads it by name
+modules/slicerheart/Reconstruct4DCineMRI/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/Reconstruct4DCineMRI/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/TCAVValveSimulator/CMakeLists.txt,build system reads it by name
+modules/slicerheart/TCAVValveSimulator/Resources/Icons/Icons.psd,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/TCAVValveSimulator/TCAVDevices/__init__.py,Python tooling finds it by name
+modules/slicerheart/TCAVValveSimulator/TCAVDevices/devices.py,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/TCAVValveSimulator/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/TCAVValveSimulator/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/TomTecUcdPlugin/CMakeLists.txt,build system reads it by name
+modules/slicerheart/UltrasoundImage3dReader/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveAnnulusAnalysis/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveAnnulusAnalysis/HeartValveLib/__init__.py,Python tooling finds it by name
+modules/slicerheart/ValveAnnulusAnalysis/HeartValveLib/helpers.py,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/ValveAnnulusAnalysis/Resources/Icons/CAVC.png,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/ValveAnnulusAnalysis/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveAnnulusAnalysis/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveBatchExport/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveBatchExport/HeartValveBatchAnalysis/__init__.py,Python tooling finds it by name
+modules/slicerheart/ValveBatchExport/ValveBatchExportRules/__init__.py,Python tooling finds it by name
+modules/slicerheart/ValveBatchExport/ValveBatchExportRules/base.py,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/ValveClipDeviceSimulator/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveClipDeviceSimulator/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveClipDeviceSimulator/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveClipDeviceSimulator/ValveClipDevices/__init__.py,Python tooling finds it by name
+modules/slicerheart/ValveClipDeviceSimulator/ValveClipDevices/devices.py,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/ValveFemExport/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveFemExport/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveFemExport/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveMoldCreator/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveMoldCreator/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveMoldCreator/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValvePapillaryAnalysis/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValvePapillaryAnalysis/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValvePapillaryAnalysis/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveQuantification/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveQuantification/Resources/MeasurementPreset/Cavc.png,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/ValveQuantification/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveQuantification/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveQuantification/ValveQuantificationLib/__init__.py,Python tooling finds it by name
+modules/slicerheart/ValveSegmentation/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveSegmentation/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveSegmentation/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveView/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveView/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/ValveView/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/VirtualCathLab/CMakeLists.txt,build system reads it by name
+modules/slicerheart/VirtualCathLab/Testing/CMakeLists.txt,build system reads it by name
+modules/slicerheart/VirtualCathLab/Testing/Python/CMakeLists.txt,build system reads it by name
+modules/slicerheart/VirtualCathLab/VirtualCathLabDevices/__init__.py,Python tooling finds it by name
+modules/slicerheart/VirtualCathLab/VirtualCathLabDevices/devices.py,CMake / 3D Slicer project: file names are build targets and Slicer module names
+modules/slicerheart/VirtualCathLab/VirtualCathLabLib/__init__.py,Python tooling finds it by name

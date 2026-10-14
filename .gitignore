@@ -1,105 +1,29 @@
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-.venv/
-venv/
-env/
-ENV/
-*.egg-info/
-.pytest_cache/
-.ruff_cache/
-.mypy_cache/
-.hypothesis/
-htmlcov/
-.coverage
-.coverage.*
-coverage.xml
-
-# Node
-node_modules/
-dist/
-build/
-.vite/
-*.tsbuildinfo
-
-# Env / secrets — NEVER commit
+# Local credentials and runtime artifacts are never published.
 .env
 .env.*
-!.env.example
+!**/.env.example
 *.pem
 *.key
-
-# Editors
-.vscode/
-.idea/
-*.swp
-*.swo
-.DS_Store
-Thumbs.db
-
-# Docker
-.docker/
-
-# OS / misc
-*.log
-*.bak
-*.tmp
-.aider*
-
-# Claude Code agent metadata (local only)
+*.p12
+*.pfx
 .claude/
-.claude
-**/.claude/
-CLAUDE.md
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+__pycache__/
+*.py[cod]
+node_modules/
+.venv/
+venv/
+*.log
+*.tmp
+*.bak
 
-# Synthea local outputs (we only commit hand-curated seeds)
-backend/app/synthea/output/
-
-# Generated OpenAPI types
-frontend/src/lib/types.gen.ts
-
-# Legacy screenshot dump (583 MB; not part of the product)
-PPT-images-archive/
-
-# CloudShell-side Lambda artefact (rebuilt by ops/aws/_build_qr.py-style flow)
-ops/aws/function.zip
-
-# OncoTwin research cache (synthetic cohort datasets; regenerated deterministically)
-.cache/
-.playwright-cli/
-
-# Local verification logs, screenshots, process files and generated demo artifacts
-/output/
-
-# Local public research corpus and owner-scoped query artifacts
-backend/data/cardiotwin_global.sqlite3*
-
-# Imported hackathon source trees: do not publish local credentials or build output
-**/.env
-**/.env.*
-!**/.env.example
-case-twin-main/.env.production
+# Credential-bearing deployment archive: retain locally only.
+/CARDIO-INTELLIGENCE/modules/heartai/src/application.zip
+# Installed Python environments imported with specialist snapshots.
 **/treehacks/
-**/node_modules/
-**/.next/
-**/.expo/
-**/.expo-export-check/
-**/dist/
-**/build/
-**/.turbo/
-**/.vercel/
-**/coverage/
-**/__pycache__/
-**/.pytest_cache/
-**/.mypy_cache/
-**/.ruff_cache/
-**/.venv/
-**/venv/
-**/out/
-**/tmp/
-**/temp/
-**/.cache/
-**/cache/
+*.tsbuildinfo
+# Rebuildable imported web bundles and generated reports.
+/CARDIO-INTELLIGENCE/modules/arterylens/frontend/dist/
+/CARDIO-INTELLIGENCE/modules/cardioscope/output/

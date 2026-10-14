@@ -1,0 +1,16 @@
+title = "CARDIOTON publication scan"
+
+[extend]
+useDefault = true
+
+# Exact non-secret matches reviewed in the consolidated snapshots.
+[[rules]]
+id = "generic-api-key"
+[rules.allowlist]
+regexTarget = "match"
+regexes = [
+  '\bkey == "relative_humidity_2m"',
+  'credentials,\s+signature/anchor',
+  '(?:development_access\.json|access_lock(?:_file)?_sha256|api(?:\.test)?\.ts|test_api\.py)": "[a-f0-9]{64}"',
+  'GROQ_API_KEY", "gsk_test1234567890abcdef"',
+]

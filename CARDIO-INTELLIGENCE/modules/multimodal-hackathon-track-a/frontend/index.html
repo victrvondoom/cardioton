@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Coronary Risk Explorer</title>
+  <meta name="description" content="Explainable estimates of coronary artery stenosis (LAD, LCX, RCA) from routine clinical data, shown on 3D anatomy. Decision support and education only.">
+  <meta property="og:title" content="Coronary Risk Explorer">
+  <meta property="og:description" content="See coronary risk, artery by artery: calibrated, explainable estimates on 3D anatomy.">
+  <meta name="theme-color" content="#0d0b0b">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231b1515'/%3E%3Cpath d='M5.5 17.5h5l2.2-5.5 3.6 10 3-7.5 1.7 3h5.5' fill='none' stroke='%23ea6a4f' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/multimodal_hackathon_track_a__frontend_css__landing.css">
+  <script src="js/deps.js"></script>   <!-- CDN when reachable, /vendor otherwise -->
+</head>
+<body class="landing">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <canvas id="stage" aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="nav">
+    <a class="brand" href="#top">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect x="0.75" y="0.75" width="30.5" height="30.5" rx="9"/><path d="M5.5 17.5h5l2.2-5.5 3.6 10 3-7.5 1.7 3h5.5"/></svg>
+      <span class="brand-name">Coronary Risk Explorer</span>
+    </a>
+    <nav aria-label="Sections">
+      <a href="#anatomy">Anatomy</a>
+      <a href="#method">Method</a>
+      <a href="#explain">Explanations</a>
+      <a href="#evidence">Evidence</a>
+    </nav>
+    <button class="icon-btn sound-btn" id="sound-btn" type="button" aria-pressed="false" aria-label="Heartbeat sound"><svg viewBox="0 0 24 24" aria-hidden="true"></svg></button>
+    <a class="btn btn-small" href="app.html">Open the explorer</a>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <p class="eyebrow" data-reveal>Stenosis ≥ 50% · LAD · LCX · RCA</p>
+        <h1 class="display">
+          <span class="line"><span data-reveal>See coronary risk,</span></span>
+          <span class="line"><em data-reveal>artery by artery.</em></span>
+        </h1>
+        <p class="lede" data-reveal>Four models read 54 routine measurements (symptoms, ECG, echocardiography and blood tests) and estimate the chance of significant narrowing in each major coronary artery. The estimates are drawn onto real 3D anatomy and explained measurement by measurement.</p>
+        <div class="cta-row" data-reveal>
+          <a class="btn" href="app.html">Open the explorer <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+          <a class="link" href="#anatomy">How it reads the heart</a>
+        </div>
+      </div>
+
+      <aside class="readout glass" id="readout" aria-live="polite" data-reveal>
+        <div class="readout-head">
+          <span class="mono tiny">Example patient</span>
+          <span class="tiny muted" id="readout-note">Development cohort · outcome hidden</span>
+        </div>
+        <div class="readout-cad">
+          <span class="muted small">Overall CAD</span>
+          <span class="mono big" id="readout-cad">—</span>
+        </div>
+        <ul class="readout-rows" id="readout-rows"></ul>
+        <div class="tryit" id="tryit" aria-busy="true"></div>
+      </aside>
+
+      <div class="ecg" aria-hidden="true">
+        <svg id="ecg-svg" preserveAspectRatio="none"><path id="ecg-path"/></svg>
+        <span class="mono tiny bpm"><i></i><span id="bpm">72</span> bpm</span>
+      </div>
+
+      <div class="disclaimer-bar" role="note">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.7h.01"/></svg>
+        <p><strong>For decision support and education only.</strong> Not a diagnostic device or a substitute for clinical assessment or coronary angiography.</p>
+      </div>
+    </section>
+
+    <section class="anatomy" id="anatomy" aria-labelledby="anatomy-title">
+      <div class="section-head">
+        <p class="eyebrow">01 · Anatomy</p>
+        <h2 id="anatomy-title">Three arteries feed <em>the heart muscle.</em></h2>
+        <p class="muted">The model gives one estimate per artery system. Scroll to trace each one.</p>
+      </div>
+      <ol class="steps" id="steps"></ol>
+    </section>
+
+    <section class="method" id="method" aria-labelledby="method-title">
+      <div class="method-grid">
+        <div class="section-head sticky">
+          <p class="eyebrow">02 · Method</p>
+          <h2 id="method-title">From a clinic visit to a <em>calibrated</em> estimate.</h2>
+          <dl class="facts">
+            <div><dt class="mono" data-count="303">303</dt><dd>patients, Z-Alizadeh Sani cohort</dd></div>
+            <div><dt class="mono" data-count="54">54</dt><dd>routine measurements</dd></div>
+            <div><dt class="mono" data-count="4">4</dt><dd>models</dd></div>
+          </dl>
+        </div>
+        <ol class="timeline">
+          <svg class="timeline-line" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 2 100"><path d="M1 0V100"/></svg>
+          <li><span class="mono num">01</span><h3>Routine data</h3><p>Demographics, symptoms, ECG, echocardiography and laboratory values from one clinic visit. No imaging of the arteries themselves.</p></li>
+          <li><span class="mono num">02</span><h3>Four models</h3><p>One for overall coronary artery disease (XGBoost) and one per artery (random forests), each chosen by nested cross-validation.</p></li>
+          <li><span class="mono num">03</span><h3>Calibration</h3><p>Platt scaling fitted on development data only, so a 70% estimate means roughly seven in ten similar patients had the narrowing.</p></li>
+          <li><span class="mono num">04</span><h3>Explanation</h3><p>Exact SHAP values show which measurements pushed each estimate up or down, next to the patient's value and its normal range.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="explain" id="explain" aria-labelledby="explain-title">
+      <div class="explain-grid">
+        <div class="section-head">
+          <p class="eyebrow">03 · Explanations</p>
+          <h2 id="explain-title">Every estimate <em>shows its reasons.</em></h2>
+          <p class="muted" id="explain-caption">Loading the example patient's explanation…</p>
+          <div class="key tiny"><span><i class="raise"></i>Raises the estimate</span><span><i class="lower"></i>Lowers it</span></div>
+        </div>
+        <div class="glass shap" id="shap" role="list"></div>
+      </div>
+    </section>
+
+    <section class="evidence" id="evidence" aria-labelledby="evidence-title">
+      <div class="section-head">
+        <p class="eyebrow">04 · Evidence</p>
+        <h2 id="evidence-title">Tested once, on patients it <em>had never seen.</em></h2>
+        <p class="muted">61 of the 303 patients were set aside before any modelling and scored a single time. ROC-AUC with 95% bootstrap intervals.</p>
+      </div>
+      <div class="evidence-grid" id="evidence-grid"></div>
+    </section>
+
+    <section class="closing" aria-labelledby="closing-title">
+      <h2 id="closing-title">Explore a patient <em>in 3D.</em></h2>
+      <p class="muted">Enter measurements, rotate the heart, choose your decision threshold and see why each estimate moved.</p>
+      <a class="btn" href="app.html">Open the explorer <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><strong>Disclaimer.</strong> For decision support and education only. Not a medical diagnostic device and not a substitute for clinical assessment or diagnostic imaging. Probabilities are model estimates for patients similar to a single-centre referral cohort.</p>
+    <p class="muted">Anatomy: BodyParts3D, © The Database Center for Life Science, licensed under CC Attribution 4.0 International (meshes simplified and recoloured). Data: Z-Alizadeh Sani dataset, UCI Machine Learning Repository. Multimodal AI Hackathon 2026 · Track A.</p>
+  </footer>
+
+  <script>startApp('js/landing.js', ['gsap/index.js', 'gsap/ScrollTrigger.js']);</script>
+</body>
+</html>

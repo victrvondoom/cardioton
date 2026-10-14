@@ -1,0 +1,60 @@
+{
+  "form_name": "Tricare Medical Form",
+  "pdf_template": "src/application_images/tricare.pdf",
+  "description": "Tricare medical billing form with 38 fields",
+  "field_mapping": {
+    "patient": {
+      "name": "Patient Name",
+      "dob": "Date of Birth",
+      "ssn": "Patient SSN",
+      "medicare_id": "Patient DBN"
+    },
+    "provider": {
+      "name": "Provider Name",
+      "npi": "Provider Tax Identification Number (TIN)"
+    },
+    "service_info": {
+      "claim_icn": "Claim Internal Control Number (ICN)",
+      "diagnosis_codes": "Diagnosis code(s)",
+      "place_of_service": "Place of Service"
+    },
+    "diagnoses": {
+      "diagnosis_1": "Diagnosis Code 1",
+      "diagnosis_2": "Diagnosis Code 2",
+      "diagnosis_3": "Diagnosis Code 3",
+      "diagnosis_4": "Diagnosis Code 4"
+    },
+    "procedures": {
+      "code_1": "HCPCS/CPT Code 1",
+      "desc_1": "Description 1",
+      "qty_1": "Quantity 1",
+      "notes_1": "Notes 1",
+      "code_2": "HCPCS/CPT Code 2",
+      "desc_2": "Description 2",
+      "qty_2": "Quantity 2",
+      "notes_2": "Notes 2",
+      "code_3": "HCPCS/CPT Code 3",
+      "desc_3": "Description 3",
+      "qty_3": "Quantity 3",
+      "notes_3": "Notes 3",
+      "code_4": "HCPCS/CPT Code 4",
+      "desc_4": "Description 4",
+      "qty_4": "Quantity 4",
+      "notes_4": "Notes 4"
+    },
+    "additional": {
+      "additional_info": "Additional Information",
+      "start_date": "Start date",
+      "end_date": "End date",
+      "authorization_date": "Authroization Date"
+    }
+  },
+  "special_fields": {
+    "dme_item": "DME Item",
+    "o2_levels": "O2 levels",
+    "gestational_age": "gestational age",
+    "corresponding_diagnosis": "corresponding diagnosis code",
+    "length_of_need": "Length of need",
+    "physician_signature": "Physician Signature"
+  }
+}

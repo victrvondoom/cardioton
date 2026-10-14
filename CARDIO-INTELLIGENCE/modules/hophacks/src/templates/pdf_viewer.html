@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Viewer - MedRelay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfjs-dist/2.16.105/pdf.min.js"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        {% include 'navigation.html' %}
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div
+            class="mb-4 p-4 rounded-md {% if category == 'error' %}bg-red-50 text-red-700 border border-red-200{% elif category == 'success' %}bg-green-50 text-green-700 border border-green-200{% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <!-- PDF Viewer Header -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">PDF Viewer</h2>
+                <p class="text-gray-600">CMS-1500 Form - {{ form.timestamp.strftime('%B %d, %Y') if form and
+                    form.timestamp else 'Unknown Date' }}</p>
+            </div>
+            <div class="flex space-x-2">
+                <a href="{{ url_for('my_forms') }}"
+                    class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md font-medium">
+                    ← Back to Forms
+                </a>
+                <a href="{{ url_for('download_form', visit_id=visit_id) }}"
+                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md font-medium">
+                    Download PDF
+                </a>
+                <button id="saveBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+
+        <!-- PDF Viewer Controls -->
+        <div class="bg-white rounded-lg shadow-lg p-4 mb-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button id="prevPage" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm">
+                        Previous
+                    </button>
+                    <span id="pageInfo" class="text-sm text-gray-600">Page 1 of 1</span>
+                    <button id="nextPage" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm">
+                        Next
+                    </button>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="zoomOut" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm">
+                        Zoom Out
+                    </button>
+                    <span id="zoomLevel" class="text-sm text-gray-600">100%</span>
+                    <button id="zoomIn" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm">
+                        Zoom In
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PDF Container -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div id="pdfContainer" class="relative">
+                <canvas id="pdfCanvas" class="w-full"></canvas>
+                <div id="loadingMessage" class="absolute inset-0 flex items-center justify-center bg-gray-50">
+                    <div class="text-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                        <p class="text-gray-600">Loading PDF...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PDF.js worker setup
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdfjs-dist/2.16.105/pdf.worker.min.js';
+
+        class PDFViewer {
+            constructor(visitId) {
+                this.visitId = visitId;
+                this.pdfDoc = null;
+                this.pageNum = 1;
+                this.scale = 1.0;
+                this.canvas = document.getElementById('pdfCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.pdfData = null; // Cache PDF data
+
+                this.init();
+            }
+
+            async init() {
+                try {
+                    console.log('Initializing PDF viewer...');
+                    await this.loadPDF();
+                    console.log('PDF loaded successfully');
+
+                    this.setupEventListeners();
+                    console.log('Event listeners set up');
+
+                    await this.renderPage();
+                    console.log('Page rendered successfully');
+
+                    this.hideLoading();
+                    console.log('PDF viewer initialized successfully');
+                } catch (error) {
+                    console.error('Error initializing PDF viewer:', error);
+                    this.showError(`Failed to load PDF: ${error.message}`);
+                }
+            }
+
+            async loadPDF() {
+                const pdfUrl = `/view-form/${this.visitId}`;
+                console.log('Loading PDF from URL:', pdfUrl);
+
+                try {
+                    // Fetch PDF data and cache it
+                    const response = await fetch(pdfUrl);
+                    console.log('Fetch response status:', response.status);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    this.pdfData = await response.arrayBuffer();
+                    console.log('PDF data loaded, size:', this.pdfData.byteLength);
+
+                    // Load PDF document with simpler configuration
+                    const loadingTask = pdfjsLib.getDocument({
+                        data: this.pdfData
+                    });
+
+                    this.pdfDoc = await loadingTask.promise;
+                    console.log('PDF document loaded, pages:', this.pdfDoc.numPages);
+
+                    // Update page info
+                    document.getElementById('pageInfo').textContent = `Page ${this.pageNum} of ${this.pdfDoc.numPages}`;
+
+                } catch (error) {
+                    console.error('Error loading PDF:', error);
+                    throw error;
+                }
+            }
+
+            async renderPage() {
+                try {
+                    const page = await this.pdfDoc.getPage(this.pageNum);
+                    const viewport = page.getViewport({ scale: this.scale });
+
+                    this.canvas.height = viewport.height;
+                    this.canvas.width = viewport.width;
+
+                    const renderContext = {
+                        canvasContext: this.ctx,
+                        viewport: viewport
+                    };
+
+                    await page.render(renderContext).promise;
+
+                    // Update UI
+                    document.getElementById('pageInfo').textContent = `Page ${this.pageNum} of ${this.pdfDoc.numPages}`;
+                    document.getElementById('zoomLevel').textContent = `${Math.round(this.scale * 100)}%`;
+
+                } catch (error) {
+                    console.error('Error rendering page:', error);
+                    this.showError('Failed to render PDF page');
+                }
+            }
+
+            setupEventListeners() {
+                // Page navigation
+                document.getElementById('prevPage').addEventListener('click', () => {
+                    if (this.pageNum > 1) {
+                        this.pageNum--;
+                        this.renderPage();
+                    }
+                });
+
+                document.getElementById('nextPage').addEventListener('click', () => {
+                    if (this.pageNum < this.pdfDoc.numPages) {
+                        this.pageNum++;
+                        this.renderPage();
+                    }
+                });
+
+                // Zoom controls
+                document.getElementById('zoomIn').addEventListener('click', () => {
+                    this.scale = Math.min(this.scale * 1.2, 3.0);
+                    this.renderPage();
+                });
+
+                document.getElementById('zoomOut').addEventListener('click', () => {
+                    this.scale = Math.max(this.scale / 1.2, 0.5);
+                    this.renderPage();
+                });
+
+                // Save button
+                document.getElementById('saveBtn').addEventListener('click', () => {
+                    this.savePDF();
+                });
+            }
+
+            async savePDF() {
+                try {
+                    if (!this.pdfData) {
+                        throw new Error('No PDF data available');
+                    }
+
+                    // For now, just show a message that save functionality would be implemented
+                    alert('Save functionality would be implemented here to send modified PDF back to server');
+
+                    // Future implementation would involve:
+                    // 1. Capturing form field changes
+                    // 2. Modifying PDF with pdf-lib
+                    // 3. Sending updated PDF back to server
+
+                } catch (error) {
+                    console.error('Error saving PDF:', error);
+                    alert('Error saving PDF changes');
+                }
+            }
+
+            hideLoading() {
+                document.getElementById('loadingMessage').style.display = 'none';
+            }
+
+            showError(message) {
+                const loadingElement = document.getElementById('loadingMessage');
+                loadingElement.innerHTML = `
+                    <div class="text-center">
+                        <svg class="w-12 h-12 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <p class="text-red-600">${message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize PDF viewer when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const visitId = '{{ visit_id }}';
+            console.log('Initializing PDF viewer for visit ID:', visitId);
+            new PDFViewer(visitId);
+        });
+    </script>
+</body>
+
+</html>

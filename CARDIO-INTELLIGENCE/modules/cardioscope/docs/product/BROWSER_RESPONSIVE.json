@@ -1,0 +1,50 @@
+[
+  {
+    "matrices": 4,
+    "metrics": 4,
+    "page": "evidence",
+    "scrollWidth": 1440,
+    "width": 1440
+  },
+  {
+    "canvasHeight": 460,
+    "fieldsLabeled": true,
+    "outputs": 4,
+    "page": "prediction",
+    "profile": "328ca73cba6befc4de6e8726096ffe2be7f639ce645b6e6b658b1a964468def3",
+    "scrollWidth": 1440,
+    "width": 1440
+  },
+  {
+    "matrices": 4,
+    "metrics": 4,
+    "page": "evidence",
+    "scrollWidth": 1024,
+    "width": 1024
+  },
+  {
+    "canvasHeight": 460,
+    "fieldsLabeled": true,
+    "outputs": 4,
+    "page": "prediction",
+    "profile": "328ca73cba6befc4de6e8726096ffe2be7f639ce645b6e6b658b1a964468def3",
+    "scrollWidth": 1024,
+    "width": 1024
+  },
+  {
+    "matrices": 4,
+    "metrics": 4,
+    "page": "evidence",
+    "scrollWidth": 390,
+    "width": 390
+  },
+  {
+    "canvasHeight": 400,
+    "fieldsLabeled": true,
+    "outputs": 4,
+    "page": "prediction",
+    "profile": "328ca73cba6befc4de6e8726096ffe2be7f639ce645b6e6b658b1a964468def3",
+    "scrollWidth": 390,
+    "width": 390
+  }
+]

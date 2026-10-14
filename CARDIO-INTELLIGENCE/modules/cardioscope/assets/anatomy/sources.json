@@ -1,0 +1,23 @@
+{
+  "archive_url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/partof_BP3D_4.0_obj_99.zip",
+  "attribution": "BodyParts3D, \u00a9 The Database Center for Life Science licensed under CC Attribution 4.0 International",
+  "license": "CC BY 4.0",
+  "schema_version": 1,
+  "sources": {
+    "elements": {
+      "bytes": 651179,
+      "sha256": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea",
+      "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/partof_element_parts.txt"
+    },
+    "license": {
+      "bytes": 14694,
+      "sha256": "1a0d7fd58760178373d4a386c6d251a4dd08af779ea5a51571fcd0f76b4fcb9c",
+      "url": "https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html"
+    },
+    "parts": {
+      "bytes": 59351,
+      "sha256": "9224080557053e6f1322f1e13ab27f0ecde0db19bb3b505f0631afad230eeebd",
+      "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/partof_parts_list_e.txt"
+    }
+  }
+}

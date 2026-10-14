@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "seed": 42,
+  "holdout_fraction": 0.2,
+  "stratify_target": "CAD",
+  "outer_folds": 5,
+  "inner_folds": 3,
+  "grouping": "identical_predictor_values; add known patient IDs if an authoritative source becomes available"
+}

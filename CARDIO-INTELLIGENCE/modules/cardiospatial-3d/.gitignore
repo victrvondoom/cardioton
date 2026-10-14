@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+.vscode/
+.idea/
+test_output.py
+test_new_features.py
+search_repos.py
+uci_extracted/

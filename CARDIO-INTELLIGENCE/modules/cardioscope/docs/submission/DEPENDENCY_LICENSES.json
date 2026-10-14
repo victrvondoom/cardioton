@@ -1,0 +1,2924 @@
+{
+  "captured_at_utc": "2026-10-03T18:31:29.309560+00:00",
+  "limitation": "Installed metadata is an inventory, not a license grant; preserve original licenses/notices for redistributed packages and images.",
+  "npm": [
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@asamuzakjp/css-color",
+      "package_path": "node_modules/@asamuzakjp/css-color",
+      "version": "5.1.11"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@asamuzakjp/dom-selector",
+      "package_path": "node_modules/@asamuzakjp/dom-selector",
+      "version": "7.1.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@asamuzakjp/generational-cache",
+      "package_path": "node_modules/@asamuzakjp/generational-cache",
+      "version": "1.0.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@asamuzakjp/nwsapi",
+      "package_path": "node_modules/@asamuzakjp/nwsapi",
+      "version": "2.3.9"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@babel/code-frame",
+      "package_path": "node_modules/@babel/code-frame",
+      "version": "7.29.7"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@babel/helper-validator-identifier",
+      "package_path": "node_modules/@babel/helper-validator-identifier",
+      "version": "7.29.7"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@babel/runtime",
+      "package_path": "node_modules/@babel/runtime",
+      "version": "7.29.7"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@bramus/specificity",
+      "package_path": "node_modules/@bramus/specificity",
+      "version": "2.4.2"
+    },
+    {
+      "dev": true,
+      "license": "MIT-0",
+      "license_notice_files": [
+        "LICENSE.md"
+      ],
+      "name": "@csstools/color-helpers",
+      "package_path": "node_modules/@csstools/color-helpers",
+      "version": "6.1.2"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.md"
+      ],
+      "name": "@csstools/css-calc",
+      "package_path": "node_modules/@csstools/css-calc",
+      "version": "3.4.2"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.md"
+      ],
+      "name": "@csstools/css-color-parser",
+      "package_path": "node_modules/@csstools/css-color-parser",
+      "version": "4.2.5"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.md"
+      ],
+      "name": "@csstools/css-parser-algorithms",
+      "package_path": "node_modules/@csstools/css-parser-algorithms",
+      "version": "4.0.2"
+    },
+    {
+      "dev": true,
+      "license": "MIT-0",
+      "license_notice_files": [
+        "LICENSE.md"
+      ],
+      "name": "@csstools/css-syntax-patches-for-csstree",
+      "package_path": "node_modules/@csstools/css-syntax-patches-for-csstree",
+      "version": "1.1.15"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.md"
+      ],
+      "name": "@csstools/css-tokenizer",
+      "package_path": "node_modules/@csstools/css-tokenizer",
+      "version": "4.0.2"
+    },
+    {
+      "dev": false,
+      "license": "Apache-2.0",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@dimforge/rapier3d-compat",
+      "package_path": "node_modules/@dimforge/rapier3d-compat",
+      "version": "0.12.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@exodus/bytes",
+      "package_path": "node_modules/@exodus/bytes",
+      "version": "1.16.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@jridgewell/sourcemap-codec",
+      "package_path": "node_modules/@jridgewell/sourcemap-codec",
+      "version": "1.6.0"
+    },
+    {
+      "dev": false,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@mediapipe/tasks-vision",
+      "package_path": "node_modules/@mediapipe/tasks-vision",
+      "version": "0.10.17"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@monogrid/gainmap-js",
+      "package_path": "node_modules/@monogrid/gainmap-js",
+      "version": "3.4.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@oxc-project/types",
+      "package_path": "node_modules/@oxc-project/types",
+      "version": "0.152.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@react-three/drei",
+      "package_path": "node_modules/@react-three/drei",
+      "version": "10.7.9"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@react-three/fiber",
+      "package_path": "node_modules/@react-three/fiber",
+      "version": "9.8.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-android-arm-eabi",
+      "package_path": "node_modules/@rolldown/binding-android-arm-eabi",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-android-arm64",
+      "package_path": "node_modules/@rolldown/binding-android-arm64",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-darwin-arm64",
+      "package_path": "node_modules/@rolldown/binding-darwin-arm64",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-darwin-x64",
+      "package_path": "node_modules/@rolldown/binding-darwin-x64",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-freebsd-x64",
+      "package_path": "node_modules/@rolldown/binding-freebsd-x64",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-linux-arm-gnueabihf",
+      "package_path": "node_modules/@rolldown/binding-linux-arm-gnueabihf",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-linux-arm64-gnu",
+      "package_path": "node_modules/@rolldown/binding-linux-arm64-gnu",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-linux-arm64-musl",
+      "package_path": "node_modules/@rolldown/binding-linux-arm64-musl",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-linux-ppc64-gnu",
+      "package_path": "node_modules/@rolldown/binding-linux-ppc64-gnu",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-linux-s390x-gnu",
+      "package_path": "node_modules/@rolldown/binding-linux-s390x-gnu",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-linux-x64-gnu",
+      "package_path": "node_modules/@rolldown/binding-linux-x64-gnu",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-linux-x64-musl",
+      "package_path": "node_modules/@rolldown/binding-linux-x64-musl",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-openharmony-arm64",
+      "package_path": "node_modules/@rolldown/binding-openharmony-arm64",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-win32-arm64-msvc",
+      "package_path": "node_modules/@rolldown/binding-win32-arm64-msvc",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "@rolldown/binding-win32-x64-msvc",
+      "package_path": "node_modules/@rolldown/binding-win32-x64-msvc",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@rolldown/pluginutils",
+      "package_path": "node_modules/@rolldown/pluginutils",
+      "version": "1.0.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@standard-schema/spec",
+      "package_path": "node_modules/@standard-schema/spec",
+      "version": "1.1.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@testing-library/dom",
+      "package_path": "node_modules/@testing-library/dom",
+      "version": "10.4.2"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@testing-library/react",
+      "package_path": "node_modules/@testing-library/react",
+      "version": "16.3.3"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@tweenjs/tween.js",
+      "package_path": "node_modules/@tweenjs/tween.js",
+      "version": "23.1.3"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@types/aria-query",
+      "package_path": "node_modules/@types/aria-query",
+      "version": "5.0.4"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@types/chai",
+      "package_path": "node_modules/@types/chai",
+      "version": "5.2.3"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@types/deep-eql",
+      "package_path": "node_modules/@types/deep-eql",
+      "version": "4.0.2"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@types/draco3d",
+      "package_path": "node_modules/@types/draco3d",
+      "version": "1.4.10"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@types/estree",
+      "package_path": "node_modules/@types/estree",
+      "version": "1.0.9"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@types/node",
+      "package_path": "node_modules/@types/node",
+      "version": "26.6.3"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@types/offscreencanvas",
+      "package_path": "node_modules/@types/offscreencanvas",
+      "version": "2019.7.3"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@types/react",
+      "package_path": "node_modules/@types/react",
+      "version": "19.3.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@types/react-dom",
+      "package_path": "node_modules/@types/react-dom",
+      "version": "19.3.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@types/react-reconciler",
+      "package_path": "node_modules/@types/react-reconciler",
+      "version": "0.28.9"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@types/stats.js",
+      "package_path": "node_modules/@types/stats.js",
+      "version": "0.17.4"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@types/three",
+      "package_path": "node_modules/@types/three",
+      "version": "0.186.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@types/webxr",
+      "package_path": "node_modules/@types/webxr",
+      "version": "0.5.24"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-aix-ppc64",
+      "package_path": "node_modules/@typescript/typescript-aix-ppc64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [
+        "LICENSE",
+        "NOTICE.txt"
+      ],
+      "name": "@typescript/typescript-darwin-arm64",
+      "package_path": "node_modules/@typescript/typescript-darwin-arm64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-darwin-x64",
+      "package_path": "node_modules/@typescript/typescript-darwin-x64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-freebsd-arm64",
+      "package_path": "node_modules/@typescript/typescript-freebsd-arm64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-freebsd-x64",
+      "package_path": "node_modules/@typescript/typescript-freebsd-x64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-linux-arm",
+      "package_path": "node_modules/@typescript/typescript-linux-arm",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-linux-arm64",
+      "package_path": "node_modules/@typescript/typescript-linux-arm64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-linux-loong64",
+      "package_path": "node_modules/@typescript/typescript-linux-loong64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-linux-mips64el",
+      "package_path": "node_modules/@typescript/typescript-linux-mips64el",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-linux-ppc64",
+      "package_path": "node_modules/@typescript/typescript-linux-ppc64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-linux-riscv64",
+      "package_path": "node_modules/@typescript/typescript-linux-riscv64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-linux-s390x",
+      "package_path": "node_modules/@typescript/typescript-linux-s390x",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-linux-x64",
+      "package_path": "node_modules/@typescript/typescript-linux-x64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-netbsd-arm64",
+      "package_path": "node_modules/@typescript/typescript-netbsd-arm64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-netbsd-x64",
+      "package_path": "node_modules/@typescript/typescript-netbsd-x64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-openbsd-arm64",
+      "package_path": "node_modules/@typescript/typescript-openbsd-arm64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-openbsd-x64",
+      "package_path": "node_modules/@typescript/typescript-openbsd-x64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-sunos-x64",
+      "package_path": "node_modules/@typescript/typescript-sunos-x64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-win32-arm64",
+      "package_path": "node_modules/@typescript/typescript-win32-arm64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "@typescript/typescript-win32-x64",
+      "package_path": "node_modules/@typescript/typescript-win32-x64",
+      "version": "7.0.2"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@use-gesture/core",
+      "package_path": "node_modules/@use-gesture/core",
+      "version": "10.3.1"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@use-gesture/react",
+      "package_path": "node_modules/@use-gesture/react",
+      "version": "10.3.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@vitejs/plugin-react",
+      "package_path": "node_modules/@vitejs/plugin-react",
+      "version": "6.1.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@vitest/expect",
+      "package_path": "node_modules/@vitest/expect",
+      "version": "4.1.11"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@vitest/mocker",
+      "package_path": "node_modules/@vitest/mocker",
+      "version": "4.1.11"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@vitest/pretty-format",
+      "package_path": "node_modules/@vitest/pretty-format",
+      "version": "4.1.11"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@vitest/runner",
+      "package_path": "node_modules/@vitest/runner",
+      "version": "4.1.11"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@vitest/snapshot",
+      "package_path": "node_modules/@vitest/snapshot",
+      "version": "4.1.11"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@vitest/spy",
+      "package_path": "node_modules/@vitest/spy",
+      "version": "4.1.11"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "@vitest/utils",
+      "package_path": "node_modules/@vitest/utils",
+      "version": "4.1.11"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "license"
+      ],
+      "name": "ansi-regex",
+      "package_path": "node_modules/ansi-regex",
+      "version": "5.0.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "license"
+      ],
+      "name": "ansi-styles",
+      "package_path": "node_modules/ansi-styles",
+      "version": "5.2.0"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "aria-query",
+      "package_path": "node_modules/aria-query",
+      "version": "5.3.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "assertion-error",
+      "package_path": "node_modules/assertion-error",
+      "version": "2.0.1"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "base64-js",
+      "package_path": "node_modules/base64-js",
+      "version": "1.5.1"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.txt"
+      ],
+      "name": "bidi-js",
+      "package_path": "node_modules/bidi-js",
+      "version": "1.1.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "buffer",
+      "package_path": "node_modules/buffer",
+      "version": "6.0.3"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "camera-controls",
+      "package_path": "node_modules/camera-controls",
+      "version": "3.1.2"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "chai",
+      "package_path": "node_modules/chai",
+      "version": "6.3.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "convert-source-map",
+      "package_path": "node_modules/convert-source-map",
+      "version": "2.0.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "cross-env",
+      "package_path": "node_modules/cross-env",
+      "version": "7.0.3"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "cross-spawn",
+      "package_path": "node_modules/cross-spawn",
+      "version": "7.0.6"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "css-tree",
+      "package_path": "node_modules/css-tree",
+      "version": "3.2.1"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "csstype",
+      "package_path": "node_modules/csstype",
+      "version": "3.2.3"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.txt"
+      ],
+      "name": "data-urls",
+      "package_path": "node_modules/data-urls",
+      "version": "7.0.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENCE.md"
+      ],
+      "name": "decimal.js",
+      "package_path": "node_modules/decimal.js",
+      "version": "10.6.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "license"
+      ],
+      "name": "dequal",
+      "package_path": "node_modules/dequal",
+      "version": "2.0.3"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "detect-gpu",
+      "package_path": "node_modules/detect-gpu",
+      "version": "5.0.70"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "detect-libc",
+      "package_path": "node_modules/detect-libc",
+      "version": "2.1.2"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.md"
+      ],
+      "name": "dom-accessibility-api",
+      "package_path": "node_modules/dom-accessibility-api",
+      "version": "0.5.16"
+    },
+    {
+      "dev": false,
+      "license": "Apache-2.0",
+      "license_notice_files": [],
+      "name": "draco3d",
+      "package_path": "node_modules/draco3d",
+      "version": "1.5.7"
+    },
+    {
+      "dev": true,
+      "license": "BSD-2-Clause",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "entities",
+      "package_path": "node_modules/entities",
+      "version": "8.1.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "es-module-lexer",
+      "package_path": "node_modules/es-module-lexer",
+      "version": "2.3.2"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "estree-walker",
+      "package_path": "node_modules/estree-walker",
+      "version": "3.0.3"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "expect-type",
+      "package_path": "node_modules/expect-type",
+      "version": "1.4.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "fdir",
+      "package_path": "node_modules/fdir",
+      "version": "6.5.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "fflate",
+      "package_path": "node_modules/fflate",
+      "version": "0.8.3"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "fsevents",
+      "package_path": "node_modules/fsevents",
+      "version": "2.3.3"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "glsl-noise",
+      "package_path": "node_modules/glsl-noise",
+      "version": "0.0.0"
+    },
+    {
+      "dev": false,
+      "license": "Apache-2.0",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "hls.js",
+      "package_path": "node_modules/hls.js",
+      "version": "1.7.3"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.txt"
+      ],
+      "name": "html-encoding-sniffer",
+      "package_path": "node_modules/html-encoding-sniffer",
+      "version": "6.0.0"
+    },
+    {
+      "dev": false,
+      "license": "BSD-3-Clause",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "ieee754",
+      "package_path": "node_modules/ieee754",
+      "version": "1.2.1"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.txt"
+      ],
+      "name": "immediate",
+      "package_path": "node_modules/immediate",
+      "version": "3.0.6"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE-MIT.txt"
+      ],
+      "name": "is-potential-custom-element-name",
+      "package_path": "node_modules/is-potential-custom-element-name",
+      "version": "1.0.1"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "is-promise",
+      "package_path": "node_modules/is-promise",
+      "version": "2.2.2"
+    },
+    {
+      "dev": false,
+      "license": "ISC",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "isexe",
+      "package_path": "node_modules/isexe",
+      "version": "2.0.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "its-fine",
+      "package_path": "node_modules/its-fine",
+      "version": "2.1.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "js-tokens",
+      "package_path": "node_modules/js-tokens",
+      "version": "4.0.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.txt"
+      ],
+      "name": "jsdom",
+      "package_path": "node_modules/jsdom",
+      "version": "29.1.1"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "license.md"
+      ],
+      "name": "lie",
+      "package_path": "node_modules/lie",
+      "version": "3.3.0"
+    },
+    {
+      "dev": true,
+      "license": "MPL-2.0",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "lightningcss",
+      "package_path": "node_modules/lightningcss",
+      "version": "1.33.0"
+    },
+    {
+      "dev": true,
+      "license": "MPL-2.0",
+      "license_notice_files": [],
+      "name": "lightningcss-android-arm64",
+      "package_path": "node_modules/lightningcss-android-arm64",
+      "version": "1.33.0"
+    },
+    {
+      "dev": true,
+      "license": "MPL-2.0",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "lightningcss-darwin-arm64",
+      "package_path": "node_modules/lightningcss-darwin-arm64",
+      "version": "1.33.0"
+    },
+    {
+      "dev": true,
+      "license": "MPL-2.0",
+      "license_notice_files": [],
+      "name": "lightningcss-darwin-x64",
+      "package_path": "node_modules/lightningcss-darwin-x64",
+      "version": "1.33.0"
+    },
+    {
+      "dev": true,
+      "license": "MPL-2.0",
+      "license_notice_files": [],
+      "name": "lightningcss-freebsd-x64",
+      "package_path": "node_modules/lightningcss-freebsd-x64",
+      "version": "1.33.0"
+    },
+    {
+      "dev": true,
+      "license": "MPL-2.0",
+      "license_notice_files": [],
+      "name": "lightningcss-linux-arm-gnueabihf",
+      "package_path": "node_modules/lightningcss-linux-arm-gnueabihf",
+      "version": "1.33.0"
+    },
+    {
+      "dev": true,
+      "license": "MPL-2.0",
+      "license_notice_files": [],
+      "name": "lightningcss-linux-arm64-gnu",
+      "package_path": "node_modules/lightningcss-linux-arm64-gnu",
+      "version": "1.33.0"
+    },
+    {
+      "dev": true,
+      "license": "MPL-2.0",
+      "license_notice_files": [],
+      "name": "lightningcss-linux-arm64-musl",
+      "package_path": "node_modules/lightningcss-linux-arm64-musl",
+      "version": "1.33.0"
+    },
+    {
+      "dev": true,
+      "license": "MPL-2.0",
+      "license_notice_files": [],
+      "name": "lightningcss-linux-x64-gnu",
+      "package_path": "node_modules/lightningcss-linux-x64-gnu",
+      "version": "1.33.0"
+    },
+    {
+      "dev": true,
+      "license": "MPL-2.0",
+      "license_notice_files": [],
+      "name": "lightningcss-linux-x64-musl",
+      "package_path": "node_modules/lightningcss-linux-x64-musl",
+      "version": "1.33.0"
+    },
+    {
+      "dev": true,
+      "license": "MPL-2.0",
+      "license_notice_files": [],
+      "name": "lightningcss-win32-arm64-msvc",
+      "package_path": "node_modules/lightningcss-win32-arm64-msvc",
+      "version": "1.33.0"
+    },
+    {
+      "dev": true,
+      "license": "MPL-2.0",
+      "license_notice_files": [],
+      "name": "lightningcss-win32-x64-msvc",
+      "package_path": "node_modules/lightningcss-win32-x64-msvc",
+      "version": "1.33.0"
+    },
+    {
+      "dev": true,
+      "license": "BlueOak-1.0.0",
+      "license_notice_files": [
+        "LICENSE.md"
+      ],
+      "name": "lru-cache",
+      "package_path": "node_modules/lru-cache",
+      "version": "11.5.3"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "lz-string",
+      "package_path": "node_modules/lz-string",
+      "version": "1.5.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "maath",
+      "package_path": "node_modules/maath",
+      "version": "0.10.8"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "magic-string",
+      "package_path": "node_modules/magic-string",
+      "version": "0.30.21"
+    },
+    {
+      "dev": true,
+      "license": "CC0-1.0",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "mdn-data",
+      "package_path": "node_modules/mdn-data",
+      "version": "2.27.1"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "meshline",
+      "package_path": "node_modules/meshline",
+      "version": "3.3.1"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.md"
+      ],
+      "name": "meshoptimizer",
+      "package_path": "node_modules/meshoptimizer",
+      "version": "1.1.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "nanoid",
+      "package_path": "node_modules/nanoid",
+      "version": "3.3.19"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "obug",
+      "package_path": "node_modules/obug",
+      "version": "2.2.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "parse5",
+      "package_path": "node_modules/parse5",
+      "version": "8.0.1"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "license"
+      ],
+      "name": "path-key",
+      "package_path": "node_modules/path-key",
+      "version": "3.1.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "pathe",
+      "package_path": "node_modules/pathe",
+      "version": "2.0.3"
+    },
+    {
+      "dev": true,
+      "license": "ISC",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "picocolors",
+      "package_path": "node_modules/picocolors",
+      "version": "1.1.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "picomatch",
+      "package_path": "node_modules/picomatch",
+      "version": "4.0.7"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "postcss",
+      "package_path": "node_modules/postcss",
+      "version": "8.5.28"
+    },
+    {
+      "dev": false,
+      "license": "ISC",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "potpack",
+      "package_path": "node_modules/potpack",
+      "version": "1.0.2"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "pretty-format",
+      "package_path": "node_modules/pretty-format",
+      "version": "27.5.1"
+    },
+    {
+      "dev": false,
+      "license": "Apache-2.0",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "promise-worker-transferable",
+      "package_path": "node_modules/promise-worker-transferable",
+      "version": "1.0.4"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE-MIT.txt"
+      ],
+      "name": "punycode",
+      "package_path": "node_modules/punycode",
+      "version": "2.3.1"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "react",
+      "package_path": "node_modules/react",
+      "version": "19.3.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "react-dom",
+      "package_path": "node_modules/react-dom",
+      "version": "19.3.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "react-is",
+      "package_path": "node_modules/react-is",
+      "version": "17.0.2"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "react-use-measure",
+      "package_path": "node_modules/react-use-measure",
+      "version": "2.1.7"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "license"
+      ],
+      "name": "require-from-string",
+      "package_path": "node_modules/require-from-string",
+      "version": "2.0.2"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "rolldown",
+      "package_path": "node_modules/rolldown",
+      "version": "1.2.12"
+    },
+    {
+      "dev": true,
+      "license": "ISC",
+      "license_notice_files": [],
+      "name": "saxes",
+      "package_path": "node_modules/saxes",
+      "version": "6.0.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "scheduler",
+      "package_path": "node_modules/scheduler",
+      "version": "0.28.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "license"
+      ],
+      "name": "shebang-command",
+      "package_path": "node_modules/shebang-command",
+      "version": "2.0.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "license"
+      ],
+      "name": "shebang-regex",
+      "package_path": "node_modules/shebang-regex",
+      "version": "3.0.0"
+    },
+    {
+      "dev": true,
+      "license": "ISC",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "siginfo",
+      "package_path": "node_modules/siginfo",
+      "version": "2.0.0"
+    },
+    {
+      "dev": true,
+      "license": "BSD-3-Clause",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "source-map-js",
+      "package_path": "node_modules/source-map-js",
+      "version": "1.2.2"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "stackback",
+      "package_path": "node_modules/stackback",
+      "version": "0.0.2"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [],
+      "name": "stats-gl",
+      "package_path": "node_modules/stats-gl",
+      "version": "2.4.2"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "three",
+      "package_path": "node_modules/stats-gl/node_modules/three",
+      "version": "0.170.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "stats.js",
+      "package_path": "node_modules/stats.js",
+      "version": "0.17.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENCE"
+      ],
+      "name": "std-env",
+      "package_path": "node_modules/std-env",
+      "version": "4.3.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "suspend-react",
+      "package_path": "node_modules/suspend-react",
+      "version": "0.1.3"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "symbol-tree",
+      "package_path": "node_modules/symbol-tree",
+      "version": "3.2.4"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "three",
+      "package_path": "node_modules/three",
+      "version": "0.186.1"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "three-mesh-bvh",
+      "package_path": "node_modules/three-mesh-bvh",
+      "version": "0.8.3"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "three-stdlib",
+      "package_path": "node_modules/three-stdlib",
+      "version": "2.36.1"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "fflate",
+      "package_path": "node_modules/three-stdlib/node_modules/fflate",
+      "version": "0.6.11"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "tinybench",
+      "package_path": "node_modules/tinybench",
+      "version": "2.9.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "tinyexec",
+      "package_path": "node_modules/tinyexec",
+      "version": "1.3.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "tinyglobby",
+      "package_path": "node_modules/tinyglobby",
+      "version": "0.2.17"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENCE"
+      ],
+      "name": "tinyrainbow",
+      "package_path": "node_modules/tinyrainbow",
+      "version": "3.2.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "tldts",
+      "package_path": "node_modules/tldts",
+      "version": "7.4.16"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "tldts-core",
+      "package_path": "node_modules/tldts-core",
+      "version": "7.4.16"
+    },
+    {
+      "dev": true,
+      "license": "BSD-3-Clause",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "tough-cookie",
+      "package_path": "node_modules/tough-cookie",
+      "version": "6.0.2"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.md"
+      ],
+      "name": "tr46",
+      "package_path": "node_modules/tr46",
+      "version": "6.0.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "troika-three-text",
+      "package_path": "node_modules/troika-three-text",
+      "version": "0.52.5"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "troika-three-utils",
+      "package_path": "node_modules/troika-three-utils",
+      "version": "0.52.5"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "troika-worker-utils",
+      "package_path": "node_modules/troika-worker-utils",
+      "version": "0.52.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "tunnel-rat",
+      "package_path": "node_modules/tunnel-rat",
+      "version": "0.1.2"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "zustand",
+      "package_path": "node_modules/tunnel-rat/node_modules/zustand",
+      "version": "4.5.7"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [
+        "LICENSE",
+        "NOTICE.txt"
+      ],
+      "name": "typescript",
+      "package_path": "node_modules/typescript",
+      "version": "7.0.2"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "undici",
+      "package_path": "node_modules/undici",
+      "version": "7.30.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "undici-types",
+      "package_path": "node_modules/undici-types",
+      "version": "8.9.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "use-sync-external-store",
+      "package_path": "node_modules/use-sync-external-store",
+      "version": "1.7.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "utility-types",
+      "package_path": "node_modules/utility-types",
+      "version": "3.11.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.md"
+      ],
+      "name": "vite",
+      "package_path": "node_modules/vite",
+      "version": "8.3.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.md"
+      ],
+      "name": "vitest",
+      "package_path": "node_modules/vitest",
+      "version": "4.1.11"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.md"
+      ],
+      "name": "w3c-xmlserializer",
+      "package_path": "node_modules/w3c-xmlserializer",
+      "version": "5.0.0"
+    },
+    {
+      "dev": false,
+      "license": "NOT DECLARED",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "license_text_sha256": "0969fa65680b694452c2c65981df14af5c192da24f2b1f87bdd51d8ed24efcfa",
+      "name": "webgl-constants",
+      "package_path": "node_modules/webgl-constants",
+      "verified_license_from_text": "MIT",
+      "version": "1.1.1"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.txt"
+      ],
+      "name": "webgl-sdf-generator",
+      "package_path": "node_modules/webgl-sdf-generator",
+      "version": "1.1.1"
+    },
+    {
+      "dev": true,
+      "license": "BSD-2-Clause",
+      "license_notice_files": [
+        "LICENSE.md"
+      ],
+      "name": "webidl-conversions",
+      "package_path": "node_modules/webidl-conversions",
+      "version": "8.0.1"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.txt"
+      ],
+      "name": "whatwg-mimetype",
+      "package_path": "node_modules/whatwg-mimetype",
+      "version": "5.0.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE.txt"
+      ],
+      "name": "whatwg-url",
+      "package_path": "node_modules/whatwg-url",
+      "version": "16.0.1"
+    },
+    {
+      "dev": false,
+      "license": "ISC",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "which",
+      "package_path": "node_modules/which",
+      "version": "2.0.2"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "why-is-node-running",
+      "package_path": "node_modules/why-is-node-running",
+      "version": "2.3.0"
+    },
+    {
+      "dev": true,
+      "license": "Apache-2.0",
+      "license_notice_files": [
+        "LICENSE.txt"
+      ],
+      "name": "xml-name-validator",
+      "package_path": "node_modules/xml-name-validator",
+      "version": "5.0.0"
+    },
+    {
+      "dev": true,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "xmlchars",
+      "package_path": "node_modules/xmlchars",
+      "version": "2.2.0"
+    },
+    {
+      "dev": false,
+      "license": "MIT",
+      "license_notice_files": [
+        "LICENSE"
+      ],
+      "name": "zustand",
+      "package_path": "node_modules/zustand",
+      "version": "5.0.15"
+    }
+  ],
+  "python": [
+    {
+      "license_classifiers": [],
+      "license_expression": "BSD-2-Clause",
+      "license_files": [
+        "AUTHORS",
+        "LICENSE"
+      ],
+      "license_metadata": "BSD-2-Clause",
+      "license_metadata_sha256": "248dd895a2f89e28813b4c8c0a7d21806a35699102e4f6e32f47784b82730428",
+      "name": "Pygments",
+      "upstream_urls": [
+        "Homepage, https://pygments.org",
+        "Documentation, https://pygments.org/docs",
+        "Source, https://github.com/pygments/pygments",
+        "Bug Tracker, https://github.com/pygments/pygments/issues",
+        "Changelog, https://github.com/pygments/pygments/blob/master/CHANGES"
+      ],
+      "version": "2.21.0"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "annotated-doc",
+      "upstream_urls": [
+        "Homepage, https://github.com/fastapi/annotated-doc",
+        "Documentation, https://github.com/fastapi/annotated-doc",
+        "Repository, https://github.com/fastapi/annotated-doc",
+        "Issues, https://github.com/fastapi/annotated-doc/issues",
+        "Changelog, https://github.com/fastapi/annotated-doc/release-notes.md"
+      ],
+      "version": "0.0.5"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ],
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "annotated-types",
+      "upstream_urls": [
+        "Homepage, https://github.com/annotated-types/annotated-types",
+        "Source, https://github.com/annotated-types/annotated-types",
+        "Changelog, https://github.com/annotated-types/annotated-types/releases"
+      ],
+      "version": "0.8.0"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "anyio",
+      "upstream_urls": [
+        "Documentation, https://anyio.readthedocs.io/en/latest/",
+        "Changelog, https://anyio.readthedocs.io/en/stable/versionhistory.html",
+        "Source code, https://github.com/agronholm/anyio",
+        "Issue tracker, https://github.com/agronholm/anyio/issues"
+      ],
+      "version": "4.15.1"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)"
+      ],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MPL-2.0",
+      "license_metadata_sha256": "09962c1dc23fac80a0e5a88b2eb7051b74a6443a568ca2a045a4ec2fb82aeee5",
+      "name": "certifi",
+      "upstream_urls": [
+        "Source, https://github.com/certifi/python-certifi"
+      ],
+      "version": "2026.7.22"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "charset-normalizer",
+      "upstream_urls": [
+        "Changelog, https://github.com/jawah/charset_normalizer/blob/master/CHANGELOG.md",
+        "Documentation, https://charset-normalizer.readthedocs.io/",
+        "Code, https://github.com/jawah/charset_normalizer",
+        "Issue tracker, https://github.com/jawah/charset_normalizer/issues"
+      ],
+      "version": "3.5.2"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "BSD-3-Clause",
+      "license_files": [
+        "LICENSE.txt"
+      ],
+      "license_metadata": "BSD-3-Clause",
+      "license_metadata_sha256": "118dbcd2d5c9f9b296a9ede9fcc469c5840f7b98ad2c88461055bf2ceda38037",
+      "name": "click",
+      "upstream_urls": [
+        "Changes, https://click.palletsprojects.com/page/changes/",
+        "Chat, https://discord.gg/pallets",
+        "Documentation, https://click.palletsprojects.com/",
+        "Donate, https://palletsprojects.com/donate",
+        "Source, https://github.com/pallets/click/"
+      ],
+      "version": "8.5.0"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: BSD License"
+      ],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "BSD-3-Clause",
+      "license_metadata_sha256": "118dbcd2d5c9f9b296a9ede9fcc469c5840f7b98ad2c88461055bf2ceda38037",
+      "name": "cloudpickle",
+      "upstream_urls": [],
+      "version": "3.1.2"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "BSD-3-Clause",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "BSD-3-Clause",
+      "license_metadata_sha256": "118dbcd2d5c9f9b296a9ede9fcc469c5840f7b98ad2c88461055bf2ceda38037",
+      "name": "contourpy",
+      "upstream_urls": [
+        "Homepage, https://github.com/contourpy/contourpy",
+        "Changelog, https://contourpy.readthedocs.io/en/latest/changelog.html",
+        "Documentation, https://contourpy.readthedocs.io",
+        "Repository, https://github.com/contourpy/contourpy"
+      ],
+      "version": "1.4.0"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: BSD License"
+      ],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "full text in upstream metadata",
+      "license_metadata_sha256": "f1218143d766da3fea66f13396b7f15df46a83303f29bf96ba6e98eb4d42f408",
+      "name": "cycler",
+      "upstream_urls": [
+        "homepage, https://matplotlib.org/cycler/",
+        "repository, https://github.com/matplotlib/cycler"
+      ],
+      "version": "0.12.1"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ],
+      "license_expression": null,
+      "license_files": [
+        "LICENCE.python",
+        "LICENCE.rst",
+        "AUTHORS.txt"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "et_xmlfile",
+      "upstream_urls": [
+        "Documentation, https://openpyxl.pages.heptapod.net/et_xmlfile/",
+        "Source, https://foss.heptapod.net/openpyxl/et_xmlfile",
+        "Tracker, https://foss.heptapod.net/openpyxl/et_xmfile/-/issues"
+      ],
+      "version": "2.0.0"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "fastapi",
+      "upstream_urls": [
+        "Homepage, https://github.com/fastapi/fastapi",
+        "Documentation, https://fastapi.tiangolo.com/",
+        "Repository, https://github.com/fastapi/fastapi",
+        "Issues, https://github.com/fastapi/fastapi/issues",
+        "Changelog, https://fastapi.tiangolo.com/release-notes/"
+      ],
+      "version": "0.142.2"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE",
+        "LICENSE.external"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "fonttools",
+      "upstream_urls": [],
+      "version": "4.66.1"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE.txt"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "h11",
+      "upstream_urls": [],
+      "version": "0.16.0"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: BSD License"
+      ],
+      "license_expression": "BSD-3-Clause",
+      "license_files": [
+        "LICENSE.md"
+      ],
+      "license_metadata": "BSD-3-Clause",
+      "license_metadata_sha256": "118dbcd2d5c9f9b296a9ede9fcc469c5840f7b98ad2c88461055bf2ceda38037",
+      "name": "httpcore2",
+      "upstream_urls": [
+        "Changelog, https://github.com/pydantic/httpx2/blob/main/src/httpcore2/CHANGELOG.md",
+        "Homepage, https://github.com/pydantic/httpx2",
+        "Source, https://github.com/pydantic/httpx2/blob/main/src/httpcore2"
+      ],
+      "version": "2.13.1"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: BSD License"
+      ],
+      "license_expression": "BSD-3-Clause",
+      "license_files": [
+        "LICENSE.md"
+      ],
+      "license_metadata": "BSD-3-Clause",
+      "license_metadata_sha256": "118dbcd2d5c9f9b296a9ede9fcc469c5840f7b98ad2c88461055bf2ceda38037",
+      "name": "httpx2",
+      "upstream_urls": [
+        "Changelog, https://github.com/pydantic/httpx2/blob/main/src/httpx2/CHANGELOG.md",
+        "Homepage, https://github.com/pydantic/httpx2",
+        "Source, https://github.com/pydantic/httpx2"
+      ],
+      "version": "2.13.1"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "BSD-3-Clause",
+      "license_files": [
+        "LICENSE.md"
+      ],
+      "license_metadata": "BSD-3-Clause",
+      "license_metadata_sha256": "118dbcd2d5c9f9b296a9ede9fcc469c5840f7b98ad2c88461055bf2ceda38037",
+      "name": "idna",
+      "upstream_urls": [
+        "Changelog, https://github.com/kjd/idna/blob/master/HISTORY.md",
+        "Issue tracker, https://github.com/kjd/idna/issues",
+        "Source, https://github.com/kjd/idna"
+      ],
+      "version": "3.20"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "iniconfig",
+      "upstream_urls": [
+        "Homepage, https://github.com/pytest-dev/iniconfig"
+      ],
+      "version": "2.3.0"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "BSD-3-Clause",
+      "license_files": [
+        "LICENSE.txt"
+      ],
+      "license_metadata": "BSD-3-Clause",
+      "license_metadata_sha256": "118dbcd2d5c9f9b296a9ede9fcc469c5840f7b98ad2c88461055bf2ceda38037",
+      "name": "joblib",
+      "upstream_urls": [
+        "Homepage, https://joblib.readthedocs.io",
+        "Source, https://github.com/joblib/joblib"
+      ],
+      "version": "1.6.0"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: BSD License"
+      ],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "full text in upstream metadata",
+      "license_metadata_sha256": "529c40e5f67f2f88904657a9f7879ae2f8dc76bc9bfef9cb10d988b48804ed61",
+      "name": "kiwisolver",
+      "upstream_urls": [
+        "homepage, https://github.com/nucleic/kiwi",
+        "documentation, https://kiwisolver.readthedocs.io/en/latest/",
+        "repository, https://github.com/nucleic/kiwi",
+        "changelog, https://github.com/nucleic/kiwi/blob/main/releasenotes.rst"
+      ],
+      "version": "1.5.1"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "BSD-2-Clause AND Apache-2.0 WITH LLVM-exception",
+      "license_files": [
+        "LICENSE",
+        "LICENSE.thirdparty"
+      ],
+      "license_metadata": "BSD-2-Clause AND Apache-2.0 WITH LLVM-exception",
+      "license_metadata_sha256": "5502056c783ed1a91f388e060f006db9d3d38b9d4f8045fddafef64e8488adb4",
+      "name": "llvmlite",
+      "upstream_urls": [
+        "Source, https://github.com/numba/llvmlite"
+      ],
+      "version": "0.50.0"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: Python Software Foundation License"
+      ],
+      "license_expression": null,
+      "license_files": [],
+      "license_metadata": "full text in upstream metadata",
+      "license_metadata_sha256": "11b43b00dc032aba34426bfb8f93d48714076cbad3753cacec31b9d0f522aa2f",
+      "name": "matplotlib",
+      "upstream_urls": [
+        "Homepage, https://matplotlib.org",
+        "Download, https://matplotlib.org/stable/install/index.html",
+        "Documentation, https://matplotlib.org",
+        "Source Code, https://github.com/matplotlib/matplotlib",
+        "Bug Tracker, https://github.com/matplotlib/matplotlib/issues",
+        "Forum, https://discourse.matplotlib.org/",
+        "Donate, https://numfocus.org/donate-to-matplotlib"
+      ],
+      "version": "3.11.2"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE.md"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "narwhals",
+      "upstream_urls": [
+        "Homepage, https://github.com/narwhals-dev/narwhals",
+        "Documentation, https://narwhals-dev.github.io/narwhals/",
+        "Repository, https://github.com/narwhals-dev/narwhals",
+        "Bug Tracker, https://github.com/narwhals-dev/narwhals/issues"
+      ],
+      "version": "2.26.0"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: BSD License"
+      ],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE",
+        "LICENSES.third-party"
+      ],
+      "license_metadata": "BSD",
+      "license_metadata_sha256": "49d9777da612e1f4e9269fa9f93ea324a66f9dcc7722ad812de124ef3f266d93",
+      "name": "numba",
+      "upstream_urls": [],
+      "version": "0.68.0"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+      "license_files": [
+        "LICENSE.txt",
+        "numpy/_core/include/numpy/libdivide/LICENSE.txt",
+        "numpy/_core/src/common/pythoncapi-compat/COPYING",
+        "numpy/_core/src/highway/LICENSE",
+        "numpy/_core/src/multiarray/dragon4_LICENSE.txt",
+        "numpy/_core/src/npysort/x86-simd-sort/LICENSE.md",
+        "numpy/_core/src/umath/svml/LICENSE",
+        "numpy/fft/pocketfft/LICENSE.md",
+        "numpy/linalg/lapack_lite/LICENSE.txt",
+        "numpy/ma/LICENSE",
+        "numpy/random/LICENSE.md",
+        "numpy/random/src/distributions/LICENSE.md",
+        "numpy/random/src/mt19937/LICENSE.md",
+        "numpy/random/src/pcg64/LICENSE.md",
+        "numpy/random/src/philox/LICENSE.md",
+        "numpy/random/src/sfc64/LICENSE.md",
+        "numpy/random/src/splitmix64/LICENSE.md"
+      ],
+      "license_metadata": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+      "license_metadata_sha256": "365ecdf0eeda8f7d03d67a4bbb06119df487ff240e108dde6f85bdf76c908781",
+      "name": "numpy",
+      "upstream_urls": [
+        "homepage, https://numpy.org",
+        "documentation, https://numpy.org/doc/",
+        "source, https://github.com/numpy/numpy",
+        "download, https://pypi.org/project/numpy/#files",
+        "tracker, https://github.com/numpy/numpy/issues",
+        "release notes, https://numpy.org/doc/stable/release"
+      ],
+      "version": "2.5.3"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ],
+      "license_expression": null,
+      "license_files": [
+        "LICENCE.rst"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "openpyxl",
+      "upstream_urls": [
+        "Documentation, https://openpyxl.readthedocs.io/en/stable/",
+        "Source, https://foss.heptapod.net/openpyxl/openpyxl",
+        "Tracker, https://foss.heptapod.net/openpyxl/openpyxl/-/issues"
+      ],
+      "version": "3.1.5"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "Apache-2.0",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "Apache-2.0",
+      "license_metadata_sha256": "2af71558e438db0b73a20beab92dc278a94e1bbe974c00c1a33e3ab62d53a608",
+      "name": "opentelemetry-api",
+      "upstream_urls": [
+        "Homepage, https://github.com/open-telemetry/opentelemetry-python/tree/main/opentelemetry-api",
+        "Repository, https://github.com/open-telemetry/opentelemetry-python"
+      ],
+      "version": "1.45.0"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "Apache-2.0 OR BSD-2-Clause",
+      "license_files": [
+        "LICENSE",
+        "LICENSE.APACHE",
+        "LICENSE.BSD"
+      ],
+      "license_metadata": "Apache-2.0 OR BSD-2-Clause",
+      "license_metadata_sha256": "f83c2e92648be1cbb1637ae2858514e098ea39d79224eb8f79abb92fca93bf69",
+      "name": "packaging",
+      "upstream_urls": [
+        "Documentation, https://packaging.pypa.io/",
+        "Source, https://github.com/pypa/packaging"
+      ],
+      "version": "26.3"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: BSD License"
+      ],
+      "license_expression": null,
+      "license_files": [],
+      "license_metadata": "full text in upstream metadata",
+      "license_metadata_sha256": "0ca26575ae36b173a7416e656b74838c85f3455140654299bb5cc496232f2ecc",
+      "name": "pandas",
+      "upstream_urls": [
+        "homepage, https://pandas.pydata.org",
+        "documentation, https://pandas.pydata.org/docs/",
+        "repository, https://github.com/pandas-dev/pandas"
+      ],
+      "version": "2.3.3"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "MIT-CMU",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT-CMU",
+      "license_metadata_sha256": "3855f83eee504691f6f2d0eb2097e49d2568479d4fa3e2b9160a013d2b9eb2a5",
+      "name": "pillow",
+      "upstream_urls": [
+        "Release notes, https://pillow.readthedocs.io/en/stable/releasenotes/index.html",
+        "Changelog, https://github.com/python-pillow/Pillow/releases",
+        "Documentation, https://pillow.readthedocs.io",
+        "Funding, https://tidelift.com/subscription/pkg/pypi-pillow?utm_source=pypi-pillow&utm_medium=pypi",
+        "Homepage, https://python-pillow.github.io",
+        "Mastodon, https://fosstodon.org/@pillow",
+        "Source, https://github.com/python-pillow/Pillow"
+      ],
+      "version": "12.3.0"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "pluggy",
+      "upstream_urls": [],
+      "version": "1.6.0"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "pydantic",
+      "upstream_urls": [
+        "Homepage, https://github.com/pydantic/pydantic",
+        "Documentation, https://docs.pydantic.dev",
+        "Funding, https://github.com/sponsors/samuelcolvin",
+        "Source, https://github.com/pydantic/pydantic",
+        "Changelog, https://docs.pydantic.dev/latest/changelog/"
+      ],
+      "version": "2.13.5"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "pydantic_core",
+      "upstream_urls": [
+        "Funding, https://github.com/sponsors/samuelcolvin",
+        "Homepage, https://github.com/pydantic",
+        "Source, https://github.com/pydantic/pydantic/tree/main/pydantic-core"
+      ],
+      "version": "2.46.5"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "pyparsing",
+      "upstream_urls": [
+        "Documentation, https://pyparsing-docs.readthedocs.io/en/latest/",
+        "Homepage, https://github.com/pyparsing/pyparsing/",
+        "Source, https://github.com/pyparsing/pyparsing.git"
+      ],
+      "version": "3.3.3"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "pytest",
+      "upstream_urls": [
+        "Changelog, https://docs.pytest.org/en/stable/changelog.html",
+        "Contact, https://docs.pytest.org/en/stable/contact.html",
+        "Funding, https://docs.pytest.org/en/stable/sponsor.html",
+        "Homepage, https://docs.pytest.org/en/latest/",
+        "Source, https://github.com/pytest-dev/pytest",
+        "Tracker, https://github.com/pytest-dev/pytest/issues"
+      ],
+      "version": "9.1.1"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: BSD License",
+        "License :: OSI Approved :: Apache Software License"
+      ],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "Dual License",
+      "license_metadata_sha256": "199628ddb098f90709bb2dc43f816a5a40fe31690de0e25d0f4d6455fe6bc609",
+      "name": "python-dateutil",
+      "upstream_urls": [
+        "Documentation, https://dateutil.readthedocs.io/en/stable/",
+        "Source, https://github.com/dateutil/dateutil"
+      ],
+      "version": "2.9.0.post0"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE.txt"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "pytz",
+      "upstream_urls": [
+        "Source, https://github.com/stub42/pytz.git",
+        "Issues, https://github.com/stub42/pytz/issues"
+      ],
+      "version": "2026.4"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: Apache Software License"
+      ],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE",
+        "NOTICE"
+      ],
+      "license_metadata": "Apache-2.0",
+      "license_metadata_sha256": "2af71558e438db0b73a20beab92dc278a94e1bbe974c00c1a33e3ab62d53a608",
+      "name": "requests",
+      "upstream_urls": [
+        "Documentation, https://requests.readthedocs.io",
+        "Source, https://github.com/psf/requests"
+      ],
+      "version": "2.34.2"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "ruff",
+      "upstream_urls": [
+        "Changelog, https://github.com/astral-sh/ruff/blob/main/CHANGELOG.md",
+        "Documentation, https://docs.astral.sh/ruff/",
+        "Repository, https://github.com/astral-sh/ruff"
+      ],
+      "version": "0.16.9"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "BSD-3-Clause",
+      "license_files": [
+        "COPYING"
+      ],
+      "license_metadata": "BSD-3-Clause",
+      "license_metadata_sha256": "118dbcd2d5c9f9b296a9ede9fcc469c5840f7b98ad2c88461055bf2ceda38037",
+      "name": "scikit-learn",
+      "upstream_urls": [
+        "homepage, https://scikit-learn.org",
+        "source, https://github.com/scikit-learn/scikit-learn",
+        "download, https://pypi.org/project/scikit-learn/#files",
+        "tracker, https://github.com/scikit-learn/scikit-learn/issues",
+        "release notes, https://scikit-learn.org/stable/whats_new"
+      ],
+      "version": "1.9.1"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: BSD License"
+      ],
+      "license_expression": null,
+      "license_files": [],
+      "license_metadata": "full text in upstream metadata",
+      "license_metadata_sha256": "c85f6c4154a28ccb2a49fe9a1cbcacb17939c14ffad7a2f63d32655610652bb7",
+      "name": "scipy",
+      "upstream_urls": [
+        "homepage, https://scipy.org/",
+        "documentation, https://docs.scipy.org/doc/scipy/",
+        "source, https://github.com/scipy/scipy",
+        "download, https://github.com/scipy/scipy/releases",
+        "tracker, https://github.com/scipy/scipy/issues"
+      ],
+      "version": "1.18.1"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ],
+      "license_expression": null,
+      "license_files": [],
+      "license_metadata": "MIT License",
+      "license_metadata_sha256": "abb2896dc3c2a9402f901b88d5035cf0a83d5cf7c17e73642cdf562b0b9d3bc5",
+      "name": "shap",
+      "upstream_urls": [
+        "Repository, http://github.com/shap/shap",
+        "Documentation, https://shap.readthedocs.io/en/latest/index.html",
+        "Release Notes, https://shap.readthedocs.io/en/latest/release_notes.html"
+      ],
+      "version": "0.52.0"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "six",
+      "upstream_urls": [],
+      "version": "1.17.0"
+    },
+    {
+      "license_classifiers": [
+        "License :: OSI Approved :: MIT License"
+      ],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": null,
+      "license_metadata_sha256": null,
+      "name": "slicer",
+      "upstream_urls": [],
+      "version": "0.0.8"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "BSD-3-Clause",
+      "license_files": [
+        "LICENSE.md"
+      ],
+      "license_metadata": "BSD-3-Clause",
+      "license_metadata_sha256": "118dbcd2d5c9f9b296a9ede9fcc469c5840f7b98ad2c88461055bf2ceda38037",
+      "name": "starlette",
+      "upstream_urls": [
+        "Homepage, https://github.com/Kludex/starlette",
+        "Documentation, https://starlette.dev/",
+        "Changelog, https://starlette.dev/release-notes/",
+        "Funding, https://github.com/sponsors/Kludex",
+        "Source, https://github.com/Kludex/starlette"
+      ],
+      "version": "1.7.0"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "BSD-3-Clause",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "BSD-3-Clause",
+      "license_metadata_sha256": "118dbcd2d5c9f9b296a9ede9fcc469c5840f7b98ad2c88461055bf2ceda38037",
+      "name": "threadpoolctl",
+      "upstream_urls": [
+        "homepage, https://github.com/joblib/threadpoolctl"
+      ],
+      "version": "3.7.0"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": null,
+      "license_files": [
+        "LICENCE"
+      ],
+      "license_metadata": "MPL-2.0 AND MIT",
+      "license_metadata_sha256": "497716e0cebf8fb1944bbac349083f8ba656e10320c3f9811a955fc8786d0cc1",
+      "name": "tqdm",
+      "upstream_urls": [
+        "homepage, https://tqdm.github.io",
+        "repository, https://github.com/tqdm/tqdm",
+        "changelog, https://tqdm.github.io/releases",
+        "wiki, https://github.com/tqdm/tqdm/wiki"
+      ],
+      "version": "4.70.1"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "truststore",
+      "upstream_urls": [
+        "Documentation, https://truststore.readthedocs.io",
+        "Source, https://github.com/sethmlarson/truststore"
+      ],
+      "version": "0.10.4"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "typing-inspection",
+      "upstream_urls": [
+        "Homepage, https://github.com/pydantic/typing-inspection",
+        "Documentation, https://pydantic.github.io/typing-inspection/dev/",
+        "Source, https://github.com/pydantic/typing-inspection",
+        "Changelog, https://github.com/pydantic/typing-inspection/blob/main/HISTORY.md"
+      ],
+      "version": "0.4.4"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "PSF-2.0",
+      "license_files": [
+        "LICENSE"
+      ],
+      "license_metadata": "PSF-2.0",
+      "license_metadata_sha256": "606b04e71db9ca7a05d4fcb08cc69001946922a9b909de4932413ea640da9486",
+      "name": "typing_extensions",
+      "upstream_urls": [
+        "Bug Tracker, https://github.com/python/typing_extensions/issues",
+        "Changes, https://github.com/python/typing_extensions/blob/main/CHANGELOG.md",
+        "Documentation, https://typing-extensions.readthedocs.io/",
+        "Home, https://github.com/python/typing_extensions",
+        "Q & A, https://github.com/python/typing/discussions",
+        "Repository, https://github.com/python/typing_extensions"
+      ],
+      "version": "4.16.0"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": null,
+      "license_files": [
+        "LICENSE",
+        "licenses/LICENSE_APACHE"
+      ],
+      "license_metadata": "Apache-2.0",
+      "license_metadata_sha256": "2af71558e438db0b73a20beab92dc278a94e1bbe974c00c1a33e3ab62d53a608",
+      "name": "tzdata",
+      "upstream_urls": [
+        "Bug Reports, https://github.com/python/tzdata/issues",
+        "Source, https://github.com/python/tzdata",
+        "Documentation, https://tzdata.python.org"
+      ],
+      "version": "2026.4"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "MIT",
+      "license_files": [
+        "LICENSE.txt"
+      ],
+      "license_metadata": "MIT",
+      "license_metadata_sha256": "e5dcffe836b6ec8a58e492419b550e65fb8cbdc308503979e5dacb33ac7ea3b7",
+      "name": "urllib3",
+      "upstream_urls": [
+        "Changelog, https://github.com/urllib3/urllib3/blob/main/CHANGES.rst",
+        "Documentation, https://urllib3.readthedocs.io",
+        "Code, https://github.com/urllib3/urllib3",
+        "Issue tracker, https://github.com/urllib3/urllib3/issues",
+        "Security policy, https://urllib3.readthedocs.io/en/latest/security.html"
+      ],
+      "version": "2.8.0"
+    },
+    {
+      "license_classifiers": [],
+      "license_expression": "BSD-3-Clause",
+      "license_files": [
+        "LICENSE.md"
+      ],
+      "license_metadata": "BSD-3-Clause",
+      "license_metadata_sha256": "118dbcd2d5c9f9b296a9ede9fcc469c5840f7b98ad2c88461055bf2ceda38037",
+      "name": "uvicorn",
+      "upstream_urls": [
+        "Changelog, https://uvicorn.dev/release-notes",
+        "Funding, https://github.com/sponsors/Kludex",
+        "Homepage, https://uvicorn.dev/",
+        "Source, https://github.com/Kludex/uvicorn"
+      ],
+      "version": "0.54.0"
+    }
+  ],
+  "scope": "53 pinned product Python packages and frontend package-lock entries; excludes v2/v2.1 runtime environments",
+  "source_lock_sha256": {
+    "config/explanations-runtime.lock.txt": "d7e77af04adbfd74e7ecc11b9bc8f6fa6d229be81327a797d1568ade795fdd3f",
+    "frontend/package-lock.json": "bb15f561de62175386ae548379b065306caa4088b81decbf21093a3382d1f74c",
+    "uv.lock": "c0fa76bdbfe2a2700c1f93a87a3e5b98be8a4141c3e3ec65467a9cae85c39253"
+  }
+}

@@ -1,0 +1,999 @@
+{
+  "fields": [
+    {
+      "name": "Age",
+      "label": "Age",
+      "group": "Demographics",
+      "type": "number",
+      "required": false,
+      "min": 30.0,
+      "max": 86.0,
+      "median": 58.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "Weight",
+      "label": "Weight",
+      "group": "Demographics",
+      "type": "number",
+      "required": false,
+      "min": 48.0,
+      "max": 120.0,
+      "median": 74.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "Length",
+      "label": "Height / length",
+      "group": "Demographics",
+      "type": "number",
+      "required": false,
+      "min": 140.0,
+      "max": 188.0,
+      "median": 165.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "Sex",
+      "label": "Sex",
+      "group": "Demographics",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "Female",
+          "label": "Female (source: Fmale)"
+        },
+        {
+          "value": "Male",
+          "label": "Male"
+        }
+      ]
+    },
+    {
+      "name": "BMI",
+      "label": "Body mass index",
+      "group": "Demographics",
+      "type": "number",
+      "required": false,
+      "min": 18.115412710007305,
+      "max": 40.90065778377467,
+      "median": 26.77551020408163,
+      "step": "any",
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "DM",
+      "label": "Diabetes mellitus (DM)",
+      "group": "History & examination",
+      "type": "coded_select",
+      "required": false,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 0.0,
+      "step": 1,
+      "observed_values": [
+        0.0,
+        1.0
+      ],
+      "unit": "As recorded in the source; UCI does not specify units for this field.",
+      "options": [
+        {
+          "value": "0",
+          "label": "0"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        }
+      ]
+    },
+    {
+      "name": "HTN",
+      "label": "Hypertension (HTN)",
+      "group": "History & examination",
+      "type": "coded_select",
+      "required": false,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 1.0,
+      "step": 1,
+      "observed_values": [
+        0.0,
+        1.0
+      ],
+      "unit": "As recorded in the source; UCI does not specify units for this field.",
+      "options": [
+        {
+          "value": "0",
+          "label": "0"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        }
+      ]
+    },
+    {
+      "name": "Current Smoker",
+      "label": "Current Smoker",
+      "group": "History & examination",
+      "type": "coded_select",
+      "required": false,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 0.0,
+      "step": 1,
+      "observed_values": [
+        0.0,
+        1.0
+      ],
+      "unit": "As recorded in the source; UCI does not specify units for this field.",
+      "options": [
+        {
+          "value": "0",
+          "label": "0"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        }
+      ]
+    },
+    {
+      "name": "EX-Smoker",
+      "label": "Former smoker (EX-Smoker)",
+      "group": "History & examination",
+      "type": "coded_select",
+      "required": false,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 0.0,
+      "step": 1,
+      "observed_values": [
+        0.0,
+        1.0
+      ],
+      "unit": "As recorded in the source; UCI does not specify units for this field.",
+      "options": [
+        {
+          "value": "0",
+          "label": "0"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        }
+      ]
+    },
+    {
+      "name": "FH",
+      "label": "Family history (FH)",
+      "group": "History & examination",
+      "type": "coded_select",
+      "required": false,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 0.0,
+      "step": 1,
+      "observed_values": [
+        0.0,
+        1.0
+      ],
+      "unit": "As recorded in the source; UCI does not specify units for this field.",
+      "options": [
+        {
+          "value": "0",
+          "label": "0"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        }
+      ]
+    },
+    {
+      "name": "Obesity",
+      "label": "Obesity",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "CRF",
+      "label": "Chronic renal failure (CRF)",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "CVA",
+      "label": "Cerebrovascular accident (CVA)",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "Airway disease",
+      "label": "Airway disease",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "Thyroid Disease",
+      "label": "Thyroid Disease",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "CHF",
+      "label": "Congestive heart failure (CHF)",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "DLP",
+      "label": "Dyslipidemia (DLP)",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "BP",
+      "label": "Blood pressure (source field BP)",
+      "group": "History & examination",
+      "type": "number",
+      "required": false,
+      "min": 90.0,
+      "max": 190.0,
+      "median": 130.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "PR",
+      "label": "Pulse rate (source field PR)",
+      "group": "History & examination",
+      "type": "number",
+      "required": false,
+      "min": 50.0,
+      "max": 110.0,
+      "median": 70.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "Edema",
+      "label": "Edema",
+      "group": "History & examination",
+      "type": "coded_select",
+      "required": false,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 0.0,
+      "step": 1,
+      "observed_values": [
+        0.0,
+        1.0
+      ],
+      "unit": "As recorded in the source; UCI does not specify units for this field.",
+      "options": [
+        {
+          "value": "0",
+          "label": "0"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        }
+      ]
+    },
+    {
+      "name": "Weak Peripheral Pulse",
+      "label": "Weak Peripheral Pulse",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "Lung rales",
+      "label": "Lung rales",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "Systolic Murmur",
+      "label": "Systolic Murmur",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "Diastolic Murmur",
+      "label": "Diastolic Murmur",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "Typical Chest Pain",
+      "label": "Typical Chest Pain",
+      "group": "History & examination",
+      "type": "coded_select",
+      "required": false,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 1.0,
+      "step": 1,
+      "observed_values": [
+        0.0,
+        1.0
+      ],
+      "unit": "As recorded in the source; UCI does not specify units for this field.",
+      "options": [
+        {
+          "value": "0",
+          "label": "0"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        }
+      ]
+    },
+    {
+      "name": "Dyspnea",
+      "label": "Dyspnea",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "Function Class",
+      "label": "Functional class",
+      "group": "History & examination",
+      "type": "coded_select",
+      "required": false,
+      "min": 0.0,
+      "max": 3.0,
+      "median": 0.0,
+      "step": 1,
+      "observed_values": [
+        0.0,
+        1.0,
+        2.0,
+        3.0
+      ],
+      "unit": "As recorded in the source; UCI does not specify units for this field.",
+      "options": [
+        {
+          "value": "0",
+          "label": "0"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        }
+      ]
+    },
+    {
+      "name": "Atypical",
+      "label": "Atypical",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "Nonanginal",
+      "label": "Nonanginal",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "LowTH Ang",
+      "label": "LowTH Ang",
+      "group": "History & examination",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "Q Wave",
+      "label": "Q Wave",
+      "group": "ECG",
+      "type": "coded_select",
+      "required": false,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 0.0,
+      "step": 1,
+      "observed_values": [
+        0.0,
+        1.0
+      ],
+      "unit": "As recorded in the source; UCI does not specify units for this field.",
+      "options": [
+        {
+          "value": "0",
+          "label": "0"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        }
+      ]
+    },
+    {
+      "name": "St Elevation",
+      "label": "St Elevation",
+      "group": "ECG",
+      "type": "coded_select",
+      "required": false,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 0.0,
+      "step": 1,
+      "observed_values": [
+        0.0,
+        1.0
+      ],
+      "unit": "As recorded in the source; UCI does not specify units for this field.",
+      "options": [
+        {
+          "value": "0",
+          "label": "0"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        }
+      ]
+    },
+    {
+      "name": "St Depression",
+      "label": "St Depression",
+      "group": "ECG",
+      "type": "coded_select",
+      "required": false,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 0.0,
+      "step": 1,
+      "observed_values": [
+        0.0,
+        1.0
+      ],
+      "unit": "As recorded in the source; UCI does not specify units for this field.",
+      "options": [
+        {
+          "value": "0",
+          "label": "0"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        }
+      ]
+    },
+    {
+      "name": "Tinversion",
+      "label": "T-wave inversion (Tinversion)",
+      "group": "ECG",
+      "type": "coded_select",
+      "required": false,
+      "min": 0.0,
+      "max": 1.0,
+      "median": 0.0,
+      "step": 1,
+      "observed_values": [
+        0.0,
+        1.0
+      ],
+      "unit": "As recorded in the source; UCI does not specify units for this field.",
+      "options": [
+        {
+          "value": "0",
+          "label": "0"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        }
+      ]
+    },
+    {
+      "name": "LVH",
+      "label": "Left ventricular hypertrophy (LVH)",
+      "group": "ECG",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "Poor R Progression",
+      "label": "Poor R Progression",
+      "group": "ECG",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Y",
+          "label": "Y"
+        }
+      ]
+    },
+    {
+      "name": "BBB",
+      "label": "Bundle branch block (BBB)",
+      "group": "ECG",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "LBBB",
+          "label": "LBBB"
+        },
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "RBBB",
+          "label": "RBBB"
+        }
+      ]
+    },
+    {
+      "name": "FBS",
+      "label": "Fasting blood sugar",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 62.0,
+      "max": 400.0,
+      "median": 98.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "CR",
+      "label": "Creatinine",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 0.5,
+      "max": 2.2,
+      "median": 1.0,
+      "step": "any",
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "TG",
+      "label": "Triglycerides",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 37.0,
+      "max": 1050.0,
+      "median": 122.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "LDL",
+      "label": "LDL cholesterol",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 18.0,
+      "max": 232.0,
+      "median": 100.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "HDL",
+      "label": "HDL cholesterol",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 15.9,
+      "max": 111.0,
+      "median": 39.0,
+      "step": "any",
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "BUN",
+      "label": "Blood urea nitrogen",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 6.0,
+      "max": 52.0,
+      "median": 16.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "ESR",
+      "label": "Erythrocyte sedimentation rate",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 1.0,
+      "max": 90.0,
+      "median": 15.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "HB",
+      "label": "Hemoglobin",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 8.9,
+      "max": 17.6,
+      "median": 13.2,
+      "step": "any",
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "K",
+      "label": "Potassium",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 3.0,
+      "max": 6.6,
+      "median": 4.2,
+      "step": "any",
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "Na",
+      "label": "Sodium",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 128.0,
+      "max": 156.0,
+      "median": 141.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "WBC",
+      "label": "White blood cell count",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 3700.0,
+      "max": 18000.0,
+      "median": 7100.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "Lymph",
+      "label": "Lymphocytes (Lymph)",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 7.0,
+      "max": 60.0,
+      "median": 32.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "Neut",
+      "label": "Neutrophils (Neut)",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 32.0,
+      "max": 89.0,
+      "median": 60.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "PLT",
+      "label": "Platelet count",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 25.0,
+      "max": 742.0,
+      "median": 210.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "EF-TTE",
+      "label": "Ejection fraction (TTE)",
+      "group": "Laboratory & echo",
+      "type": "number",
+      "required": false,
+      "min": 15.0,
+      "max": 60.0,
+      "median": 50.0,
+      "step": 1,
+      "observed_values": null,
+      "unit": "As recorded in the source; UCI does not specify units for this field."
+    },
+    {
+      "name": "Region RWMA",
+      "label": "Regional wall-motion abnormality code",
+      "group": "Laboratory & echo",
+      "type": "coded_select",
+      "required": false,
+      "min": 0.0,
+      "max": 4.0,
+      "median": 0.0,
+      "step": 1,
+      "observed_values": [
+        0.0,
+        1.0,
+        2.0,
+        3.0,
+        4.0
+      ],
+      "unit": "As recorded in the source; UCI does not specify units for this field.",
+      "options": [
+        {
+          "value": "0",
+          "label": "0"
+        },
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
+      ]
+    },
+    {
+      "name": "VHD",
+      "label": "Valvular heart disease finding",
+      "group": "Laboratory & echo",
+      "type": "select",
+      "required": false,
+      "options": [
+        {
+          "value": "Moderate",
+          "label": "Moderate"
+        },
+        {
+          "value": "N",
+          "label": "N"
+        },
+        {
+          "value": "Severe",
+          "label": "Severe"
+        },
+        {
+          "value": "mild",
+          "label": "mild"
+        }
+      ]
+    }
+  ],
+  "targets": [
+    "CAD",
+    "LAD",
+    "LCX",
+    "RCA"
+  ],
+  "missing_policy": "Blank values are accepted and imputed by training-fitted pipeline medians or modes."
+}

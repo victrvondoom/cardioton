@@ -1,0 +1,100 @@
+{
+  "verified_at_utc": "2026-10-03T18:35:18.143222+00:00",
+  "phase": "submission preparation only",
+  "branch": "codex/submission-package",
+  "starting_commit": "e287d68",
+  "protected_v1": {
+    "file_count": 256,
+    "all_sha256_match": true,
+    "all_git_tag_bytes_match": true,
+    "tag": "cardioscope-v1.0.0",
+    "manifest_sha256": "7f03a46a9edcb1e695fd68b4ae3ea485654645c1ab23e02dce00eb3321f77dd6"
+  },
+  "app_scientific_code_diff_from_start": [],
+  "safe_checks": {
+    "make_verify": "PASS: runtime 53 pins; protected bytes; development-only source/folds; 83 meshes",
+    "make_lint": "PASS: ruff check/format and TypeScript",
+    "make_build": "PASS",
+    "core_python_tests": {
+      "passed": 43,
+      "seconds": 3.12,
+      "command": ".venv/bin/python -m pytest -q tests/test_data.py tests/test_splits.py tests/test_anatomy.py tests/test_actual_sources.py tests/test_api.py"
+    },
+    "frontend_tests": {
+      "passed": 75,
+      "files": 8,
+      "seconds": 5.6,
+      "command": "cd frontend && npm test"
+    },
+    "warnings": [
+      "Existing Vitest Three.js CJS deprecation warning",
+      "Existing lazy anatomy chunk ~951 KB build-size advisory; no product change",
+      "Poppler fontconfig default-config warning; all six rendered pages visually inspected"
+    ],
+    "local_markdown_links": {
+      "checked": 177,
+      "missing": [],
+      "external_links": "Primary source/license links checked during preparation; future public/YouTube/Devpost links remain pending, not claimed tested"
+    },
+    "claims": "PASS: saved aggregate V1 metrics/configs/uncertainty, contract/split counts, anatomical groups, public example and failed joint research dispositions match",
+    "publication_scan": "PASS within documented scope: no credential/private-path/cache-env findings. Existing PDF history and code-license decision prevent publication.",
+    "dependency_attribution": {
+      "python_product_pins": 53,
+      "frontend_lock_entries": 210,
+      "distinct_upstream_notice_texts": 197,
+      "webgl_constants_license": "MIT verified from installed LICENSE",
+      "notice_private_path_scan": "PASS"
+    },
+    "architecture_diagram": "PASS: native SVG visually reviewed in browser, text overflow corrected",
+    "git_diff_check": "PASS for authored changes; collected upstream notices preserve original whitespace and are excluded from whitespace lint. PDF is explicitly a binary Git artifact."
+  },
+  "report": {
+    "path": "output/pdf/CardioScope-Track-A-Report.pdf",
+    "sha256": "ef33c3102644a7765d3affeec4f6ca723e1e136575a61b111df4490d207af1f0",
+    "pages": 6,
+    "all_pages_rendered_and_visually_reviewed": true,
+    "editable_source": "docs/submission/report_source.py",
+    "private_home_paths_in_extracted_text": false,
+    "same_environment_rebuild_byte_identical": true
+  },
+  "screenshot_check": {
+    "real_application": true,
+    "public_development_example_only": true,
+    "no_private_profile_or_browser_chrome": true,
+    "provenance": "docs/submission/SCREENSHOT_PROVENANCE.json",
+    "temporary_viewport_reset": true
+  },
+  "historical_full_suite": {
+    "source": "docs/hardening/FINAL_VERIFICATION.json",
+    "python": 134,
+    "frontend": 75,
+    "current_phase_reran_full_python_suite": false,
+    "reason": "Avoid fitting and evaluation tests; only safe scoped tests authorized"
+  },
+  "prohibited_actions": {
+    "model_training": false,
+    "final_holdout_evaluation": false,
+    "reserved_workbook_outcome_decoding": false,
+    "reserved_row_prediction_deserialization": false,
+    "threshold_change": false,
+    "shap_change": false,
+    "anatomy_change": false,
+    "deployment": false,
+    "remote_push": false,
+    "external_upload_or_submission": false
+  },
+  "publication_ready": false,
+  "remaining_manual_tasks": [
+    "License and copyright selection",
+    "Organizer PDF permission or clean-public-snapshot export",
+    "Approved GitHub publication and hosted CI",
+    "Video recording and YouTube upload",
+    "Devpost fields/gallery/team members/final URLs",
+    "Official deadline and logged-out final checks"
+  ],
+  "cleanup": {
+    "owned_temporary_servers_stopped": true,
+    "agent_browser_tab_closed": true,
+    "preexisting_server_untouched": true
+  }
+}

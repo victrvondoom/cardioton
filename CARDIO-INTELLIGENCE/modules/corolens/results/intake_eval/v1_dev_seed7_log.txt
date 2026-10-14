@@ -1,0 +1,66 @@
+{
+ "notes": 61,
+ "model": "jev-latest (responses report jev-1.13.0)",
+ "accuracy": {
+  "numeric_mentioned": {
+   "accuracy": 1,
+   "correct": 989,
+   "total": 989
+  },
+  "numeric_absent_no_pick": {
+   "accuracy": 1,
+   "correct": 231,
+   "total": 231
+  },
+  "binary": {
+   "accuracy": 0.9818501170960188,
+   "correct": 1677,
+   "total": 1708
+  },
+  "choice": {
+   "accuracy": 1,
+   "correct": 305,
+   "total": 305
+  },
+  "bmi_computed": {
+   "accuracy": 1,
+   "correct": 45,
+   "total": 45
+  }
+ },
+ "downstream_mean_abs_prob_diff_vs_hand_entry": {
+  "CAD": 0.03009159680016886,
+  "LAD": 0.008238654600855388,
+  "LCX": 0.0045955067318890095,
+  "RCA": 0.015339468527096499
+ },
+ "downstream_max_abs_prob_diff": {
+  "CAD": 0.20262876746318614,
+  "LAD": 0.05395994113623381,
+  "LCX": 0.0372474575414492,
+  "RCA": 0.18256158454062332
+ },
+ "mean_input_tokens_per_note": 16550.803278688523,
+ "mean_latency_ms_per_note_with_4_parallel": 317.72131147540983,
+ "notes_with_any_review_flag": 25,
+ "errors": {
+  "numeric_mentioned": [],
+  "numeric_absent_no_pick": [],
+  "binary": [
+   "test-03 Nonanginal: got Y want N (p=0.64)",
+   "test-01 EX-Smoker: got 1 want 0 (p=0.67)",
+   "test-07 Nonanginal: got Y want N (p=0.71)",
+   "test-08 Nonanginal: got Y want N (p=0.61)",
+   "test-11 Atypical: got Y want N (p=0.69)",
+   "test-13 EX-Smoker: got 1 want 0 (p=0.67)",
+   "test-14 EX-Smoker: got 1 want 0 (p=0.54)",
+   "test-14 Nonanginal: got Y want N (p=0.77)",
+   "test-16 CHF: got Y want N (p=0.67)",
+   "test-18 EX-Smoker: got 1 want 0 (p=0.63)",
+   "test-19 Nonanginal: got Y want N (p=0.78)",
+   "test-20 Nonanginal: got Y want N (p=0.74)"
+  ],
+  "choice": [],
+  "bmi_computed": []
+ }
+}

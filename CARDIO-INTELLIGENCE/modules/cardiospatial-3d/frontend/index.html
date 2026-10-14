@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CARDIOSPATIAL-3D | Cardiovascular Risk Visualization & Multi-Vessel Stenosis Prediction</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js + OrbitControls + GLTFLoader -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <!-- GSAP for Smooth Camera Animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/static/cardiospatial_3d__frontend_static__style.css">
+</head>
+
+<body class="bg-slate-950 text-slate-100 flex flex-col min-h-screen">
+
+  <!-- ================================================================= -->
+  <!-- TOP NAVIGATION / HEADER -->
+  <!-- ================================================================= -->
+  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur-md sticky top-0 z-40 px-4 py-2.5">
+    <div class="max-w-[1720px] mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- Brand & Title -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-rose-500 via-purple-600 to-sky-400 flex items-center justify-center shadow-lg shadow-rose-500/20">
+          <i data-lucide="activity" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="font-extrabold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-rose-300 to-amber-200">
+              CARDIOSPATIAL-3D
+            </h1>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">
+              Track A Prototype
+            </span>
+          </div>
+          <p class="text-xs text-slate-400 font-medium">Interactive 3D Multi-Vessel Coronary Stenosis & CAD Intelligence System</p>
+        </div>
+      </div>
+
+      <!-- Patient Presets Selector -->
+      <div class="flex items-center space-x-2 bg-slate-800/80 p-1.5 rounded-xl border border-slate-700/60 text-xs">
+        <span class="text-slate-400 font-semibold px-2 flex items-center gap-1">
+          <i data-lucide="user-check" class="w-3.5 h-3.5 text-sky-400"></i> Clinical Preset:
+        </span>
+        <select id="preset-selector" onchange="loadPreset(this.value)" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 outline-none focus:border-sky-400 transition cursor-pointer">
+          <option value="isolated_lad">⚡ Acute LAD Stenosis (STEMI Risk)</option>
+          <option value="triple_vessel">🚨 Critical Triple-Vessel CAD</option>
+          <option value="isolated_rca">🟡 Dominant RCA Stenosis (Inferior)</option>
+          <option value="isolated_lcx">🟣 Moderate LCX Stenosis (Lateral)</option>
+          <option value="metabolic_borderline">🟠 Borderline Metabolic Risk</option>
+          <option value="healthy_control">🟢 Healthy Young Control</option>
+        </select>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center space-x-2 flex-wrap gap-y-1">
+        <button onclick="openInterventionModal()" class="px-3 py-1.5 rounded-lg bg-emerald-600/25 hover:bg-emerald-600/40 text-emerald-300 border border-emerald-500/40 text-xs font-semibold flex items-center gap-1.5 transition">
+          <i data-lucide="flask-conical" class="w-3.5 h-3.5 text-emerald-400"></i> What-If Simulator
+        </button>
+
+        <button onclick="openSoapModal()" class="px-3 py-1.5 rounded-lg bg-purple-600/25 hover:bg-purple-600/40 text-purple-300 border border-purple-500/40 text-xs font-semibold flex items-center gap-1.5 transition">
+          <i data-lucide="clipboard-check" class="w-3.5 h-3.5 text-purple-400"></i> SOAP Note
+        </button>
+
+        <button onclick="openCohortModal()" class="px-3 py-1.5 rounded-lg bg-amber-600/25 hover:bg-amber-600/40 text-amber-300 border border-amber-500/40 text-xs font-semibold flex items-center gap-1.5 transition">
+          <i data-lucide="users" class="w-3.5 h-3.5 text-amber-400"></i> Cohort Explorer
+        </button>
+
+        <button onclick="document.getElementById('metrics-modal').classList.remove('hidden')" class="px-3 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/40 text-xs font-semibold flex items-center gap-1.5 transition">
+          <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i> Benchmark Metrics
+        </button>
+
+        <button onclick="document.getElementById('disclaimer-modal').classList.remove('hidden')" class="badge-pill bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 transition flex items-center gap-1 text-xs">
+          <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-amber-400"></i> Disclaimer
+        </button>
+
+        <button onclick="exportClinicalReport()" class="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-sky-600/30 transition">
+          <i data-lucide="printer" class="w-3.5 h-3.5"></i> Print Report
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================================================================= -->
+  <!-- MAIN 3-COLUMN WORKSPACE -->
+  <!-- ================================================================= -->
+  <main class="flex-1 max-w-[1720px] w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-4">
+
+    <!-- =============================================================== -->
+    <!-- LEFT COLUMN: PHYSIOLOGICAL & CLINICAL INPUT COCKPIT (3.5 cols) -->
+    <!-- =============================================================== -->
+    <div class="lg:col-span-4 xl:col-span-3.5 flex flex-col space-y-4">
+      <div class="glass-panel p-4 flex-1 flex flex-col">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="sliders" class="w-4 h-4 text-sky-400"></i>
+            <h2 class="font-bold text-sm text-slate-200">Patient Clinical Parameters</h2>
+          </div>
+          <div class="flex items-center space-x-2">
+            <label class="text-[11px] text-slate-400 flex items-center gap-1 cursor-pointer">
+              <input type="checkbox" id="auto-predict-toggle" checked class="accent-sky-500 rounded"> Live Predict
+            </label>
+          </div>
+        </div>
+
+        <!-- Input Category Navigation Tabs -->
+        <div class="flex border-b border-slate-800 text-xs font-semibold mt-2 overflow-x-auto pb-1 gap-1">
+          <button class="tab-btn active px-2.5 py-1.5 rounded-lg border border-sky-400/40 text-sky-400 bg-slate-800/80 transition" data-tab="demo">Demographics</button>
+          <button class="tab-btn px-2.5 py-1.5 rounded-lg border border-transparent text-slate-400 hover:text-slate-200 transition" data-tab="symptoms">Symptoms/BP</button>
+          <button class="tab-btn px-2.5 py-1.5 rounded-lg border border-transparent text-slate-400 hover:text-slate-200 transition" data-tab="ecg">ECG Leads</button>
+          <button class="tab-btn px-2.5 py-1.5 rounded-lg border border-transparent text-slate-400 hover:text-slate-200 transition" data-tab="echo">Echo/RWMA</button>
+          <button class="tab-btn px-2.5 py-1.5 rounded-lg border border-transparent text-slate-400 hover:text-slate-200 transition" data-tab="labs">Blood Labs</button>
+        </div>
+
+        <!-- TAB CONTENT CONTAINER -->
+        <div class="flex-1 overflow-y-auto py-3 space-y-4 text-xs max-h-[580px] pr-1">
+
+          <!-- 1. TAB: DEMOGRAPHICS & COMORBIDITIES -->
+          <div id="tab-demo" class="tab-content space-y-3">
+            
+            <!-- Age Slider -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-slate-300 font-medium">
+                <span>Patient Age:</span>
+                <span id="input-Age-val" class="font-mono text-sky-400 font-bold">56</span> yrs
+              </div>
+              <input type="range" id="input-Age" min="30" max="85" value="56" class="w-full param-input">
+            </div>
+
+            <!-- Sex & BMI -->
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-slate-400 mb-1">Sex:</label>
+                <select id="input-Sex" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 param-input">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+              <div class="space-y-1">
+                <div class="flex justify-between text-slate-400">
+                  <span>BMI:</span>
+                  <span id="input-BMI-val" class="font-mono text-sky-400 font-bold">26.1</span>
+                </div>
+                <input type="range" id="input-BMI" min="18" max="42" step="0.1" value="26.1" class="w-full param-input">
+              </div>
+            </div>
+
+            <!-- Weight & Length -->
+            <div class="grid grid-cols-2 gap-2">
+              <div class="space-y-1">
+                <div class="flex justify-between text-slate-400">
+                  <span>Weight (kg):</span>
+                  <span id="input-Weight-val" class="font-mono text-slate-200 font-bold">80</span>
+                </div>
+                <input type="range" id="input-Weight" min="45" max="130" value="80" class="w-full param-input">
+              </div>
+              <div class="space-y-1">
+                <div class="flex justify-between text-slate-400">
+                  <span>Height (cm):</span>
+                  <span id="input-Length-val" class="font-mono text-slate-200 font-bold">175</span>
+                </div>
+                <input type="range" id="input-Length" min="140" max="195" value="175" class="w-full param-input">
+              </div>
+            </div>
+
+            <!-- Comorbidities Grid -->
+            <div class="pt-2 border-t border-slate-800">
+              <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">Comorbidities & Risk Factors</span>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="text-slate-400 block mb-1">Diabetes (DM):</label>
+                  <select id="input-DM" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                    <option value="0">No (0)</option>
+                    <option value="1">Yes (1)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-slate-400 block mb-1">Hypertension (HTN):</label>
+                  <select id="input-HTN" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                    <option value="1" selected>Yes (1)</option>
+                    <option value="0">No (0)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-slate-400 block mb-1">Current Smoker:</label>
+                  <select id="input-Current-Smoker" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                    <option value="1" selected>Yes (1)</option>
+                    <option value="0">No (0)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-slate-400 block mb-1">Dyslipidemia (DLP):</label>
+                  <select id="input-DLP" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                    <option value="Y" selected>Yes (Y)</option>
+                    <option value="N">No (N)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-slate-400 block mb-1">Family History (FH):</label>
+                  <select id="input-FH" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                    <option value="1" selected>Yes (1)</option>
+                    <option value="0">No (0)</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-slate-400 block mb-1">Heart Failure (CHF):</label>
+                  <select id="input-CHF" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                    <option value="N" selected>No (N)</option>
+                    <option value="Y">Yes (Y)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Additional Medical History -->
+            <input type="hidden" id="input-EX-Smoker" value="0">
+            <input type="hidden" id="input-Obesity" value="N">
+            <input type="hidden" id="input-CRF" value="N">
+            <input type="hidden" id="input-CVA" value="N">
+            <input type="hidden" id="input-Airway-disease" value="N">
+            <input type="hidden" id="input-Thyroid-Disease" value="N">
+
+          </div>
+
+          <!-- 2. TAB: SYMPTOMS & HEMODYNAMICS -->
+          <div id="tab-symptoms" class="tab-content hidden space-y-3">
+            
+            <!-- Blood Pressure & Pulse Rate -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-slate-300 font-medium">
+                <span>Systolic Blood Pressure (BP):</span>
+                <span id="input-BP-val" class="font-mono text-sky-400 font-bold">140</span> mmHg
+              </div>
+              <input type="range" id="input-BP" min="90" max="210" value="140" class="w-full param-input">
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-slate-300 font-medium">
+                <span>Resting Pulse Rate (PR):</span>
+                <span id="input-PR-val" class="font-mono text-rose-400 font-bold">76</span> bpm
+              </div>
+              <input type="range" id="input-PR" min="50" max="130" value="76" class="w-full param-input">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
+              <div>
+                <label class="text-slate-400 block mb-1">Typical Chest Pain:</label>
+                <select id="input-Typical-Chest-Pain" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                  <option value="1" selected>Yes (1)</option>
+                  <option value="0">No (0)</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-1">Dyspnea / Exertional:</label>
+                <select id="input-Dyspnea" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                  <option value="N" selected>No (N)</option>
+                  <option value="Y">Yes (Y)</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-1">NYHA Function Class:</label>
+                <select id="input-Function-Class" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                  <option value="1">Class I (Mild)</option>
+                  <option value="2" selected>Class II (Moderate)</option>
+                  <option value="3">Class III (Severe)</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-1">Atypical Angina:</label>
+                <select id="input-Atypical" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                  <option value="N" selected>No (N)</option>
+                  <option value="Y">Yes (Y)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Hidden Examination Fields -->
+            <input type="hidden" id="input-Nonanginal" value="N">
+            <input type="hidden" id="input-LowTH-Ang" value="N">
+            <input type="hidden" id="input-Edema" value="0">
+            <input type="hidden" id="input-Weak-Peripheral-Pulse" value="N">
+            <input type="hidden" id="input-Lung-rales" value="N">
+            <input type="hidden" id="input-Systolic-Murmur" value="N">
+            <input type="hidden" id="input-Diastolic-Murmur" value="N">
+
+          </div>
+
+          <!-- 3. TAB: ECG FINDINGS -->
+          <div id="tab-ecg" class="tab-content hidden space-y-3">
+            <div class="p-2.5 rounded-lg bg-sky-950/30 border border-sky-500/20 text-[11px] text-sky-300">
+              ⚡ ECG markers correlate with regional coronary perfusion territories (Anterior: LAD, Inferior: RCA, Lateral: LCX).
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-slate-400 block mb-1">ST Elevation:</label>
+                <select id="input-St-Elevation" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                  <option value="1" selected>Present (1)</option>
+                  <option value="0">None (0)</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-1">ST Depression:</label>
+                <select id="input-St-Depression" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                  <option value="0" selected>None (0)</option>
+                  <option value="1">Present (1)</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-1">T-Wave Inversion:</label>
+                <select id="input-Tinversion" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                  <option value="1" selected>Present (1)</option>
+                  <option value="0">None (0)</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-1">Pathological Q-Wave:</label>
+                <select id="input-Q-Wave" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                  <option value="0" selected>None (0)</option>
+                  <option value="1">Present (1)</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-1">Poor R Progression:</label>
+                <select id="input-Poor-R-Progression" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                  <option value="Y" selected>Yes (Y)</option>
+                  <option value="N">No (N)</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-1">Bundle Branch Block:</label>
+                <select id="input-BBB" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                  <option value="N" selected>Normal (N)</option>
+                  <option value="LBBB">LBBB</option>
+                  <option value="RBBB">RBBB</option>
+                </select>
+              </div>
+            </div>
+
+            <input type="hidden" id="input-LVH" value="N">
+
+          </div>
+
+          <!-- 4. TAB: ECHOCARDIOGRAPHY & REGION RWMA -->
+          <div id="tab-echo" class="tab-content hidden space-y-3">
+            
+            <!-- Ejection Fraction -->
+            <div class="space-y-1">
+              <div class="flex justify-between text-slate-300 font-medium">
+                <span>Ejection Fraction (EF-TTE):</span>
+                <span id="input-EF-TTE-val" class="font-mono text-sky-400 font-bold">42</span> %
+              </div>
+              <input type="range" id="input-EF-TTE" min="20" max="65" value="42" class="w-full param-input">
+              <span class="text-[10px] text-slate-500">Normal: &ge;50% | Moderate Impairment: 35-49% | Severe: &lt;35%</span>
+            </div>
+
+            <!-- Regional Wall Motion Abnormality (RWMA) -->
+            <div class="space-y-2 pt-2 border-t border-slate-800">
+              <label class="text-slate-300 font-medium block">Region with RWMA (Echocardiography):</label>
+              <select id="input-Region-RWMA" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200 font-semibold param-input">
+                <option value="0">0: Normal Wall Motion (No RWMA)</option>
+                <option value="1" selected>1: Anterior / Septal (LAD Territory)</option>
+                <option value="2">2: Inferior / Posterior (RCA Territory)</option>
+                <option value="3">3: Lateral Wall (LCX Territory)</option>
+                <option value="4">4: Multi-Territory / Apical (Multi-Vessel)</option>
+              </select>
+              <span class="text-[10px] text-slate-400 leading-tight block">
+                Direct anatomical correlation between myocardial wall motion abnormality and flow-limiting coronary stenosis.
+              </span>
+            </div>
+
+            <!-- Valvular Heart Disease -->
+            <div>
+              <label class="text-slate-400 block mb-1">Valvular Heart Disease (VHD):</label>
+              <select id="input-VHD" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-1.5 text-slate-200 param-input">
+                <option value="N" selected>None (N)</option>
+                <option value="mild">Mild</option>
+                <option value="Moderate">Moderate</option>
+                <option value="Severe">Severe</option>
+              </select>
+            </div>
+
+          </div>
+
+          <!-- 5. TAB: BLOOD LABS & LIPIDS -->
+          <div id="tab-labs" class="tab-content hidden space-y-3">
+            
+            <div class="space-y-1">
+              <div class="flex justify-between text-slate-300">
+                <span>LDL Cholesterol:</span>
+                <span id="input-LDL-val" class="font-mono text-rose-400 font-bold">165</span> mg/dL
+              </div>
+              <input type="range" id="input-LDL" min="50" max="250" value="165" class="w-full param-input">
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-slate-300">
+                <span>HDL Cholesterol:</span>
+                <span id="input-HDL-val" class="font-mono text-emerald-400 font-bold">36</span> mg/dL
+              </div>
+              <input type="range" id="input-HDL" min="20" max="80" value="36" class="w-full param-input">
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-slate-300">
+                <span>Triglycerides (TG):</span>
+                <span id="input-TG-val" class="font-mono text-amber-400 font-bold">195</span> mg/dL
+              </div>
+              <input type="range" id="input-TG" min="50" max="450" value="195" class="w-full param-input">
+            </div>
+
+            <div class="space-y-1">
+              <div class="flex justify-between text-slate-300">
+                <span>Fasting Blood Sugar (FBS):</span>
+                <span id="input-FBS-val" class="font-mono text-slate-200 font-bold">110</span> mg/dL
+              </div>
+              <input type="range" id="input-FBS" min="70" max="300" value="110" class="w-full param-input">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
+              <div class="space-y-1">
+                <div class="flex justify-between text-slate-400">
+                  <span>Creatinine:</span>
+                  <span id="input-CR-val" class="font-mono text-slate-200 font-bold">1.0</span>
+                </div>
+                <input type="range" id="input-CR" min="0.5" max="3.0" step="0.1" value="1.0" class="w-full param-input">
+              </div>
+              <div class="space-y-1">
+                <div class="flex justify-between text-slate-400">
+                  <span>BUN:</span>
+                  <span id="input-BUN-val" class="font-mono text-slate-200 font-bold">16</span>
+                </div>
+                <input type="range" id="input-BUN" min="8" max="50" value="16" class="w-full param-input">
+              </div>
+            </div>
+
+            <!-- Other Blood Lab inputs -->
+            <input type="hidden" id="input-ESR" value="14">
+            <input type="hidden" id="input-HB" value="14.8">
+            <input type="hidden" id="input-K" value="4.2">
+            <input type="hidden" id="input-Na" value="140">
+            <input type="hidden" id="input-WBC" value="7800">
+            <input type="hidden" id="input-Lymph" value="28">
+            <input type="hidden" id="input-Neut" value="65">
+            <input type="hidden" id="input-PLT" value="210">
+
+          </div>
+
+        </div>
+
+        <!-- Run Prediction Button -->
+        <div class="pt-3 border-t border-slate-800">
+          <button onclick="runPrediction()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-bold text-xs flex items-center justify-center space-x-2 shadow-lg shadow-sky-500/25 transition">
+            <i data-lucide="zap" class="w-4 h-4"></i>
+            <span>Run Multi-Vessel Inference & SHAP</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- =============================================================== -->
+    <!-- CENTER COLUMN: INTERACTIVE 3D CARDIAC ANATOMY CANVAS (5.5 cols) -->
+    <!-- =============================================================== -->
+    <div class="lg:col-span-5 xl:col-span-5.5 flex flex-col space-y-4">
+      <div class="glass-panel p-3 flex-1 flex flex-col relative min-h-[560px]">
+        
+        <!-- Top Overlay: 3D Camera Controls & Legend -->
+        <div class="absolute top-5 left-5 right-5 z-20 flex flex-wrap items-center justify-between pointer-events-none gap-2">
+          
+          <!-- Camera Presets -->
+          <div class="pointer-events-auto flex items-center space-x-1 bg-slate-900/85 backdrop-blur-md p-1 rounded-xl border border-slate-700/70 shadow-lg text-[11px]">
+            <span class="text-slate-400 font-semibold px-2">View:</span>
+            <button onclick="visualizer3D.setCameraPreset('anterior')" class="px-2 py-1 rounded-lg bg-sky-500/20 text-sky-300 hover:bg-sky-500/30 transition">LAD (Ant)</button>
+            <button onclick="visualizer3D.setCameraPreset('lateral')" class="px-2 py-1 rounded-lg bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 transition">LCX (Lat)</button>
+            <button onclick="visualizer3D.setCameraPreset('inferior')" class="px-2 py-1 rounded-lg bg-orange-500/20 text-orange-300 hover:bg-orange-500/30 transition">RCA (Inf)</button>
+            <button onclick="visualizer3D.setCameraPreset('overview')" class="px-2 py-1 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 transition">360°</button>
+          </div>
+
+          <!-- 3D Layer Toggles & Opacity -->
+          <div class="pointer-events-auto flex items-center space-x-2 bg-slate-900/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700/70 text-[11px]">
+            <label class="flex items-center gap-1 text-slate-300 cursor-pointer">
+              <input type="checkbox" checked onchange="visualizer3D.toggleBloodFlow(this.checked)" class="accent-sky-400"> Flow
+            </label>
+            <label class="flex items-center gap-1 text-slate-300 cursor-pointer">
+              <input type="checkbox" checked onchange="visualizer3D.toggleLabels(this.checked)" class="accent-amber-400"> Labels
+            </label>
+            <label class="flex items-center gap-1 text-slate-300 cursor-pointer">
+              <input type="checkbox" checked onchange="visualizer3D.isBeating = this.checked" class="accent-rose-500"> Beat
+            </label>
+            <div class="flex items-center gap-1 pl-1 border-l border-slate-700">
+              <span class="text-[10px] text-slate-400">Opacity:</span>
+              <input type="range" min="0.2" max="1.0" step="0.05" value="0.92" oninput="visualizer3D.setMyocardiumOpacity(this.value)" class="w-14 accent-sky-400 cursor-pointer">
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 3D Canvas Viewport -->
+        <div id="canvas3d-container" class="flex-1 w-full rounded-xl"></div>
+
+        <!-- Bottom Overlay: 3D Interaction Hint & Stenosis Color Scale -->
+        <div class="absolute bottom-5 left-5 right-5 z-20 flex flex-wrap items-center justify-between pointer-events-none gap-2">
+          
+          <div class="pointer-events-auto flex items-center space-x-1.5 bg-slate-900/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700/70 text-[11px] text-slate-400">
+            <i data-lucide="mouse-pointer-click" class="w-3.5 h-3.5 text-sky-400"></i>
+            <span>Click any vessel branch to inspect localized risk, IVUS lumen & SHAP</span>
+          </div>
+
+          <!-- Color scale legend (Phase 3 Strict Dataset Definition Thresholds) -->
+          <div class="pointer-events-auto flex items-center space-x-3 bg-slate-900/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-700/70 text-[10px]">
+            <div class="flex items-center space-x-1">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block shadow-sm shadow-emerald-400"></span>
+              <span class="text-slate-300">&lt;30% Low Risk</span>
+            </div>
+            <div class="flex items-center space-x-1">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block shadow-sm shadow-amber-400"></span>
+              <span class="text-slate-300">30%-49% Intermediate</span>
+            </div>
+            <div class="flex items-center space-x-1">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block shadow-sm shadow-rose-500"></span>
+              <span class="text-slate-300">&ge;50% Predicted Stenosis</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Real-Time Telemetry ECG Monitor & Virtual Intravascular Ultrasound (IVUS) Panel -->
+      <div class="glass-panel p-3 grid grid-cols-1 md:grid-cols-12 gap-3">
+        
+        <!-- 1. Real-Time 12-Lead ECG Telemetry Monitor (7 cols) -->
+        <div class="md:col-span-7 flex flex-col space-y-1.5">
+          <div class="flex items-center justify-between text-xs">
+            <div class="flex items-center space-x-1.5 text-emerald-400 font-bold">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+              <span>ICU Telemetry: Precordial Lead V1-V4 / II</span>
+            </div>
+            <div class="flex items-center space-x-2 text-[11px]">
+              <span class="text-slate-400">HR: <strong id="ecg-bpm-val" class="text-emerald-400 font-mono text-xs">74</strong> bpm</span>
+              <span id="ecg-rhythm-badge" class="badge-pill bg-emerald-500/20 text-emerald-400 text-[10px] py-0.5">Normal Sinus</span>
+            </div>
+          </div>
+          
+          <div class="ecg-screen w-full h-[98px] rounded-lg relative">
+            <canvas id="ecgCanvas" width="560" height="98" class="w-full h-full block ecg-glow"></canvas>
+            <div class="absolute bottom-1 right-2 text-[9px] font-mono text-emerald-500/60 pointer-events-none">25 mm/s | 10 mm/mV</div>
+          </div>
+        </div>
+
+        <!-- 2. Virtual Intravascular Ultrasound (IVUS) & Hemodynamic FFR (5 cols) -->
+        <div class="md:col-span-5 flex flex-col space-y-1.5 border-t md:border-t-0 md:border-l border-slate-800 md:pl-3">
+          <div class="flex items-center justify-between text-xs">
+            <div class="flex items-center space-x-1 text-sky-400 font-bold">
+              <i data-lucide="scan" class="w-3.5 h-3.5"></i>
+              <span>IVUS Lumen &amp; FFR: <span id="ivus-vessel-title" class="text-white font-mono">LAD</span></span>
+            </div>
+            <span id="ivus-ischemia-badge" class="badge-pill bg-rose-500/20 text-rose-400 text-[10px] py-0.5">Ischemic (+)</span>
+          </div>
+
+          <div class="flex items-center space-x-3">
+            <div class="w-[88px] h-[88px] rounded-lg ivus-screen border border-slate-800 flex-shrink-0 relative overflow-hidden">
+              <canvas id="ivusCanvas" width="88" height="88" class="w-full h-full block"></canvas>
+              <div class="absolute inset-0 flex items-center justify-center pointer-events-none text-[8px] font-mono text-sky-400/50">LUMEN</div>
+            </div>
+
+            <div class="flex-1 grid grid-cols-2 gap-x-2 gap-y-1 text-[10px]">
+              <div class="bg-slate-900/70 p-1.5 rounded border border-slate-800">
+                <div class="text-slate-400 text-[9px]">Simulated FFR</div>
+                <div id="ivus-ffr-val" class="font-mono font-bold text-xs text-rose-400">0.48</div>
+              </div>
+              <div class="bg-slate-900/70 p-1.5 rounded border border-slate-800">
+                <div class="text-slate-400 text-[9px]">% Stenosis</div>
+                <div id="ivus-pct-stenosis" class="font-mono font-bold text-xs text-rose-400">92.4%</div>
+              </div>
+              <div class="bg-slate-900/70 p-1.5 rounded border border-slate-800">
+                <div class="text-slate-400 text-[9px]">Min. Lumen Area</div>
+                <div id="ivus-mla-val" class="font-mono font-bold text-[11px] text-slate-200">1.2 mm²</div>
+              </div>
+              <div class="bg-slate-900/70 p-1.5 rounded border border-slate-800">
+                <div class="text-slate-400 text-[9px]">Plaque Burden</div>
+                <div id="ivus-plaque-val" class="font-mono font-bold text-[11px] text-amber-400">88.5%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- =============================================================== -->
+    <!-- RIGHT COLUMN: CLINICAL RISK DASHBOARD & SHAP EXPLAINABILITY (3 cols) -->
+    <!-- =============================================================== -->
+    <div class="lg:col-span-3 xl:col-span-3 flex flex-col space-y-4">
+      
+      <!-- 1. OVERALL CAD STATUS & RISK TIER CARD -->
+      <div class="glass-panel p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="heart-pulse" class="w-4 h-4 text-rose-400"></i>
+            <h3 class="font-bold text-xs uppercase tracking-wider text-slate-300">Overall CAD Status</h3>
+          </div>
+          <span id="cad-status-badge" class="badge-pill bg-rose-500/20 text-rose-400 border border-rose-500/30">
+            CAD Detected
+          </span>
+        </div>
+
+        <div class="flex items-baseline justify-between">
+          <div>
+            <div id="cad-score-display" class="font-mono text-3xl font-extrabold text-white">82%</div>
+            <div class="text-[11px] text-slate-400">Predicted CAD Probability</div>
+          </div>
+          <div class="text-right">
+            <div id="cad-risk-tier" class="text-xs font-bold text-amber-400">High Risk</div>
+            <div id="vessels-at-risk-badge" class="badge-pill bg-slate-800 text-slate-300 text-[10px] mt-0.5">
+              2 Vessels Involved
+            </div>
+          </div>
+        </div>
+
+        <!-- CAD Probability Bar -->
+        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+          <div id="cad-progress-bar" class="h-full bg-gradient-to-r from-amber-500 to-rose-500 transition-all duration-500" style="width: 82%;"></div>
+        </div>
+
+        <!-- Clinical Recommendation -->
+        <p id="cad-recommendation" class="text-[11px] text-slate-300 bg-slate-900/60 p-2 rounded-lg border border-slate-800 leading-relaxed">
+          High suspicion of flow-limiting stenosis. Urgent cardiology consult and stress perfusion/CTCA advised.
+        </p>
+      </div>
+
+      <!-- 2. TRI-VESSEL STENOSIS BREAKDOWN -->
+      <div class="glass-panel p-4 space-y-2.5">
+        <div class="flex items-center justify-between mb-1">
+          <h3 class="font-bold text-xs uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+            <i data-lucide="git-branch" class="w-3.5 h-3.5 text-sky-400"></i>
+            Vessel Stenosis Breakdown
+          </h3>
+          <span class="text-[10px] text-slate-500">&ge;50% Threshold</span>
+        </div>
+
+        <!-- LAD Card -->
+        <div id="lad-card" onclick="visualizer3D.selectVessel('LAD'); highlightVesselTab('LAD'); loadExplanationForTarget('LAD');" class="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/80 cursor-pointer transition hover:border-sky-400">
+          <div class="flex items-center justify-between text-xs mb-1">
+            <div class="flex items-center space-x-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+              <span class="font-bold text-slate-200">LAD (Anterior)</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span id="lad-prob-display" class="font-mono font-bold text-rose-400">77%</span>
+              <span id="lad-status-badge" class="badge-pill bg-rose-500/20 text-rose-400 text-[10px] py-0.5">Stenotic</span>
+            </div>
+          </div>
+          <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
+            <div id="lad-bar" class="h-full bg-rose-500 transition-all duration-300" style="width: 77%;"></div>
+          </div>
+        </div>
+
+        <!-- LCX Card -->
+        <div id="lcx-card" onclick="visualizer3D.selectVessel('LCX'); highlightVesselTab('LCX'); loadExplanationForTarget('LCX');" class="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/80 cursor-pointer transition hover:border-purple-400">
+          <div class="flex items-center justify-between text-xs mb-1">
+            <div class="flex items-center space-x-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+              <span class="font-bold text-slate-200">LCX (Lateral)</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span id="lcx-prob-display" class="font-mono font-bold text-amber-400">58%</span>
+              <span id="lcx-status-badge" class="badge-pill bg-amber-500/20 text-amber-400 text-[10px] py-0.5">Stenotic</span>
+            </div>
+          </div>
+          <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
+            <div id="lcx-bar" class="h-full bg-amber-500 transition-all duration-300" style="width: 58%;"></div>
+          </div>
+        </div>
+
+        <!-- RCA Card -->
+        <div id="rca-card" onclick="visualizer3D.selectVessel('RCA'); highlightVesselTab('RCA'); loadExplanationForTarget('RCA');" class="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/80 cursor-pointer transition hover:border-orange-400">
+          <div class="flex items-center justify-between text-xs mb-1">
+            <div class="flex items-center space-x-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-orange-400"></span>
+              <span class="font-bold text-slate-200">RCA (Inferior)</span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span id="rca-prob-display" class="font-mono font-bold text-emerald-400">3%</span>
+              <span id="rca-status-badge" class="badge-pill bg-emerald-500/20 text-emerald-400 text-[10px] py-0.5">Patent</span>
+            </div>
+          </div>
+          <div class="w-full bg-slate-900 h-1.5 rounded-full overflow-hidden">
+            <div id="rca-bar" class="h-full bg-emerald-400 transition-all duration-300" style="width: 3%;"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 3. REAL-TIME SHAP FEATURE ATTRIBUTION CHART -->
+      <div class="glass-panel p-4 flex-1 flex flex-col space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-1.5">
+            <i data-lucide="brain-circuit" class="w-4 h-4 text-sky-400"></i>
+            <h3 id="current-explain-target-label" class="font-bold text-xs uppercase tracking-wider text-slate-300">
+              SHAP Explainability
+            </h3>
+          </div>
+        </div>
+
+        <!-- Target Switcher Pills -->
+        <div class="flex bg-slate-900 p-1 rounded-lg border border-slate-800 text-[10px] font-semibold gap-1">
+          <button class="explain-target-btn flex-1 py-1 rounded bg-sky-500 text-white transition" data-target="CAD">Overall CAD</button>
+          <button class="explain-target-btn flex-1 py-1 rounded text-slate-400 hover:text-slate-200 transition" data-target="LAD">LAD</button>
+          <button class="explain-target-btn flex-1 py-1 rounded text-slate-400 hover:text-slate-200 transition" data-target="LCX">LCX</button>
+          <button class="explain-target-btn flex-1 py-1 rounded text-slate-400 hover:text-slate-200 transition" data-target="RCA">RCA</button>
+        </div>
+
+        <!-- SHAP Waterfall Bar Chart Canvas -->
+        <div class="relative w-full h-[180px]">
+          <canvas id="shapChart"></canvas>
+        </div>
+
+        <!-- Clinical Narrative -->
+        <div class="text-[11px] text-slate-300 bg-slate-900/70 p-2.5 rounded-lg border border-slate-800/80 leading-relaxed font-sans">
+          <span class="font-bold text-sky-400 block mb-0.5">Clinical Rationale:</span>
+          <p id="shap-narrative-text">Prediction is driven upwards by anterior wall motion abnormalities and reduced EF.</p>
+        </div>
+      </div>
+
+      <!-- 4. PHYSIOLOGICAL RISK RADAR -->
+      <div class="glass-panel p-4 space-y-2">
+        <h3 class="font-bold text-xs uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+          <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-purple-400"></i>
+          Physiological Domain Profile
+        </h3>
+        <div class="relative w-full h-[140px]">
+          <canvas id="radarChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ================================================================= -->
+  <!-- MODALS: CLINICAL DISCLAIMER & VALIDATION METRICS -->
+  <!-- ================================================================= -->
+  <!-- 1. Clinical Disclaimer Modal -->
+  <div id="disclaimer-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-lg w-full p-6 space-y-4 border border-amber-500/40">
+      <div class="flex items-center space-x-3 text-amber-400">
+        <i data-lucide="shield-alert" class="w-7 h-7"></i>
+        <h3 class="text-lg font-bold text-white">Clinical Safety & Decision-Support Disclaimer</h3>
+      </div>
+      <p class="text-xs text-slate-300 leading-relaxed font-semibold">
+        For educational and decision-support research use only. Not a definitive clinical diagnosis.
+      </p>
+      <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
+        <li><strong>CARDIOSPATIAL-3D</strong> is an investigational decision-support AI prototype developed for the <strong>IIT Mandi Multimodal AI Hackathon 2026</strong>.</li>
+        <li>Predictions and 3D visual risk mappings are intended strictly for <strong>research exploration and clinical decision support</strong>.</li>
+        <li>This software is <strong>NOT a substitute</strong> for formal diagnostic coronary angiography, CTCA, or independent clinical judgment by a qualified healthcare professional.</li>
+      </ul>
+      <div class="pt-2 flex justify-end">
+        <button onclick="document.getElementById('disclaimer-modal').classList.add('hidden')" class="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs transition">
+          I Understand & Acknowledge
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Validation Metrics Modal -->
+  <div id="metrics-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-3xl w-full p-6 space-y-4 border border-sky-500/40 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2 text-sky-400">
+          <i data-lucide="award" class="w-6 h-6"></i>
+          <h3 class="text-base font-bold text-white">5-Fold Stratified Cross-Validation Benchmark</h3>
+        </div>
+        <button onclick="document.getElementById('metrics-modal').classList.add('hidden')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="text-xs text-slate-300 space-y-1">
+        <p><strong>Dataset:</strong> UCI Z-Alizadeh Sani Coronary Artery Disease Cohort (303 patients, 54 features).</p>
+        <p><strong>Target Leakage Policy:</strong> Cath, CAD, LAD, LCX, and RCA are strictly excluded from input feature spaces.</p>
+      </div>
+
+      <!-- Injected Metrics Cards -->
+      <div id="metrics-content-container">
+        <!-- Rendered by dashboard.js -->
+      </div>
+
+      <div class="p-3 bg-slate-900 rounded-xl text-xs text-slate-400 space-y-1">
+        <span class="font-bold text-slate-200">Methodological Highlights:</span>
+        <ul class="list-disc list-inside space-y-0.5">
+          <li>Stratified 5-Fold Cross-Validation ensures robust out-of-fold generalization.</li>
+          <li>Class imbalance addressed via positive class weighting (<code class="text-sky-300">scale_pos_weight</code>) and balanced tree priors.</li>
+          <li>Calibrated probabilities verified with Brier Score & PR-AUC analysis.</li>
+        </ul>
+      </div>
+
+      <div class="flex justify-end">
+        <button onclick="document.getElementById('metrics-modal').classList.add('hidden')" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. What-If Counterfactual Intervention Simulator Modal -->
+  <div id="intervention-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-2xl w-full p-6 space-y-4 border border-emerald-500/40 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2 text-emerald-400">
+          <i data-lucide="flask-conical" class="w-6 h-6"></i>
+          <div>
+            <h3 class="text-base font-bold text-white">"What-If" Counterfactual Intervention Simulator</h3>
+            <p class="text-[11px] text-slate-400">Prescriptive Cardiology AI: Simulate treatment impact before clinical intervention</p>
+          </div>
+        </div>
+        <button onclick="document.getElementById('intervention-modal').classList.add('hidden')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Treatment Checkbox Options -->
+      <div class="space-y-2 text-xs">
+        <span class="font-bold text-slate-200 block">Select Clinical Treatment Regimen:</span>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+          
+          <label class="flex items-start space-x-2.5 p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 hover:border-emerald-500/40 cursor-pointer transition">
+            <input type="checkbox" id="treat-statin" checked class="accent-emerald-500 mt-0.5">
+            <div>
+              <strong class="text-emerald-400 block">High-Intensity Statin Therapy</strong>
+              <span class="text-slate-400 text-[11px]">Atorvastatin 80mg (Target LDL &lt; 55 mg/dL, -52% LDL reduction)</span>
+            </div>
+          </label>
+
+          <label class="flex items-start space-x-2.5 p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 hover:border-emerald-500/40 cursor-pointer transition">
+            <input type="checkbox" id="treat-bp" checked class="accent-emerald-500 mt-0.5">
+            <div>
+              <strong class="text-sky-400 block">Blood Pressure Optimization</strong>
+              <span class="text-slate-400 text-[11px]">ACEi / ARB + CCB (Normalize SBP to 120 mmHg)</span>
+            </div>
+          </label>
+
+          <label class="flex items-start space-x-2.5 p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 hover:border-emerald-500/40 cursor-pointer transition">
+            <input type="checkbox" id="treat-smoke" checked class="accent-emerald-500 mt-0.5">
+            <div>
+              <strong class="text-amber-400 block">Smoking Cessation Protocol</strong>
+              <span class="text-slate-400 text-[11px]">Pharmacotherapy &amp; behavioral intervention (Smoker: No)</span>
+            </div>
+          </label>
+
+          <label class="flex items-start space-x-2.5 p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 hover:border-emerald-500/40 cursor-pointer transition">
+            <input type="checkbox" id="treat-glucose" class="accent-emerald-500 mt-0.5">
+            <div>
+              <strong class="text-purple-400 block">Intensive Glycemic Control</strong>
+              <span class="text-slate-400 text-[11px]">SGLT2 inhibitor / GLP-1 RA (Normalize FBS to 92 mg/dL)</span>
+            </div>
+          </label>
+
+          <label class="flex items-start space-x-2.5 p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 hover:border-emerald-500/40 cursor-pointer transition">
+            <input type="checkbox" id="treat-rehab" checked class="accent-emerald-500 mt-0.5">
+            <div>
+              <strong class="text-rose-400 block">Supervised Cardiac Rehab</strong>
+              <span class="text-slate-400 text-[11px]">Exercise conditioning (+4% LVEF, -2.0 BMI)</span>
+            </div>
+          </label>
+
+          <label class="flex items-start space-x-2.5 p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 hover:border-emerald-500/40 cursor-pointer transition">
+            <input type="checkbox" id="treat-ischemic" checked class="accent-emerald-500 mt-0.5">
+            <div>
+              <strong class="text-indigo-400 block">Anti-Ischemic &amp; Revascularization</strong>
+              <span class="text-slate-400 text-[11px]">Relieves angina, resolves RWMA to 0, ECG normalized</span>
+            </div>
+          </label>
+
+        </div>
+      </div>
+
+      <div class="flex justify-end pt-1">
+        <button onclick="executeInterventionSimulation()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold text-xs flex items-center space-x-1.5 shadow-lg shadow-emerald-500/20 transition">
+          <i data-lucide="play" class="w-4 h-4"></i>
+          <span>Simulate Treatment Impact</span>
+        </button>
+      </div>
+
+      <!-- Simulation Results Container -->
+      <div id="intervention-results" class="hidden space-y-3 pt-3 border-t border-slate-800">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-2 text-center text-xs">
+          
+          <div class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+            <div class="text-[10px] text-slate-400">Overall CAD Risk</div>
+            <div id="sim-cad-delta" class="font-mono text-base font-extrabold text-emerald-400 my-0.5">82% → 31%</div>
+            <div id="sim-cad-pct" class="text-[10px] font-bold text-emerald-400">-62.2% Relative</div>
+          </div>
+
+          <div class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+            <div class="text-[10px] text-slate-400">LAD (Anterior)</div>
+            <div id="sim-lad-delta" class="font-mono text-base font-extrabold text-emerald-400 my-0.5">97% → 28%</div>
+            <div id="sim-lad-pct" class="text-[10px] font-bold text-emerald-400">Patent Reversal</div>
+          </div>
+
+          <div class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+            <div class="text-[10px] text-slate-400">LCX (Lateral)</div>
+            <div id="sim-lcx-delta" class="font-mono text-base font-extrabold text-emerald-400 my-0.5">93% → 35%</div>
+            <div id="sim-lcx-pct" class="text-[10px] font-bold text-emerald-400">Risk Normalized</div>
+          </div>
+
+          <div class="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800">
+            <div class="text-[10px] text-slate-400">RCA (Inferior)</div>
+            <div id="sim-rca-delta" class="font-mono text-base font-extrabold text-emerald-400 my-0.5">5% → 4%</div>
+            <div id="sim-rca-pct" class="text-[10px] font-bold text-emerald-400">Patent (Stable)</div>
+          </div>
+
+        </div>
+
+        <div class="p-3 bg-emerald-950/30 rounded-xl border border-emerald-500/30 text-xs text-slate-300 space-y-1">
+          <strong class="text-emerald-400 block flex items-center gap-1">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Prescriptive Recommendation:
+          </strong>
+          <p id="sim-narrative-summary" class="leading-relaxed text-[11px]">
+            High-intensity statin therapy combined with blood pressure normalization reverses flow-limiting stenosis risk below the critical 50% interventional threshold.
+          </p>
+        </div>
+
+        <div class="flex justify-between items-center pt-1">
+          <button onclick="applyInterventionTo3D()" class="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs flex items-center space-x-1.5 transition">
+            <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+            <span>🌟 Apply Counterfactual to 3D Anatomy</span>
+          </button>
+          <button onclick="document.getElementById('intervention-modal').classList.add('hidden')" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition">
+            Close
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 4. Hospital Cardiology Consultation S.O.A.P. Note Modal -->
+  <div id="soap-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-3xl w-full p-6 space-y-4 border border-purple-500/40 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2 text-purple-400">
+          <i data-lucide="clipboard-check" class="w-6 h-6"></i>
+          <div>
+            <h3 class="text-base font-bold text-white">Hospital Cardiology Consultation Report (S.O.A.P.)</h3>
+            <p class="text-[11px] text-slate-400">Structured Medical Documentation synthesized with ML Multi-Vessel Findings</p>
+          </div>
+        </div>
+        <button onclick="document.getElementById('soap-modal').classList.add('hidden')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- S.O.A.P. Content Area -->
+      <div id="soap-content-container" class="soap-paper p-4 rounded-xl text-xs space-y-3 text-slate-200">
+        <div>
+          <span class="text-sky-400 font-bold block mb-0.5">[SUBJECTIVE - CLINICAL HISTORY &amp; PRESENTATION]</span>
+          <p id="soap-subj" class="text-slate-300 leading-relaxed font-sans"></p>
+        </div>
+        <div>
+          <span class="text-emerald-400 font-bold block mb-0.5">[OBJECTIVE - VITALS, LABS, ECG &amp; ECHOCARDIOGRAPHY]</span>
+          <p id="soap-obj" class="text-slate-300 leading-relaxed font-sans"></p>
+        </div>
+        <div>
+          <span class="text-amber-400 font-bold block mb-0.5">[ASSESSMENT - AI MULTI-VESSEL STENOSIS &amp; HEMODYNAMIC FFR]</span>
+          <pre id="soap-assess" class="text-slate-300 whitespace-pre-wrap font-mono text-[11px] leading-relaxed"></pre>
+        </div>
+        <div>
+          <span class="text-purple-400 font-bold block mb-0.5">[PLAN - GUIDELINE-DIRECTED MEDICAL THERAPY &amp; IMAGING]</span>
+          <pre id="soap-plan" class="text-slate-300 whitespace-pre-wrap font-mono text-[11px] leading-relaxed"></pre>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center pt-2">
+        <button onclick="copySoapNote()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center space-x-1.5 transition">
+          <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+          <span id="copy-soap-btn-text">Copy Full Note</span>
+        </button>
+        <div class="flex items-center space-x-2">
+          <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center space-x-1.5 transition">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+            <span>Print Clinical Note</span>
+          </button>
+          <button onclick="document.getElementById('soap-modal').classList.add('hidden')" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Benchmark Cohort Explorer Modal -->
+  <div id="cohort-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="glass-panel max-w-4xl w-full p-6 space-y-4 border border-amber-500/40 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-2 text-amber-400">
+          <i data-lucide="users" class="w-6 h-6"></i>
+          <div>
+            <h3 class="text-base font-bold text-white">15 Benchmark Cohort Patients (UCI Z-Alizadeh Sani)</h3>
+            <p class="text-[11px] text-slate-400">Demonstrate real patient verification and 1-click loading across diverse risk profiles</p>
+          </div>
+        </div>
+        <button onclick="document.getElementById('cohort-modal').classList.add('hidden')" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Cohort Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="border-b border-slate-800 text-slate-400 text-[11px]">
+              <th class="p-2">Patient ID</th>
+              <th class="p-2">Age / Sex</th>
+              <th class="p-2">Clinical Category</th>
+              <th class="p-2">Ground Truth (CAD / Vessels)</th>
+              <th class="p-2">LVEF %</th>
+              <th class="p-2">BP / LDL</th>
+              <th class="p-2 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody id="cohort-table-body" class="divide-y divide-slate-800/60 text-slate-300">
+            <!-- Rendered by dashboard.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-end pt-2">
+        <button onclick="document.getElementById('cohort-modal').classList.add('hidden')" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Initialize Lucide Icons & Dashboard Controller -->
+  <script src="/static/cardio_3d.js"></script>
+  <script src="/static/dashboard.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+
+</body>
+</html>

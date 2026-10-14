@@ -1,0 +1,145 @@
+{
+  "verified_at_utc": "2026-10-04T04:00:57.953305+00:00",
+  "phase": "one final submission-polish pass; no scientific/product changes",
+  "branch": "codex/submission-package",
+  "starting_commit": "5df5782045067967e8b3a4d348d4f26112a73548",
+  "previous_submission_preparation_record": "docs/submission/VERIFICATION.json",
+  "protected_v1": {
+    "file_count": 256,
+    "all_sha256_match": true,
+    "all_git_tag_bytes_match": true,
+    "tag": "cardioscope-v1.0.0",
+    "manifest_sha256": "7f03a46a9edcb1e695fd68b4ae3ea485654645c1ab23e02dce00eb3321f77dd6",
+    "product_scientific_tracked_diff_from_start": []
+  },
+  "safe_checks": {
+    "command": "make lint verify build",
+    "runtime": "PASS: Python 3.12.14 and 53 pinned package versions",
+    "lint": "PASS: ruff check/format; 37 source files already formatted",
+    "typescript": "PASS: tsc --noEmit",
+    "production_build": "PASS; same frozen bundle names and sizes",
+    "data_verify": "PASS: source bytes and development-only contract/folds; 242 records; no holdout target decoding or fold regeneration",
+    "anatomy_verify": "PASS: 83 unique meshes; heart 30 / LAD 18 / LCX 6 / RCA 29",
+    "python_tests": {
+      "command": ".venv/bin/python -m pytest -q tests/test_data.py tests/test_splits.py tests/test_anatomy.py tests/test_actual_sources.py tests/test_api.py",
+      "passed": 43,
+      "seconds": 2.68
+    },
+    "frontend_tests": {
+      "command": "cd frontend && npm test",
+      "passed": 75,
+      "files": 8,
+      "seconds": 5.29
+    },
+    "warnings": [
+      "Existing Vitest Three.js CJS deprecation warning",
+      "Existing lazy anatomy chunk above Vite 500 KB advisory",
+      "Poppler fontconfig default-config warning; six rendered pages visually inspected"
+    ],
+    "git_diff_check": "PASS",
+    "local_markdown_links": {
+      "markdown_files": 27,
+      "checked": 193,
+      "missing": [],
+      "scope": "all tracked Markdown; local file existence; code fences and external URLs excluded; public links pending"
+    },
+    "publication_path_secret_scan": {
+      "scope": "README, third-party notices, submission Markdown/JSON/report source, and extracted report text",
+      "findings": [],
+      "guarantee": "scoped checks only"
+    }
+  },
+  "report": {
+    "path": "output/pdf/CardioScope-Track-A-Report.pdf",
+    "sha256": "07316f0748a72fc11c679a42c83798cce320e6818b55e7d899c60dc6128f4e2e",
+    "pages": 6,
+    "all_pages_rendered_and_visually_reviewed": true,
+    "no_clipping_overlap_or_broken_glyphs_observed": true,
+    "private_paths_in_extracted_text": false,
+    "same_environment_rebuild_byte_identical": true,
+    "scientific_metrics_and_claims_source_unchanged": true
+  },
+  "screenshots": {
+    "source": "real frozen V1 application; existing public development example only",
+    "original_five_captures_unchanged": true,
+    "new_capture": "docs/submission/assets/anatomy-posterior-LCX.jpg",
+    "new_view": "posterior LCX selected; heart and all vessels shown",
+    "derived_integer_crops": 3,
+    "source_and_crop_sha256_verified": true,
+    "exact_crop_pixels_verified": true,
+    "fabrication_compositing_or_scientific_content_alteration": false,
+    "provenance": "docs/submission/SCREENSHOT_PROVENANCE.json"
+  },
+  "demo": {
+    "target_seconds": 310,
+    "narration_words": 375,
+    "complete_video_recorded_or_timed": false,
+    "browser_rehearsal": "PASS: RCA selected -> exposed LAD mesh click -> LAD card selected / RCA cleared; LCX card selection -> LCX geometry/label",
+    "architecture_seconds": 10,
+    "silent_final_frame_preparation_seconds": 10,
+    "closing_seconds": 20
+  },
+  "devpost": {
+    "previous_word_count": 969,
+    "polished_word_count": 950
+  },
+  "publication_inventory": {
+    "Problem Statements.pdf": 2,
+    "Track B.pdf": 3,
+    "total_pdfs": 7,
+    "total_pages": 17,
+    "source_files_unchanged": true
+  },
+  "prohibited_actions": {
+    "model_training": false,
+    "real_data_model_refit": false,
+    "final_holdout_evaluation": false,
+    "reserved_workbook_outcome_decoding": false,
+    "reserved_row_prediction_deserialization": false,
+    "threshold_change": false,
+    "shap_math_or_background_change": false,
+    "anatomy_mapping_or_geometry_change": false,
+    "research_execution_or_deployment": false,
+    "remote_push": false,
+    "upload_or_submission": false,
+    "git_history_rewrite": false,
+    "owner_license_selection": false
+  },
+  "cleanup": {
+    "owned_temporary_server_stopped": true,
+    "owned_browser_tab_closed": true,
+    "temporary_viewport_reset": true,
+    "preexisting_user_server_and_tab_untouched": true,
+    "temporary_pdf_renders_removed": true
+  },
+  "publication_ready": false,
+  "ready_for_owner_license_pdf_publication_decisions": true,
+  "remaining_tasks": [
+    "Owner code-license/copyright decision; no root LICENSE added",
+    "Organizer-PDF permission or approved separate clean export; original local archive/history retained",
+    "Approved GitHub publication and actual hosted CI",
+    "Actual demo recording/YouTube upload",
+    "Devpost links/team identities/final submission",
+    "Official deadline and final logged-out access confirmation"
+  ],
+  "files_changed": [
+    "README.md",
+    "docs/submission/CLAIM_AUDIT.md",
+    "docs/submission/DEMO_REHEARSAL.md",
+    "docs/submission/DEMO_SCRIPT.md",
+    "docs/submission/DEVPOST.md",
+    "docs/submission/JUDGE_QA.md",
+    "docs/submission/POLISH_VERIFICATION.json",
+    "docs/submission/PUBLICATION.md",
+    "docs/submission/REPORT_BUILD.md",
+    "docs/submission/SCREENSHOTS.md",
+    "docs/submission/SCREENSHOT_PROVENANCE.json",
+    "docs/submission/SUBMISSION_CHECKLIST.md",
+    "docs/submission/assets/anatomy-posterior-LCX-crop.png",
+    "docs/submission/assets/anatomy-posterior-LCX.jpg",
+    "docs/submission/assets/explanation-CAD-higher-crop.png",
+    "docs/submission/assets/explanation-CAD-lower-crop.png",
+    "docs/submission/report_source.py",
+    "output/pdf/CardioScope-Track-A-Report.pdf"
+  ]
+}

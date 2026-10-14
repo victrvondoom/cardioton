@@ -1,0 +1,252 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+model Post {
+    id        Int      @id @default(autoincrement())
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    createdById String  // Clerk user ID
+    
+    @@index([name])
+}
+
+model Kiosk {
+    id          String    @id @default(uuid())
+    location    String?
+    description String?
+    status      String    // "ACTIVE" | "OFFLINE" | "MAINTENANCE"
+
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+
+    sessions    Session[]
+}
+
+model Session {
+    id          String       @id @default(uuid())
+    userId      String
+    kioskId     String
+    startTime   DateTime?
+    endTime     DateTime?
+    state       String       // "IN_PROGRESS" | "COMPLETED" | "CANCELED"
+
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
+
+    kiosk       Kiosk        @relation(fields: [kioskId], references: [id])
+
+    conversation       Conversation?
+    healthMarkers     HealthMarker[]
+    recommendations   Recommendation[]
+    referrals         Referral[]
+    externalQueries   ExternalQuery[]
+    medias           Media[]
+    metaReasonings    MetaReasoning[]
+    realtimeSessions  RealtimeSession[]
+    auditLogs         AuditLog[]
+    continualFeeds    ContinualVisionFeed[]
+    analysisStatuses  AnalysisStatus[]
+}
+
+model Conversation {
+    id          String        @id @default(uuid())
+    sessionId   String        @unique
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+
+    session     Session       @relation(fields: [sessionId], references: [id])
+    chatMessages ChatMessage[]
+}
+
+model ChatMessage {
+    id              String         @id @default(uuid())
+    conversationId  String
+    sender          String         // "user" | "system" | "ai"
+    messageText     String
+    timestamp       DateTime       @default(now())
+
+    conversation    Conversation   @relation(fields: [conversationId], references: [id])
+}
+
+model HealthMarker {
+    id          String     @id @default(uuid())
+    sessionId   String
+    markerType  String     // "weight" | "bmi" | "bloodPressure" | "heartRate" | "height"
+    data        String     // Stored as JSON string
+    capturedAt  DateTime   @default(now())
+    deviceId    String?
+    
+    session     Session    @relation(fields: [sessionId], references: [id])
+    device      Device?    @relation(fields: [deviceId], references: [id])
+}
+
+model Device {
+    id               String        @id @default(uuid())
+    name             String
+    deviceTypeId     String
+    connectionMethod String?      // e.g., "Bluetooth", "camera-vision", "manualEntry"
+    lastReadingAt    DateTime?
+
+    createdAt        DateTime      @default(now())
+    updatedAt        DateTime      @updatedAt
+
+    deviceType       DeviceType    @relation(fields: [deviceTypeId], references: [id])
+    healthMarkers    HealthMarker[]
+    auditLogs        AuditLog[]
+}
+
+model DeviceType {
+    id          String    @id @default(uuid())
+    typeKey     String    @unique // e.g. "bloodPressureMonitor"
+    description String?
+
+    devices     Device[]
+}
+
+model Recommendation {
+    id            String      @id @default(uuid())
+    sessionId     String
+    title         String
+    description   String?
+    externalLinks String?     // Stored as JSON string
+    createdAt     DateTime    @default(now())
+
+    session       Session     @relation(fields: [sessionId], references: [id])
+}
+
+model Referral {
+    id            String    @id @default(uuid())
+    sessionId     String
+    referredTo    String?   // e.g. clinic name or specialist info
+    scheduledTime DateTime?
+    status        String?   // "pending", "confirmed", "canceled"
+
+    session       Session   @relation(fields: [sessionId], references: [id])
+}
+
+model ExternalQuery {
+    id              String    @id @default(uuid())
+    sessionId       String?
+    queryText       String
+    sourceType      String    // "tavily", "googleScholar", "generalWebSearch", etc.
+    options         String?   // Stored as JSON string
+    timestamp       DateTime  @default(now())
+
+    session         Session?  @relation(fields: [sessionId], references: [id])
+    externalResults ExternalResult[]
+}
+
+model ExternalResult {
+    id              String         @id @default(uuid())
+    externalQueryId String
+    resultContent   String         // Stored as JSON string
+    responseTime    Float?
+    createdAt       DateTime       @default(now())
+
+    externalQuery   ExternalQuery  @relation(fields: [externalQueryId], references: [id])
+}
+
+model Media {
+    id              String          @id @default(uuid())
+    sessionId       String
+    mediaType       String          // "image" | "video" | etc.
+    storageLocation String          // S3 URL or local path
+    capturedAt      DateTime        @default(now())
+    metadata        String?         // Stored as JSON string
+
+    session         Session         @relation(fields: [sessionId], references: [id])
+    visionAnalyses  VisionAnalysis[]
+    continualFeeds  ContinualVisionFeed[]
+}
+
+model VisionAnalysis {
+    id              String       @id @default(uuid())
+    mediaId         String
+    analysisType    String       // "rash detection", "text recognition", etc.
+    analysisResults String?      // Stored as JSON string
+    createdAt       DateTime     @default(now())
+
+    media           Media        @relation(fields: [mediaId], references: [id])
+}
+
+model ContinualVisionFeed {
+    id              String   @id @default(uuid())
+    feedName        String
+    lastSnapshotId  String?
+    analysisHistory String?  // Stored as JSON string
+    sessionId       String?
+    
+    lastSnapshot    Media?   @relation(fields: [lastSnapshotId], references: [id])
+    session         Session? @relation(fields: [sessionId], references: [id])
+}
+
+model RealtimeSession {
+    id           String   @id @default(uuid())
+    sessionId    String?
+    ephemeralKey String?  // short-lived token
+    startedAt    DateTime @default(now())
+    endedAt      DateTime?
+    active       Boolean  @default(true)
+
+    session      Session? @relation(fields: [sessionId], references: [id])
+}
+
+model AuditLog {
+    id             String    @id @default(uuid())
+    eventType      String    // "error", "warning", "info"
+    description    String?
+    details        String?   // Stored as JSON string
+    createdAt      DateTime  @default(now())
+
+    sessionId      String?
+    userId         String?
+    deviceId       String?
+    associatedId   String?   // e.g. if referencing a kiosk or other table by ID
+    associatedType String?   // "session", "user", "device", etc.
+
+    session        Session?  @relation(fields: [sessionId], references: [id])
+    device         Device?   @relation(fields: [deviceId], references: [id])
+}
+
+model MetaReasoning {
+    id             String   @id @default(uuid())
+    sessionId      String
+    agentType      String   // "reviewAgent", "hypothesisAgent", etc.
+    analysisContent String? // Stored as JSON string
+    createdAt      DateTime @default(now())
+
+    session        Session  @relation(fields: [sessionId], references: [id])
+}
+
+model AnalysisStatus {
+    id                   String   @id @default(uuid())
+    sessionId            String
+    hasEnoughInformation Boolean?
+    missingCriticalInfo  String?   // Stored as JSON string array
+    recommendedNextSteps String?   // Stored as JSON string array
+    urgencyLevel         String?   // "low" | "medium" | "high"
+    reasoning            String?
+    timestamp          DateTime @default(now())
+
+    session              Session  @relation(fields: [sessionId], references: [id])
+}
+
+model GoogleFitTokens {
+    id           String   @id @default(uuid())
+    userId       String   @unique
+    accessToken  String
+    refreshToken String
+    expiryDate   BigInt
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+}

@@ -1,0 +1,1668 @@
+{
+  "anatomical_visual_review_complete": false,
+  "archive_snapshot": {
+    "etag": "\"3de1eb9-4dd48e9fe8d00\"",
+    "modified": "Wed, 22 May 2013 06:45:40 GMT",
+    "size": 64888505
+  },
+  "assembly": {
+    "bounds_max": [
+      79.3913,
+      -70.1704,
+      1279.5
+    ],
+    "bounds_min": [
+      -36.3037,
+      -176.517,
+      1174.92
+    ],
+    "center": [
+      21.5438,
+      -123.3437,
+      1227.21
+    ],
+    "coordinate_units": "not independently documented; preserve source coordinates",
+    "scale": 0.017286831755909938,
+    "transform": "apply p_view = (p_source - center) * scale to all groups together"
+  },
+  "browser_render_verified": false,
+  "groups": {
+    "LAD": {
+      "concept_id": "FMA3862",
+      "expected_leaves": 18,
+      "leaf_ids": [
+        "FJ2631",
+        "FJ2632",
+        "FJ2633",
+        "FJ2634",
+        "FJ2635",
+        "FJ2636",
+        "FJ2637",
+        "FJ2638",
+        "FJ2639",
+        "FJ2640",
+        "FJ2641",
+        "FJ2642",
+        "FJ2643",
+        "FJ2644",
+        "FJ2645",
+        "FJ2646",
+        "FJ2647",
+        "FJ2648"
+      ],
+      "representation_id": "BP9548",
+      "source_name": "anterior interventricular branch of left coronary artery"
+    },
+    "LCX": {
+      "concept_id": "FMA3895",
+      "expected_leaves": 6,
+      "leaf_ids": [
+        "FJ2649",
+        "FJ2650",
+        "FJ2651",
+        "FJ2652",
+        "FJ2653",
+        "FJ2654"
+      ],
+      "representation_id": "BP9745",
+      "source_name": "circumflex branch of left coronary artery"
+    },
+    "RCA": {
+      "concept_id": "FMA50039",
+      "expected_leaves": 29,
+      "leaf_ids": [
+        "FJ2667",
+        "FJ2668",
+        "FJ2670",
+        "FJ2671",
+        "FJ2672",
+        "FJ2673",
+        "FJ2674",
+        "FJ2675",
+        "FJ2676",
+        "FJ2677",
+        "FJ2692",
+        "FJ2693",
+        "FJ2694",
+        "FJ2695",
+        "FJ2696",
+        "FJ2697",
+        "FJ2698",
+        "FJ2699",
+        "FJ2700",
+        "FJ2714",
+        "FJ2715",
+        "FJ2716",
+        "FJ2717",
+        "FJ2718",
+        "FJ2719",
+        "FJ2720",
+        "FJ2721",
+        "FJ2722",
+        "FJ2723"
+      ],
+      "representation_id": "BP9299",
+      "source_name": "right coronary artery"
+    },
+    "heart": {
+      "concept_id": "FMA7088",
+      "expected_leaves": 83,
+      "leaf_ids": [
+        "FJ2417",
+        "FJ2418",
+        "FJ2419",
+        "FJ2420",
+        "FJ2421",
+        "FJ2422",
+        "FJ2423",
+        "FJ2424",
+        "FJ2425",
+        "FJ2426",
+        "FJ2427",
+        "FJ2429",
+        "FJ2430",
+        "FJ2431",
+        "FJ2432",
+        "FJ2433",
+        "FJ2434",
+        "FJ2435",
+        "FJ2436",
+        "FJ2437",
+        "FJ2438",
+        "FJ2439",
+        "FJ2655",
+        "FJ2656",
+        "FJ2724",
+        "FJ2727",
+        "FJ2728",
+        "FJ2729",
+        "FJ2731",
+        "FJ2737"
+      ],
+      "original_leaf_ids": [
+        "FJ2417",
+        "FJ2418",
+        "FJ2419",
+        "FJ2420",
+        "FJ2421",
+        "FJ2422",
+        "FJ2423",
+        "FJ2424",
+        "FJ2425",
+        "FJ2426",
+        "FJ2427",
+        "FJ2429",
+        "FJ2430",
+        "FJ2431",
+        "FJ2432",
+        "FJ2433",
+        "FJ2434",
+        "FJ2435",
+        "FJ2436",
+        "FJ2437",
+        "FJ2438",
+        "FJ2439",
+        "FJ2631",
+        "FJ2632",
+        "FJ2633",
+        "FJ2634",
+        "FJ2635",
+        "FJ2636",
+        "FJ2637",
+        "FJ2638",
+        "FJ2639",
+        "FJ2640",
+        "FJ2641",
+        "FJ2642",
+        "FJ2643",
+        "FJ2644",
+        "FJ2645",
+        "FJ2646",
+        "FJ2647",
+        "FJ2648",
+        "FJ2649",
+        "FJ2650",
+        "FJ2651",
+        "FJ2652",
+        "FJ2653",
+        "FJ2654",
+        "FJ2655",
+        "FJ2656",
+        "FJ2667",
+        "FJ2668",
+        "FJ2670",
+        "FJ2671",
+        "FJ2672",
+        "FJ2673",
+        "FJ2674",
+        "FJ2675",
+        "FJ2676",
+        "FJ2677",
+        "FJ2692",
+        "FJ2693",
+        "FJ2694",
+        "FJ2695",
+        "FJ2696",
+        "FJ2697",
+        "FJ2698",
+        "FJ2699",
+        "FJ2700",
+        "FJ2714",
+        "FJ2715",
+        "FJ2716",
+        "FJ2717",
+        "FJ2718",
+        "FJ2719",
+        "FJ2720",
+        "FJ2721",
+        "FJ2722",
+        "FJ2723",
+        "FJ2724",
+        "FJ2727",
+        "FJ2728",
+        "FJ2729",
+        "FJ2731",
+        "FJ2737"
+      ],
+      "representation_id": "BP9305",
+      "source_name": "heart"
+    }
+  },
+  "meshes": {
+    "FJ2417": {
+      "bounds_max": [
+        40.9215,
+        -139.537,
+        1261.45
+      ],
+      "bounds_min": [
+        23.1402,
+        -159.581,
+        1244.9
+      ],
+      "bytes": 78668,
+      "faces": 1272,
+      "path": "meshes/FJ2417.obj",
+      "sha256": "b4888f2a738be2f11b98d909c3fc08c0a3ccb05f88a94e53d7e283ad17af15dc",
+      "vertices": 708
+    },
+    "FJ2418": {
+      "bounds_max": [
+        56.5892,
+        -124.512,
+        1224.65
+      ],
+      "bounds_min": [
+        31.5447,
+        -160.032,
+        1191.81
+      ],
+      "bytes": 54781,
+      "faces": 816,
+      "path": "meshes/FJ2418.obj",
+      "sha256": "e462c4455225f7d99845af95988ca2d9885144fbb3f7567610ca5635ca3a3dbc",
+      "vertices": 532
+    },
+    "FJ2419": {
+      "bounds_max": [
+        47.1424,
+        -151.131,
+        1209.05
+      ],
+      "bounds_min": [
+        12.0583,
+        -172.71,
+        1179.8
+      ],
+      "bytes": 59579,
+      "faces": 882,
+      "path": "meshes/FJ2419.obj",
+      "sha256": "05242b351343b3cce42237dd3e8256a53bb395eaee90e4e8a465578259b58fe8",
+      "vertices": 580
+    },
+    "FJ2420": {
+      "bounds_max": [
+        45.8879,
+        -93.1022,
+        1235.92
+      ],
+      "bounds_min": [
+        11.7217,
+        -141.625,
+        1204.46
+      ],
+      "bytes": 495303,
+      "faces": 7558,
+      "path": "meshes/FJ2420.obj",
+      "sha256": "859e44dbbc0e66eb64da60eff23afba5c4bba1a9b6aaf260d075502c0f3c4f44",
+      "vertices": 4052
+    },
+    "FJ2421": {
+      "bounds_max": [
+        23.2047,
+        -129.198,
+        1236.21
+      ],
+      "bounds_min": [
+        -21.0772,
+        -156.313,
+        1198.11
+      ],
+      "bytes": 532774,
+      "faces": 8160,
+      "path": "meshes/FJ2421.obj",
+      "sha256": "ab4d65a190910effcffa60cb5522359756504edb45b9dd312971083cb70c3af7",
+      "vertices": 4282
+    },
+    "FJ2422": {
+      "bounds_max": [
+        70.2463,
+        -86.4016,
+        1251.55
+      ],
+      "bounds_min": [
+        6.46745,
+        -158.522,
+        1184.07
+      ],
+      "bytes": 102175,
+      "faces": 1722,
+      "path": "meshes/FJ2422.obj",
+      "sha256": "88654bd73fa155daf0b44fd67bccaec81c9e37c105e046076993f2684c463d95",
+      "vertices": 879
+    },
+    "FJ2423": {
+      "bounds_max": [
+        52.6634,
+        -115.195,
+        1260.03
+      ],
+      "bounds_min": [
+        -18.8458,
+        -173.418,
+        1179.48
+      ],
+      "bytes": 113625,
+      "faces": 1918,
+      "path": "meshes/FJ2423.obj",
+      "sha256": "390747e238ba9239961d02d1e02516d7af7aacc86d2bc0c29fc835381032ceeb",
+      "vertices": 973
+    },
+    "FJ2424": {
+      "bounds_max": [
+        3.18705,
+        -92.4415,
+        1277.52
+      ],
+      "bounds_min": [
+        -34.203,
+        -153.569,
+        1185.26
+      ],
+      "bytes": 139100,
+      "faces": 2244,
+      "path": "meshes/FJ2424.obj",
+      "sha256": "8bd340059ff697cfe9ce57f2427e8c5a982e248a1d2230d477a4fe094adc2a2a",
+      "vertices": 1193
+    },
+    "FJ2425": {
+      "bounds_max": [
+        48.3237,
+        -70.9905,
+        1268.29
+      ],
+      "bounds_min": [
+        -20.3846,
+        -126.761,
+        1206.45
+      ],
+      "bytes": 65827,
+      "faces": 1064,
+      "path": "meshes/FJ2425.obj",
+      "sha256": "223233fef054fb67b81d27881f10a1acce47c9ade147546b6859fa90e4e37dc3",
+      "vertices": 587
+    },
+    "FJ2426": {
+      "bounds_max": [
+        32.3882,
+        -106.41,
+        1255.08
+      ],
+      "bounds_min": [
+        16.5969,
+        -126.656,
+        1240.7
+      ],
+      "bytes": 57410,
+      "faces": 914,
+      "path": "meshes/FJ2426.obj",
+      "sha256": "a309412ea0b21043e9851a6e8d7d529db01034c379f0b846a49f2ac070c94bee",
+      "vertices": 526
+    },
+    "FJ2427": {
+      "bounds_max": [
+        40.5959,
+        -127.603,
+        1261.62
+      ],
+      "bounds_min": [
+        23.5494,
+        -142.209,
+        1245.19
+      ],
+      "bytes": 62533,
+      "faces": 996,
+      "path": "meshes/FJ2427.obj",
+      "sha256": "2c07c02f4913f9ee34b4a169f64ab506394a751d0906fad9aa596329da703a1e",
+      "vertices": 573
+    },
+    "FJ2429": {
+      "bounds_max": [
+        74.5404,
+        -104.767,
+        1218.26
+      ],
+      "bounds_min": [
+        46.4648,
+        -146.92,
+        1188.44
+      ],
+      "bytes": 51285,
+      "faces": 780,
+      "path": "meshes/FJ2429.obj",
+      "sha256": "83ad99e19bb6105883aa99a86a3c0089385dc5d2de96844c3e9eec6616e571e8",
+      "vertices": 487
+    },
+    "FJ2430": {
+      "bounds_max": [
+        36.7766,
+        -131.886,
+        1192.79
+      ],
+      "bounds_min": [
+        7.16454,
+        -160.418,
+        1178.44
+      ],
+      "bytes": 48378,
+      "faces": 692,
+      "path": "meshes/FJ2430.obj",
+      "sha256": "92d65071f4ffc0bb22dcf5da52160cb22fd90056af85d9cbb0cb56794b8b5bac",
+      "vertices": 484
+    },
+    "FJ2431": {
+      "bounds_max": [
+        23.2396,
+        -104.826,
+        1250.52
+      ],
+      "bounds_min": [
+        5.66774,
+        -123.847,
+        1233.41
+      ],
+      "bytes": 21437,
+      "faces": 316,
+      "path": "meshes/FJ2431.obj",
+      "sha256": "6ab13f8acf9a3cf93830ab28538e39c423b24c07ffad6c305196671dfc419df0",
+      "vertices": 215
+    },
+    "FJ2432": {
+      "bounds_max": [
+        62.8543,
+        -85.4446,
+        1231.65
+      ],
+      "bounds_min": [
+        13.5745,
+        -123.267,
+        1199.6
+      ],
+      "bytes": 274623,
+      "faces": 3820,
+      "path": "meshes/FJ2432.obj",
+      "sha256": "bdcf7f32b2a16bd8d7b2920ac0f03958174c90d31353e9b38c4462aacfc038f3",
+      "vertices": 2560
+    },
+    "FJ2433": {
+      "bounds_max": [
+        16.4701,
+        -113.717,
+        1216.2
+      ],
+      "bounds_min": [
+        -18.9578,
+        -145.256,
+        1188.64
+      ],
+      "bytes": 325362,
+      "faces": 4926,
+      "path": "meshes/FJ2433.obj",
+      "sha256": "736c0689a5489394df568e2788d27e1a547d8fcbc464490e7bef94ba9c66e8e8",
+      "vertices": 2729
+    },
+    "FJ2434": {
+      "bounds_max": [
+        27.5245,
+        -132.88,
+        1265.27
+      ],
+      "bounds_min": [
+        8.76793,
+        -156.869,
+        1248.07
+      ],
+      "bytes": 85109,
+      "faces": 1370,
+      "path": "meshes/FJ2434.obj",
+      "sha256": "ab3806e8ae151df2ea1973043cd5ffe48a89f73dc27c81b2a1d4c1b6cee51131",
+      "vertices": 769
+    },
+    "FJ2435": {
+      "bounds_max": [
+        26.6562,
+        -118.971,
+        1252.73
+      ],
+      "bounds_min": [
+        6.99224,
+        -132.441,
+        1234.7
+      ],
+      "bytes": 56516,
+      "faces": 920,
+      "path": "meshes/FJ2435.obj",
+      "sha256": "410689ed978de91a6f14a3332f333b9b8db32931edb47e880cf7bc58b505d191",
+      "vertices": 508
+    },
+    "FJ2436": {
+      "bounds_max": [
+        29.5014,
+        -113.573,
+        1236.48
+      ],
+      "bounds_min": [
+        -6.484,
+        -137.745,
+        1213.14
+      ],
+      "bytes": 302594,
+      "faces": 4526,
+      "path": "meshes/FJ2436.obj",
+      "sha256": "d2d152ec63544d37077ede2c72f2e8ebd80eb98537386ab917c6a19788f8ed98",
+      "vertices": 2591
+    },
+    "FJ2437": {
+      "bounds_max": [
+        32.1741,
+        -128.195,
+        1240.17
+      ],
+      "bounds_min": [
+        12.8912,
+        -143.599,
+        1213.46
+      ],
+      "bytes": 56354,
+      "faces": 844,
+      "path": "meshes/FJ2437.obj",
+      "sha256": "510fbbf7a56981733876388838d5acfa392de92a37e84a68d489882e7a063dcb",
+      "vertices": 539
+    },
+    "FJ2438": {
+      "bounds_max": [
+        63.2392,
+        -70.1704,
+        1272.4
+      ],
+      "bounds_min": [
+        -22.8801,
+        -151.151,
+        1199.43
+      ],
+      "bytes": 510081,
+      "faces": 7544,
+      "path": "meshes/FJ2438.obj",
+      "sha256": "187235f3c3612ef27abde924d01c71579c2946435e64319164f43e5ad008284d",
+      "vertices": 4284
+    },
+    "FJ2439": {
+      "bounds_max": [
+        6.77791,
+        -96.345,
+        1279.5
+      ],
+      "bounds_min": [
+        -36.3037,
+        -162.645,
+        1183.08
+      ],
+      "bytes": 1211686,
+      "faces": 17784,
+      "path": "meshes/FJ2439.obj",
+      "sha256": "e7c21cd1659eced056eb56e28f4fa9019ace451ea6e0333097846177f807bb5a",
+      "vertices": 9887
+    },
+    "FJ2631": {
+      "bounds_max": [
+        63.8413,
+        -120.073,
+        1257.62
+      ],
+      "bounds_min": [
+        33.2928,
+        -168.008,
+        1179.54
+      ],
+      "bytes": 187042,
+      "faces": 3032,
+      "path": "meshes/FJ2631.obj",
+      "sha256": "06c78376e08c2eed7416d0e2a841e47952b5d95cafa89fbcb7612c072cd65573",
+      "vertices": 1549
+    },
+    "FJ2632": {
+      "bounds_max": [
+        49.9554,
+        -163.655,
+        1230.46
+      ],
+      "bounds_min": [
+        45.0176,
+        -168.054,
+        1228.67
+      ],
+      "bytes": 8547,
+      "faces": 108,
+      "path": "meshes/FJ2632.obj",
+      "sha256": "71c8621f9ed5a9dd7814c054f9e6f2ec9a480b39141110615bc7090795040272",
+      "vertices": 91
+    },
+    "FJ2633": {
+      "bounds_max": [
+        78.1436,
+        -120.501,
+        1236.73
+      ],
+      "bounds_min": [
+        65.6934,
+        -140.95,
+        1210.2
+      ],
+      "bytes": 32813,
+      "faces": 492,
+      "path": "meshes/FJ2633.obj",
+      "sha256": "3a38d05c39634da75a226de3a4665b02614bf38ab4ea3a39fe8ef1096c0d0296",
+      "vertices": 318
+    },
+    "FJ2634": {
+      "bounds_max": [
+        73.6426,
+        -119.706,
+        1233.91
+      ],
+      "bounds_min": [
+        70.7029,
+        -131.152,
+        1227.62
+      ],
+      "bytes": 14845,
+      "faces": 196,
+      "path": "meshes/FJ2634.obj",
+      "sha256": "21dff12c8f9beef5d6022dda5c9d25419a72509e5a9fc2e4a33cafe771237442",
+      "vertices": 158
+    },
+    "FJ2635": {
+      "bounds_max": [
+        67.3163,
+        -156.679,
+        1227.62
+      ],
+      "bounds_min": [
+        53.2984,
+        -168.108,
+        1181.99
+      ],
+      "bytes": 51356,
+      "faces": 766,
+      "path": "meshes/FJ2635.obj",
+      "sha256": "51114a0f6f2d95fbc18ddbce0cc19431a0b2cb55db18208029fce64f9128ec2c",
+      "vertices": 495
+    },
+    "FJ2636": {
+      "bounds_max": [
+        62.7598,
+        -162.844,
+        1219.41
+      ],
+      "bounds_min": [
+        59.3332,
+        -167.282,
+        1204.82
+      ],
+      "bytes": 28747,
+      "faces": 420,
+      "path": "meshes/FJ2636.obj",
+      "sha256": "aa2166cc5bf12de992dd33eaee5953bc23bb739f62610bbbec345d6aea2c1ecc",
+      "vertices": 282
+    },
+    "FJ2637": {
+      "bounds_max": [
+        68.7239,
+        -153.245,
+        1185.66
+      ],
+      "bounds_min": [
+        62.9355,
+        -161.326,
+        1182.73
+      ],
+      "bytes": 13107,
+      "faces": 160,
+      "path": "meshes/FJ2637.obj",
+      "sha256": "6c59d4cf0dbdb902fc83e5596f7a181bb66bcbeda24e10c8ce48d4661dfbe34d",
+      "vertices": 144
+    },
+    "FJ2638": {
+      "bounds_max": [
+        76.0108,
+        -151.165,
+        1198.99
+      ],
+      "bounds_min": [
+        70.9297,
+        -161.783,
+        1192.4
+      ],
+      "bytes": 22811,
+      "faces": 290,
+      "path": "meshes/FJ2638.obj",
+      "sha256": "aa3ccf75d2a5a5fefe9665b5acafed8f1797f001a01da365bfdc709a8c84aa4b",
+      "vertices": 246
+    },
+    "FJ2639": {
+      "bounds_max": [
+        73.2089,
+        -144.507,
+        1188.54
+      ],
+      "bounds_min": [
+        71.1114,
+        -153.497,
+        1183.58
+      ],
+      "bytes": 11516,
+      "faces": 150,
+      "path": "meshes/FJ2639.obj",
+      "sha256": "dc8bcfe30ddcaff7e1e9022bb1013bb884cd03a0fc9d9fae00a924c8d4eef955",
+      "vertices": 122
+    },
+    "FJ2640": {
+      "bounds_max": [
+        73.2088,
+        -146.035,
+        1188.55
+      ],
+      "bounds_min": [
+        67.4145,
+        -153.498,
+        1179.45
+      ],
+      "bytes": 20312,
+      "faces": 260,
+      "path": "meshes/FJ2640.obj",
+      "sha256": "38bc0b0b2c9f8a7424098f9dbaa36ed57b07cb9a1211a86a823c779c419035b1",
+      "vertices": 218
+    },
+    "FJ2641": {
+      "bounds_max": [
+        54.6271,
+        -158.587,
+        1205.54
+      ],
+      "bounds_min": [
+        46.2692,
+        -168.949,
+        1181.67
+      ],
+      "bytes": 31773,
+      "faces": 442,
+      "path": "meshes/FJ2641.obj",
+      "sha256": "27e5fff1fdeeff77e3c911ffe2a753279cb391b977f2de3f6ea17e21876b0dac",
+      "vertices": 322
+    },
+    "FJ2642": {
+      "bounds_max": [
+        79.3913,
+        -133.27,
+        1243.61
+      ],
+      "bounds_min": [
+        50.0626,
+        -147.441,
+        1194.77
+      ],
+      "bytes": 58864,
+      "faces": 964,
+      "path": "meshes/FJ2642.obj",
+      "sha256": "e906224a535dbf5bfb2201cd6fc81880521aa02f5148ae1bbe67404ace96b3a6",
+      "vertices": 525
+    },
+    "FJ2643": {
+      "bounds_max": [
+        50.4157,
+        -143.073,
+        1247.02
+      ],
+      "bounds_min": [
+        33.6178,
+        -171.783,
+        1239.39
+      ],
+      "bytes": 29635,
+      "faces": 478,
+      "path": "meshes/FJ2643.obj",
+      "sha256": "303086bfdcb88e2e9bb4cddcfaff2e9be2bf3f1db2c7943d8ccd4a7a38239fac",
+      "vertices": 269
+    },
+    "FJ2644": {
+      "bounds_max": [
+        43.3605,
+        -163.058,
+        1246.95
+      ],
+      "bounds_min": [
+        28.8318,
+        -170.795,
+        1243.3
+      ],
+      "bytes": 20058,
+      "faces": 306,
+      "path": "meshes/FJ2644.obj",
+      "sha256": "203a8bc0e029a76f3b291729ebb4cbfd1155bb84ff5724d2eb51d5fa02d36aa9",
+      "vertices": 193
+    },
+    "FJ2645": {
+      "bounds_max": [
+        53.1428,
+        -152.68,
+        1235.5
+      ],
+      "bounds_min": [
+        42.177,
+        -171.082,
+        1223.58
+      ],
+      "bytes": 22293,
+      "faces": 318,
+      "path": "meshes/FJ2645.obj",
+      "sha256": "760b5d48099edb74a6b14fafe02b56ad076c4e4c27c8edb905f21929d192f8b5",
+      "vertices": 224
+    },
+    "FJ2646": {
+      "bounds_max": [
+        54.544,
+        -160.897,
+        1222.3
+      ],
+      "bounds_min": [
+        37.1664,
+        -172.766,
+        1196.87
+      ],
+      "bytes": 30481,
+      "faces": 470,
+      "path": "meshes/FJ2646.obj",
+      "sha256": "1e2f885bc9aafd4270895deb0000a970ca4e494e909e06a5f13b94858d0b8cc9",
+      "vertices": 287
+    },
+    "FJ2647": {
+      "bounds_max": [
+        47.1041,
+        -160.586,
+        1192.26
+      ],
+      "bounds_min": [
+        40.427,
+        -167.238,
+        1182.83
+      ],
+      "bytes": 21398,
+      "faces": 306,
+      "path": "meshes/FJ2647.obj",
+      "sha256": "cd55e20146fe1f08872c6733a2ed3ef5f2397235e2f7f8c77b883f64b5b67d57",
+      "vertices": 216
+    },
+    "FJ2648": {
+      "bounds_max": [
+        77.0926,
+        -140.968,
+        1223.07
+      ],
+      "bounds_min": [
+        74.3632,
+        -148.184,
+        1210.09
+      ],
+      "bytes": 20029,
+      "faces": 286,
+      "path": "meshes/FJ2648.obj",
+      "sha256": "14c937696c6e76239474f760324389f5cc955cfe06570ec7c4f61eb4216e8894",
+      "vertices": 203
+    },
+    "FJ2649": {
+      "bounds_max": [
+        50.5177,
+        -86.9805,
+        1256.31
+      ],
+      "bounds_min": [
+        34.3553,
+        -121.957,
+        1222.38
+      ],
+      "bytes": 81034,
+      "faces": 1380,
+      "path": "meshes/FJ2649.obj",
+      "sha256": "0603b5d96efc1cde531c9301a578b05c747080e9a845ca5b244b973c51b14d67",
+      "vertices": 692
+    },
+    "FJ2650": {
+      "bounds_max": [
+        59.8176,
+        -89.4264,
+        1216.54
+      ],
+      "bounds_min": [
+        55.2865,
+        -95.7634,
+        1199.68
+      ],
+      "bytes": 29819,
+      "faces": 396,
+      "path": "meshes/FJ2650.obj",
+      "sha256": "ec32539fad28298dd01611d624051765eac07c989d461151996907381a1220d9",
+      "vertices": 316
+    },
+    "FJ2651": {
+      "bounds_max": [
+        75.6332,
+        -92.2562,
+        1218.22
+      ],
+      "bounds_min": [
+        58.756,
+        -115.551,
+        1211.07
+      ],
+      "bytes": 37857,
+      "faces": 510,
+      "path": "meshes/FJ2651.obj",
+      "sha256": "2fb72c01e8e2b65a8f262e314a9b85cd1c2256defc2d00e1bd8d857013c28d54",
+      "vertices": 395
+    },
+    "FJ2652": {
+      "bounds_max": [
+        68.2426,
+        -97.3195,
+        1209.61
+      ],
+      "bounds_min": [
+        64.1856,
+        -107.278,
+        1194.65
+      ],
+      "bytes": 22770,
+      "faces": 308,
+      "path": "meshes/FJ2652.obj",
+      "sha256": "ebfa7ccd9598b689c247175e49c89ab8ea3baaef763b5554db38306a689be916",
+      "vertices": 240
+    },
+    "FJ2653": {
+      "bounds_max": [
+        76.8311,
+        -119.449,
+        1198.68
+      ],
+      "bounds_min": [
+        73.7457,
+        -128.307,
+        1188.33
+      ],
+      "bytes": 20961,
+      "faces": 252,
+      "path": "meshes/FJ2653.obj",
+      "sha256": "fa365a612a1850f3628ef7224ce0988f1fe2d9cdb4e8c6aa4db10d2a1962a4c3",
+      "vertices": 232
+    },
+    "FJ2654": {
+      "bounds_max": [
+        76.4916,
+        -131.297,
+        1192.21
+      ],
+      "bounds_min": [
+        74.1667,
+        -142.845,
+        1187.82
+      ],
+      "bytes": 13779,
+      "faces": 172,
+      "path": "meshes/FJ2654.obj",
+      "sha256": "2d4b35919118657f1d5b8d842d2c78021d4676f78082c71e55e7d8aba9616fa8",
+      "vertices": 150
+    },
+    "FJ2655": {
+      "bounds_max": [
+        43.2693,
+        -81.1083,
+        1216.68
+      ],
+      "bounds_min": [
+        -5.5224,
+        -115.565,
+        1197.5
+      ],
+      "bytes": 37445,
+      "faces": 624,
+      "path": "meshes/FJ2655.obj",
+      "sha256": "6cc76de968f59ae4244f5990fc00023a1ad137e500eea7e3ab02740a9505e030",
+      "vertices": 331
+    },
+    "FJ2656": {
+      "bounds_max": [
+        48.5622,
+        -81.9228,
+        1253.46
+      ],
+      "bounds_min": [
+        39.9088,
+        -126.878,
+        1213.78
+      ],
+      "bytes": 49559,
+      "faces": 826,
+      "path": "meshes/FJ2656.obj",
+      "sha256": "30995a449ef7c390dcda7f800e38fb1656d23202b162c4a83abf160380dc4cbd",
+      "vertices": 434
+    },
+    "FJ2667": {
+      "bounds_max": [
+        33.977,
+        -169.338,
+        1204.85
+      ],
+      "bounds_min": [
+        13.2975,
+        -173.963,
+        1195.64
+      ],
+      "bytes": 25911,
+      "faces": 360,
+      "path": "meshes/FJ2667.obj",
+      "sha256": "6bb2898acda5680828658540ed9048abc51b9df9761fed5608567849fcbd6a61",
+      "vertices": 267
+    },
+    "FJ2668": {
+      "bounds_max": [
+        35.7176,
+        -172.332,
+        1205.79
+      ],
+      "bounds_min": [
+        23.7623,
+        -173.797,
+        1201.58
+      ],
+      "bytes": 16403,
+      "faces": 216,
+      "path": "meshes/FJ2668.obj",
+      "sha256": "ecd7de3f9aa7a87a85da8abc9c023d6701040c3297fd1f6ba93d7875e871f611",
+      "vertices": 176
+    },
+    "FJ2670": {
+      "bounds_max": [
+        26.8707,
+        -151.582,
+        1259.08
+      ],
+      "bounds_min": [
+        7.00791,
+        -169.622,
+        1247.03
+      ],
+      "bytes": 28946,
+      "faces": 442,
+      "path": "meshes/FJ2670.obj",
+      "sha256": "d23c5be67fc7e0a221e6d284772cf89bbc75b31a5bfa431210bd396be8d087b7",
+      "vertices": 280
+    },
+    "FJ2671": {
+      "bounds_max": [
+        24.4832,
+        -159.262,
+        1245.43
+      ],
+      "bounds_min": [
+        0.417048,
+        -176.517,
+        1222.24
+      ],
+      "bytes": 32035,
+      "faces": 478,
+      "path": "meshes/FJ2671.obj",
+      "sha256": "095344f7ee5d89c8877b24c76fd57671491f34cb59e0fdf1f0738c54c239b200",
+      "vertices": 313
+    },
+    "FJ2672": {
+      "bounds_max": [
+        26.0301,
+        -158.58,
+        1220.11
+      ],
+      "bounds_min": [
+        -14.2896,
+        -173.149,
+        1194.38
+      ],
+      "bytes": 47953,
+      "faces": 742,
+      "path": "meshes/FJ2672.obj",
+      "sha256": "0adecd6703d24888e3c236c8a248393777a9b83d902ed9bfc69f258809188092",
+      "vertices": 447
+    },
+    "FJ2673": {
+      "bounds_max": [
+        33.6145,
+        -172.346,
+        1232.47
+      ],
+      "bounds_min": [
+        11.3195,
+        -176.509,
+        1222.5
+      ],
+      "bytes": 23830,
+      "faces": 338,
+      "path": "meshes/FJ2673.obj",
+      "sha256": "b3fe7f8dd47fd7758fe4b2f8613c24c642be96d419a7699f85b44a2396a127a7",
+      "vertices": 243
+    },
+    "FJ2674": {
+      "bounds_max": [
+        15.6076,
+        -167.824,
+        1207.93
+      ],
+      "bounds_min": [
+        3.9372,
+        -170.947,
+        1195.56
+      ],
+      "bytes": 18809,
+      "faces": 284,
+      "path": "meshes/FJ2674.obj",
+      "sha256": "605cda4cb28547b67d9569ff8576ab7dc9a945d47a9d8b4a15d9552c80daee91",
+      "vertices": 186
+    },
+    "FJ2675": {
+      "bounds_max": [
+        -0.126139,
+        -164.082,
+        1212.53
+      ],
+      "bounds_min": [
+        -6.41476,
+        -166.412,
+        1203.13
+      ],
+      "bytes": 14384,
+      "faces": 200,
+      "path": "meshes/FJ2675.obj",
+      "sha256": "f0d843e88d508d4ab383c4e8131974d9fdcab3b340c87e3002fabde9cf23d3f4",
+      "vertices": 148
+    },
+    "FJ2676": {
+      "bounds_max": [
+        32.7239,
+        -163.242,
+        1257.64
+      ],
+      "bounds_min": [
+        18.4338,
+        -165.493,
+        1253.44
+      ],
+      "bytes": 22236,
+      "faces": 304,
+      "path": "meshes/FJ2676.obj",
+      "sha256": "c588c075c7c665691e6789312dad8d86541a1d2916fb63c33d03e38266e213d7",
+      "vertices": 233
+    },
+    "FJ2677": {
+      "bounds_max": [
+        34.177,
+        -174.16,
+        1231.44
+      ],
+      "bounds_min": [
+        20.9332,
+        -176.313,
+        1226.87
+      ],
+      "bytes": 18722,
+      "faces": 252,
+      "path": "meshes/FJ2677.obj",
+      "sha256": "a63f5990cabf34ead2c743bda11b178cdb60a983e7d181c2b757757354f2681e",
+      "vertices": 198
+    },
+    "FJ2692": {
+      "bounds_max": [
+        65.5678,
+        -119.205,
+        1190.44
+      ],
+      "bounds_min": [
+        -0.896807,
+        -151.046,
+        1175.88
+      ],
+      "bytes": 62839,
+      "faces": 930,
+      "path": "meshes/FJ2692.obj",
+      "sha256": "560c831439ab349de9b564ca92ed175677a3d12963ccd5483314175948797347",
+      "vertices": 608
+    },
+    "FJ2693": {
+      "bounds_max": [
+        57.6407,
+        -117.587,
+        1191.4
+      ],
+      "bounds_min": [
+        -0.780954,
+        -138.002,
+        1174.92
+      ],
+      "bytes": 50463,
+      "faces": 766,
+      "path": "meshes/FJ2693.obj",
+      "sha256": "ec42da30e165d2cb4ccf189982843b88a8ba006daae95b99104a2061bf30633b",
+      "vertices": 480
+    },
+    "FJ2694": {
+      "bounds_max": [
+        34.4785,
+        -118.092,
+        1182.45
+      ],
+      "bounds_min": [
+        17.7393,
+        -122.364,
+        1177.78
+      ],
+      "bytes": 30021,
+      "faces": 424,
+      "path": "meshes/FJ2694.obj",
+      "sha256": "2d2b675af567f743da81826537d13fe72087c98a39741f5848bb70b1676b5c75",
+      "vertices": 305
+    },
+    "FJ2695": {
+      "bounds_max": [
+        46.4785,
+        -128.965,
+        1178.65
+      ],
+      "bounds_min": [
+        37.6414,
+        -134.781,
+        1174.95
+      ],
+      "bytes": 15955,
+      "faces": 236,
+      "path": "meshes/FJ2695.obj",
+      "sha256": "00e9b8257eed1ddb8bfb60dfe301b03c08fd8a6e4b83002dad567d8cc738ba73",
+      "vertices": 163
+    },
+    "FJ2696": {
+      "bounds_max": [
+        31.5782,
+        -128.465,
+        1181.3
+      ],
+      "bounds_min": [
+        17.4566,
+        -153.798,
+        1177.97
+      ],
+      "bytes": 26378,
+      "faces": 336,
+      "path": "meshes/FJ2696.obj",
+      "sha256": "ec8ecd7100e6a34661db1a99861ef4f3df17c8ac87316cafac2dbf6f895efd5a",
+      "vertices": 286
+    },
+    "FJ2697": {
+      "bounds_max": [
+        41.5583,
+        -140.87,
+        1178.53
+      ],
+      "bounds_min": [
+        38.7991,
+        -153.36,
+        1175.89
+      ],
+      "bytes": 17358,
+      "faces": 220,
+      "path": "meshes/FJ2697.obj",
+      "sha256": "e029d3b95fc5b032016ff1e0783a2c71623a55be49cdbbd4be37fcbbfed0117a",
+      "vertices": 188
+    },
+    "FJ2698": {
+      "bounds_max": [
+        45.1114,
+        -145.197,
+        1178.91
+      ],
+      "bounds_min": [
+        39.4599,
+        -154.17,
+        1175.9
+      ],
+      "bytes": 17211,
+      "faces": 200,
+      "path": "meshes/FJ2698.obj",
+      "sha256": "2864725de555603dc502c206c9d12bef366358ee4064e8f375c1df9294b7f955",
+      "vertices": 195
+    },
+    "FJ2699": {
+      "bounds_max": [
+        66.8785,
+        -149.881,
+        1181.47
+      ],
+      "bounds_min": [
+        60.3716,
+        -153.435,
+        1177.9
+      ],
+      "bytes": 11084,
+      "faces": 126,
+      "path": "meshes/FJ2699.obj",
+      "sha256": "b52176deba592a44bcec3e29d11a8cac00031cac0a35e215d06df515e3224fc4",
+      "vertices": 126
+    },
+    "FJ2700": {
+      "bounds_max": [
+        62.7395,
+        -148.287,
+        1181.49
+      ],
+      "bounds_min": [
+        56.4499,
+        -155.87,
+        1177.35
+      ],
+      "bytes": 19414,
+      "faces": 280,
+      "path": "meshes/FJ2700.obj",
+      "sha256": "7c1bda6f9d3170fc5a553a5e917514bb7d108f6c3e37cbe912d6573d634fe983",
+      "vertices": 197
+    },
+    "FJ2714": {
+      "bounds_max": [
+        68.3224,
+        -93.3674,
+        1194.8
+      ],
+      "bounds_min": [
+        19.339,
+        -130.561,
+        1178.0
+      ],
+      "bytes": 51289,
+      "faces": 794,
+      "path": "meshes/FJ2714.obj",
+      "sha256": "aa76ceec1e0b4e19b281a2da0e15328d2719eaa1d7b1a3666421bf11ab9c877a",
+      "vertices": 482
+    },
+    "FJ2715": {
+      "bounds_max": [
+        73.5926,
+        -129.698,
+        1186.86
+      ],
+      "bounds_min": [
+        67.5654,
+        -134.496,
+        1179.75
+      ],
+      "bytes": 17089,
+      "faces": 218,
+      "path": "meshes/FJ2715.obj",
+      "sha256": "d34c2023e84119131841fe5a1e1251a7252d4900b62b2b1b61d29d3ece4cb51a",
+      "vertices": 185
+    },
+    "FJ2716": {
+      "bounds_max": [
+        72.0801,
+        -129.802,
+        1184.88
+      ],
+      "bounds_min": [
+        67.5522,
+        -139.107,
+        1179.65
+      ],
+      "bytes": 17576,
+      "faces": 232,
+      "path": "meshes/FJ2716.obj",
+      "sha256": "ecb5e668e2cf43031263ceed40e29b6862519d8dadef6b21ef63c3398e2f81a5",
+      "vertices": 188
+    },
+    "FJ2717": {
+      "bounds_max": [
+        42.3301,
+        -88.6317,
+        1195.03
+      ],
+      "bounds_min": [
+        26.2255,
+        -95.2395,
+        1189.27
+      ],
+      "bytes": 24860,
+      "faces": 340,
+      "path": "meshes/FJ2717.obj",
+      "sha256": "1dcde62744c8b83892ce1828179d736d2eafdf2fb3cbd74aa61658001dab686b",
+      "vertices": 259
+    },
+    "FJ2718": {
+      "bounds_max": [
+        44.8687,
+        -95.4755,
+        1188.07
+      ],
+      "bounds_min": [
+        38.7705,
+        -99.3127,
+        1184.11
+      ],
+      "bytes": 13362,
+      "faces": 186,
+      "path": "meshes/FJ2718.obj",
+      "sha256": "07ca611daf69f5411871802dbf76e6845519b71df1ef39a772d648c7b1861414",
+      "vertices": 139
+    },
+    "FJ2719": {
+      "bounds_max": [
+        46.4398,
+        -104.653,
+        1181.56
+      ],
+      "bounds_min": [
+        42.8745,
+        -116.788,
+        1176.2
+      ],
+      "bytes": 28575,
+      "faces": 380,
+      "path": "meshes/FJ2719.obj",
+      "sha256": "dd10bda525a6b29340babe9b70aa02f8273bedd77519fdc69398dc9f492001b7",
+      "vertices": 299
+    },
+    "FJ2720": {
+      "bounds_max": [
+        65.1989,
+        -106.854,
+        1189.03
+      ],
+      "bounds_min": [
+        53.3707,
+        -109.305,
+        1179.91
+      ],
+      "bytes": 22830,
+      "faces": 320,
+      "path": "meshes/FJ2720.obj",
+      "sha256": "996196bea87629d81a5c2040b767026e2a0a77854500999fe9857f3f4a030f5f",
+      "vertices": 233
+    },
+    "FJ2721": {
+      "bounds_max": [
+        72.3301,
+        -115.894,
+        1189.18
+      ],
+      "bounds_min": [
+        61.8243,
+        -120.001,
+        1178.12
+      ],
+      "bytes": 18829,
+      "faces": 256,
+      "path": "meshes/FJ2721.obj",
+      "sha256": "d42f1d3059c8a78d65b44ea7934deebd96dbc84338b30341a422a9ce1751c243",
+      "vertices": 198
+    },
+    "FJ2722": {
+      "bounds_max": [
+        63.5244,
+        -116.931,
+        1179.07
+      ],
+      "bounds_min": [
+        60.9896,
+        -134.395,
+        1175.57
+      ],
+      "bytes": 23586,
+      "faces": 320,
+      "path": "meshes/FJ2722.obj",
+      "sha256": "f5de57227430b3622ad827348883760596469ed754c473685975be5247cc9abd",
+      "vertices": 244
+    },
+    "FJ2723": {
+      "bounds_max": [
+        20.7385,
+        -93.3042,
+        1261.07
+      ],
+      "bounds_min": [
+        -21.7476,
+        -162.494,
+        1187.94
+      ],
+      "bytes": 281614,
+      "faces": 4502,
+      "path": "meshes/FJ2723.obj",
+      "sha256": "a98fe0acbf5a00bd5f73dcbc47f01dfbb932ea72607fd2e74231f6cfe49619d1",
+      "vertices": 2255
+    },
+    "FJ2724": {
+      "bounds_max": [
+        -1.88546,
+        -147.219,
+        1241.13
+      ],
+      "bounds_min": [
+        -20.8401,
+        -160.431,
+        1202.07
+      ],
+      "bytes": 33912,
+      "faces": 570,
+      "path": "meshes/FJ2724.obj",
+      "sha256": "419e6a37e1fd0b0e7468654b6b58e561229a94f9641f5b04506271659017b2d4",
+      "vertices": 294
+    },
+    "FJ2727": {
+      "bounds_max": [
+        54.8335,
+        -148.373,
+        1206.27
+      ],
+      "bounds_min": [
+        -20.75,
+        -156.715,
+        1178.7
+      ],
+      "bytes": 65358,
+      "faces": 970,
+      "path": "meshes/FJ2727.obj",
+      "sha256": "e482e49e0568a53afa594791946a4cb98ad774dbdf4db6bb32d7f9b3629bdced",
+      "vertices": 627
+    },
+    "FJ2728": {
+      "bounds_max": [
+        2.34261,
+        -165.405,
+        1213.84
+      ],
+      "bounds_min": [
+        -5.13858,
+        -166.86,
+        1201.67
+      ],
+      "bytes": 19148,
+      "faces": 282,
+      "path": "meshes/FJ2728.obj",
+      "sha256": "107b8fc3f7740ca108ac0d2b4b722d6242a3b78f8e67e29433ac56f08544a31b",
+      "vertices": 190
+    },
+    "FJ2729": {
+      "bounds_max": [
+        28.1082,
+        -167.839,
+        1203.65
+      ],
+      "bounds_min": [
+        12.4745,
+        -172.408,
+        1193.06
+      ],
+      "bytes": 15253,
+      "faces": 222,
+      "path": "meshes/FJ2729.obj",
+      "sha256": "8b21e5b96cc8cdd8d4b63d798ff7ae01c0d0b335cc6f3fb8ae00b7895067ad48",
+      "vertices": 156
+    },
+    "FJ2731": {
+      "bounds_max": [
+        5.9949,
+        -114.357,
+        1203.83
+      ],
+      "bounds_min": [
+        -20.3165,
+        -148.928,
+        1186.6
+      ],
+      "bytes": 52848,
+      "faces": 892,
+      "path": "meshes/FJ2731.obj",
+      "sha256": "ac26ffa55a72b44913d761c6b922f6c000f9a229f29740ab765e5ef5fe43f9c5",
+      "vertices": 454
+    },
+    "FJ2737": {
+      "bounds_max": [
+        34.405,
+        -117.304,
+        1260.82
+      ],
+      "bounds_min": [
+        23.3893,
+        -123.425,
+        1253.95
+      ],
+      "bytes": 12645,
+      "faces": 204,
+      "path": "meshes/FJ2737.obj",
+      "sha256": "f350efef8902f0ca4c4ef440a650c3ec4515d6a412340beb596536f4b1b72f32",
+      "vertices": 121
+    }
+  },
+  "schema_version": 1,
+  "source_records": {
+    "archive_url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/partof_BP3D_4.0_obj_99.zip",
+    "attribution": "BodyParts3D, \u00a9 The Database Center for Life Science licensed under CC Attribution 4.0 International",
+    "license": "CC BY 4.0",
+    "schema_version": 1,
+    "sources": {
+      "elements": {
+        "bytes": 651179,
+        "sha256": "3f5f6df1028eb122b30de77c711597b6bb8e5541658e5985859fd228adbf88ea",
+        "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/partof_element_parts.txt"
+      },
+      "license": {
+        "bytes": 14694,
+        "sha256": "1a0d7fd58760178373d4a386c6d251a4dd08af779ea5a51571fcd0f76b4fcb9c",
+        "url": "https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html"
+      },
+      "parts": {
+        "bytes": 59351,
+        "sha256": "9224080557053e6f1322f1e13ab27f0ecde0db19bb3b505f0631afad230eeebd",
+        "url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/partof_parts_list_e.txt"
+      }
+    }
+  }
+}

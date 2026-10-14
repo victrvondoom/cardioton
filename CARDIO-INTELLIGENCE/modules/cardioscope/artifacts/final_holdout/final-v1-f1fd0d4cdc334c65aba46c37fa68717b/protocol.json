@@ -1,0 +1,135 @@
+{
+  "access_lock_sha256": "66bb7a9f43dc614b2f875d3f0fbc849dd2743fd762b0093a6639acb70bf7ce02",
+  "comparison": "selection_procedure nested-CV mean, SD and observed outer range; descriptive only, no statistical significance claim",
+  "development_directory": "artifacts/development/v1-bb08b3d0230a",
+  "development_files_sha256": {
+    "artifacts/development/v1-bb08b3d0230a/comparison.csv": "05223fddfa93a10fa805bae280587880b14969a3de15528563a7a4ac07261398",
+    "artifacts/development/v1-bb08b3d0230a/figures/CAD-confusion.png": "b50e6ffb5975076b0b762f1b54601047f792a083a81cb7e8a66fa3ef51fe3d49",
+    "artifacts/development/v1-bb08b3d0230a/figures/CAD-confusion.svg": "68639173c07f86b644ccfb7f3dbf267f3ebee6e1c191c328329fcbca8a8634ad",
+    "artifacts/development/v1-bb08b3d0230a/figures/CAD-curves.png": "db9ed6c99e095f0281e745d9efabaf2bddbb91cfb625f39a570bb3282bf7b575",
+    "artifacts/development/v1-bb08b3d0230a/figures/CAD-curves.svg": "ba419e1b3a29cc24df2db9f364a069896f6d9a9a2b606912f5aeb35862ef3a1b",
+    "artifacts/development/v1-bb08b3d0230a/figures/LAD-confusion.png": "13cf81e685d0230a76c37f16e6eef23ec4d0bdfa0ae748df3473b96e2c1a09fc",
+    "artifacts/development/v1-bb08b3d0230a/figures/LAD-confusion.svg": "7c7fe3e44ec7b5f1ee68a028dd708138477707be0a2718f3a84b045d16cf2611",
+    "artifacts/development/v1-bb08b3d0230a/figures/LAD-curves.png": "74145b5ad031f5b1600add79d6d1cdafddccec9d572e9cf1a7ea6bfd88504d62",
+    "artifacts/development/v1-bb08b3d0230a/figures/LAD-curves.svg": "24a23cac6a5fda22681ff920dadee4d16e6b64ec2dddd836320b29a7ec254057",
+    "artifacts/development/v1-bb08b3d0230a/figures/LCX-confusion.png": "0d88207c40e481bb0e249539c6764432bc1bb3a637573d868005922d59984e95",
+    "artifacts/development/v1-bb08b3d0230a/figures/LCX-confusion.svg": "9d34230ee67b4128883a2ae510e8febbe05520a24737158b0a3e8a940848fe2b",
+    "artifacts/development/v1-bb08b3d0230a/figures/LCX-curves.png": "0e38dd1b7a2683565f40f2497486f2ef1a114133c0e160016ee339b416ffa473",
+    "artifacts/development/v1-bb08b3d0230a/figures/LCX-curves.svg": "7c648f6aac119931bbbb350bff30cdf8194c8c8090f8cbaaced17d0d527c6b77",
+    "artifacts/development/v1-bb08b3d0230a/figures/RCA-confusion.png": "041d36c37a72b9154c05f183a8d31d46129a26b3e291b29aae49a2dfe9a09f20",
+    "artifacts/development/v1-bb08b3d0230a/figures/RCA-confusion.svg": "2cb53d14ee41e6767b1027f7661813bb4227940042b1a1bba0d89e204897e565",
+    "artifacts/development/v1-bb08b3d0230a/figures/RCA-curves.png": "1787d503c49dd2f706f70185ab54e709a0a377ccded85bed944452ba46fde7b1",
+    "artifacts/development/v1-bb08b3d0230a/figures/RCA-curves.svg": "cd24d1d8e1ae38e5930313243cd0ddbb610fe51fd9806fd7a1b231070484c96c",
+    "artifacts/development/v1-bb08b3d0230a/models/CAD.joblib": "1870a8606e0de26bcd69b0f291058b159b4757994b8df4dfd97d9b6f0f2b23ed",
+    "artifacts/development/v1-bb08b3d0230a/models/CAD.json": "26e04788ed28f4aa26f28d3fead0d0c4e0bccfee92b033b72e3798aea4b6bd71",
+    "artifacts/development/v1-bb08b3d0230a/models/LAD.joblib": "dae2aaafb9cfff4dddf8be56e737e6cbb96c1db236d5f284f546eed2fb2586f7",
+    "artifacts/development/v1-bb08b3d0230a/models/LAD.json": "0992dfb49eacef55da5812d90d59ab3b54af293dbc6c38d640b4bcd2a385f320",
+    "artifacts/development/v1-bb08b3d0230a/models/LCX.joblib": "cefd1107a6e069f795bd13aabf5f638588900f0498aec3eb4f026b7139cb55f2",
+    "artifacts/development/v1-bb08b3d0230a/models/LCX.json": "e430d2f160d6799f72ebb58d85d9c73a69a8f0f852d9050bc888585eb2c263fe",
+    "artifacts/development/v1-bb08b3d0230a/models/RCA.joblib": "0d6ac8145b5d34073f20e8a838cf24d625ada59ad67d19fa85af035b1bc9b52b",
+    "artifacts/development/v1-bb08b3d0230a/models/RCA.json": "fb3f3f6376bc075524ce65da85337c7a8718748d851ace797794853ef0abb39a",
+    "artifacts/development/v1-bb08b3d0230a/provenance.json": "faaf2c31a5c1bd9ea40a5fc648eef108e508f5dd25e06fae8497fec10da5dc0c",
+    "artifacts/development/v1-bb08b3d0230a/results.json": "13996a9fa4685bc71afe27ab727e1436322b420fca2c3bb77a1bb06a9976f1db",
+    "artifacts/development/v1-bb08b3d0230a/search.json": "46c5f345925f6adb76ebb4f63417453f8a6105bc93f566c007226b988175aaf4",
+    "artifacts/development/v1-bb08b3d0230a/selected_configurations.json": "b1d0172ebdbdda54c9341edc714ad3c410405ce065afc9980222fbfa2210056d",
+    "artifacts/development/v1-bb08b3d0230a/timings/2026-10-01T10-54-01.178466+00-00.json": "52e64ed77c73d6ee93cc8d6bdb47813c622b0015042455afa5626a90a5c0e676",
+    "artifacts/development/v1-bb08b3d0230a/timings/2026-10-01T10-54-58.768742+00-00.json": "c942ec1e8dcfd64dcc0328d69fb4ec687250b21ba17e07a6df2bfe9e284b0283"
+  },
+  "development_run_id": "v1-bb08b3d0230a",
+  "development_run_sha256": "bb08b3d0230a6cd00b40ee13f84977a70bbdf0e0ca5e78b5ac9c0ab7be11722c",
+  "frozen_candidates": {
+    "CAD": {
+      "family": "logistic",
+      "id": "logistic-C0.1-balanced",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced"
+      },
+      "simplicity_rank": 2
+    },
+    "LAD": {
+      "family": "logistic",
+      "id": "logistic-C0.1-balanced",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced"
+      },
+      "simplicity_rank": 2
+    },
+    "LCX": {
+      "family": "forest",
+      "id": "forest-depth3-leaf10-none",
+      "params": {
+        "class_weight": null,
+        "max_depth": 3,
+        "min_samples_leaf": 10
+      },
+      "simplicity_rank": 7
+    },
+    "RCA": {
+      "family": "forest",
+      "id": "forest-depth5-leaf10-none",
+      "params": {
+        "class_weight": null,
+        "max_depth": 5,
+        "min_samples_leaf": 10
+      },
+      "simplicity_rank": 11
+    }
+  },
+  "guard_policy": "exclusive durable reservation before any holdout label access; any prior attempt consumes this frozen-artifact evaluation; no force or automatic retry",
+  "holdout_ids_sha256": "67ba637bec9a57c3612fece5e53d4943aa122ee3ee1e083e0c26839c24881e12",
+  "holdout_records": 61,
+  "phase": "FINAL_HOLDOUT",
+  "probability_label": "model-estimated probabilities; calibration unverified",
+  "schema_sha256": "b94a1e93d98728e465d42f578f7e66008d04618b04f5db4076fa997e691a9d01",
+  "schema_version": 1,
+  "search_sha256": "46c5f345925f6adb76ebb4f63417453f8a6105bc93f566c007226b988175aaf4",
+  "split_sha256": "98e8d0b080019e6d9426543a543efb1cffe8f249a9b6c7ada544caa5dac6cdb2",
+  "targets": {
+    "CAD": {
+      "column": "Cath",
+      "negative_class": "Normal",
+      "positive_class": "CAD"
+    },
+    "LAD": {
+      "column": "LAD",
+      "negative_class": "Normal",
+      "positive_class": "Stenotic"
+    },
+    "LCX": {
+      "column": "LCX",
+      "negative_class": "Normal",
+      "positive_class": "Stenotic"
+    },
+    "RCA": {
+      "column": "RCA",
+      "negative_class": "Normal",
+      "positive_class": "Stenotic"
+    }
+  },
+  "threshold": 0.5,
+  "uncertainty": {
+    "binomial_method": "two-sided Clopper-Pearson exact interval",
+    "binomial_metrics": [
+      "accuracy",
+      "recall"
+    ],
+    "bootstrap_metrics": [
+      "roc_auc",
+      "pr_auc",
+      "average_precision",
+      "brier_score",
+      "balanced_accuracy",
+      "precision",
+      "f1"
+    ],
+    "bootstrap_repetitions": 2000,
+    "confidence_level": 0.95,
+    "degenerate_policy": "withhold degenerate bootstrap intervals; mark empirical resampling limitation",
+    "limitation": "conditional on observed class counts and empirical records; no training uncertainty or clinical-generalization inference; independence unverified",
+    "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+    "minimum_class_count": 10,
+    "seed": 20261001
+  }
+}

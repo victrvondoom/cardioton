@@ -1,0 +1,14 @@
+import { copyFile, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const require = createRequire(import.meta.url);
+const root = dirname(dirname(fileURLToPath(import.meta.url)));
+const three = dirname(dirname(require.resolve('three')));
+const out = join(root, 'app/static/vendor');
+await mkdir(out, { recursive: true });
+await copyFile(join(three, 'build/three.module.js'), join(out, 'three.module.js'));
+await copyFile(join(three, 'build/three.core.js'), join(out, 'three.core.js'));
+const controls = await readFile(join(three, 'examples/jsm/controls/OrbitControls.js'), 'utf8');
+await writeFile(join(out, 'OrbitControls.js'), controls.replaceAll("from 'three'", "from './three.module.js'"));
+console.log('Vendored Three.js runtime files into app/static/vendor');

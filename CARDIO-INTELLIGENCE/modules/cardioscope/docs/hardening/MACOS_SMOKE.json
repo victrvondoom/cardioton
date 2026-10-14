@@ -1,0 +1,24 @@
+{
+  "example_id": "0056fb5ae87a9ac1510fd77cb5cd6bd3b348a0d0de578cf1a86132f8d87733dc",
+  "targets": {
+    "CAD": {
+      "probability": 0.1709399517600908,
+      "residual": -6.661338147750939e-16
+    },
+    "LAD": {
+      "probability": 0.24305384913623826,
+      "residual": 0.0
+    },
+    "LCX": {
+      "probability": 0.3705140009054133,
+      "residual": -6.116750994600295e-10
+    },
+    "RCA": {
+      "probability": 0.3090592361868292,
+      "residual": -1.7709154698231089e-09
+    }
+  },
+  "identities_unchanged": true,
+  "holdout_inference": false,
+  "fitting": false
+}

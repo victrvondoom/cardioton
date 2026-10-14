@@ -1,0 +1,81 @@
+{
+  "recorded_at_utc": "2026-10-04T18:16:39.268514+00:00",
+  "status": "LOCAL_EXPORT_VERIFIED; PUBLIC_REPOSITORY_CREATED; PUSH_BLOCKED_BY_OAUTH_WORKFLOW_SCOPE",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2026 CardioScope contributors",
+  "repository_url": "https://github.com/AbhikRao/CardioScope",
+  "repository_visibility": "public; anonymous GitHub HTML/API HTTP 200; private=false",
+  "initial_public_commit": "53cf72021e04330eabbdbb02d071ae87f18e2555",
+  "public_tag": {
+    "name": "v1.0.0",
+    "annotated": true,
+    "exists_locally": true,
+    "pushed": false
+  },
+  "github_push": {
+    "status": "rejected",
+    "reason": "refusing to allow an OAuth App to create or update workflow .github/workflows/ci.yml without workflow scope",
+    "unsafe_credential_workaround": false
+  },
+  "hosted_ci": {
+    "status": "not started; no remote code pushed",
+    "runs": 0
+  },
+  "protected_v1": {
+    "files": 256,
+    "matches_archive_working_tree": true,
+    "matches_locked_sha256": true,
+    "matches_original_archival_tag": true,
+    "archival_tag": "cardioscope-v1.0.0"
+  },
+  "local_checks": {
+    "clean_export_install": true,
+    "runtime_53_pins": true,
+    "source_anatomy": true,
+    "lint_typescript_production_build": true,
+    "python_tests": 43,
+    "frontend_tests": 75,
+    "documentation_links_before_status_updates": 184,
+    "privacy_secret_path_scan": "PASS; two nonprotected documentary transcript paths redacted only in public copies",
+    "docker": "not run; Docker daemon unavailable",
+    "final_local_markdown_links": 186,
+    "final_local_markdown_missing": []
+  },
+  "report": {
+    "path": "output/pdf/CardioScope-Track-A-Report.pdf",
+    "pages": 6,
+    "sha256": "07316f0748a72fc11c679a42c83798cce320e6818b55e7d899c60dc6128f4e2e",
+    "matches_approved_archival_polished_bytes": true
+  },
+  "fresh_public_clone": "blocked: no remote commits yet",
+  "remote_code_published": false,
+  "organizer_pdfs_excluded": true,
+  "archival_history_rewritten": false,
+  "model_training": false,
+  "real_holdout_evaluation": false,
+  "reserved_outcome_decoding": false,
+  "video_uploaded": false,
+  "devpost_submitted": false,
+  "resume_commands": [
+    "cd /path/to/CardioScope-public",
+    "gh auth refresh -h github.com -s workflow",
+    "gh auth status",
+    "git push -u origin main",
+    "git push origin v1.0.0",
+    "gh run list --repo AbhikRao/CardioScope",
+    "gh run watch <RUN_ID> --repo AbhikRao/CardioScope --exit-status"
+  ],
+  "remaining_user_tasks": [
+    "Grant GitHub CLI workflow scope; resume main/tag push and verify hosted CI/public clone",
+    "Record/upload YouTube demo; add actual URL",
+    "Complete Devpost and both teammate identities; submit after final checks",
+    "Confirm official deadline and logged-out final links"
+  ],
+  "anonymous_access": {
+    "authenticated_headers_or_cookies": false,
+    "api_http_status": 200,
+    "html_http_status": 200,
+    "repository_private": false,
+    "code_available": false
+  }
+}

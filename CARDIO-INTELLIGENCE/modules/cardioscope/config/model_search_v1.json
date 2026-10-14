@@ -1,0 +1,195 @@
+{
+  "access_lock_file_sha256": "66bb7a9f43dc614b2f875d3f0fbc849dd2743fd762b0093a6639acb70bf7ce02",
+  "candidates": [
+    {
+      "family": "dummy",
+      "id": "dummy-prior",
+      "params": {
+        "strategy": "prior"
+      },
+      "simplicity_rank": 0
+    },
+    {
+      "family": "logistic",
+      "id": "logistic-C0.1-none",
+      "params": {
+        "C": 0.1,
+        "class_weight": null
+      },
+      "simplicity_rank": 1
+    },
+    {
+      "family": "logistic",
+      "id": "logistic-C0.1-balanced",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced"
+      },
+      "simplicity_rank": 2
+    },
+    {
+      "family": "logistic",
+      "id": "logistic-C1-none",
+      "params": {
+        "C": 1.0,
+        "class_weight": null
+      },
+      "simplicity_rank": 3
+    },
+    {
+      "family": "logistic",
+      "id": "logistic-C1-balanced",
+      "params": {
+        "C": 1.0,
+        "class_weight": "balanced"
+      },
+      "simplicity_rank": 4
+    },
+    {
+      "family": "logistic",
+      "id": "logistic-C10-none",
+      "params": {
+        "C": 10.0,
+        "class_weight": null
+      },
+      "simplicity_rank": 5
+    },
+    {
+      "family": "logistic",
+      "id": "logistic-C10-balanced",
+      "params": {
+        "C": 10.0,
+        "class_weight": "balanced"
+      },
+      "simplicity_rank": 6
+    },
+    {
+      "family": "forest",
+      "id": "forest-depth3-leaf10-none",
+      "params": {
+        "class_weight": null,
+        "max_depth": 3,
+        "min_samples_leaf": 10
+      },
+      "simplicity_rank": 7
+    },
+    {
+      "family": "forest",
+      "id": "forest-depth3-leaf10-balanced",
+      "params": {
+        "class_weight": "balanced",
+        "max_depth": 3,
+        "min_samples_leaf": 10
+      },
+      "simplicity_rank": 8
+    },
+    {
+      "family": "forest",
+      "id": "forest-depth3-leaf5-none",
+      "params": {
+        "class_weight": null,
+        "max_depth": 3,
+        "min_samples_leaf": 5
+      },
+      "simplicity_rank": 9
+    },
+    {
+      "family": "forest",
+      "id": "forest-depth3-leaf5-balanced",
+      "params": {
+        "class_weight": "balanced",
+        "max_depth": 3,
+        "min_samples_leaf": 5
+      },
+      "simplicity_rank": 10
+    },
+    {
+      "family": "forest",
+      "id": "forest-depth5-leaf10-none",
+      "params": {
+        "class_weight": null,
+        "max_depth": 5,
+        "min_samples_leaf": 10
+      },
+      "simplicity_rank": 11
+    },
+    {
+      "family": "forest",
+      "id": "forest-depth5-leaf10-balanced",
+      "params": {
+        "class_weight": "balanced",
+        "max_depth": 5,
+        "min_samples_leaf": 10
+      },
+      "simplicity_rank": 12
+    },
+    {
+      "family": "forest",
+      "id": "forest-depth5-leaf5-none",
+      "params": {
+        "class_weight": null,
+        "max_depth": 5,
+        "min_samples_leaf": 5
+      },
+      "simplicity_rank": 13
+    },
+    {
+      "family": "forest",
+      "id": "forest-depth5-leaf5-balanced",
+      "params": {
+        "class_weight": "balanced",
+        "max_depth": 5,
+        "min_samples_leaf": 5
+      },
+      "simplicity_rank": 14
+    }
+  ],
+  "forest_fixed": {
+    "bootstrap": true,
+    "max_features": "sqrt",
+    "n_estimators": 100,
+    "n_jobs": 1
+  },
+  "inner_folds": 3,
+  "justification": {
+    "forest": "Two shallow depths and leaf sizes >=5; optional balanced weights; 100 seeded trees",
+    "logistic": "Three decade-spaced L2 strengths and optional training-fold balanced weights; fixed convergence tolerance",
+    "simplicity": "dummy before logistic before forest; stronger L2, shallower trees/larger leaves, and unweighted ties first"
+  },
+  "logistic_fixed": {
+    "l1_ratio": 0.0,
+    "max_iter": 2000,
+    "solver": "lbfgs",
+    "tol": 1e-08
+  },
+  "metric_definitions": {
+    "average_precision": "non-interpolated stepwise area; included to avoid overstating a constant dummy baseline",
+    "confusion_matrix": "rows=true, columns=predicted; labels [0,1]",
+    "pr_auc": "trapezoidal area under precision-recall curve",
+    "variation": "sample standard deviation across 5 outer folds, not an independent-patient confidence interval"
+  },
+  "outer_folds": 5,
+  "phase": "DEVELOPMENT_ONLY",
+  "preprocessing": {
+    "calibration": "none",
+    "categorical": "OneHotEncoder auto, drop=None, handle_unknown=ignore, dense; vocabulary fitted on training fold",
+    "feature_selection": "none",
+    "missing": "reject; no imputation",
+    "numeric_logistic": "StandardScaler fitted on training fold",
+    "numeric_other": "passthrough"
+  },
+  "schema_version": 1,
+  "seed": 42,
+  "selection": {
+    "final": "unweighted mean of each candidate's 15 existing inner validation scores; outer-test metrics never participate",
+    "outer_report": "family-specific inner selections plus all-family inner selection procedure; not independent evaluation of the final all-development fit",
+    "per_outer": "choose only using that outer-training set's three inner validation scores",
+    "primary": "highest unweighted mean inner-fold ROC-AUC",
+    "rounding_decimals": 12,
+    "tie_breakers": [
+      "lowest mean inner-fold Brier score",
+      "lowest predefined simplicity_rank"
+    ]
+  },
+  "threshold": 0.5
+}

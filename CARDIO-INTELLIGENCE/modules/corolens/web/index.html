@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoroLens: vessel-level coronary risk map</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="style.css" />
+  <script type="importmap">{ "imports": { "three": "./vendor/three/corolens__vendor_three__three.module.js" } }</script>
+</head>
+<body>
+  <div class="disclaimer" role="alert">
+    <strong>Decision support and education only.</strong> CoroLens is a research prototype trained on 242 patients
+    from one public dataset. It is not a medical device and not a substitute for coronary angiography, CT imaging
+    or a clinician's judgement.
+  </div>
+  <header>
+    <div class="brand"><span class="name">CoroLens</span><span class="tag">Vessel-level coronary risk with calibrated uncertainty</span></div>
+    <nav>
+      <button class="link" data-view="map" aria-pressed="true">Risk map</button>
+      <button class="link" data-view="model">Model card</button>
+    </nav>
+  </header>
+
+  <main id="view-map">
+    <section class="panel left">
+      <h2>Patient</h2>
+      <label class="row">Held-out patient
+        <select id="patient"></select>
+      </label>
+      <details class="intake" open>
+        <summary>Paste a referral note (TypeSafe intake)</summary>
+        <textarea id="note" rows="7" placeholder="e.g. 62 y/o man, typical exertional angina, NYHA II. Hypertensive, diabetic. BP 150/90, pulse 78. LDL 145, HDL 34. ECG: ST depression V4-V6. Echo: EF 45%, RWMA in 2 regions."></textarea>
+        <div class="row"><button id="extract" class="primary">Fill fields from note</button><span id="intake-status" class="muted"></span></div>
+        <p class="muted small">Numbers are copied from your note by code. TypeSafe only chooses which number is which field, so it cannot invent a value. Fields marked "check" had low confidence.</p>
+      </details>
+      <div id="form"></div>
+    </section>
+
+    <section class="panel center">
+      <div id="heart"></div>
+      <div class="legend">
+        <span>Stenosis probability</span>
+        <span class="scale"><span class="ramp"></span><span class="ticks"><b>0%</b><b>50%</b><b>100%</b></span></span>
+        <span class="muted small">Pulsing nodes: the 90% conformal set contains both "normal" and "stenotic" (the model is unsure). Drag to rotate, scroll to zoom, click a vessel.</span>
+      </div>
+    </section>
+
+    <section class="panel right">
+      <div id="summary"></div>
+      <h3 id="explain-title">Why this estimate</h3>
+      <p id="explain-note" class="muted small"></p>
+      <div id="explain"></div>
+      <div id="truth" class="muted small"></div>
+    </section>
+  </main>
+
+  <main id="view-model" hidden>
+    <section class="panel wide" id="modelcard"></section>
+  </main>
+
+  <script type="module" src="corolens__web__app.js"></script>
+</body>
+</html>

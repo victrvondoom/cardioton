@@ -1,0 +1,26 @@
+[
+  {
+    "profile": "328ca73cba6befc4de6e8726096ffe2be7f639ce645b6e6b658b1a964468def3",
+    "selected": "LAD",
+    "target": "LAD",
+    "units": "Contribution units: model log-odds, not probability percentage points."
+  },
+  {
+    "profile": "328ca73cba6befc4de6e8726096ffe2be7f639ce645b6e6b658b1a964468def3",
+    "selected": "LCX",
+    "target": "LCX",
+    "units": "Contribution units: probability units (1.0 equals 100 percentage points of model output)."
+  },
+  {
+    "profile": "328ca73cba6befc4de6e8726096ffe2be7f639ce645b6e6b658b1a964468def3",
+    "selected": "RCA",
+    "target": "RCA",
+    "units": "Contribution units: probability units (1.0 equals 100 percentage points of model output)."
+  },
+  {
+    "profile": "328ca73cba6befc4de6e8726096ffe2be7f639ce645b6e6b658b1a964468def3",
+    "selected": "",
+    "target": "CAD",
+    "units": "Contribution units: model log-odds, not probability percentage points."
+  }
+]

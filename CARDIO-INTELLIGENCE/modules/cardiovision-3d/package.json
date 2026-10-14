@@ -1,0 +1,11 @@
+{
+  "name": "cardiovision-3d",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CardioVision 3D - 3D Heart Visualization & Cardiovascular Risk Assessment Platform",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview"
+  }
+}

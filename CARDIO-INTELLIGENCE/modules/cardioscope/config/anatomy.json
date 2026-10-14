@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "parts_url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/partof_parts_list_e.txt",
+  "elements_url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/partof_element_parts.txt",
+  "archive_url": "https://dbarchive.biosciencedbc.jp/data/bodyparts3d/LATEST/partof_BP3D_4.0_obj_99.zip",
+  "license_url": "https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html",
+  "license": "CC BY 4.0",
+  "attribution": "BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International",
+  "structures": {
+    "heart": {"concept_id": "FMA7088", "representation_id": "BP9305", "source_name": "heart", "expected_leaves": 83},
+    "LAD": {"concept_id": "FMA3862", "representation_id": "BP9548", "source_name": "anterior interventricular branch of left coronary artery", "expected_leaves": 18},
+    "LCX": {"concept_id": "FMA3895", "representation_id": "BP9745", "source_name": "circumflex branch of left coronary artery", "expected_leaves": 6},
+    "RCA": {"concept_id": "FMA50039", "representation_id": "BP9299", "source_name": "right coronary artery", "expected_leaves": 29}
+  }
+}

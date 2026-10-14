@@ -1,0 +1,22 @@
+{
+  "approximate": false,
+  "background_file": "artifacts/explanations/v1/background.json",
+  "background_file_sha256": "d0b134ca26640dde8edd3d777a710197140a6aedc63e3be07e8991f5488edb57",
+  "cache_capacity": 128,
+  "feature_perturbation": "interventional",
+  "llvmlite_version": "0.50.0",
+  "logit_tolerance": 1e-10,
+  "methods": {
+    "CAD": "LinearExplainer",
+    "LAD": "LinearExplainer",
+    "LCX": "TreeExplainer",
+    "RCA": "TreeExplainer"
+  },
+  "numba_version": "0.68.0",
+  "probability_tolerance": 1e-06,
+  "runtime_lock_sha256": "d7e77af04adbfd74e7ecc11b9bc8f6fa6d229be81327a797d1568ade795fdd3f",
+  "shap_version": "0.52.0",
+  "tree_input_dtype": "float32 (the frozen sklearn tree classifier input dtype)",
+  "tree_threshold_adapter": "floor-to-float32-preserves-sklearn-routing-v1",
+  "version": 1
+}

@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedRelay - Medical Billing Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .loading {
+            display: none;
+        }
+        .loading.show {
+            display: block;
+        }
+        .download-link {
+            display: none;
+        }
+        .download-link.show {
+            display: block;
+        }
+        
+        /* Professional Medical UI Styling */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+        }
+        
+        .professional-header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 1rem 1rem;
+        }
+        
+        .medical-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+        
+        .medical-card:hover {
+            box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-medical {
+            background: #1e40af;
+            color: white;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
+        }
+        
+        .btn-medical:hover {
+            background: #1e3a8a;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(30, 64, 175, 0.3);
+        }
+        
+        .btn-secondary-medical {
+            background: #64748b;
+            color: white;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-secondary-medical:hover {
+            background: #475569;
+            transform: translateY(-1px);
+        }
+        
+        .btn-danger-medical {
+            background: #dc2626;
+            color: white;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-danger-medical:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+        }
+        
+        .btn-warning-medical {
+            background: #d97706;
+            color: white;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-warning-medical:hover {
+            background: #b45309;
+            transform: translateY(-1px);
+        }
+        
+        .professional-input {
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 0.875rem 1rem;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            background: #fafbfc;
+        }
+        
+        .professional-input:focus {
+            outline: none;
+            border-color: #1e40af;
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+            background: white;
+        }
+        
+        .recording-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+        }
+        
+        .feature-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .feature-card:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .icon-medical {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: #1e40af;
+        }
+        
+        .text-medical-primary {
+            color: #1e40af;
+        }
+        
+        .text-medical-secondary {
+            color: #64748b;
+        }
+        
+        .border-medical {
+            border-color: #e2e8f0;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-cover bg-center bg-no-repeat" style="background-image: url('/static/images/main_background.png');">
+    <div class="min-h-screen p-8">
+        <!-- Main Content Container -->
+        <div class="w-full max-w-6xl mx-auto bg-white rounded-xl shadow-2xl p-8 min-h-[80vh]">
+            {% include 'navigation.html' %}
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="mb-6">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{'danger' if category == 'error' else category }} bg-{{'red' if category == 'error' else 'blue' if category == 'info' else 'green' }}-100 border border-{{'red' if category == 'error' else 'blue' if category == 'info' else 'green' }}-400 text-{{'red' if category == 'error' else 'blue' if category == 'info' else 'green' }}-700 px-4 py-3 rounded-lg mb-4">
+                            {{message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Professional Header -->
+        <!-- <div class="professional-header text-center">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-center mb-4">
+                    <div class="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mr-4">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-4xl font-bold text-white">MedRelay</h1>
+                </div>
+                <p class="text-xl text-white/90 font-medium mb-2">CMS-1500 Claim Form Automation</p>
+                <p class="text-lg text-white/80">Transform clinical conversations into standardized CMS-1500 claim forms with AI-powered precision</p>
+                <div class="mt-4 inline-flex items-center bg-white/20 rounded-lg px-4 py-2">
+                    <svg class="w-5 h-5 text-white mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span class="text-white font-medium">Official CMS-1500 Format</span>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Main Form -->
+        <div class="w-full">
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Clinical Input Section -->
+                <div class="lg:col-span-2 bg-gray-50 rounded-lg shadow-sm p-8">
+            <div class="mb-6">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4">Clinical Transcript Input</h2>
+                <p id="formInstructions" class="text-gray-600 mb-4">
+                    Record a doctor-patient conversation or paste a transcript below. Our AI will automatically extract all required information to generate a complete Tricare CMN form.
+                </p>
+            </div>
+            <!--Form Selection -->
+            <div class="flex items-center space-x-4">
+                <div>
+                    <label for="formType" class="block text-sm font-medium text-gray-700 mb-2">
+                        Form Type
+                    </label>
+                    <select
+                        id="formType"
+                        name="formType"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        required
+                    >
+                        <option value="tricare">Tricare Medical Form</option>
+                        <option value="cms1500">CMS-1500 Medical Claim Form</option>
+                        <option value="cms1450">CMS-1450 Medical Claim Form</option>
+                    </select>
+                    <p class="text-sm text-gray-500 mt-1">Select the type of medical form you want to generate</p>
+
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button
+                            id="findPriorAuthBtn"
+                            class="bg-white hover:shadow-xl border border-green-800 text-green-600 px-4 py-2 rounded-lg font-medium flex items-center transition-colors duration-200"
+                        >
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Find Prior Auth Form
+                        </button>
+                        <div id="priorAuthStatus" class="text-sm text-gray-500 hidden">
+                            <span id="priorAuthStatusText">Ready to find form</span>
+                        </div>
+                    </div>
+            </div>
+            <!-- Audio Recording Section -->
+            <div class="mb-6 recording-section p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <button id="recordingToggle" class="text-lg font-semibold text-medical-primary flex items-center hover:text-blue-700 transition-colors cursor-pointer">
+                        <svg id="recordingIcon" class="icon-medical mr-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                        </svg>
+                        <span id="recordingButtonText">Record</span>
+                    </button>
+                    <div class="flex items-center space-x-3">
+                        <button
+                            id="clearRecording"
+                            class="p-2 hover:bg-orange-50 rounded-lg transition-colors cursor-pointer border-none bg-transparent"
+                            title="Clear Recording"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="#d97706" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                        <button
+                            id="uploadAudioFile"
+                            class="p-2 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer border-none bg-transparent"
+                            title="Upload Audio File"
+                        >
+                            <svg class="w-5 h-5" fill="none" stroke="#64748b" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Recording Status Indicator - Moved Below -->
+                <div id="recordingStatus" class="flex items-center space-x-2 text-sm mt-3">
+                    <div id="recordingDot" class="w-3 h-3 bg-gray-400 rounded-full"></div>
+                    <span id="recordingText">Ready</span>
+                    <span id="timeoutCountdown" class="text-xs text-gray-500 hidden"></span>
+                </div>
+                <div id="recordingStatusDetails" class="text-sm text-medical-secondary mb-4">
+                    <span id="recordingIndicator" class="hidden status-indicator">
+                        <span class="inline-block w-3 h-3 bg-red-500 rounded-full animate-pulse mr-2"></span>
+                        Recording... Speak clearly into your microphone
+                    </span>
+                    <span id="transcribingIndicator" class="hidden status-indicator">
+                        <span class="inline-block w-3 h-3 bg-blue-500 rounded-full animate-pulse mr-2"></span>
+                        Converting speech to text...
+                    </span>
+                </div>
+                <div id="recordingPreview" class="hidden">
+                    <div class="bg-white border border-gray-300 rounded-md p-3 mb-2">
+                        <div class="text-sm text-gray-600 mb-2">Transcribed Text:</div>
+                        <div id="transcribedText" class="text-gray-800 mb-3"></div>
+                        <div class="text-xs text-gray-500 mb-2">
+                            💡 The conversation will be automatically formatted with speaker identification
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button
+                            id="useTranscription"
+                            class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition duration-200"
+                        >
+                            Use This Transcription
+                        </button>
+                        <button
+                            id="formatConversation"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition duration-200"
+                        >
+                            Format as Conversation
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <form id="transcriptForm" class="space-y-6">
+                <div>
+                    <label for="transcript" class="block text-sm font-medium text-gray-700 mb-2">
+                        Clinical Transcript
+                    </label>
+                    <textarea
+                        id="transcript"
+                        name="transcript"
+                        rows="12"
+                        class="w-full professional-input"
+                        placeholder="Paste your clinical conversation transcript here...
+
+Note: When recording, speak naturally - AI will automatically identify speakers and format the conversation."
+                        required
+                    ></textarea>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <div class="flex space-x-4">
+                        <button
+                            type="submit"
+                            id="generateBtn"
+                            class="btn-medical flex items-center"
+                        >
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span id="generateBtnText">Generate Tricare CMN Form</span>
+                        </button>
+                                                <button
+                            type="button"
+                            id="generatePriorAuthBtn"
+                            class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium flex items-center transition-colors duration-200"
+                        >
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Generate Prior Auth Form
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Loading Indicator -->
+            <div id="loadingIndicator" class="loading mt-6">
+                <div class="flex items-center justify-center">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <span id="loadingText" class="ml-3 text-gray-600">Processing transcript and generating Tricare CMN form...</span>
+                </div>
+            </div>
+
+            <!-- Download Link -->
+            <div id="downloadSection" class="download-link mt-6">
+                <div class="bg-green-50 border border-green-200 rounded-md p-4">
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <h3 id="successTitle" class="text-lg font-medium text-green-800">Tricare CMN Form Generated Successfully!</h3>
+                            <p class="text-green-700" id="successMessage">Your Tricare CMN form is ready for download.</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex space-x-3">
+                        <a
+                            id="downloadLink"
+                            href="#"
+                            download="tricare_cmn.pdf"
+                            class="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-md transition duration-200"
+                        >
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Download PDF
+                        </a>
+                        <a
+                            id="viewLink"
+                            href="#"
+                            target="_blank"
+                            class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition duration-200"
+                        >
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            View PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Error Message -->
+            <div id="errorMessage" class="hidden mt-6">
+                <div class="bg-red-50 border border-red-200 rounded-md p-4">
+                    <div class="flex items-center">
+                        <svg class="w-6 h-6 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <h3 class="text-lg font-medium text-red-800">Error Processing Request</h3>
+                            <p id="errorText" class="text-red-700">An error occurred while processing your request.</p>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                </div>
+
+                <!-- Features Section -->
+                <div class="bg-gray-50 rounded-lg shadow-sm p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">How It Works</h2>
+                    <div class="space-y-6">
+                        <div class="feature-card">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-14 h-14 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <svg class="icon-medical" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-2">1. Record or Paste</h3>
+                                    <p class="text-medical-secondary text-sm">Record a live conversation or paste an existing transcript.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-14 h-14 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-gray-800 mb-2">2. AI Processing</h3>
+                                    <p class="text-medical-secondary text-sm">Our AI extracts patient info, diagnoses, and procedures automatically.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="flex items-center space-x-4">
+                                <div class="w-14 h-14 bg-purple-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 id="sidebarStepTitle" class="text-lg font-semibold text-gray-800 mb-2">3. Download Tricare CMN</h3>
+                                    <p id="sidebarStepDescription" class="text-medical-secondary text-sm">Get your complete, submission-ready Tricare CMN form for medical equipment authorization.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Information Widget moved here -->
+    <div class="container mx-auto px-6 py-4">
+        <div id="formInfoWidget" class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+            <div class="flex items-start">
+                <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                    <h3 id="formInfoTitle" class="text-sm font-semibold text-blue-800 mb-1">About Tricare CMN Forms</h3>
+                    <p id="formInfoDescription" class="text-sm text-blue-700">
+                        Tricare Certificate of Medical Necessity (CMN) forms are used to document medical necessity for durable medical equipment, prosthetics, orthotics, and supplies (DMEPOS). Our AI automatically extracts patient demographics, medical conditions, equipment requirements, and provider information to generate a properly formatted, submission-ready CMN form.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Form Type UI Updates
+        function updateUIForFormType(formType) {
+            const formInfo = {
+                'tricare': {
+                    title: 'About Tricare CMN Forms',
+                    description: 'Tricare Certificate of Medical Necessity (CMN) forms are used to document medical necessity for durable medical equipment, prosthetics, orthotics, and supplies (DMEPOS). Our AI automatically extracts patient demographics, medical conditions, equipment requirements, and provider information to generate a properly formatted, submission-ready CMN form.',
+                    instructions: 'Record a doctor-patient conversation or paste a transcript below. Our AI will automatically extract all required information to generate a complete Tricare CMN form.',
+                    buttonText: 'Generate Tricare CMN Form',
+                    loadingText: 'Processing transcript and generating Tricare CMN form...',
+                    successTitle: 'Tricare CMN Form Generated Successfully!',
+                    successMessage: 'Your Tricare CMN form is ready for download.',
+                    downloadFileName: 'tricare_cmn.pdf',
+                    sidebarStepTitle: '3. Download Tricare CMN',
+                    sidebarStepDescription: 'Get your complete, submission-ready Tricare CMN form for medical equipment authorization.'
+                },
+                'cms1500': {
+                    title: 'About CMS-1500 Forms',
+                    description: 'The CMS-1500 is the standard claim form used by healthcare providers to bill Medicare and other insurance carriers. Our AI automatically extracts patient demographics, diagnosis codes (ICD-10), procedure codes (CPT), and provider information to generate a properly formatted, submission-ready claim form.',
+                    instructions: 'Record a doctor-patient conversation or paste a transcript below. Our AI will automatically extract all required information to generate a complete CMS-1500 claim form.',
+                    buttonText: 'Generate CMS-1500 Form',
+                    loadingText: 'Processing transcript and generating CMS-1500 form...',
+                    successTitle: 'CMS-1500 Claim Form Generated Successfully!',
+                    successMessage: 'Your CMS-1500 claim form is ready for download.',
+                    downloadFileName: 'cms1500_claim.pdf',
+                    sidebarStepTitle: '3. Download CMS-1500',
+                    sidebarStepDescription: 'Get your complete, submission-ready CMS-1500 claim form for Medicare and insurance billing.'
+                },
+                'cms1450': {
+                    title: 'About CMS-1450 Forms',
+                    description: 'The CMS-1450 (UB-04) is the standard claim form used by hospitals and institutional providers to bill Medicare and other insurance carriers. Our AI automatically extracts patient demographics, diagnosis codes (ICD-10), procedure codes, revenue codes, and provider information to generate a properly formatted, submission-ready institutional claim form.',
+                    instructions: 'Record a doctor-patient conversation or paste a transcript below. Our AI will automatically extract all required information to generate a complete CMS-1450 claim form.',
+                    buttonText: 'Generate CMS-1450 Form',
+                    loadingText: 'Processing transcript and generating CMS-1450 form...',
+                    successTitle: 'CMS-1450 Claim Form Generated Successfully!',
+                    successMessage: 'Your CMS-1450 claim form is ready for download.',
+                    downloadFileName: 'cms1450_claim.pdf',
+                    sidebarStepTitle: '3. Download CMS-1450',
+                    sidebarStepDescription: 'Get your complete, submission-ready CMS-1450 institutional claim form for hospital billing.'
+                }
+            };
+
+            const info = formInfo[formType];
+            if (!info) return;
+
+            // Update form info section
+            document.getElementById('formInfoTitle').textContent = info.title;
+            document.getElementById('formInfoDescription').textContent = info.description;
+            document.getElementById('formInstructions').textContent = info.instructions;
+
+            // Update button text
+            document.getElementById('generateBtnText').textContent = info.buttonText;
+
+            // Update loading text
+            document.getElementById('loadingText').textContent = info.loadingText;
+
+            // Update success messages
+            document.getElementById('successTitle').textContent = info.successTitle;
+            document.getElementById('successMessage').textContent = info.successMessage;
+
+            // Update download filename
+            document.getElementById('downloadLink').download = info.downloadFileName;
+
+            // Update sidebar step 3
+            document.getElementById('sidebarStepTitle').textContent = info.sidebarStepTitle;
+            document.getElementById('sidebarStepDescription').textContent = info.sidebarStepDescription;
+        }
+
+        // Audio Recording Variables
+        let recognition = null;
+        let isRecording = false;
+        let recordedText = '';
+        let isProcessing = false;
+        let inactivityTimeout = null;
+        let lastSpeechTime = 0;
+        const INACTIVITY_TIMEOUT = 5000; // 5 seconds
+
+        // Initialize Speech Recognition
+        function initSpeechRecognition() {
+            console.log('Initializing speech recognition...');
+            
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                
+                recognition.continuous = true;
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+                recognition.maxAlternatives = 1;
+                
+                recognition.onstart = function() {
+                    console.log('Recording started');
+                    isRecording = true;
+                    updateRecordingUI();
+                };
+                
+                recognition.onresult = function(event) {
+                    console.log('Speech result received:', event);
+                    let interimTranscript = '';
+                    let finalTranscript = '';
+                    
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        const transcript = event.results[i][0].transcript;
+                        
+                        if (event.results[i].isFinal) {
+                            finalTranscript += transcript + ' ';
+                            recordedText += transcript + ' ';
+                            lastSpeechTime = Date.now(); // Update last speech time
+                            console.log('Final transcript added:', transcript);
+                        } else {
+                            interimTranscript += transcript;
+                        }
+                    }
+                    
+                    // Show live transcription (no speaker detection)
+                    document.getElementById('transcribedText').textContent = recordedText + interimTranscript;
+                    console.log('Current recorded text:', recordedText);
+                    
+                    // Reset inactivity timeout on any speech activity
+                    resetInactivityTimeout();
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    isRecording = false;
+                    updateRecordingUI();
+                    
+                    let errorMessage = 'Speech recognition error: ' + event.error;
+                    if (event.error === 'not-allowed') {
+                        errorMessage = 'Microphone access denied. Please allow microphone access and try again.';
+                    } else if (event.error === 'no-speech') {
+                        errorMessage = 'No speech detected. Please try speaking closer to the microphone.';
+                    } else if (event.error === 'audio-capture') {
+                        errorMessage = 'No microphone found. Please check your microphone connection.';
+                    }
+                    
+                    alert(errorMessage);
+                };
+                
+                recognition.onend = function() {
+                    console.log('Recording ended. Recorded text:', recordedText);
+                    console.log('isRecording flag:', isRecording);
+                    
+                    // Only process if we manually stopped recording
+                    if (!isRecording) {
+                        console.log('Manual stop - processing transcript');
+                        clearInactivityTimeout();
+                        isRecording = false;
+                        updateRecordingUI();
+                        if (recordedText.trim()) {
+                            // Process with Gemini for speaker identification
+                            processTranscriptWithGemini(recordedText);
+                        } else {
+                            console.log('No speech detected or recorded');
+                            alert('No speech was detected. Please try speaking closer to the microphone and ensure you have a working microphone.');
+                        }
+                    } else {
+                        console.log('Auto-stop detected - restarting recording');
+                        // The API stopped automatically, restart if we're still supposed to be recording
+                        setTimeout(() => {
+                            if (isRecording) {
+                                console.log('Restarting recording after auto-stop');
+                                recognition.start();
+                            }
+                        }, 100);
+                    }
+                };
+                
+                console.log('Speech recognition initialized successfully');
+            } else {
+                console.error('Speech recognition not supported');
+                alert('Speech recognition is not supported in this browser. Please use Chrome or Edge.');
+            }
+        }
+
+        // Update Recording UI
+        function updateRecordingUI() {
+            const recordingIndicator = document.getElementById('recordingIndicator');
+            const transcribingIndicator = document.getElementById('transcribingIndicator');
+            const recordingDot = document.getElementById('recordingDot');
+            const recordingText = document.getElementById('recordingText');
+            
+            // Update the toggle button appearance
+            updateRecordingButton(isRecording);
+            
+            if (isRecording) {
+                recordingIndicator.classList.remove('hidden');
+                transcribingIndicator.classList.add('hidden');
+                
+                // Update status indicator
+                if (recordingDot) {
+                    recordingDot.className = 'w-3 h-3 bg-red-500 rounded-full animate-pulse';
+                }
+                if (recordingText) {
+                    recordingText.textContent = 'Recording...';
+                }
+            } else {
+                recordingIndicator.classList.add('hidden');
+                transcribingIndicator.classList.add('hidden');
+                
+                // Update status indicator
+                if (recordingDot) {
+                    recordingDot.className = 'w-3 h-3 bg-gray-400 rounded-full';
+                }
+                if (recordingText) {
+                    recordingText.textContent = 'Ready';
+                }
+            }
+        }
+
+        // Show Transcription Preview
+        function showTranscriptionPreview() {
+            const preview = document.getElementById('recordingPreview');
+            preview.classList.remove('hidden');
+        }
+
+        // Toggle Recording (Start/Stop)
+        function toggleRecording() {
+            if (!isRecording) {
+                // Start recording
+                console.log('Starting recording...');
+                if (recognition) {
+                    recordedText = '';
+                    lastSpeechTime = Date.now();
+                    document.getElementById('transcribedText').textContent = '';
+                    document.getElementById('recordingPreview').classList.add('hidden');
+                    try {
+                        recognition.start();
+                        // Start the inactivity timeout
+                        resetInactivityTimeout();
+                        updateRecordingButton(true);
+                    } catch (error) {
+                        console.error('Error starting recognition:', error);
+                        alert('Error starting recording: ' + error.message);
+                    }
+                } else {
+                    console.log('Cannot start recording - recognition not available');
+                }
+            } else {
+                // Stop recording
+                console.log('Stopping recording...');
+                if (recognition && isRecording) {
+                    isRecording = false; // Set this first to prevent onend from restarting
+                    clearInactivityTimeout(); // Clear the timeout
+                    recognition.stop();
+                    updateRecordingButton(false);
+                } else {
+                    console.log('Cannot stop recording - recognition:', !!recognition, 'isRecording:', isRecording);
+                }
+            }
+        }
+        
+        // Update recording button appearance
+        function updateRecordingButton(recording) {
+            const button = document.getElementById('recordingToggle');
+            const icon = document.getElementById('recordingIcon');
+            const text = document.getElementById('recordingButtonText');
+            
+            if (recording) {
+                // Change to stop state - red color when recording
+                button.className = 'text-lg font-semibold text-red-600 flex items-center hover:text-red-700 transition-colors cursor-pointer';
+                icon.setAttribute('fill', '#dc2626'); // red-600 color
+                icon.innerHTML = '<path d="M6 6h12v12H6z"/>';
+                text.textContent = 'Stop';
+            } else {
+                // Change to start state - blue color when not recording
+                button.className = 'text-lg font-semibold text-medical-primary flex items-center hover:text-blue-700 transition-colors cursor-pointer';
+                icon.setAttribute('fill', '#1e40af'); // medical-primary blue color
+                icon.innerHTML = '<path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>';
+                text.textContent = 'Record';
+            }
+        }
+
+        // Legacy functions for compatibility
+        function startRecording() {
+            if (!isRecording) toggleRecording();
+        }
+        
+        function stopRecording() {
+            if (isRecording) toggleRecording();
+        }
+
+        // Clear Recording
+        function clearRecording() {
+            console.log('Clear recording clicked');
+            
+            // Stop recording if it's currently recording
+            if (recognition && isRecording) {
+                console.log('Stopping recording before clearing');
+                recognition.stop();
+            }
+            
+            // Clear timeout
+            clearInactivityTimeout();
+            
+            // Reset all recording state
+            recordedText = '';
+            isRecording = false;
+            isProcessing = false;
+            lastSpeechTime = 0;
+            
+            // Clear UI elements
+            document.getElementById('transcribedText').textContent = '';
+            document.getElementById('recordingPreview').classList.add('hidden');
+            
+            // Reset the transcript textarea
+            document.getElementById('transcript').value = '';
+            
+            // Update UI state
+            updateRecordingUI();
+            
+            // Status text removed
+            
+            console.log('Recording cleared successfully');
+        }
+
+        // Use Transcription
+        function useTranscription() {
+            if (recordedText.trim()) {
+                document.getElementById('transcript').value = recordedText;
+                document.getElementById('recordingPreview').classList.add('hidden');
+            }
+        }
+
+        // Format Conversation with Speaker Identification
+        function formatConversation() {
+            if (recordedText.trim()) {
+                const formattedText = formatTextWithSpeakers(recordedText);
+                document.getElementById('transcript').value = formattedText;
+                document.getElementById('recordingPreview').classList.add('hidden');
+            }
+        }
+
+        // Automatically format and populate transcript after recording
+        function formatAndPopulateTranscript() {
+            if (conversationSegments.length > 0) {
+                // Use the conversation segments which already have speaker identification
+                let formattedText = '';
+                conversationSegments.forEach(segment => {
+                    formattedText += `${segment.speaker}: ${segment.text}\n`;
+                });
+                
+                document.getElementById('transcript').value = formattedText;
+                
+                // Show a brief success message
+                console.log('Conversation recorded and formatted!');
+            }
+        }
+
+        // Inactivity Timeout Management
+        function resetInactivityTimeout() {
+            console.log('Resetting inactivity timeout');
+            clearInactivityTimeout();
+            
+            if (isRecording) {
+                // Show countdown
+                showTimeoutCountdown();
+                
+                inactivityTimeout = setTimeout(() => {
+                    console.log('Inactivity timeout reached - stopping recording');
+                    if (isRecording) {
+                        isRecording = false;
+                        recognition.stop();
+                    }
+                }, INACTIVITY_TIMEOUT);
+            }
+        }
+        
+        function showTimeoutCountdown() {
+            const countdownElement = document.getElementById('timeoutCountdown');
+            if (!countdownElement) return;
+            
+            countdownElement.classList.remove('hidden');
+            let timeLeft = INACTIVITY_TIMEOUT / 1000;
+            
+            const countdownInterval = setInterval(() => {
+                if (!isRecording) {
+                    clearInterval(countdownInterval);
+                    countdownElement.classList.add('hidden');
+                    return;
+                }
+                
+                countdownElement.textContent = `(auto-stop in ${timeLeft}s)`;
+                timeLeft--;
+                
+                if (timeLeft < 0) {
+                    clearInterval(countdownInterval);
+                    countdownElement.classList.add('hidden');
+                }
+            }, 1000);
+        }
+        
+        function clearInactivityTimeout() {
+            if (inactivityTimeout) {
+                clearTimeout(inactivityTimeout);
+                inactivityTimeout = null;
+                console.log('Inactivity timeout cleared');
+            }
+        }
+        
+        // Note: All complex speaker detection functions removed - now using Gemini for speaker identification
+
+        // Helper function to format text with speaker identification (legacy)
+        function formatTextWithSpeakers(text) {
+            // Simple heuristic to identify speakers based on content
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+            let formattedText = '';
+            
+            for (let sentence of sentences) {
+                sentence = sentence.trim();
+                if (sentence.length === 0) continue;
+                
+                // Heuristics to identify speaker
+                let speaker = 'Person';
+                
+                // Doctor indicators
+                if (sentence.match(/\b(doctor|dr\.|physician|let me|examine|diagnose|prescribe|treatment|medication|symptoms|condition|test|results)\b/i)) {
+                    speaker = 'Doctor';
+                }
+                // Patient indicators  
+                else if (sentence.match(/\b(i have|i feel|i'm|my|pain|hurt|sick|problem|worried|concerned|what should|how long)\b/i)) {
+                    speaker = 'Patient';
+                }
+                // Question indicators (often doctor asking)
+                else if (sentence.includes('?')) {
+                    speaker = 'Doctor';
+                }
+                
+                formattedText += `${speaker}: ${sentence}\n`;
+            }
+            
+            return formattedText;
+        }
+
+        // Process transcript with Gemini for speaker identification
+        async function processTranscriptWithGemini(rawTranscript) {
+            console.log('Processing transcript with Gemini:', rawTranscript);
+            
+            // Show processing indicator
+            showProcessingIndicator();
+            
+            try {
+                const response = await fetch('/process-transcript', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({transcript: rawTranscript })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const formattedTranscript = data.formatted_transcript;
+                    
+                    console.log('Gemini processed transcript:', formattedTranscript);
+                    
+                    // Populate the textarea with formatted text
+                    document.getElementById('transcript').value = formattedTranscript;
+                    
+                    // Hide processing indicator
+                    hideProcessingIndicator();
+                    
+                    // Show success message
+                    showSuccessMessage();
+                } else {
+                    let errorMessage = 'Failed to process transcript';
+                    try {
+                        const errorData = await response.json();
+                        errorMessage = errorData.error || errorMessage;
+                    } catch (jsonError) {
+                        // If response is not JSON, use status text
+                        errorMessage = response.statusText || errorMessage;
+                    }
+                    throw new Error(errorMessage);
+                }
+            } catch (error) {
+                console.error('Error processing transcript:', error);
+                hideProcessingIndicator();
+                alert('Error processing transcript with AI. Please try again.');
+            }
+        }
+        
+        // Show processing indicator
+        function showProcessingIndicator() {
+            isProcessing = true;
+            console.log('Processing with AI...');
+            
+            // Show processing animation
+            const indicator = document.getElementById('transcribingIndicator');
+            indicator.classList.remove('hidden');
+            
+            // Update status indicator
+            const recordingDot = document.getElementById('recordingDot');
+            const recordingText = document.getElementById('recordingText');
+            if (recordingDot) {
+                recordingDot.className = 'w-3 h-3 bg-blue-500 rounded-full animate-pulse';
+            }
+            if (recordingText) {
+                recordingText.textContent = 'Processing...';
+            }
+        }
+        
+        // Hide processing indicator
+        function hideProcessingIndicator() {
+            isProcessing = false;
+            const indicator = document.getElementById('transcribingIndicator');
+            indicator.classList.add('hidden');
+            
+            // Reset status indicator
+            const recordingDot = document.getElementById('recordingDot');
+            const recordingText = document.getElementById('recordingText');
+            if (recordingDot) {
+                recordingDot.className = 'w-3 h-3 bg-gray-400 rounded-full';
+            }
+            if (recordingText) {
+                recordingText.textContent = 'Ready';
+            }
+        }
+        
+        // Show success message
+        function showSuccessMessage() {
+            // Status text functionality removed
+            console.log('Conversation processed and formatted!');
+        }
+        
+        // Process pre-recorded audio file
+        function processAudioFile(audioFile) {
+            console.log('Processing audio file:', audioFile.name);
+            
+            // Create audio element
+            const audio = new Audio();
+            const audioUrl = URL.createObjectURL(audioFile);
+            audio.src = audioUrl;
+            
+            // Create a simple audio context for analysis
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const source = audioContext.createMediaElementSource(audio);
+            const analyser = audioContext.createAnalyser();
+            
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+            
+            // Process audio in chunks (simplified approach)
+            audio.addEventListener('loadeddata', () => {
+                console.log('Audio loaded, duration:', audio.duration);
+                
+                // For demo purposes, we'll simulate processing
+                // In a real implementation, you'd use Web Audio API or send to a service
+                simulateAudioProcessing(audioFile);
+            });
+            
+            audio.load();
+        }
+        
+        // Simulate audio processing (replace with real implementation)
+        function simulateAudioProcessing(audioFile) {
+            // This is a placeholder - in reality you'd:
+            // 1. Send audio to AssemblyAI, Deepgram, or similar service
+            // 2. Or use Web Audio API for local processing
+            // 3. Or send to your backend for processing
+            
+            console.log('Simulating audio processing for:', audioFile.name);
+            alert('Audio file processing would be implemented here. For now, use the live recording feature.');
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded, initializing...');
+            initSpeechRecognition();
+            
+            // Initialize UI for default form type
+            const formTypeSelect = document.getElementById('formType');
+            updateUIForFormType(formTypeSelect.value);
+            
+            // Add event listener for form type changes
+            formTypeSelect.addEventListener('change', function() {
+                updateUIForFormType(this.value);
+            });
+                        
+            // Event listeners for recording buttons
+            document.getElementById('recordingToggle').addEventListener('click', toggleRecording);
+            document.getElementById('clearRecording').addEventListener('click', clearRecording);
+            document.getElementById('useTranscription').addEventListener('click', useTranscription);
+            document.getElementById('formatConversation').addEventListener('click', formatConversation);
+            
+            // Add file input for audio files
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'audio/*';
+            fileInput.style.display = 'none';
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    processAudioFile(e.target.files[0]);
+                }
+            });
+            document.body.appendChild(fileInput);
+            
+            // Connect upload button to file input
+            document.getElementById('uploadAudioFile').addEventListener('click', () => fileInput.click());
+        });
+
+        // Form submission handler
+        document.getElementById('transcriptForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const transcript = document.getElementById('transcript').value;
+            const generateBtn = document.getElementById('generateBtn');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const downloadSection = document.getElementById('downloadSection');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Reset UI
+            errorMessage.classList.add('hidden');
+            downloadSection.classList.remove('show');
+            loadingIndicator.classList.add('show');
+            generateBtn.disabled = true;
+            
+            try {
+                const formType = document.getElementById('formType').value;
+                const response = await fetch('/generate-claim', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        transcript: transcript,
+                        form_type: formType
+                    })
+                });
+                
+                if (response.ok) {
+                    // Get the JSON response with visit_id and URLs
+                    const data = await response.json();
+                    console.log('Response data:', data);
+                    
+                    // Set up download and view links
+                    const downloadLink = document.getElementById('downloadLink');
+                    const viewLink = document.getElementById('viewLink');
+                    
+                    console.log('Download link element:', downloadLink);
+                    console.log('View link element:', viewLink);
+                    
+                    if (downloadLink && data.download_url) {
+                        downloadLink.href = data.download_url;
+                        console.log('Set download URL:', data.download_url);
+                    } else {
+                        console.error('Download link not found or no download URL');
+                    }
+                    
+                    if (viewLink && data.view_url) {
+                        viewLink.href = data.view_url;
+                        console.log('Set view URL:', data.view_url);
+                    } else {
+                        console.error('View link not found or no view URL');
+                    }
+                    
+                    // Show success UI
+                    loadingIndicator.classList.remove('show');
+                    downloadSection.classList.add('show');
+                } else {
+                    let errorMessage = 'Failed to generate claim form';
+                    try {
+                        const errorData = await response.json();
+                        errorMessage = errorData.error || errorMessage;
+                    } catch (jsonError) {
+                        // If response is not JSON, use status text
+                        errorMessage = response.statusText || errorMessage;
+                    }
+                    throw new Error(errorMessage);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Show error UI
+                loadingIndicator.classList.remove('show');
+                errorMessage.classList.remove('hidden');
+                document.getElementById('errorText').textContent = error.message;
+            } finally {
+                generateBtn.disabled = false;
+            }
+        });
+
+        // Prior Auth Form Generation
+        document.getElementById('generatePriorAuthBtn').addEventListener('click', async function() {
+            const transcript = document.getElementById('transcript').value;
+            const generatePriorAuthBtn = document.getElementById('generatePriorAuthBtn');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const downloadSection = document.getElementById('downloadSection');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            if (!transcript.trim()) {
+                alert('Please enter a transcript first');
+                return;
+            }
+            
+            // Reset UI
+            errorMessage.classList.add('hidden');
+            downloadSection.classList.remove('show');
+            loadingIndicator.classList.add('show');
+            generatePriorAuthBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/generate-prior-auth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ transcript: transcript })
+                });
+                
+                if (response.ok) {
+                    // Get the PDF blob
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    
+                    // Set up download link
+                    const downloadLink = document.getElementById('downloadLink');
+                    downloadLink.href = url;
+                    downloadLink.textContent = 'Download Prior Auth PDF';
+                    
+                    // Show success UI
+                    loadingIndicator.classList.remove('show');
+                    downloadSection.classList.add('show');
+                    
+                    // Update the success message
+                    const successTitle = document.querySelector('#downloadSection h3');
+                    const successText = document.querySelector('#downloadSection p');
+                    if (successTitle) successTitle.textContent = 'Prior Auth Form Generated Successfully!';
+                    if (successText) successText.textContent = 'Your prior authorization form is ready for download.';
+                    
+                } else {
+                    let errorMessage = 'Failed to generate prior auth form';
+                    try {
+                        const errorData = await response.json();
+                        errorMessage = errorData.error || errorMessage;
+                    } catch (jsonError) {
+                        // If response is not JSON, use status text
+                        errorMessage = response.statusText || errorMessage;
+                    }
+                    throw new Error(errorMessage);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Show error UI
+                loadingIndicator.classList.remove('show');
+                errorMessage.classList.remove('hidden');
+                document.getElementById('errorText').textContent = error.message;
+            } finally {
+                generatePriorAuthBtn.disabled = false;
+            }
+        });
+
+        // Find Prior Auth Form for Selected Patient
+        document.getElementById('findPriorAuthBtn').addEventListener('click', async function() {
+            const findPriorAuthBtn = document.getElementById('findPriorAuthBtn');
+            const priorAuthStatus = document.getElementById('priorAuthStatus');
+            
+            findPriorAuthBtn.disabled = true;
+            
+            // Show loading modal immediately
+            showLoadingModal();
+            
+            try {
+                const response = await fetch('/api/prior-auth/find-for-patient', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success && result.forms && result.forms.length > 0) {
+                    // Update modal to show form selection
+                    updateModalWithForms(result);
+                } else {
+                    throw new Error(result.message || 'No prior auth forms available for this patient');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showErrorModal(error.message);
+            } finally {
+                findPriorAuthBtn.disabled = false;
+            }
+        });
+        
+        // Function to show loading modal
+        function showLoadingModal() {
+            const modal = document.createElement('div');
+            modal.id = 'formSelectionModal';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                    <div class="p-6 text-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2" id="loadingTitle">AI Agent Loading...</h3>
+                        <p class="text-sm text-gray-600" id="loadingSubtitle">Initializing search...</p>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Start the dynamic loading messages
+            startLoadingMessages();
+        }
+        
+        // Function to cycle through loading messages
+        function startLoadingMessages() {
+            const messages = [
+                { title: "AI Agent Loading...", subtitle: "Initializing search..." },
+                { title: "AI Agent Fetching...", subtitle: "Searching state databases..." },
+                { title: "AI Agent Processing...", subtitle: "Analyzing form requirements..." },
+                { title: "AI Agent Scanning...", subtitle: "Finding available forms..." },
+                { title: "AI Agent Finalizing...", subtitle: "Preparing results..." }
+            ];
+            
+            let currentIndex = 0;
+            const titleElement = document.getElementById('loadingTitle');
+            const subtitleElement = document.getElementById('loadingSubtitle');
+            
+            if (!titleElement || !subtitleElement) return;
+            
+            const interval = setInterval(() => {
+                currentIndex = (currentIndex + 1) % messages.length;
+                titleElement.textContent = messages[currentIndex].title;
+                subtitleElement.textContent = messages[currentIndex].subtitle;
+            }, 1500); // Change message every 1.5 seconds
+            
+            // Store interval ID so we can clear it later
+            window.loadingInterval = interval;
+        }
+        
+        // Function to update modal with forms
+        function updateModalWithForms(result) {
+            const modal = document.getElementById('formSelectionModal');
+            if (!modal) return;
+            
+            // Clear the loading interval if it exists
+            if (window.loadingInterval) {
+                clearInterval(window.loadingInterval);
+                window.loadingInterval = null;
+            }
+            
+            // Show "Fetching data..." message briefly
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                    <div class="p-6 text-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Fetching data...</h3>
+                        <p class="text-sm text-gray-600">Preparing form results...</p>
+                    </div>
+                </div>
+            `;
+            
+            // Wait a moment then show the actual forms
+            setTimeout(() => {
+                const state = result.state;
+                const forms = result.forms;
+                
+                modal.innerHTML = `
+                    <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+                        <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-800">
+                                Prior Authorization Forms for ${state}
+                            </h3>
+                            <button id="closeModalBtn" class="text-gray-400 hover:text-gray-600">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <div class="p-4 overflow-y-auto max-h-[60vh]">
+                            <div class="space-y-3">
+                                ${forms.map((form, index) => `
+                                    <div class="border border-gray-200 rounded-lg p-3 hover:bg-gray-50 cursor-pointer form-option" 
+                                         data-form-index="${index}" 
+                                         data-form-type="${form.type}">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center space-x-3">
+                                                <div class="flex-shrink-0">
+                                                    <div class="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                                                        <svg class="w-3 h-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <h4 class="text-sm font-medium text-gray-900 truncate">${form.name}</h4>
+                                                    <div class="flex items-center space-x-2 mt-1">
+                                                        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                            ONLINE
+                                                        </span>
+                                                        <span class="text-xs text-gray-500 truncate">${form.source}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button class="select-form-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium ml-2">
+                                                Select
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="p-4 border-t border-gray-200 bg-gray-50">
+                            <p class="text-xs text-gray-500">
+                                Forms are sourced from state websites and official databases.
+                            </p>
+                        </div>
+                    </div>
+                `;
+                
+                // Add click handlers
+                modal.querySelectorAll('.form-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        const formIndex = parseInt(this.dataset.formIndex);
+                        const selectedForm = forms[formIndex];
+                        selectForm(selectedForm, result);
+                        closeModal();
+                    });
+                });
+                
+                modal.querySelectorAll('.select-form-btn').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const formOption = this.closest('.form-option');
+                        const formIndex = parseInt(formOption.dataset.formIndex);
+                        const selectedForm = forms[formIndex];
+                        selectForm(selectedForm, result);
+                        closeModal();
+                    });
+                });
+                
+                // Close modal handlers
+                document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) closeModal();
+                });
+                
+                function closeModal() {
+                    // Clear the loading interval if it exists
+                    if (window.loadingInterval) {
+                        clearInterval(window.loadingInterval);
+                        window.loadingInterval = null;
+                    }
+                    document.body.removeChild(modal);
+                }
+            }, 800); // Show "Fetching data..." for 800ms before showing forms
+        }
+        
+        // Function to show error modal
+        function showErrorModal(errorMessage) {
+            const modal = document.getElementById('formSelectionModal');
+            if (!modal) return;
+            
+            // Clear the loading interval if it exists
+            if (window.loadingInterval) {
+                clearInterval(window.loadingInterval);
+                window.loadingInterval = null;
+            }
+            
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
+                    <div class="p-6 text-center">
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">Error</h3>
+                        <p class="text-sm text-gray-600 mb-4">${errorMessage}</p>
+                        <button onclick="closeErrorModal()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded text-sm font-medium">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Function to close error modal
+        function closeErrorModal() {
+            const modal = document.getElementById('formSelectionModal');
+            if (modal) {
+                // Clear the loading interval if it exists
+                if (window.loadingInterval) {
+                    clearInterval(window.loadingInterval);
+                    window.loadingInterval = null;
+                }
+                document.body.removeChild(modal);
+            }
+        }
+        
+        
+        // Function to handle form selection
+        function selectForm(selectedForm, result) {
+            const priorAuthStatus = document.getElementById('priorAuthStatus');
+            const findPriorAuthBtn = document.getElementById('findPriorAuthBtn');
+            
+            // Update the status to show selected form in a compact way
+            priorAuthStatus.innerHTML = `
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <div>
+                                <h4 class="text-sm font-medium text-green-800">Form Selected</h4>
+                                <p class="text-xs text-green-700 truncate max-w-xs">${selectedForm.name}</p>
+                            </div>
+                        </div>
+                        <div class="flex space-x-2">
+                            ${selectedForm.type === 'local' ? `
+                                <a href="/api/prior-auth/download/${result.state.toLowerCase()}" 
+                                   download="${selectedForm.filename}"
+                                   class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium">
+                                    Open
+                                </a>
+                            ` : `
+                                <a href="${selectedForm.url}" 
+                                   target="_blank"
+                                   class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium">
+                                    Open
+                                </a>
+                            `}
+                            <button onclick="showLoadingModal(); setTimeout(() => updateModalWithForms(${JSON.stringify(result).replace(/"/g, '&quot;')}), 100)" 
+                                    class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs font-medium">
+                                Change
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+                    
+                    // Update button to show form is ready
+                    findPriorAuthBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    findPriorAuthBtn.classList.add('bg-green-500', 'hover:bg-green-600');
+                    findPriorAuthBtn.innerHTML = `
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Form Ready
+                    `;
+                    
+            // Store the selected form info
+            window.selectedPriorAuthForm = selectedForm;
+        }
+    </script>
+    </div>
+    </div>
+</body>
+</html>

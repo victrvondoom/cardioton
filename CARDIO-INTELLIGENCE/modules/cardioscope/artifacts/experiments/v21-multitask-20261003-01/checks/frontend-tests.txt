@@ -1,0 +1,16 @@
+
+> cardioscope-frontend@0.1.0 test
+> vitest run --run
+
+
+ RUN  v4.1.11 <ARCHIVAL_ROOT>/frontend
+
+(node:63005) [THREE_CJS_DEPRECATED] DeprecationWarning: `require("three")` is deprecated and will be removed.
+Replace `const THREE = require("three")` with `import * as THREE from "three"`.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+ Test Files  8 passed (8)
+      Tests  75 passed (75)
+   Start at  21:37:40
+   Duration  5.80s (transform 266ms, setup 0ms, import 758ms, tests 6.59s, environment 3.04s)
+

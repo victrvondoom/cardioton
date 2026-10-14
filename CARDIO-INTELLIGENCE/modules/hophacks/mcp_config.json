@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "medrelay-ai-agents": {
+      "command": "python",
+      "args": ["hophacks__mcp_server.py"],
+      "cwd": "/Users/sakethpoori/Documents/hacks/HopHacks",
+      "env": {
+        "PYTHONPATH": "/Users/sakethpoori/Documents/hacks/HopHacks/src"
+      }
+    }
+  }
+}

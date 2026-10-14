@@ -1,0 +1,56 @@
+{
+ "notes_file": "results/intake_eval/notes_test_seed11.json",
+ "notes": 61,
+ "model": "jev-latest (responses report jev-1.13.0)",
+ "accuracy": {
+  "numeric_mentioned": {
+   "accuracy": 1,
+   "correct": 1003,
+   "total": 1003
+  },
+  "numeric_absent_no_pick": {
+   "accuracy": 1,
+   "correct": 217,
+   "total": 217
+  },
+  "binary": {
+   "accuracy": 0.9994145199063232,
+   "correct": 1707,
+   "total": 1708
+  },
+  "choice": {
+   "accuracy": 1,
+   "correct": 305,
+   "total": 305
+  },
+  "bmi_computed": {
+   "accuracy": 1,
+   "correct": 41,
+   "total": 41
+  }
+ },
+ "downstream_mean_abs_prob_diff_vs_hand_entry": {
+  "CAD": 0,
+  "LAD": 0.0000951767736695875,
+  "LCX": 0.00006123180431825902,
+  "RCA": 0.0031060725813644927
+ },
+ "downstream_max_abs_prob_diff": {
+  "CAD": 0,
+  "LAD": 0.0030551574542247995,
+  "LCX": 0.002321714759910054,
+  "RCA": 0.18947042746323406
+ },
+ "mean_input_tokens_per_note": 16729.262295081968,
+ "mean_latency_ms_per_note_with_4_parallel": 293.4590163934426,
+ "notes_with_any_review_flag": 5,
+ "errors": {
+  "numeric_mentioned": [],
+  "numeric_absent_no_pick": [],
+  "binary": [
+   "test-29 CHF: got Y want N (p=0.60)"
+  ],
+  "choice": [],
+  "bmi_computed": []
+ }
+}

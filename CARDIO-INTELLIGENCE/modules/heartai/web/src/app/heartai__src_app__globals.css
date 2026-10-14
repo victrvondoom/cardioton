@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* Example: body transitions */
+
+
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+.nextjs-container-errors-overlay {
+  display: none !important;
+}
+
+nextjs-portal {
+  display: none;
+}

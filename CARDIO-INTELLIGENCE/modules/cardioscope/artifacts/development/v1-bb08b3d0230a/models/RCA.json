@@ -1,0 +1,406 @@
+{
+  "deployed": false,
+  "holdout_evaluated": false,
+  "model_sha256": "0d6ac8145b5d34073f20e8a838cf24d625ada59ad67d19fa85af035b1bc9b52b",
+  "phase": "DEVELOPMENT_ONLY",
+  "schema_sha256": "b94a1e93d98728e465d42f578f7e66008d04618b04f5db4076fa997e691a9d01",
+  "selected_configuration": {
+    "calibrated": false,
+    "candidate": {
+      "family": "forest",
+      "id": "forest-depth5-leaf10-none",
+      "params": {
+        "class_weight": null,
+        "max_depth": 5,
+        "min_samples_leaf": 10
+      },
+      "simplicity_rank": 11
+    },
+    "estimator_parameters": {
+      "bootstrap": true,
+      "ccp_alpha": 0.0,
+      "class_weight": null,
+      "criterion": "gini",
+      "max_depth": 5,
+      "max_features": "sqrt",
+      "max_leaf_nodes": null,
+      "max_samples": null,
+      "min_impurity_decrease": 0.0,
+      "min_samples_leaf": 10,
+      "min_samples_split": 2,
+      "min_weight_fraction_leaf": 0.0,
+      "monotonic_cst": null,
+      "n_estimators": 100,
+      "n_jobs": 1,
+      "oob_score": false,
+      "random_state": 42,
+      "verbose": 0,
+      "warm_start": false
+    },
+    "evaluation_scope": "Outer scores estimate inner selection procedures, not an independent test of this all-development frozen fit.",
+    "outer_fold_metrics_for_family_selection_procedure": {
+      "accuracy": {
+        "max": 0.7291666666666666,
+        "mean": 0.6780612244897959,
+        "min": 0.6122448979591837,
+        "std": 0.04629807262469102,
+        "values": [
+          0.6530612244897959,
+          0.6122448979591837,
+          0.7083333333333334,
+          0.6875,
+          0.7291666666666666
+        ]
+      },
+      "average_precision": {
+        "max": 0.6834720824923692,
+        "mean": 0.6373487244289997,
+        "min": 0.6046890344130533,
+        "std": 0.03000933187625471,
+        "values": [
+          0.6046890344130533,
+          0.6231400108436411,
+          0.6834720824923692,
+          0.6275709910563781,
+          0.6478715033395563
+        ]
+      },
+      "balanced_accuracy": {
+        "max": 0.7388888888888889,
+        "mean": 0.6302964307320025,
+        "min": 0.5719298245614035,
+        "std": 0.06709082684758927,
+        "values": [
+          0.5719298245614035,
+          0.5964912280701754,
+          0.6497277676950998,
+          0.5944444444444444,
+          0.7388888888888889
+        ]
+      },
+      "brier_score": {
+        "max": 0.2218658537096303,
+        "mean": 0.21247105962470253,
+        "min": 0.20632080656080112,
+        "std": 0.005736608026830874,
+        "values": [
+          0.21138839442839688,
+          0.2218658537096303,
+          0.21239955236814087,
+          0.20632080656080112,
+          0.21038069105654364
+        ]
+      },
+      "f1": {
+        "max": 0.6829268292682927,
+        "mean": 0.4727146858090655,
+        "min": 0.32,
+        "std": 0.146168608440395,
+        "values": [
+          0.32,
+          0.5128205128205128,
+          0.5,
+          0.34782608695652173,
+          0.6829268292682927
+        ]
+      },
+      "pr_auc": {
+        "max": 0.6752638416325921,
+        "mean": 0.6241513828465876,
+        "min": 0.5864208908659088,
+        "std": 0.03350563259324776,
+        "values": [
+          0.5864208908659088,
+          0.6094184776123979,
+          0.6752638416325921,
+          0.6139533710250119,
+          0.6357003330970273
+        ]
+      },
+      "precision": {
+        "max": 0.8,
+        "mean": 0.6706280193236716,
+        "min": 0.5,
+        "std": 0.12367640388818565,
+        "values": [
+          0.6666666666666666,
+          0.5,
+          0.7777777777777778,
+          0.8,
+          0.6086956521739131
+        ]
+      },
+      "recall": {
+        "max": 0.7777777777777778,
+        "mean": 0.42105263157894735,
+        "min": 0.21052631578947367,
+        "std": 0.23714874381276743,
+        "values": [
+          0.21052631578947367,
+          0.5263157894736842,
+          0.3684210526315789,
+          0.2222222222222222,
+          0.7777777777777778
+        ]
+      },
+      "roc_auc": {
+        "max": 0.7703703703703704,
+        "mean": 0.7217906836055656,
+        "min": 0.6896551724137931,
+        "std": 0.030920741159984496,
+        "values": [
+          0.7157894736842105,
+          0.7035087719298245,
+          0.6896551724137931,
+          0.7296296296296296,
+          0.7703703703703704
+        ]
+      }
+    },
+    "preprocessing": {
+      "calibration": null,
+      "encoded_feature_names": [
+        "numeric__Age",
+        "numeric__Weight",
+        "numeric__Length",
+        "numeric__BMI",
+        "numeric__DM",
+        "numeric__HTN",
+        "numeric__Current Smoker",
+        "numeric__EX-Smoker",
+        "numeric__FH",
+        "numeric__BP",
+        "numeric__PR",
+        "numeric__Edema",
+        "numeric__Typical Chest Pain",
+        "numeric__Function Class",
+        "numeric__Q Wave",
+        "numeric__St Elevation",
+        "numeric__St Depression",
+        "numeric__Tinversion",
+        "numeric__FBS",
+        "numeric__CR",
+        "numeric__TG",
+        "numeric__LDL",
+        "numeric__HDL",
+        "numeric__BUN",
+        "numeric__ESR",
+        "numeric__HB",
+        "numeric__K",
+        "numeric__Na",
+        "numeric__WBC",
+        "numeric__Lymph",
+        "numeric__Neut",
+        "numeric__PLT",
+        "numeric__EF-TTE",
+        "numeric__Region RWMA",
+        "categorical__Sex_Fmale",
+        "categorical__Sex_Male",
+        "categorical__Obesity_N",
+        "categorical__Obesity_Y",
+        "categorical__CRF_N",
+        "categorical__CRF_Y",
+        "categorical__CVA_N",
+        "categorical__CVA_Y",
+        "categorical__Airway disease_N",
+        "categorical__Airway disease_Y",
+        "categorical__Thyroid Disease_N",
+        "categorical__Thyroid Disease_Y",
+        "categorical__CHF_N",
+        "categorical__CHF_Y",
+        "categorical__DLP_N",
+        "categorical__DLP_Y",
+        "categorical__Weak Peripheral Pulse_N",
+        "categorical__Weak Peripheral Pulse_Y",
+        "categorical__Lung rales_N",
+        "categorical__Lung rales_Y",
+        "categorical__Systolic Murmur_N",
+        "categorical__Systolic Murmur_Y",
+        "categorical__Diastolic Murmur_N",
+        "categorical__Diastolic Murmur_Y",
+        "categorical__Dyspnea_N",
+        "categorical__Dyspnea_Y",
+        "categorical__Atypical_N",
+        "categorical__Atypical_Y",
+        "categorical__Nonanginal_N",
+        "categorical__Nonanginal_Y",
+        "categorical__Exertional CP_N",
+        "categorical__LowTH Ang_N",
+        "categorical__LowTH Ang_Y",
+        "categorical__LVH_N",
+        "categorical__LVH_Y",
+        "categorical__Poor R Progression_N",
+        "categorical__Poor R Progression_Y",
+        "categorical__BBB_LBBB",
+        "categorical__BBB_N",
+        "categorical__BBB_RBBB",
+        "categorical__VHD_Moderate",
+        "categorical__VHD_N",
+        "categorical__VHD_Severe",
+        "categorical__VHD_mild"
+      ],
+      "feature_order": [
+        "Age",
+        "Weight",
+        "Length",
+        "Sex",
+        "BMI",
+        "DM",
+        "HTN",
+        "Current Smoker",
+        "EX-Smoker",
+        "FH",
+        "Obesity",
+        "CRF",
+        "CVA",
+        "Airway disease",
+        "Thyroid Disease",
+        "CHF",
+        "DLP",
+        "BP",
+        "PR",
+        "Edema",
+        "Weak Peripheral Pulse",
+        "Lung rales",
+        "Systolic Murmur",
+        "Diastolic Murmur",
+        "Typical Chest Pain",
+        "Dyspnea",
+        "Function Class",
+        "Atypical",
+        "Nonanginal",
+        "Exertional CP",
+        "LowTH Ang",
+        "Q Wave",
+        "St Elevation",
+        "St Depression",
+        "Tinversion",
+        "LVH",
+        "Poor R Progression",
+        "BBB",
+        "FBS",
+        "CR",
+        "TG",
+        "LDL",
+        "HDL",
+        "BUN",
+        "ESR",
+        "HB",
+        "K",
+        "Na",
+        "WBC",
+        "Lymph",
+        "Neut",
+        "PLT",
+        "EF-TTE",
+        "Region RWMA",
+        "VHD"
+      ],
+      "feature_selection": null,
+      "fit_record_count": 242,
+      "fit_row_ids_sha256": "e56cf3bf38426d1aac24cd9b6c3ec179a28bf481c2d7b214f90bcf891ad34a4e",
+      "imputation": null,
+      "numeric_scaling": null,
+      "schema_sha256": "b94a1e93d98728e465d42f578f7e66008d04618b04f5db4076fa997e691a9d01",
+      "training_categories": {
+        "Airway disease": [
+          "N",
+          "Y"
+        ],
+        "Atypical": [
+          "N",
+          "Y"
+        ],
+        "BBB": [
+          "LBBB",
+          "N",
+          "RBBB"
+        ],
+        "CHF": [
+          "N",
+          "Y"
+        ],
+        "CRF": [
+          "N",
+          "Y"
+        ],
+        "CVA": [
+          "N",
+          "Y"
+        ],
+        "DLP": [
+          "N",
+          "Y"
+        ],
+        "Diastolic Murmur": [
+          "N",
+          "Y"
+        ],
+        "Dyspnea": [
+          "N",
+          "Y"
+        ],
+        "Exertional CP": [
+          "N"
+        ],
+        "LVH": [
+          "N",
+          "Y"
+        ],
+        "LowTH Ang": [
+          "N",
+          "Y"
+        ],
+        "Lung rales": [
+          "N",
+          "Y"
+        ],
+        "Nonanginal": [
+          "N",
+          "Y"
+        ],
+        "Obesity": [
+          "N",
+          "Y"
+        ],
+        "Poor R Progression": [
+          "N",
+          "Y"
+        ],
+        "Sex": [
+          "Fmale",
+          "Male"
+        ],
+        "Systolic Murmur": [
+          "N",
+          "Y"
+        ],
+        "Thyroid Disease": [
+          "N",
+          "Y"
+        ],
+        "VHD": [
+          "Moderate",
+          "N",
+          "Severe",
+          "mild"
+        ],
+        "Weak Peripheral Pulse": [
+          "N",
+          "Y"
+        ]
+      },
+      "unknown_category_encoding": "all-zero one-hot block; no learned validation domain"
+    },
+    "primary_metric": "highest unweighted mean inner-fold ROC-AUC",
+    "reason": "Highest mean ROC-AUC over the 15 existing inner validations; Brier and predefined simplicity resolve ties. No outer-test outcome enters selection.",
+    "threshold": 0.5,
+    "tie_breakers": [
+      "lowest mean inner-fold Brier score",
+      "lowest predefined simplicity_rank"
+    ]
+  },
+  "split_sha256": "98e8d0b080019e6d9426543a543efb1cffe8f249a9b6c7ada544caa5dac6cdb2",
+  "target": "RCA",
+  "training_configuration_sha256": "bb08b3d0230a6cd00b40ee13f84977a70bbdf0e0ca5e78b5ac9c0ab7be11722c"
+}

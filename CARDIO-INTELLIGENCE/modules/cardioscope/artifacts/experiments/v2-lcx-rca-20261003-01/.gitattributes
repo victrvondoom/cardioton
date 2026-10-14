@@ -1,0 +1,2 @@
+# Python CSV exports use standard CRLF records; preserve sealed export bytes.
+*.csv whitespace=cr-at-eol

@@ -1,0 +1,136 @@
+{
+  "source": "real current frozen V1 production application",
+  "browser": "Codex in-app Chromium; version not exposed",
+  "app_url": "http://127.0.0.1:8005/",
+  "public_example": {
+    "example_id": "0056fb5ae87a9ac1510fd77cb5cd6bd3b348a0d0de578cf1a86132f8d87733dc",
+    "fitting": false,
+    "holdout_inference": false,
+    "identities_unchanged": true,
+    "targets": {
+      "CAD": {
+        "probability": 0.1709399517600908,
+        "residual": -6.661338147750939e-16
+      },
+      "LAD": {
+        "probability": 0.24305384913623826,
+        "residual": 0.0
+      },
+      "LCX": {
+        "probability": 0.3705140009054133,
+        "residual": -6.116750994600295e-10
+      },
+      "RCA": {
+        "probability": 0.3090592361868292,
+        "residual": -1.7709154698231089e-09
+      }
+    }
+  },
+  "screenshots": [
+    {
+      "path": "docs/submission/assets/product-hero.png",
+      "sha256": "dc2b5ed40a9f63f13d7a7dc423e45cd46725930fe35b80fa796ee1761fa31cef",
+      "captured_at_utc": "2026-10-03T17:56:22.498580+00:00",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ]
+    },
+    {
+      "path": "docs/submission/assets/anatomy.png",
+      "sha256": "997db3fb4cd74a466ed10f8d8edb3407bc78d181452917bd0c33c3acca03ef33",
+      "captured_at_utc": "2026-10-03T17:56:02.910568+00:00",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ]
+    },
+    {
+      "path": "docs/submission/assets/explanation-CAD.png",
+      "sha256": "e89fd37cb28dc1287d04b97e2ad2ef59d3d507ada158ac1827ccb30f961e5c43",
+      "captured_at_utc": "2026-10-03T17:56:59.828182+00:00",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ]
+    },
+    {
+      "path": "docs/submission/assets/explanation-RCA.png",
+      "sha256": "3a9c8ccc116d6fba3615f0eb02f7d86a7490f1032d1782dfd106f76466623787",
+      "captured_at_utc": "2026-10-03T17:58:20.217934+00:00",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ]
+    },
+    {
+      "path": "docs/submission/assets/evidence.png",
+      "sha256": "ca80603862c97ba37e20e8752acf462646eeff4161f71a6f9b462f39a901105e",
+      "captured_at_utc": "2026-10-03T17:57:53.410966+00:00",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ]
+    },
+    {
+      "path": "docs/submission/assets/anatomy-posterior-LCX.jpg",
+      "sha256": "b04aeadf3f5d0295d2f99aba85f6dbb6ad6815ff71fd43c30c55e351f920f0a8",
+      "captured_at_utc": "2026-10-04T03:49:47.659Z",
+      "viewport_css_pixels": [
+        1440,
+        1000
+      ],
+      "selection": "LCX",
+      "view": "posterior; show all",
+      "source": "real frozen V1 application; same public development example",
+      "format": "JPEG"
+    }
+  ],
+  "image_fabrication": false,
+  "holdout_inference": false,
+  "training": false,
+  "derived_crops": [
+    {
+      "path": "docs/submission/assets/anatomy-posterior-LCX-crop.png",
+      "sha256": "a4629ac80f3db491f0e356ab9d553b1fe1c4fbe74cd6131260acdb0190644d66",
+      "source_path": "docs/submission/assets/anatomy-posterior-LCX.jpg",
+      "source_sha256": "b04aeadf3f5d0295d2f99aba85f6dbb6ad6815ff71fd43c30c55e351f920f0a8",
+      "crop_box_ltrb": [
+        445,
+        357,
+        1378,
+        967
+      ],
+      "operation": "integer pixel crop only; no resampling, compositing, annotation, or content alteration",
+      "pixel_exact_verified": true
+    },
+    {
+      "path": "docs/submission/assets/explanation-CAD-higher-crop.png",
+      "sha256": "a2710cdf8140600d2338730434a63cc4b224a894b9b90a514b6beb256ebc08c2",
+      "source_path": "docs/submission/assets/explanation-CAD.png",
+      "source_sha256": "e89fd37cb28dc1287d04b97e2ad2ef59d3d507ada158ac1827ccb30f961e5c43",
+      "crop_box_ltrb": [
+        65,
+        483,
+        709,
+        626
+      ],
+      "operation": "integer pixel crop only; no resampling, compositing, annotation, or content alteration",
+      "pixel_exact_verified": true
+    },
+    {
+      "path": "docs/submission/assets/explanation-CAD-lower-crop.png",
+      "sha256": "7fc9dbfd66266d28247bd7057f943798c9e4ddf25b6ec3b5cc0cf11dc929eba4",
+      "source_path": "docs/submission/assets/explanation-CAD.png",
+      "source_sha256": "e89fd37cb28dc1287d04b97e2ad2ef59d3d507ada158ac1827ccb30f961e5c43",
+      "crop_box_ltrb": [
+        737,
+        483,
+        1376,
+        626
+      ],
+      "operation": "integer pixel crop only; no resampling, compositing, annotation, or content alteration",
+      "pixel_exact_verified": true
+    }
+  ]
+}

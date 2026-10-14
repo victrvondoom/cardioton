@@ -1,0 +1,47 @@
+{
+  "name": "safetyconnect",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "db:seed": "tsx scripts/seed.ts",
+    "db:verify": "tsx scripts/safetyconnect__scripts__verify.ts",
+    "ingest": "tsx scripts/safetyconnect__scripts__ingest.ts",
+    "classify": "tsx scripts/safetyconnect__scripts__classify.ts",
+    "run-defense": "tsx scripts/run.ts",
+    "triage": "tsx scripts/safetyconnect__scripts__triage.ts",
+    "feedback-check": "tsx scripts/safetyconnect__scripts__feedback.ts"
+  },
+  "dependencies": {
+    "@clickhouse/client": "^1.20.0",
+    "d3-geo": "^3.1.1",
+    "inngest": "^4.5.1",
+    "next": "^15.5.19",
+    "openai": "^6.42.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "topojson-client": "^3.1.0",
+    "us-atlas": "^3.0.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.7",
+    "@types/d3-geo": "^3.1.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/topojson-client": "^3.1.5",
+    "@types/ws": "^8.18.1",
+    "autoprefixer": "^10.5.0",
+    "dotenv": "^17.4.2",
+    "eslint": "^9",
+    "eslint-config-next": "^15.5.19",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^3.4.19",
+    "tsx": "^4.22.4",
+    "typescript": "^5",
+    "ws": "^8.21.0"
+  }
+}

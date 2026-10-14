@@ -1,0 +1,20 @@
+{
+  "browser_initial_validation_and_prediction_ms": 66,
+  "example_id": "0056fb5ae87a9ac1510fd77cb5cd6bd3b348a0d0de578cf1a86132f8d87733dc",
+  "example_selection": "lexicographically smallest development content record ID",
+  "model_version": "d955d81c63c3d1402766c7891fa8015919b737f36a7efb7e0130686c98e4bdcd",
+  "no_fit": true,
+  "no_holdout_inference": true,
+  "prediction_http_ms": {
+    "max": 26.39020800415892,
+    "median": 23.45070800220128,
+    "p95": 24.87523154777591
+  },
+  "records": "one unchanged development example; no holdout profiles",
+  "timing_scope": "loopback HTTP; persistent connection; one warm-up excluded; 30 samples per scope",
+  "validation_and_prediction_http_ms": {
+    "max": 28.620874996704515,
+    "median": 24.462666500767227,
+    "p95": 26.397029351574016
+  }
+}

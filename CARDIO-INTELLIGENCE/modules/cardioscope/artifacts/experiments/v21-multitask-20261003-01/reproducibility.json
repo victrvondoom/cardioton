@@ -1,0 +1,7 @@
+{
+  "complete_inner_search_repeated": 16,
+  "elapsed_seconds": 5.946427457995014,
+  "probability_tolerance": 1e-10,
+  "status": "identical decisions/epochs/OOF+outer probabilities and metrics",
+  "training_stages_repeated": 129
+}

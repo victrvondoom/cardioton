@@ -37,7 +37,7 @@ jobs:
       id: backend
       uses: docker/build-push-action@v5
       with:
-        context: backend
+        context: CARDIO-INTELLIGENCE/core/backend
         push: true
         tags: ghcr.io/${{ github.repository }}/clincase-backend:${{ github.sha }}
 
@@ -45,8 +45,8 @@ jobs:
       id: worker
       uses: docker/build-push-action@v5
       with:
-        context: backend
-        file: backend/Dockerfile
+        context: CARDIO-INTELLIGENCE/core/backend
+        file: CARDIO-INTELLIGENCE/core/backend/Dockerfile
         push: true
         tags: ghcr.io/${{ github.repository }}/clincase-worker:${{ github.sha }}
         target: worker

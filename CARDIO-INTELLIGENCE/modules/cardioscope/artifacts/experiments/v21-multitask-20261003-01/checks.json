@@ -1,0 +1,56 @@
+{
+  "collection_note": "Combined research collection initially collided on shared test_experiment.py basenames; --import-mode=importlib resolved collection without editing sealed code or prior files.",
+  "deterministic_reproduction": {
+    "complete_inner_search_repeated": 16,
+    "elapsed_seconds": 5.946427457995014,
+    "probability_tolerance": 1e-10,
+    "status": "identical decisions/epochs/OOF+outer probabilities and metrics",
+    "training_stages_repeated": 129
+  },
+  "foundation": {
+    "checks": [
+      "53 original runtime pins",
+      "backend/ML/test/script Ruff lint and format",
+      "TypeScript typecheck",
+      "256 immutable files",
+      "locked original data/split verification",
+      "83 anatomy meshes"
+    ],
+    "command": "make lint verify",
+    "status": "PASS"
+  },
+  "frontend": {
+    "command": "cd frontend && npm test -- --run",
+    "files": 8,
+    "passed": 75,
+    "status": "PASS"
+  },
+  "not_run": "Historical holdout evaluation, reserved label readers, and product evidence/API tests that deserialize historical holdout aggregate results were not invoked.",
+  "preregistration_commit": "1c04452",
+  "provenance_audit": {
+    "all_baseline_files_unchanged": 519,
+    "holdout_outcome_use": false,
+    "holdout_reader_calls": 0,
+    "outer_arms_recomputed": 637,
+    "protocol_sha256": "15ab83fcf3bc4ae0763c051403afe761a0cb93f8cd06d5642dc7332ac47e1dc6",
+    "status": "PASS",
+    "training_stages_audited": 6450,
+    "v1_tag_byte_identical_files": 256
+  },
+  "research": {
+    "command": ".runtime/v21/bin/python -m pytest --import-mode=importlib -q research/v21_multitask/tests research/v2_lcx_rca/tests",
+    "existing_v2_tests": 29,
+    "new_v21_tests": 22,
+    "passed": 51,
+    "status": "PASS"
+  },
+  "research_lint": {
+    "command": ".runtime/v21/bin/ruff check --config research/ruff.toml research/v21_multitask && .runtime/v21/bin/ruff format --check --config research/ruff.toml research/v21_multitask",
+    "status": "PASS"
+  },
+  "v1_safe_core": {
+    "command": ".venv/bin/python -m pytest -q tests/test_data.py tests/test_splits.py tests/test_anatomy.py tests/test_actual_sources.py tests/test_modeling.py",
+    "passed": 61,
+    "status": "PASS"
+  }
+}

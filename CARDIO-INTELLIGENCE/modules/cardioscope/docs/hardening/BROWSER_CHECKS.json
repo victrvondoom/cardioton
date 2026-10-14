@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-03",
+  "chromium": {
+    "browser": "Codex in-app Chromium",
+    "version": "Not exposed by enabled browser interface",
+    "host": "macOS ARM64",
+    "realMeshes": 83,
+    "workflow": "Public development example; four frozen probabilities; CAD/LCX SHAP; selected vessel/isolation/reset; Evidence/Prediction; refresh clears state; keyboard History Enter focuses field-5 and Tab field-6",
+    "viewportWidths": [
+      390,
+      1024,
+      1440
+    ],
+    "horizontalOverflow": false,
+    "beforeWarmReloadToVerifiedRenderMs": 557,
+    "afterWarmReloadToVerifiedRenderMs": 1017,
+    "timingLimit": "Automation wall-clock upper bounds with warm HTTP cache; Linux build running during after measurement; not a controlled improvement claim",
+    "linuxBackedWorkflow": "Final Ubuntu image: 83 real meshes; four target explanations; actual LAD mesh click; camera changes under orbit/zoom; reset; posterior LCX isolation; Evidence/Prediction preserves selection/isolation/explanation",
+    "linuxEvidence": "LINUX_BROWSER.json"
+  },
+  "firefox": {
+    "version": "157.0",
+    "host": "macOS ARM64",
+    "realMeshes": 83,
+    "fpsObserved": "59\u201360",
+    "workflow": "Example/four predictions; CAD/LAD/LCX/RCA explanations; LAD mesh click synchronizes UI; three vessel buttons; LCX/RCA isolation; orbit/zoom visually change source geometry; reset; Evidence navigation preserves LCX isolation"
+  },
+  "safari": {
+    "version": "27.2",
+    "host": "macOS ARM64",
+    "realMeshes": 83,
+    "fpsObserved": "59\u201360",
+    "workflow": "Example/four predictions; CAD/LCX/RCA explanations; LAD mesh synchronizes the explanation target; LAD mesh click synchronizes UI; LCX/RCA selection/isolation; orbit/zoom; reset; current-build Evidence/Prediction navigation",
+    "staleChunkFailure": "Rebuilding dist while an old tab was open produced explicit Evidence module unavailable; refresh recovered and cleared in-memory profile/results"
+  },
+  "limits": [
+    "No physical mobile or Linux browser/GPU tested",
+    "Chrome native testing interrupted; Chromium tested in the in-app browser",
+    "No screen-reader certification"
+  ],
+  "protectedGeometryChanges": false
+}

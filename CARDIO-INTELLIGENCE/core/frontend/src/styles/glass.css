@@ -1,0 +1,229 @@
+/* =============================================================================
+   CARDIO INTELLIGENCE — futuristic glass theme.
+
+   Layered over the token system in index.css. Dark mode (html.dark) becomes a
+   deep-space canvas with drifting aurora light; every raised surface, panel
+   and top bar turns into frosted glass with a luminous hairline edge. Clinical
+   status colours (red / green / amber) keep their meaning.
+   ============================================================================= */
+
+html.dark {
+  --surface-bg:        5 8 20;       /* deep space */
+  --surface-raised:    18 26 52;     /* glass tint */
+  --surface-raised-hi: 28 38 72;
+  --surface-border:    44 56 96;
+  --surface-border-hi: 76 92 150;
+  --surface-panel:     10 15 34;
+
+  --ink-primary: 240 246 255;
+  --ink-body:    200 210 232;
+  --ink-muted:   148 160 196;
+  --ink-faint:   110 120 158;
+
+  --accent-brand:      56 189 248;   /* electric cyan: primary interaction */
+  --accent-brand-soft: 10 34 58;
+  --accent-brand-glow: 129 140 248;  /* indigo glow */
+  --accent-cyan:       34 211 238;
+  --accent-blue:       96 165 250;
+  --accent-violet:     167 139 250;
+
+  --brand-50:  8 24 44;
+  --brand-100: 10 34 62;
+  --brand-200: 12 52 92;
+  --brand-300: 14 80 132;
+  --brand-400: 28 132 196;
+  --brand-500: 56 189 248;
+  --brand-600: 125 211 252;
+  --brand-700: 165 224 253;
+  --brand-800: 200 236 254;
+  --brand-900: 228 246 255;
+
+  --glass-fill:       rgba(16, 24, 52, 0.52);
+  --glass-fill-hi:    rgba(26, 36, 70, 0.58);
+  --glass-edge:       rgba(148, 170, 255, 0.16);
+  --glass-edge-hi:    rgba(148, 196, 255, 0.32);
+  --glass-highlight:  inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  --glass-shadow:     0 10px 40px -16px rgba(2, 6, 23, 0.85);
+  --glass-blur:       blur(18px) saturate(160%);
+  --neon-cyan:        56 189 248;
+  --neon-violet:      167 139 250;
+  --neon-pink:        236 72 153;
+
+  --topbar-bg-plain:   rgba(6, 10, 26, 0.55);
+  --topbar-bg-frosted: rgba(6, 10, 26, 0.72);
+  --selection-bg:      rgba(56, 189, 248, 0.32);
+  --evidence-flash-bg:   rgba(56, 189, 248, 0.14);
+  --evidence-flash-ring: rgba(56, 189, 248, 0.55);
+  --scrollbar-thumb:       rgba(148, 170, 255, 0.22);
+  --scrollbar-thumb-hover: rgba(148, 170, 255, 0.38);
+}
+
+/* Deep-space canvas with drifting aurora light and a faint holographic grid. */
+html.dark body {
+  background-color: rgb(var(--surface-bg));
+  background-image:
+    radial-gradient(1100px 760px at 8% -12%, rgba(56, 189, 248, 0.16), transparent 62%),
+    radial-gradient(980px 720px at 108% 4%, rgba(167, 139, 250, 0.18), transparent 60%),
+    radial-gradient(900px 900px at 50% 118%, rgba(236, 72, 153, 0.10), transparent 62%),
+    linear-gradient(rgba(148, 170, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 170, 255, 0.035) 1px, transparent 1px);
+  background-size: auto, auto, auto, 56px 56px, 56px 56px;
+  background-attachment: fixed;
+}
+
+html.dark body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 35% at 30% 30%, rgba(56, 189, 248, 0.10), transparent 70%),
+    radial-gradient(35% 30% at 70% 60%, rgba(167, 139, 250, 0.10), transparent 70%);
+  filter: blur(40px);
+  animation: ci-aurora-drift 28s ease-in-out infinite alternate;
+}
+
+@keyframes ci-aurora-drift {
+  0%   { transform: translate3d(-4%, -2%, 0) scale(1); }
+  50%  { transform: translate3d(3%, 4%, 0) scale(1.08); }
+  100% { transform: translate3d(-2%, 2%, 0) scale(1.02); }
+}
+
+/* Page canvases let the aurora through; raised surfaces become frosted glass. */
+html.dark .bg-surface-bg { background-color: transparent; }
+
+html.dark .bg-surface-raised,
+html.dark .bg-surface-panel {
+  background-color: var(--glass-fill);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
+}
+
+html.dark .bg-surface-raised-hi {
+  background-color: var(--glass-fill-hi);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+}
+
+html.dark .border-surface-border { border-color: var(--glass-edge); }
+html.dark .border-surface-border-hi { border-color: var(--glass-edge-hi); }
+
+html.dark .bg-accent-brand {
+  background-image: linear-gradient(120deg, rgb(var(--neon-cyan)), rgb(var(--neon-violet)));
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset, 0 8px 28px -10px rgba(56, 189, 248, 0.65);
+}
+
+html.dark :focus-visible {
+  outline: 2px solid rgba(56, 189, 248, 0.85);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.18);
+}
+
+/* ---------------------------------------------------------------- hub building blocks */
+
+.ci-glass {
+  position: relative;
+  border-radius: 18px;
+  border: 1px solid var(--glass-edge, rgba(148, 170, 255, 0.16));
+  background: var(--glass-fill, rgba(16, 24, 52, 0.52));
+  backdrop-filter: var(--glass-blur, blur(18px) saturate(160%));
+  -webkit-backdrop-filter: var(--glass-blur, blur(18px) saturate(160%));
+  box-shadow: var(--glass-highlight, inset 0 1px 0 rgba(255, 255, 255, 0.07)), var(--glass-shadow, none);
+}
+
+.ci-glass-interactive {
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+}
+.ci-glass-interactive:hover {
+  transform: translateY(-3px);
+  border-color: var(--glass-edge-hi, rgba(148, 196, 255, 0.32));
+  box-shadow: var(--glass-highlight), 0 18px 48px -18px rgba(56, 189, 248, 0.45);
+}
+
+.ci-gradient-text {
+  background: linear-gradient(110deg, #7dd3fc 0%, #a5b4fc 45%, #f0abfc 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ci-neon-number {
+  font-variant-numeric: tabular-nums;
+  color: #e0f2fe;
+  text-shadow: 0 0 18px rgba(56, 189, 248, 0.55);
+}
+
+.ci-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  border: 1px solid rgba(148, 170, 255, 0.2);
+  background: rgba(15, 23, 48, 0.55);
+  color: rgb(var(--ink-body));
+}
+.ci-chip[data-active="true"] {
+  border-color: rgba(56, 189, 248, 0.7);
+  background: rgba(56, 189, 248, 0.16);
+  color: #e0f2fe;
+  box-shadow: 0 0 18px -6px rgba(56, 189, 248, 0.8);
+}
+
+.ci-scanline {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 0%, rgba(56, 189, 248, 0.06) 50%, transparent 100%);
+  background-size: 100% 220%;
+  animation: ci-scan 6s linear infinite;
+  opacity: 0.7;
+}
+@keyframes ci-scan {
+  0% { background-position: 0 -120%; }
+  100% { background-position: 0 220%; }
+}
+
+.ci-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(36px);
+  opacity: 0.55;
+  pointer-events: none;
+  animation: ci-float 14s ease-in-out infinite alternate;
+}
+@keyframes ci-float {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(18px, -14px, 0); }
+}
+
+.ci-markdown { color: rgb(var(--ink-body)); line-height: 1.7; font-size: 14px; }
+.ci-markdown h1, .ci-markdown h2, .ci-markdown h3 { color: rgb(var(--ink-primary)); font-weight: 600; margin: 1.4em 0 0.6em; }
+.ci-markdown h1 { font-size: 1.6em; }
+.ci-markdown h2 { font-size: 1.3em; border-bottom: 1px solid rgba(148, 170, 255, 0.14); padding-bottom: 0.3em; }
+.ci-markdown h3 { font-size: 1.1em; }
+.ci-markdown p, .ci-markdown ul, .ci-markdown ol { margin: 0.6em 0; }
+.ci-markdown ul { list-style: disc; padding-left: 1.4em; }
+.ci-markdown ol { list-style: decimal; padding-left: 1.4em; }
+.ci-markdown a { color: #7dd3fc; text-decoration: underline; text-underline-offset: 3px; }
+.ci-markdown code { font-family: "JetBrains Mono", monospace; font-size: 0.86em; background: rgba(15, 23, 48, 0.7); padding: 2px 6px; border-radius: 6px; }
+.ci-markdown pre { background: rgba(5, 8, 20, 0.75); border: 1px solid rgba(148, 170, 255, 0.14); border-radius: 12px; padding: 14px; overflow-x: auto; }
+.ci-markdown pre code { background: none; padding: 0; }
+.ci-markdown .ci-table-wrap { overflow-x: auto; margin: 1em 0; border-radius: 12px; border: 1px solid rgba(148, 170, 255, 0.14); }
+.ci-markdown table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ci-markdown tbody tr:nth-child(even) { background: rgba(148, 170, 255, 0.04); }
+.ci-markdown td { font-variant-numeric: tabular-nums; }
+.ci-markdown th, .ci-markdown td { border: 1px solid rgba(148, 170, 255, 0.14); padding: 6px 10px; text-align: left; }
+.ci-markdown th { background: rgba(56, 189, 248, 0.08); color: rgb(var(--ink-primary)); }
+.ci-markdown img { max-width: 100%; border-radius: 12px; margin: 0.8em 0; }
+.ci-markdown blockquote { border-left: 3px solid rgba(56, 189, 248, 0.6); padding-left: 1em; color: rgb(var(--ink-muted)); }
+
+@media (prefers-reduced-motion: reduce) {
+  html.dark body::before, .ci-scanline, .ci-orb { animation: none; }
+  .ci-glass-interactive, .ci-glass-interactive:hover { transition: none; transform: none; }
+}

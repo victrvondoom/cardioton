@@ -1,0 +1,36 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+catboost_info/
+
+# Node / frontend
+node_modules/
+dist/
+.vite/
+
+# Env / secrets
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Excel lock files
+~$*.xlsx
+
+# training smoke-test outputs
+models/_fast/
+reports/figures/_fast/
+
+# generated deployment bundle
+deploy/hf-space/
+
+# 3D asset build intermediates
+assets/3d/build/

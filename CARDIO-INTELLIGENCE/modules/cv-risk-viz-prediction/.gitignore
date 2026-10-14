@@ -1,0 +1,41 @@
+# Node / frontend
+node_modules/
+dist/
+*.local
+.npm/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+catboost_info/
+
+# Environment
+.env
+.env.local
+*.env.bak
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Vite / tooling caches
+node_modules/.vite/
+.vite/
+
+# Freebuff workspace metadata (not part of the deliverable)
+.freebuff/
+
+
+# Large raw data file (auto-downloadable from UCI; see README "Data")
+# The 303-row dataset is ~130 KB; if you prefer committing it, remove this line.
+# data/raw/
+
+# Reports are small generated artifacts — keep them committed for transparency.

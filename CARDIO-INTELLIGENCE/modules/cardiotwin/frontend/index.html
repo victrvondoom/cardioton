@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0B0E12" />
+    <meta
+      name="description"
+      content="CardioTwin: an explainable coronary digital twin. Predicts overall CAD and LAD, LCX and RCA stenosis risk from routine clinical data, explains every estimate with SHAP and maps it onto real 3D anatomy. Decision support and education only."
+    />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>CardioTwin · Explainable coronary risk</title>
+    <style>
+      /* Paint the app background before CSS loads so first paint is never white. */
+      html,
+      body {
+        background: #0b0e12;
+        color: #edf1f5;
+      }
+    </style>
+    <script>
+      // Start the stage still (V2 §5.18) at top priority for the route being opened, so a cold load never
+      // shows an empty hero while the poster decodes. Same size rule as src/three/posters.ts (closest of
+      // 1440 / 1280); other routes preload nothing.
+      (function () {
+        var h = location.hash.replace(/^#/, '') || '/';
+        var stage = h === '/' || h.indexOf('/?') === 0 ? 'hero' : h.indexOf('/workstation') === 0 ? 'workstation' : null;
+        if (!stage) return;
+        var wide = window.innerWidth >= 1360;
+        var file = stage === 'hero' ? (wide ? 'hero.webp' : 'hero-1280.webp') : wide ? 'workstation.webp' : 'workstation-1280.webp';
+        var link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = './posters/' + file;
+        link.setAttribute('fetchpriority', 'high');
+        document.head.appendChild(link);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <p style="font-family: system-ui, sans-serif; padding: 24px">
+        CardioTwin needs JavaScript. Decision support and education only; not a diagnosis.
+      </p>
+    </noscript>
+    <script type="module" src="/src/cardiotwin__frontend_src__main.tsx"></script>
+  </body>
+</html>

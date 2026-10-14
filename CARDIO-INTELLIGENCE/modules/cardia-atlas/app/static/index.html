@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1116"><title>Cardia Atlas | Clinical visualization prototype</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-mark">✳</span><span><strong>cardia atlas</strong><small>Track A · Cardiovascular risk visualization</small></span></a>
+    <div class="top-actions"><span class="local-pill"><i></i> EDUCATIONAL PROTOTYPE</span><a class="quiet-link" href="#model-quality">Model notes</a></div>
+  </header>
+  <main>
+    <section class="hero-row">
+      <div><div class="eyebrow">EDUCATIONAL DECISION SUPPORT</div><h1>See the signal.<br><em>Understand the model.</em></h1><p>Explore model-estimated CAD and vessel stenosis probabilities through a patient-specific view.</p></div>
+      <aside class="safety"><span class="safety-icon">!</span><p><strong>Not a diagnosis</strong><br>For education and decision-support research only. Not a substitute for clinician assessment or formal diagnostic imaging.</p></aside>
+    </section>
+    <div class="workspace-grid">
+      <section class="panel input-panel">
+        <div class="panel-heading"><div><div class="eyebrow">01 / PATIENT INPUT</div><h2>Clinical profile</h2></div><span class="count-pill" id="field-count">Loading fields</span></div>
+        <p class="panel-intro">Enter known values. Leave fields blank when unavailable; the pipeline will impute them. Source abbreviations are expanded where documented; original coded values stay unchanged.</p>
+        <div class="example-note" id="example-note">Synthetic demo values are used for illustration only.</div>
+        <div class="form-tools"><button class="btn secondary" id="load-example" type="button">↻ Load demo values</button><button class="text-button" id="clear-form" type="button">Clear all</button></div>
+        <form id="clinical-form"><div id="field-groups" class="field-groups"></div><div class="form-actions"><button class="btn primary" id="predict" type="submit"><span>Generate analysis</span><span aria-hidden="true">→</span></button><div class="privacy-note"><span>◉</span> Inputs are sent to this app for inference and are not stored by the application. Use synthetic data only.</div></div></form>
+      </section>
+      <section class="panel results-panel">
+        <div class="panel-heading"><div><div class="eyebrow">02 / MODEL OUTPUT</div><h2>Risk landscape</h2></div><span class="status-badge" id="analysis-state"><i></i> Awaiting inputs</span></div>
+        <div class="results-empty" id="results-empty"><div class="empty-icon">⌁</div><strong>Your analysis will appear here</strong><p>Generate an analysis to update the vessel view and patient-specific explanation.</p></div>
+        <div id="result-content" class="result-content hidden">
+          <div class="prediction-cards" id="prediction-cards"></div>
+          <div class="anatomy-heading"><div><strong>Interactive coronary map</strong><span>Anterior view · anatomy-informed illustration</span></div><button class="reset-view" id="reset-view" type="button" title="Reset camera">Reset view ⤢</button></div>
+          <div class="anatomy-layout">
+            <div class="canvas-wrap" id="canvas-wrap"><canvas id="heart-canvas" aria-label="Interactive illustrative 3D heart with schematic LAD, LCX, and RCA paths"></canvas><div class="canvas-overlay"><span class="view-tag">3D ANATOMY-INSPIRED SCHEMATIC</span><span class="drag-hint">Drag to rotate · scroll to zoom</span></div><div class="canvas-labels" id="canvas-labels"></div></div>
+            <div class="vessel-list" id="vessel-list"></div>
+          </div>
+          <div class="color-legend"><span class="legend-title">Illustrative bands · not clinical categories</span><span><i class="swatch low"></i> &lt;33% lower</span><span><i class="swatch mid"></i> 33–&lt;67% middle</span><span><i class="swatch high"></i> ≥67% higher</span></div>
+          <div class="probability-note">Color encodes model-predicted probability only. It does not show a measured lesion, stenosis percentage, or exact location.</div>
+          <div class="explanation-section"><div class="explanation-heading"><div><div class="eyebrow">03 / PATIENT-SPECIFIC EXPLANATION</div><h3>What influenced the estimate?</h3></div><select id="explain-target" aria-label="Choose result to explain"></select></div><p class="contribution-key">Positive bars move the model output above its background baseline; negative bars move it below. Values use the source record's scale; units were not specified by UCI.</p><div class="baseline-line" id="baseline-line"></div><div id="shap-bars" class="shap-bars"></div><p class="explanation-foot">Showing the 10 largest absolute contributions of 54 predictors. Additivity uses the full feature contribution set, including features not shown here. Approximate permutation SHAP explains this deployed model and fitted preprocessing in positive-class probability points. Blank values show as imputed. Contributions are associations, not causes; finite permutations and correlated features limit interpretation.</p></div>
+        </div>
+        <div class="error-box hidden" id="error-box"></div>
+      </section>
+    </div>
+    <section class="panel quality-panel" id="model-quality">
+      <div class="panel-heading"><div><div class="eyebrow">MODEL CARD</div><h2>Performance & limitations</h2></div><span class="count-pill">Internal validation</span></div>
+      <div id="performance-grid" class="performance-grid"><div class="loading-inline">Loading measured cross-validation results…</div></div>
+      <div class="method-note" id="method-note"></div>
+      <div class="limitations"><strong>Read with care</strong><p>Small single-source dataset (303 records), with no independent external cohort. Cross-validation estimates may be optimistic after selecting among model families. Class probabilities are not calibrated clinical risk estimates, and no threshold is clinically validated. Educational prototype only.</p></div>
+    </section>
+    <footer><span>Cardia Atlas · Developed by Pavitra Gangwar</span><span>Multimodal AI Hackathon 2026 · Track A · UCI CC BY 4.0</span></footer>
+  </main>
+  <script type="module" src="/cardia_atlas__app_static__app.js"></script>
+</body>
+</html>

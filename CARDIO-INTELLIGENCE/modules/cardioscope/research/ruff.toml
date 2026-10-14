@@ -1,0 +1,8 @@
+extend = "../pyproject.toml"
+
+[lint.isort]
+known-first-party = ["ml", "backend", "scripts", "research"]
+
+[lint.per-file-ignores]
+# The reporting helper is called immediately in its iteration, never stored or deferred.
+"v2_lcx_rca/report.py" = ["B023"]

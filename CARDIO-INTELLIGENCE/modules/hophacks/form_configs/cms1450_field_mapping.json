@@ -1,0 +1,73 @@
+{
+  "form_name": "CMS-1450 Medical Claim Form",
+  "pdf_template": "src/application_images/cms1450.pdf",
+  "description": "CMS-1450 medical billing form with comprehensive field mapping",
+  "field_mapping": {
+    "patient": {
+      "pt_name": "pt_name",
+      "pt_street": "pt_street",
+      "pt_city": "pt_city",
+      "pt_AreaCode": "pt_AreaCode",
+      "pt_phone": "pt_phone",
+      "pt_state": "pt_state",
+      "pt_zip": "pt_zip",
+      "pt_account": "pt_account",
+      "birth_mm": "birth_mm",
+      "birth_dd": "birth_dd",
+      "birth_yy": "birth_yy"
+    },
+    "insurance": {
+      "rel_to_ins": "rel_to_ins",
+      "insurance_type": "insurance_type",
+      "insurance_id": "insurance_id",
+      "ins_name": "ins_name",
+      "ins_street": "ins_street",
+      "ins_city": "ins_city",
+      "ins_state": "ins_state",
+      "ins_zip": "ins_zip",
+      "ins_phone": "ins_phone",
+      "ins_policy": "ins_policy",
+      "ins_plan_name": "ins_plan_name"
+    },
+    "service_info": {
+      "pt_date": "pt_date"
+    },
+    "diagnoses": {
+      "diagnosis1": "diagnosis1",
+      "diagnosis2": "diagnosis2",
+      "diagnosis3": "diagnosis3",
+      "diagnosis4": "diagnosis4",
+      "diagnosis5": "diagnosis5",
+      "diagnosis6": "diagnosis6",
+      "diagnosis7": "diagnosis7",
+      "diagnosis8": "diagnosis8",
+      "diagnosis9": "diagnosis9",
+      "diagnosis10": "diagnosis10",
+      "diagnosis11": "diagnosis11",
+      "diagnosis12": "diagnosis12"
+    },
+    "procedures": {
+      "cpt1": "cpt1",
+      "cpt2": "cpt2",
+      "cpt3": "cpt3",
+      "cpt4": "cpt4",
+      "cpt5": "cpt5",
+      "cpt6": "cpt6",
+      "ch1": "ch1",
+      "ch2": "ch2",
+      "ch3": "ch3",
+      "ch4": "ch4",
+      "ch5": "ch5",
+      "ch6": "ch6"
+    },
+    "provider": {
+      "tax_id": "tax_id",
+      "fac_name": "fac_name",
+      "doc_name": "doc_name"
+    },
+    "additional": {
+      "t_charge": "t_charge"
+    }
+  },
+  "special_fields": {}
+}

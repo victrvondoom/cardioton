@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+node_modules/
+.env
+# raw data is downloaded by the user; remove this line if you want to commit it
+data/raw/*
+!data/raw/multimodal_ai_hackathon_project__data_raw__.gitkeep
+models_final/
+reports_final/

@@ -1,0 +1,29 @@
+{
+  "scope": "Actual final Linux image; faults only in disposable /tmp copies; original /app stays read-only; no holdout inference",
+  "results": {
+    "missing_model": {
+      "models_loaded": false,
+      "predict_status": 503,
+      "no_partial_outputs": true,
+      "no_internal_paths": true
+    },
+    "corrupt_model": {
+      "models_loaded": false,
+      "predict_status": 503,
+      "no_partial_outputs": true,
+      "no_internal_paths": true
+    },
+    "corrupt_explanation_config": {
+      "explain_status": 503,
+      "predictions_unchanged": true,
+      "no_contributions": true
+    },
+    "unavailable_shap": {
+      "scope": "SHAP package directory hidden by empty tmpfs in disposable read-only container; metadata and frozen application unchanged",
+      "models_loaded": true,
+      "explain_status": 503,
+      "predictions_unchanged": true,
+      "no_contributions": true
+    }
+  }
+}

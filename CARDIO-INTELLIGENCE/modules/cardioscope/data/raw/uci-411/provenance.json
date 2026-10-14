@@ -1,0 +1,10 @@
+{
+  "acquired_at_utc": "2026-10-01T09:23:12.268146+00:00",
+  "bytes": 131317,
+  "doi": "10.24432/C5461K",
+  "license": "CC BY 4.0",
+  "sha256": "e97af1a18733d64fa88caa0628e5fe7ce6b2e26ec4c7ee03baade92a6f1470e8",
+  "url": "https://archive.ics.uci.edu/static/public/411/extention+of+z+alizadeh+sani+dataset.zip",
+  "workbook": "extention of Z-Alizadeh sani dataset.xlsx",
+  "workbook_sha256": "739343245c2ba578b541370217531750d8e936022f928b83e0d91756caa3ff0b"
+}

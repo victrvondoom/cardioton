@@ -1,0 +1,57 @@
+{
+  "html_ms": 21.98175000376068,
+  "manifest_ms": 2.309,
+  "sequential_mesh_http_ms": 69.23687500238884,
+  "prediction_median_ms": 22.073500000000003,
+  "explanations": {
+    "CAD": {
+      "first_ms": 490.878,
+      "warm_ms": 1.836,
+      "residual": -6.661338147750939e-16
+    },
+    "LAD": {
+      "first_ms": 20.57,
+      "warm_ms": 1.702,
+      "residual": 0.0
+    },
+    "LCX": {
+      "first_ms": 21.907,
+      "warm_ms": 1.701,
+      "residual": -6.116750994600295e-10
+    },
+    "RCA": {
+      "first_ms": 23.946,
+      "warm_ms": 1.799,
+      "residual": -1.7709154698231089e-09
+    }
+  },
+  "probabilities": {
+    "CAD": 0.1709399517600908,
+    "LAD": 0.24305384913623826,
+    "LCX": 0.3705140009054133,
+    "RCA": 0.3090592361868292
+  },
+  "bundles": {
+    "index.html": {
+      "bytes": 396,
+      "gzip_bytes": 267
+    },
+    "assets/index-CPQWJQHf.js": {
+      "bytes": 266391,
+      "gzip_bytes": 83611
+    },
+    "assets/EvidencePage-CGGtDLSY.js": {
+      "bytes": 17275,
+      "gzip_bytes": 5300
+    },
+    "assets/AnatomyViewer-ClPQz-zD.js": {
+      "bytes": 950859,
+      "gzip_bytes": 250392
+    },
+    "assets/index-C1Oc1BE1.css": {
+      "bytes": 18303,
+      "gzip_bytes": 4622
+    }
+  },
+  "note": "Loopback HTTP; sequential mesh transfer differs from browser parallel loading. First explanation includes lazy initialization only in a fresh server."
+}

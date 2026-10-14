@@ -1,0 +1,14 @@
+{
+  "audit_source_sha256": "0aeeb6750a267ad39720e528545aea3e2fc1e40592902344034fc5ab2bb2c0fc",
+  "fit_memberships_audited": 7060,
+  "fitting_performed_by_audit": false,
+  "full_candidate_242_membership_and_predictions_checked": true,
+  "holdout_outcomes_accessed": false,
+  "inner_thresholds_and_selections_recomputed": true,
+  "metrics_independently_recomputed": true,
+  "note": "Post-run audit and descriptive pairing only; no changes to registered fitting/selection/protocol.",
+  "outer_arm_evaluations_audited": 288,
+  "paired_same_fold_reference_comparisons": true,
+  "protocol_sha256": "9c0358077d457273ae01c9d92fdbb05da109843bb1ce00fcde493479fb679116",
+  "threshold_only_ranking_unchanged": true
+}

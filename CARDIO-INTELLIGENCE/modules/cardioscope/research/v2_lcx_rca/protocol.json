@@ -1,0 +1,715 @@
+{
+  "baseline_commit": "c75913853577e802703b7509334963d9be1fd868",
+  "baseline_tag": "cardioscope-v1.0.0",
+  "candidates": [
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.03-l10.9-None",
+      "params": {
+        "C": 0.03,
+        "class_weight": null,
+        "l1_ratio": 0.9
+      },
+      "simplicity_rank": 1
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.03-l10.9-balanced",
+      "params": {
+        "C": 0.03,
+        "class_weight": "balanced",
+        "l1_ratio": 0.9
+      },
+      "simplicity_rank": 2
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.03-l10.5-None",
+      "params": {
+        "C": 0.03,
+        "class_weight": null,
+        "l1_ratio": 0.5
+      },
+      "simplicity_rank": 3
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.03-l10.5-balanced",
+      "params": {
+        "C": 0.03,
+        "class_weight": "balanced",
+        "l1_ratio": 0.5
+      },
+      "simplicity_rank": 4
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.03-l10.0-None",
+      "params": {
+        "C": 0.03,
+        "class_weight": null,
+        "l1_ratio": 0.0
+      },
+      "simplicity_rank": 5
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.03-l10.0-balanced",
+      "params": {
+        "C": 0.03,
+        "class_weight": "balanced",
+        "l1_ratio": 0.0
+      },
+      "simplicity_rank": 6
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.1-l10.9-None",
+      "params": {
+        "C": 0.1,
+        "class_weight": null,
+        "l1_ratio": 0.9
+      },
+      "simplicity_rank": 7
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.1-l10.9-balanced",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced",
+        "l1_ratio": 0.9
+      },
+      "simplicity_rank": 8
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.1-l10.5-None",
+      "params": {
+        "C": 0.1,
+        "class_weight": null,
+        "l1_ratio": 0.5
+      },
+      "simplicity_rank": 9
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.1-l10.5-balanced",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced",
+        "l1_ratio": 0.5
+      },
+      "simplicity_rank": 10
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.1-l10.0-None",
+      "params": {
+        "C": 0.1,
+        "class_weight": null,
+        "l1_ratio": 0.0
+      },
+      "simplicity_rank": 11
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.1-l10.0-balanced",
+      "params": {
+        "C": 0.1,
+        "class_weight": "balanced",
+        "l1_ratio": 0.0
+      },
+      "simplicity_rank": 12
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.3-l10.9-None",
+      "params": {
+        "C": 0.3,
+        "class_weight": null,
+        "l1_ratio": 0.9
+      },
+      "simplicity_rank": 13
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.3-l10.9-balanced",
+      "params": {
+        "C": 0.3,
+        "class_weight": "balanced",
+        "l1_ratio": 0.9
+      },
+      "simplicity_rank": 14
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.3-l10.5-None",
+      "params": {
+        "C": 0.3,
+        "class_weight": null,
+        "l1_ratio": 0.5
+      },
+      "simplicity_rank": 15
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.3-l10.5-balanced",
+      "params": {
+        "C": 0.3,
+        "class_weight": "balanced",
+        "l1_ratio": 0.5
+      },
+      "simplicity_rank": 16
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.3-l10.0-None",
+      "params": {
+        "C": 0.3,
+        "class_weight": null,
+        "l1_ratio": 0.0
+      },
+      "simplicity_rank": 17
+    },
+    {
+      "family": "elastic_net",
+      "id": "elastic-C0.3-l10.0-balanced",
+      "params": {
+        "C": 0.3,
+        "class_weight": "balanced",
+        "l1_ratio": 0.0
+      },
+      "simplicity_rank": 18
+    },
+    {
+      "family": "forest",
+      "id": "forest-d3-leaf10-None",
+      "params": {
+        "class_weight": null,
+        "max_depth": 3,
+        "min_samples_leaf": 10
+      },
+      "simplicity_rank": 19
+    },
+    {
+      "family": "forest",
+      "id": "forest-d3-leaf10-balanced",
+      "params": {
+        "class_weight": "balanced",
+        "max_depth": 3,
+        "min_samples_leaf": 10
+      },
+      "simplicity_rank": 20
+    },
+    {
+      "family": "forest",
+      "id": "forest-d3-leaf5-None",
+      "params": {
+        "class_weight": null,
+        "max_depth": 3,
+        "min_samples_leaf": 5
+      },
+      "simplicity_rank": 21
+    },
+    {
+      "family": "forest",
+      "id": "forest-d3-leaf5-balanced",
+      "params": {
+        "class_weight": "balanced",
+        "max_depth": 3,
+        "min_samples_leaf": 5
+      },
+      "simplicity_rank": 22
+    },
+    {
+      "family": "forest",
+      "id": "forest-d5-leaf10-None",
+      "params": {
+        "class_weight": null,
+        "max_depth": 5,
+        "min_samples_leaf": 10
+      },
+      "simplicity_rank": 23
+    },
+    {
+      "family": "forest",
+      "id": "forest-d5-leaf10-balanced",
+      "params": {
+        "class_weight": "balanced",
+        "max_depth": 5,
+        "min_samples_leaf": 10
+      },
+      "simplicity_rank": 24
+    },
+    {
+      "family": "forest",
+      "id": "forest-d5-leaf5-None",
+      "params": {
+        "class_weight": null,
+        "max_depth": 5,
+        "min_samples_leaf": 5
+      },
+      "simplicity_rank": 25
+    },
+    {
+      "family": "forest",
+      "id": "forest-d5-leaf5-balanced",
+      "params": {
+        "class_weight": "balanced",
+        "max_depth": 5,
+        "min_samples_leaf": 5
+      },
+      "simplicity_rank": 26
+    },
+    {
+      "family": "xgboost",
+      "id": "xgb-d1-none",
+      "params": {
+        "max_depth": 1
+      },
+      "simplicity_rank": 27,
+      "weighting": "none"
+    },
+    {
+      "family": "xgboost",
+      "id": "xgb-d1-balanced",
+      "params": {
+        "max_depth": 1
+      },
+      "simplicity_rank": 28,
+      "weighting": "balanced"
+    },
+    {
+      "family": "xgboost",
+      "id": "xgb-d2-none",
+      "params": {
+        "max_depth": 2
+      },
+      "simplicity_rank": 29,
+      "weighting": "none"
+    },
+    {
+      "family": "xgboost",
+      "id": "xgb-d2-balanced",
+      "params": {
+        "max_depth": 2
+      },
+      "simplicity_rank": 30,
+      "weighting": "balanced"
+    },
+    {
+      "family": "xgboost",
+      "id": "xgb-d3-none",
+      "params": {
+        "max_depth": 3
+      },
+      "simplicity_rank": 31,
+      "weighting": "none"
+    },
+    {
+      "family": "xgboost",
+      "id": "xgb-d3-balanced",
+      "params": {
+        "max_depth": 3
+      },
+      "simplicity_rank": 32,
+      "weighting": "balanced"
+    }
+  ],
+  "created_at_utc": "2026-10-03T14:40:15.679840+00:00",
+  "development_data_sha256": "6663e4f6339b7cc318486e86c3790c67daf8bb1233b67dcc8079bd16bf12cd77",
+  "development_records": 242,
+  "diagnosis_rule": {
+    "A": "threshold-only passes same gate, mean sensitivity/BA no more than .03 below primary and mean ROC-AUC no more than .02 below primary: prefer operating-point explanation",
+    "B": "threshold-only fails gate, primary passes, and a non-reference family is selected in >=15/25 folds: evidence for ranking-model change",
+    "C": "primary fails gate: no stable improvement supported; retain v1 and stop searching",
+    "otherwise": "mixed/inconclusive evidence; no complexity preference inferred from trivial outer AUC differences"
+  },
+  "elastic_net_fixed": {
+    "max_iter": 20000,
+    "solver": "saga",
+    "tol": 1e-07
+  },
+  "estimator_seed": 271828,
+  "experiment_id": "v2-lcx-rca-20261003-01",
+  "experimental_folds_sha256": "83f5e653d62ed557bbfa2d4e19349cea085c3a0228273a2d22373ea8ed3f63ee",
+  "final_inner_seeds": {
+    "LCX": 22001,
+    "RCA": 23001
+  },
+  "forbidden": [
+    "reserved outcome decoding",
+    "final holdout inference/evaluator",
+    "v1 artifact writes",
+    "outer-based selection changes",
+    "new seeds/candidates after results",
+    "deployment",
+    "calibration",
+    "feature subset search"
+  ],
+  "forest_fixed": {
+    "bootstrap": true,
+    "max_features": "sqrt",
+    "n_estimators": 500,
+    "n_jobs": 1
+  },
+  "groups_sha256": "6c946e8ce2cf329d8671548e83134440b7ed0665bf485f8e0cc2b6f8cf46165c",
+  "inner_folds": 4,
+  "inner_seeds": {
+    "LCX": [
+      [
+        20001,
+        20002,
+        20003,
+        20004,
+        20005
+      ],
+      [
+        20011,
+        20012,
+        20013,
+        20014,
+        20015
+      ],
+      [
+        20021,
+        20022,
+        20023,
+        20024,
+        20025
+      ],
+      [
+        20031,
+        20032,
+        20033,
+        20034,
+        20035
+      ],
+      [
+        20041,
+        20042,
+        20043,
+        20044,
+        20045
+      ]
+    ],
+    "RCA": [
+      [
+        21001,
+        21002,
+        21003,
+        21004,
+        21005
+      ],
+      [
+        21011,
+        21012,
+        21013,
+        21014,
+        21015
+      ],
+      [
+        21021,
+        21022,
+        21023,
+        21024,
+        21025
+      ],
+      [
+        21031,
+        21032,
+        21033,
+        21034,
+        21035
+      ],
+      [
+        21041,
+        21042,
+        21043,
+        21044,
+        21045
+      ]
+    ]
+  },
+  "membership_sha256": "e56cf3bf38426d1aac24cd9b6c3ec179a28bf481c2d7b214f90bcf891ad34a4e",
+  "metric_definitions": {
+    "average_precision": "non-interpolated AP",
+    "confusion": "rows true/columns predicted [0,1]",
+    "fold_summary": "unweighted mean/sample SD/median/min/max/individual values; descriptive correlated folds",
+    "positive": "Stenotic=1, Normal=0",
+    "pr_auc": "trapezoidal precision-recall area",
+    "repeat_pooling": "one prediction per development record per repeat, applying each fold's frozen threshold",
+    "zero_predicted_positive": "precision and F1=0; no silent undefined metric"
+  },
+  "metrics": [
+    "sensitivity",
+    "specificity",
+    "balanced_accuracy",
+    "precision",
+    "f1",
+    "roc_auc",
+    "pr_auc",
+    "average_precision",
+    "predicted_positive_rate",
+    "prevalence",
+    "confusion_matrix"
+  ],
+  "outer_folds": 5,
+  "outer_repeats": 5,
+  "outer_seeds": [
+    1729,
+    2718,
+    3141,
+    5772,
+    8119
+  ],
+  "predictors": [
+    "Age",
+    "Weight",
+    "Length",
+    "Sex",
+    "BMI",
+    "DM",
+    "HTN",
+    "Current Smoker",
+    "EX-Smoker",
+    "FH",
+    "Obesity",
+    "CRF",
+    "CVA",
+    "Airway disease",
+    "Thyroid Disease",
+    "CHF",
+    "DLP",
+    "BP",
+    "PR",
+    "Edema",
+    "Weak Peripheral Pulse",
+    "Lung rales",
+    "Systolic Murmur",
+    "Diastolic Murmur",
+    "Typical Chest Pain",
+    "Dyspnea",
+    "Function Class",
+    "Atypical",
+    "Nonanginal",
+    "Exertional CP",
+    "LowTH Ang",
+    "Q Wave",
+    "St Elevation",
+    "St Depression",
+    "Tinversion",
+    "LVH",
+    "Poor R Progression",
+    "BBB",
+    "FBS",
+    "CR",
+    "TG",
+    "LDL",
+    "HDL",
+    "BUN",
+    "ESR",
+    "HB",
+    "K",
+    "Na",
+    "WBC",
+    "Lymph",
+    "Neut",
+    "PLT",
+    "EF-TTE",
+    "Region RWMA",
+    "VHD"
+  ],
+  "preprocessing": {
+    "calibration": "none",
+    "categorical": "training-fold-fitted OneHotEncoder auto, dense, ignore unknown, no drop",
+    "feature_selection": "none",
+    "missing": "reject, no imputation",
+    "numeric_elastic_net": "training-fold-fitted StandardScaler on all non-categorical predictors",
+    "numeric_tree": "passthrough",
+    "schema_domains": "locked development contract validates spelling; does not fit encoder vocabulary"
+  },
+  "protected_manifest_sha256": "7f03a46a9edcb1e695fd68b4ae3ea485654645c1ab23e02dce00eb3321f77dd6",
+  "reference_fixed": {
+    "n_estimators": 100,
+    "random_state": 42
+  },
+  "references": {
+    "LCX": {
+      "family": "reference",
+      "id": "v1-reference-LCX",
+      "params": {
+        "class_weight": null,
+        "max_depth": 3,
+        "min_samples_leaf": 10
+      },
+      "simplicity_rank": 0
+    },
+    "RCA": {
+      "family": "reference",
+      "id": "v1-reference-RCA",
+      "params": {
+        "class_weight": null,
+        "max_depth": 5,
+        "min_samples_leaf": 10
+      },
+      "simplicity_rank": 0
+    }
+  },
+  "reproduction": {
+    "probability_atol": 1e-12,
+    "probability_rtol": 1e-10,
+    "protocol_and_code_hashes_checked_before_each_run": true,
+    "single_thread": true,
+    "timing_excluded": true
+  },
+  "requirements_lock_sha256": "41a2faaf4a2150ee8edff17d0e2d6de92083ca075afab409cf5af6c3344bab22",
+  "runtime": {
+    "packages": {
+      "Pygments": "2.21.0",
+      "annotated-doc": "0.0.5",
+      "annotated-types": "0.8.0",
+      "anyio": "4.15.1",
+      "certifi": "2026.7.22",
+      "charset-normalizer": "3.5.2",
+      "click": "8.5.0",
+      "cloudpickle": "3.1.2",
+      "contourpy": "1.4.0",
+      "cycler": "0.12.1",
+      "et_xmlfile": "2.0.0",
+      "fastapi": "0.142.2",
+      "fonttools": "4.66.1",
+      "h11": "0.16.0",
+      "httpcore2": "2.13.1",
+      "httpx2": "2.13.1",
+      "idna": "3.20",
+      "iniconfig": "2.3.0",
+      "joblib": "1.6.0",
+      "kiwisolver": "1.5.1",
+      "llvmlite": "0.50.0",
+      "matplotlib": "3.11.2",
+      "narwhals": "2.26.0",
+      "numba": "0.68.0",
+      "numpy": "2.5.3",
+      "openpyxl": "3.1.5",
+      "opentelemetry-api": "1.45.0",
+      "packaging": "26.3",
+      "pandas": "2.3.3",
+      "pillow": "12.3.0",
+      "pluggy": "1.6.0",
+      "pydantic": "2.13.5",
+      "pydantic_core": "2.46.5",
+      "pyparsing": "3.3.3",
+      "pytest": "9.1.1",
+      "python-dateutil": "2.9.0.post0",
+      "pytz": "2026.4",
+      "requests": "2.34.2",
+      "ruff": "0.16.9",
+      "scikit-learn": "1.9.1",
+      "scipy": "1.18.1",
+      "shap": "0.52.0",
+      "six": "1.17.0",
+      "slicer": "0.0.8",
+      "starlette": "1.7.0",
+      "threadpoolctl": "3.7.0",
+      "tqdm": "4.70.1",
+      "truststore": "0.10.4",
+      "typing-inspection": "0.4.4",
+      "typing_extensions": "4.16.0",
+      "tzdata": "2026.4",
+      "urllib3": "2.8.0",
+      "uvicorn": "0.54.0",
+      "xgboost": "3.4.1"
+    },
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "python": "3.12.14"
+  },
+  "schema_sha256": "b94a1e93d98728e465d42f578f7e66008d04618b04f5db4076fa997e691a9d01",
+  "selection": {
+    "complete_pool": "target reference plus 18 elastic-net, 8 forest, 6 XGBoost configurations",
+    "final": "same selection on new predeclared full-development 4-fold inner OOF only",
+    "ordering": [
+      "highest pooled inner OOF balanced_accuracy at selected threshold",
+      "highest pooled inner OOF trapezoidal PR-AUC",
+      "highest pooled inner OOF ROC-AUC",
+      "lowest predefined simplicity_rank"
+    ],
+    "primary": "complete inner selection procedure, never retrospective best outer family",
+    "round_decimals_for_ties": 12,
+    "simplicity": "existing reference, then elastic-net C ascending/l1_ratio descending/unweighted first, then shallower RF/larger leaves/unweighted first, then shallow XGBoost/unweighted first"
+  },
+  "source_code_sha256": {
+    "research/v2_lcx_rca/__init__.py": "b16cbf33b4a0a360d75f9de74baa030ad5bbf932bd9aa793426e62a10eef99fd",
+    "research/v2_lcx_rca/core.py": "3d728e27c9d93681289795f1c549a41d96c3267983096042e7191d087538a6ea",
+    "research/v2_lcx_rca/preregister.py": "14d4497888f042dfe32fa5a09629d8ebb8a105393b1e86354cea3487ea71aa6f",
+    "research/v2_lcx_rca/report.py": "37d9ebd2f465a8f16f66b724ad18156bf219325d77e846ffddf8e7bdf968a56f",
+    "research/v2_lcx_rca/run.py": "69b536494408a9e9f0838e841cc3d3ced944124f7f5b3ae30769c07f035084c0",
+    "research/v2_lcx_rca/tests/test_experiment.py": "8598e4ad0d65d4f4b1705091c92d47531766bb083c13a7f5b259becb8265a1b8"
+  },
+  "starting_commit": "1a0ed0eaf8f672b9f214a33a435bc2968e19a21e",
+  "status": "POST_HOLDOUT_INTERNAL_DEVELOPMENT_ONLY",
+  "success_gate": {
+    "all_outer_rules_eligible": true,
+    "balanced_accuracy_min": 0.625,
+    "interpretation": "prototype research criteria, not clinical safety standards; numeric repeat/quality definitions fixed before results",
+    "joint_success": "BOTH targets must pass all criteria",
+    "positive_rate_max": 0.65,
+    "quality_margin": 0.05,
+    "repeat_sensitivity_floor": 0.55,
+    "repeat_specificity_floor": 0.5,
+    "roc_auc_decline_max": 0.02,
+    "sensitivity_min": 0.65,
+    "specificity_min": 0.6,
+    "successful_repeats_min": 4
+  },
+  "targets": {
+    "LCX": {
+      "column": "LCX",
+      "negative_class": "Normal",
+      "positive_class": "Stenotic"
+    },
+    "RCA": {
+      "column": "RCA",
+      "negative_class": "Normal",
+      "positive_class": "Stenotic"
+    }
+  },
+  "threshold_rule": {
+    "enumeration": "unique OOF probabilities plus 0 and 1",
+    "failure": "ineligible; no model/threshold fallback; no outer metrics for that arm/fold",
+    "select": "highest unique inner OOF probability threshold satisfying both; >= comparison",
+    "sensitivity_min": 0.65,
+    "specificity_min": 0.6
+  },
+  "uncertainty": {
+    "bootstrap_samples": 2000,
+    "estimand": "mean of five repeat-pooled metrics conditional on already fitted rules; percentile 95% intervals",
+    "limitations": "no retraining; no selection uncertainty/full external-generalization CI; repeated patients are not independent cohorts",
+    "seed": 161803,
+    "unit": "development predictor-group/patient proxy, resampled jointly across all five cross-fitted repeats"
+  },
+  "version": 1,
+  "weighting": {
+    "other_balanced": "sklearn training-fold inverse-class-frequency rule",
+    "xgboost_balanced": "n_negative/n_positive from each fitting partition only"
+  },
+  "xgboost_fixed": {
+    "booster": "gbtree",
+    "colsample_bytree": 0.8,
+    "device": "cpu",
+    "eval_metric": "logloss",
+    "gamma": 1.0,
+    "learning_rate": 0.03,
+    "max_bin": 256,
+    "min_child_weight": 5,
+    "n_estimators": 200,
+    "n_jobs": 1,
+    "objective": "binary:logistic",
+    "reg_alpha": 0.0,
+    "reg_lambda": 10.0,
+    "subsample": 0.8,
+    "tree_method": "hist",
+    "verbosity": 0
+  }
+}

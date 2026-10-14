@@ -1,0 +1,90 @@
+{
+  "calibrated": false,
+  "completed_utc": "2026-10-01T13:39:52.917751+00:00",
+  "development_run_id": "v1-bb08b3d0230a",
+  "development_run_sha256": "bb08b3d0230a6cd00b40ee13f84977a70bbdf0e0ca5e78b5ac9c0ab7be11722c",
+  "evaluation_configuration_sha256": "4979dd5905ed7dff1a87967d4146c342744dcb19877f702a11dbb317cafd90fd",
+  "evaluation_id": "final-v1-f1fd0d4cdc334c65aba46c37fa68717b",
+  "evaluator_files_sha256": {
+    "common.py": "4ca11bbf62f1c83aa8c5e216c45801727dfac757fd7190a7814f4eea45a15239",
+    "data.py": "86b4502fb5c02d89b34aebfdd17ebd2d52d46895cb3116f00e6ae3ac05c47481",
+    "development.py": "47e3af2591af07a9457296dc6c66b49aefce3fd9a3d75f01fedcf0ace0105fb7",
+    "evaluate_holdout.py": "4df40053bf38f898d57c5e66d00bb49a13f5d03539452d4152894af9388658a0",
+    "holdout_data.py": "c4f49fd282bf9caea67d424e74e19f4f8fc22abd689eb8b1c926d0c353476340",
+    "holdout_metrics.py": "11f3faedb749178fed62b471f3f42eb43b1eb99749bc44f675a886a7f37f0bff",
+    "holdout_plots.py": "659ff7c03fd0d61d7f81a695a307badc4416613edac4cc25861e6f85f5022e89",
+    "metrics.py": "a47713d319bde7aee589f17bfce1e64af13537d87ea600a232be7c006e35ee87",
+    "models.py": "3d89fceaf632fea2296ed4aee2fb4cfec63fe8f04ed8e4f064091aafd3c099ee"
+  },
+  "feature_manifest_sha256": "b94a1e93d98728e465d42f578f7e66008d04618b04f5db4076fa997e691a9d01",
+  "files_sha256": {
+    "confusion_matrices.json": "b691a5e2ed57da3b9a4a2eb1470ace685fbb0dfbfe776400c466a00d20afaf49",
+    "curves.json": "0b2b30e06017aabc7f720ffb4e35b52c1ef1210582e06824fcfe20f90f841eb6",
+    "development_comparison.json": "7617caa003272b852b370f1baf21f198d7ecbb7db5e277dcb5c5923741e927a6",
+    "figures/confusion.png": "c06a5bb22e91c4a6685482bf0a9d75f3efa04195f0c4b9e7ce9195965d69edab",
+    "figures/confusion.svg": "e787b96957ceb6b3fe8ce01531c491ab85b3945f013872996c08094be6d542a0",
+    "figures/precision-recall.png": "07dce70ebf1c24146a8e6203665bbfd21432eae0cfbbe5092976e22f5b55fb5e",
+    "figures/precision-recall.svg": "ef87a17c728b47acc9873e1e3f790a2514c443f06eddf044a7d7fed0756c601a",
+    "figures/roc.png": "5e6202a5b05da01829d21e4034852f199e937108cba36ef9a986bb7fb10fae33",
+    "figures/roc.svg": "f0da3057aa2b81b9ab900e789c36928a0afd9e31163bfa0ba3ce5d50ba47406c",
+    "metrics.csv": "a869b95803a05bd23fd5cd97facf95f9459b5b4d46f34f791d199492bfb7a5be",
+    "predictions.json": "ab8ab0dd8544b8c3949e592a94b90ac86565aab20d2ed984f0591244692b0d21",
+    "protocol.json": "8684d9d532c51cf24173e1f802b53a360c6a92a3a654a7467b5368acf2c11b51",
+    "provenance.json": "1a41f8c6409d794b47e704f1e7670e42fb3f1283126228ba9a112a0e967f2e2b",
+    "results.json": "50e7a5354e77f797241ea772325cae046b9d729f9177034d85aa930d4ddfa3d5",
+    "uncertainty.json": "b4fcf6573c22e0a42be5e245945c5a61453bd642f27b5b0630ea7c69560ef458"
+  },
+  "fitting_performed": false,
+  "holdout_ids_sha256": "67ba637bec9a57c3612fece5e53d4943aa122ee3ee1e083e0c26839c24881e12",
+  "inference_calls_per_target": 1,
+  "libraries": {
+    "joblib": "1.6.0",
+    "matplotlib": "3.11.2",
+    "numpy": "2.5.3",
+    "pandas": "2.3.3",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "threadpoolctl": "3.7.0"
+  },
+  "model_checksums": {
+    "CAD": "1870a8606e0de26bcd69b0f291058b159b4757994b8df4dfd97d9b6f0f2b23ed",
+    "LAD": "dae2aaafb9cfff4dddf8be56e737e6cbb96c1db236d5f284f546eed2fb2586f7",
+    "LCX": "cefd1107a6e069f795bd13aabf5f638588900f0498aec3eb4f026b7139cb55f2",
+    "RCA": "0d6ac8145b5d34073f20e8a838cf24d625ada59ad67d19fa85af035b1bc9b52b"
+  },
+  "output_directory": "artifacts/final_holdout/final-v1-f1fd0d4cdc334c65aba46c37fa68717b",
+  "phase": "FINAL_HOLDOUT",
+  "predictions_sha256": "ab8ab0dd8544b8c3949e592a94b90ac86565aab20d2ed984f0591244692b0d21",
+  "protocol_sha256": "8684d9d532c51cf24173e1f802b53a360c6a92a3a654a7467b5368acf2c11b51",
+  "python": "3.12.14",
+  "reservation_sha256": "90ca9d0fea207c625d53668a6f31cac93cc20fab983b9e04e62f93c6a64d04fe",
+  "reservation_utc": "2026-10-01T13:39:28.373631+00:00",
+  "results_sha256": "50e7a5354e77f797241ea772325cae046b9d729f9177034d85aa930d4ddfa3d5",
+  "schema_sha256": "b94a1e93d98728e465d42f578f7e66008d04618b04f5db4076fa997e691a9d01",
+  "search_sha256": "46c5f345925f6adb76ebb4f63417453f8a6105bc93f566c007226b988175aaf4",
+  "split_sha256": "98e8d0b080019e6d9426543a543efb1cffe8f249a9b6c7ada544caa5dac6cdb2",
+  "status": "completed",
+  "targets": {
+    "CAD": {
+      "column": "Cath",
+      "negative_class": "Normal",
+      "positive_class": "CAD"
+    },
+    "LAD": {
+      "column": "LAD",
+      "negative_class": "Normal",
+      "positive_class": "Stenotic"
+    },
+    "LCX": {
+      "column": "LCX",
+      "negative_class": "Normal",
+      "positive_class": "Stenotic"
+    },
+    "RCA": {
+      "column": "RCA",
+      "negative_class": "Normal",
+      "positive_class": "Stenotic"
+    }
+  },
+  "threshold": 0.5
+}

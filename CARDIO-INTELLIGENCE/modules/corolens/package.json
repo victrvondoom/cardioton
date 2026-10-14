@@ -1,0 +1,13 @@
+{
+  "name": "corolens",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Vessel-level coronary stenosis risk with calibrated uncertainty, exact TreeSHAP explanations and an interactive 3D heart. Inference runs in the browser.",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/js/"
+  },
+  "engines": { "node": ">=18" },
+  "license": "MIT"
+}

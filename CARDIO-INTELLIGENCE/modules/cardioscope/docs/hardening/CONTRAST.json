@@ -1,0 +1,69 @@
+{
+  "body on page": {
+    "foreground": "#253d40",
+    "background": "#f5f7f6",
+    "ratio": 10.72,
+    "required": 4.5
+  },
+  "muted on white": {
+    "foreground": "#596e70",
+    "background": "#ffffff",
+    "ratio": 5.4,
+    "required": 4.5
+  },
+  "eyebrow on white": {
+    "foreground": "#4f7974",
+    "background": "#ffffff",
+    "ratio": 4.86,
+    "required": 4.5
+  },
+  "primary button": {
+    "foreground": "#ffffff",
+    "background": "#126c67",
+    "ratio": 6.24,
+    "required": 4.5
+  },
+  "selected button": {
+    "foreground": "#155b52",
+    "background": "#e2f0eb",
+    "ratio": 6.75,
+    "required": 4.5
+  },
+  "focus ring on white": {
+    "foreground": "#b0702b",
+    "background": "#ffffff",
+    "ratio": 4.04,
+    "required": 3
+  },
+  "disclaimer": {
+    "foreground": "#405747",
+    "background": "#eef3ed",
+    "ratio": 6.99,
+    "required": 4.5
+  },
+  "field label": {
+    "foreground": "#4c6160",
+    "background": "#ffffff",
+    "ratio": 6.59,
+    "required": 4.5
+  },
+  "field error": {
+    "foreground": "#934328",
+    "background": "#ffffff",
+    "ratio": 6.83,
+    "required": 4.5
+  },
+  "weak detection note": {
+    "foreground": "#79603e",
+    "background": "#faf5ec",
+    "ratio": 5.44,
+    "required": 4.5
+  },
+  "comparison header": {
+    "foreground": "#4d6a62",
+    "background": "#f2f6f3",
+    "ratio": 5.42,
+    "required": 4.5
+  },
+  "scope": "Representative static CSS pairs, not a complete WCAG certification; disabled controls excluded."
+}

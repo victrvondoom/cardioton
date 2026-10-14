@@ -1,0 +1,127 @@
+<!doctype html>
+<!--
+  Stage 7c - three.js capture of the published GLB (docs/media/renders/web_preview_three.jpg).
+
+  Loaded headless by anatomy/scripts/web_preview_three.mjs (static server at the repository root + headless Chrome).
+  It renders the web asset as the viewer's Realistic look does - three.js GLTFLoader + MeshoptDecoder, the GLB's own
+  baked maps and KHR_materials_clearcoat, NeutralToneMapping, the viewer's camera-attached Realistic light rig
+  (frontend/src/three/stage/studio.ts RIGS.realistic) and its code-built studio environment - from the EXACT hero
+  camera of render_heroes.py (HERO_TARGET / HERO_VIEW, 70 mm lens), so the capture compares 1:1 with hero_heart.jpg.
+  The only additions are the atlas-red colour on the (untextured) coronary arteries, which the app recolours by risk,
+  and the staging of the hero shot: the pulmonary artery trimmed to its trunk and proximal branches with the GLB's
+  _DIST_HEART attribute, the descending aorta clipped below the heart base, and the pulmonary veins, IVC, arch
+  branches and brachiocephalic veins hidden.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<title>CardioTwin web preview</title>
+<style>html, body { margin: 0; background: #16181c; overflow: hidden; } canvas { display: block; }</style>
+<script type="importmap">
+{ "imports": {
+  "three": "/frontend/node_modules/three/build/three.module.js",
+  "three/addons/": "/frontend/node_modules/three/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+
+const q = new URLSearchParams(location.search);
+const glb = q.get('glb') ?? '/frontend/public/anatomy/cardiotwin_anatomy.glb';
+const W = Number(q.get('w') ?? 1920), H = Number(q.get('h') ?? 1080);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NeutralToneMapping;   // the viewer's tone mapping (SceneCanvas.tsx)
+renderer.toneMappingExposure = 1.0;
+document.body.appendChild(renderer.domElement);
+
+// the viewer's Realistic studio environment (studio.ts buildStudioScene), as image-based light only
+function studio() {
+  const s = new THREE.Scene();
+  s.add(new THREE.Mesh(new THREE.SphereGeometry(20, 32, 16), new THREE.MeshBasicMaterial({ color: new THREE.Color('#0B0D11'), side: THREE.BackSide })));
+  const panel = (w, h, color, intensity, pos) => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(intensity) }));
+    m.position.set(...pos); m.lookAt(0, 0, 0); s.add(m);
+  };
+  panel(9, 6, '#FFF1E4', 5, [-6, 7, 8]);
+  panel(2.2, 12, '#EEE8E2', 3, [9, 2, -7]);
+  panel(10, 10, '#FFFFFF', 1.6, [0, 12, 0]);
+  panel(12, 5, '#7A4034', 0.5, [0, -9, 4]);
+  panel(3, 8, '#FFE9DA', 2.2, [10, 1, 6]);
+  return s;
+}
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#16181c');
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(studio(), 0.04).texture;
+scene.environmentIntensity = 0.5;
+
+// hero camera: render_heroes.py HERO_TARGET (Blender) + orbit(az 28, el 8, dist 7.3), 70 mm lens on a 36 mm sensor
+const toGl = (v) => new THREE.Vector3(v[0], v[2], -v[1]);
+const heroTarget = [0.06, -0.05, 0.36];
+const az = THREE.MathUtils.degToRad(28), el = THREE.MathUtils.degToRad(8), dist = 7.3;
+const heroCam = [heroTarget[0] + dist * Math.sin(az) * Math.cos(el), heroTarget[1] - dist * Math.cos(az) * Math.cos(el), heroTarget[2] + dist * Math.sin(el)];
+const vfov = THREE.MathUtils.radToDeg(2 * Math.atan((36 * H / W) / 2 / 70));
+const camera = new THREE.PerspectiveCamera(vfov, W / H, 0.05, 60);
+camera.position.copy(toGl(heroCam));
+camera.lookAt(toGl(heroTarget));
+scene.add(camera);
+// the viewer's Realistic rig (studio.ts RIGS.realistic), attached to the camera like the app's
+const hemi = new THREE.HemisphereLight('#DCE6F2', '#3A2522', 0.42);
+scene.add(hemi);
+for (const [color, intensity, pos] of [['#FFEBDD', 2.5, [-3, 4, 5]], ['#B4CCF2', 1.7, [2.5, 2, -4]], ['#FFF1E6', 0.45, [4, -1, 3]]]) {
+  const l = new THREE.DirectionalLight(color, intensity);
+  l.position.set(...pos);
+  l.target.position.set(0, 0, -7.3);
+  camera.add(l, l.target);
+}
+
+const loader = new GLTFLoader();
+loader.setMeshoptDecoder(MeshoptDecoder);
+const gltf = await loader.loadAsync(glb);
+const keep = new Set(['Layer_Heart', 'Layer_Coronary']);
+const hide = new Set(['GreatVessel_IVC', 'GreatVessel_SVC_BrachiocephalicVeins', 'GreatVessel_Aorta_ArchBranches',
+  'GreatVessel_PulmonaryVeins']);
+renderer.localClippingEnabled = true;
+const belowBase = new THREE.Plane(new THREE.Vector3(0, 1, 0), -0.02); // keep y >= 0.02 (the hero crop of the aorta)
+gltf.scene.traverse((o) => {
+  if (o.parent && o.parent.name && o.parent.name.startsWith('Layer_') && !keep.has(o.parent.name)) o.visible = false;
+  if (hide.has(o.name)) o.visible = false;
+  if (!o.isMesh) return;
+  if (o.name.startsWith('Coronary_')) {
+    o.material = new THREE.MeshPhysicalMaterial({ color: '#9f2a22', roughness: 0.45, clearcoat: 0.2, clearcoatRoughness: 0.3 });
+  }
+  if (o.material && o.material.vertexColors) o.material.vertexColors = false; // COLOR_0 is territory data, not a tint
+  if (o.material && o.material.normalMap) o.material.normalMap.anisotropy = 8;
+  if (o.material && o.material.map) o.material.map.anisotropy = 8;
+  if (o.name === 'GreatVessel_Aorta') o.material.clippingPlanes = [belowBase];
+  if (o.geometry.attributes._dist_heart) {
+    // the pulmonary trunk and the first centimetres of its branches (geodesic distance from the valve, scene units)
+    o.material.side = THREE.DoubleSide;
+    o.material.onBeforeCompile = (sh) => {
+      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nattribute float _dist_heart;\nvarying float vHeart;')
+        .replace('#include <begin_vertex>', '#include <begin_vertex>\nvHeart = _dist_heart;');
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying float vHeart;')
+        .replace('void main() {', 'void main() {\n if (vHeart > 0.55) discard;');
+    };
+  }
+});
+scene.add(gltf.scene);
+await renderer.compileAsync(scene, camera);
+// give the lazily decoded WebP maps a moment, then render twice (the first frame uploads)
+await new Promise((r) => setTimeout(r, 1500));
+renderer.render(scene, camera);
+await new Promise((r) => setTimeout(r, 300));
+renderer.render(scene, camera);
+document.title = 'ready';
+window.__ready = true;
+</script>
+</body>
+</html>

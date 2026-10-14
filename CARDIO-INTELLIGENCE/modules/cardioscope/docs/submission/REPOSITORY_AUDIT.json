@@ -1,0 +1,308 @@
+{
+  "base_commit": "e287d6871b2a482075c0c1c222965607bbb8044b",
+  "blocking_owner_decisions": [
+    "MIT vs Apache-2.0 and copyright holder/year",
+    "PDF public redistribution permission or separate clean-snapshot export without copied Git history"
+  ],
+  "branch": "codex/submission-package",
+  "captured_at_utc": "2026-10-03T18:31:29.309560+00:00",
+  "docker_context_note": "Current Dockerfile includes research artifacts as inert files; historical 338 MB hardened-V1 image size does not describe a current full-tree rebuild.",
+  "excluded_by_gitignore": [
+    ".venv",
+    ".runtime",
+    "frontend/node_modules",
+    "frontend/dist",
+    "__pycache__",
+    ".env/.env.*",
+    "logs",
+    "editor/cache outputs"
+  ],
+  "largest_tracked_files": [
+    {
+      "bytes": 21379587,
+      "path": "artifacts/experiments/v2-lcx-rca-20261003-01/results.json"
+    },
+    {
+      "bytes": 12261513,
+      "path": "artifacts/development/v1-bb08b3d0230a/results.json"
+    },
+    {
+      "bytes": 4403699,
+      "path": "research/v2_lcx_rca/folds.json"
+    },
+    {
+      "bytes": 4222832,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/RCA-r4-f4.json"
+    },
+    {
+      "bytes": 4220033,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/LCX-r3-f0.json"
+    },
+    {
+      "bytes": 4211367,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/RCA-r2-f2.json"
+    },
+    {
+      "bytes": 4208215,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/RCA-r4-f0.json"
+    },
+    {
+      "bytes": 4204262,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/LCX-r0-f3.json"
+    },
+    {
+      "bytes": 4200918,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/RCA-r1-f3.json"
+    },
+    {
+      "bytes": 4196003,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/LCX-r2-f2.json"
+    },
+    {
+      "bytes": 4195646,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/RCA-r3-f2.json"
+    },
+    {
+      "bytes": 4195302,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/LCX-r2-f3.json"
+    },
+    {
+      "bytes": 4193376,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/LCX-r4-f2.json"
+    },
+    {
+      "bytes": 4191109,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/RCA-r3-f4.json"
+    },
+    {
+      "bytes": 4190928,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/LCX-r0-f4.json"
+    },
+    {
+      "bytes": 4189002,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/LCX-r3-f2.json"
+    },
+    {
+      "bytes": 4184821,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/LCX-r2-f1.json"
+    },
+    {
+      "bytes": 4184744,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/RCA-r4-f2.json"
+    },
+    {
+      "bytes": 4184666,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/RCA-r0-f0.json"
+    },
+    {
+      "bytes": 4182905,
+      "path": "artifacts/experiments/v21-multitask-20261003-01/folds/RCA-r1-f1.json"
+    }
+  ],
+  "organizer_pdf_history": [
+    {
+      "bytes": 34719,
+      "commits_touching_file": [
+        "c759138 Freeze verified CardioScope v1 through Phase 7"
+      ],
+      "file": "Multimodal AI Hackathon 2026 - Prize Pool.pdf",
+      "redistribution_permission": "NOT ESTABLISHED"
+    },
+    {
+      "bytes": 43767,
+      "commits_touching_file": [
+        "c759138 Freeze verified CardioScope v1 through Phase 7"
+      ],
+      "file": "Multimodal AI Hackathon 2026 - Submission Guidelines.pdf",
+      "redistribution_permission": "NOT ESTABLISHED"
+    },
+    {
+      "bytes": 68933,
+      "commits_touching_file": [
+        "c759138 Freeze verified CardioScope v1 through Phase 7"
+      ],
+      "file": "Problem Statements.pdf",
+      "redistribution_permission": "NOT ESTABLISHED"
+    },
+    {
+      "bytes": 101246,
+      "commits_touching_file": [
+        "c759138 Freeze verified CardioScope v1 through Phase 7"
+      ],
+      "file": "Track A.pdf",
+      "redistribution_permission": "NOT ESTABLISHED"
+    },
+    {
+      "bytes": 116878,
+      "commits_touching_file": [
+        "c759138 Freeze verified CardioScope v1 through Phase 7"
+      ],
+      "file": "Track B.pdf",
+      "redistribution_permission": "NOT ESTABLISHED"
+    },
+    {
+      "bytes": 81189,
+      "commits_touching_file": [
+        "c759138 Freeze verified CardioScope v1 through Phase 7"
+      ],
+      "file": "Track C.pdf",
+      "redistribution_permission": "NOT ESTABLISHED"
+    },
+    {
+      "bytes": 86318,
+      "commits_touching_file": [
+        "c759138 Freeze verified CardioScope v1 through Phase 7"
+      ],
+      "file": "Track D.pdf",
+      "redistribution_permission": "NOT ESTABLISHED"
+    }
+  ],
+  "publication_ready": false,
+  "remote_configured": false,
+  "text_scan": {
+    "files_scanned": 137,
+    "findings": [],
+    "limitation": "Scoped current-tree patterns; no claim of exhaustive history-wide secret scanning. Organizer PDF history inspected separately. Do not publish before clean-export and owner decisions.",
+    "patterns": [
+      "private_absolute_path",
+      "private_key_header",
+      "github_token",
+      "aws_access_key",
+      "openai_secret"
+    ],
+    "scope_exclusions": [
+      "binary assets/workbooks",
+      "all artifacts (reserved outcomes never parsed)",
+      "research traces/source",
+      "upstream anatomy source/license tables"
+    ]
+  },
+  "tracked_by_top_level": {
+    ".dockerignore": {
+      "bytes": 125,
+      "files": 1
+    },
+    ".github": {
+      "bytes": 1532,
+      "files": 1
+    },
+    ".gitignore": {
+      "bytes": 469,
+      "files": 1
+    },
+    ".python-version": {
+      "bytes": 5,
+      "files": 1
+    },
+    "Dockerfile": {
+      "bytes": 2140,
+      "files": 1
+    },
+    "Makefile": {
+      "bytes": 1942,
+      "files": 1
+    },
+    "Multimodal AI Hackathon 2026 - Prize Pool.pdf": {
+      "bytes": 34719,
+      "files": 1
+    },
+    "Multimodal AI Hackathon 2026 - Submission Guidelines.pdf": {
+      "bytes": 43767,
+      "files": 1
+    },
+    "PLAN.md": {
+      "bytes": 33040,
+      "files": 1
+    },
+    "Problem Statements.pdf": {
+      "bytes": 68933,
+      "files": 1
+    },
+    "README.md": {
+      "bytes": 11283,
+      "files": 1
+    },
+    "THIRD_PARTY_NOTICES.md": {
+      "bytes": 2717,
+      "files": 1
+    },
+    "Track A.pdf": {
+      "bytes": 101246,
+      "files": 1
+    },
+    "Track B.pdf": {
+      "bytes": 116878,
+      "files": 1
+    },
+    "Track C.pdf": {
+      "bytes": 81189,
+      "files": 1
+    },
+    "Track D.pdf": {
+      "bytes": 86318,
+      "files": 1
+    },
+    "artifacts": {
+      "bytes": 263589755,
+      "files": 233
+    },
+    "assets": {
+      "bytes": 7609527,
+      "files": 172
+    },
+    "backend": {
+      "bytes": 44032,
+      "files": 7
+    },
+    "config": {
+      "bytes": 67065,
+      "files": 10
+    },
+    "data": {
+      "bytes": 262914,
+      "files": 3
+    },
+    "docs": {
+      "bytes": 4267607,
+      "files": 61
+    },
+    "frontend": {
+      "bytes": 264498,
+      "files": 31
+    },
+    "ml": {
+      "bytes": 116789,
+      "files": 14
+    },
+    "pyproject.toml": {
+      "bytes": 899,
+      "files": 1
+    },
+    "reports": {
+      "bytes": 0,
+      "files": 1
+    },
+    "research": {
+      "bytes": 4875093,
+      "files": 25
+    },
+    "scripts": {
+      "bytes": 8821,
+      "files": 5
+    },
+    "tests": {
+      "bytes": 79703,
+      "files": 12
+    },
+    "uv.lock": {
+      "bytes": 92162,
+      "files": 1
+    }
+  },
+  "tracked_bytes_at_base": 281865168,
+  "tracked_cache_or_env_findings": [],
+  "tracked_file_count_at_base": 592,
+  "tracked_files_at_least_100MiB": [],
+  "tracked_research_bytes": 252654147,
+  "tracked_research_files": 204
+}

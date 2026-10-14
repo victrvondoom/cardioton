@@ -1,0 +1,595 @@
+{
+  "anatomy": {
+    "LAD": 18,
+    "LCX": 6,
+    "RCA": 29,
+    "heart": 30,
+    "total": 83
+  },
+  "data": {
+    "development": 242,
+    "excluded_targets": [
+      "Cath",
+      "LAD",
+      "LCX",
+      "RCA"
+    ],
+    "holdout": 61,
+    "predictors": 55,
+    "records": 303
+  },
+  "historical_hardening": {
+    "frontend_tests": 75,
+    "hosted_ci": "NOT RUN",
+    "initial_js_after": 266391,
+    "initial_js_before": 1216295,
+    "protected_files": 256,
+    "python_tests": 134
+  },
+  "public_example": {
+    "example_id": "0056fb5ae87a9ac1510fd77cb5cd6bd3b348a0d0de578cf1a86132f8d87733dc",
+    "fitting": false,
+    "holdout_inference": false,
+    "identities_unchanged": true,
+    "targets": {
+      "CAD": {
+        "probability": 0.1709399517600908,
+        "residual": -6.661338147750939e-16
+      },
+      "LAD": {
+        "probability": 0.24305384913623826,
+        "residual": 0.0
+      },
+      "LCX": {
+        "probability": 0.3705140009054133,
+        "residual": -6.116750994600295e-10
+      },
+      "RCA": {
+        "probability": 0.3090592361868292,
+        "residual": -1.7709154698231089e-09
+      }
+    }
+  },
+  "research": {
+    "v21_final_candidate_fitted": false,
+    "v21_gate_passed": false,
+    "v2_gate_passed": false
+  },
+  "review_date": "2026-10-04",
+  "shap": {
+    "background_records": 100,
+    "logit_tolerance": 1e-10,
+    "methods": {
+      "CAD": "Linear SHAP",
+      "LAD": "Linear SHAP",
+      "LCX": "TreeSHAP",
+      "RCA": "TreeSHAP"
+    },
+    "probability_tolerance": 1e-06
+  },
+  "v1": {
+    "metrics": {
+      "CAD": {
+        "accuracy": 0.8524590163934426,
+        "average_precision": 0.9599893180905119,
+        "balanced_accuracy": 0.8145994832041343,
+        "brier_score": 0.10406985557246183,
+        "class_counts": {
+          "0": 18,
+          "1": 43
+        },
+        "confusion_matrix": [
+          [
+            13,
+            5
+          ],
+          [
+            4,
+            39
+          ]
+        ],
+        "f1": 0.896551724137931,
+        "pr_auc": 0.9594208253674666,
+        "precision": 0.8863636363636364,
+        "recall": 0.9069767441860465,
+        "roc_auc": 0.9134366925064599,
+        "threshold": 0.5
+      },
+      "LAD": {
+        "accuracy": 0.7213114754098361,
+        "average_precision": 0.8871199711163188,
+        "balanced_accuracy": 0.7099567099567099,
+        "brier_score": 0.16670862999035824,
+        "class_counts": {
+          "0": 28,
+          "1": 33
+        },
+        "confusion_matrix": [
+          [
+            16,
+            12
+          ],
+          [
+            5,
+            28
+          ]
+        ],
+        "f1": 0.7671232876712328,
+        "pr_auc": 0.8854020423406358,
+        "precision": 0.7,
+        "recall": 0.8484848484848485,
+        "roc_auc": 0.8474025974025974,
+        "threshold": 0.5
+      },
+      "LCX": {
+        "accuracy": 0.6065573770491803,
+        "average_precision": 0.535243069352992,
+        "balanced_accuracy": 0.5365990990990991,
+        "brier_score": 0.22237460996296993,
+        "class_counts": {
+          "0": 37,
+          "1": 24
+        },
+        "confusion_matrix": [
+          [
+            32,
+            5
+          ],
+          [
+            19,
+            5
+          ]
+        ],
+        "f1": 0.29411764705882354,
+        "pr_auc": 0.5189395283458003,
+        "precision": 0.5,
+        "recall": 0.20833333333333334,
+        "roc_auc": 0.6722972972972973,
+        "threshold": 0.5
+      },
+      "RCA": {
+        "accuracy": 0.6721311475409836,
+        "average_precision": 0.5329718399366258,
+        "balanced_accuracy": 0.5803571428571428,
+        "brier_score": 0.20658174330987855,
+        "class_counts": {
+          "0": 40,
+          "1": 21
+        },
+        "confusion_matrix": [
+          [
+            35,
+            5
+          ],
+          [
+            15,
+            6
+          ]
+        ],
+        "f1": 0.375,
+        "pr_auc": 0.504037081550002,
+        "precision": 0.5454545454545454,
+        "recall": 0.2857142857142857,
+        "roc_auc": 0.6976190476190476,
+        "threshold": 0.5
+      }
+    },
+    "models": {
+      "CAD": {
+        "family": "logistic",
+        "id": "logistic-C0.1-balanced",
+        "params": {
+          "C": 0.1,
+          "class_weight": "balanced"
+        },
+        "simplicity_rank": 2
+      },
+      "LAD": {
+        "family": "logistic",
+        "id": "logistic-C0.1-balanced",
+        "params": {
+          "C": 0.1,
+          "class_weight": "balanced"
+        },
+        "simplicity_rank": 2
+      },
+      "LCX": {
+        "family": "forest",
+        "id": "forest-depth3-leaf10-none",
+        "params": {
+          "class_weight": null,
+          "max_depth": 3,
+          "min_samples_leaf": 10
+        },
+        "simplicity_rank": 7
+      },
+      "RCA": {
+        "family": "forest",
+        "id": "forest-depth5-leaf10-none",
+        "params": {
+          "class_weight": null,
+          "max_depth": 5,
+          "min_samples_leaf": 10
+        },
+        "simplicity_rank": 11
+      }
+    },
+    "source": "artifacts/final_holdout/final-v1-f1fd0d4cdc334c65aba46c37fa68717b/results.json",
+    "source_sha256": "50e7a5354e77f797241ea772325cae046b9d729f9177034d85aa930d4ddfa3d5",
+    "threshold": 0.5,
+    "uncertainty": {
+      "CAD": {
+        "completed_repetitions": 2000,
+        "intervals": {
+          "accuracy": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.738311911998048,
+              0.9302477020274412
+            ],
+            "limitation": "Assumes independent records; patient identity unverified",
+            "method": "two-sided Clopper-Pearson exact binomial",
+            "successes": 52,
+            "trials": 61
+          },
+          "average_precision": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.9144079843500892,
+              0.9915933814832183
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "balanced_accuracy": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.6918604651162791,
+              0.921188630490956
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "brier_score": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.061560593792230923,
+              0.15565649616604643
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "f1": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.8314606741573034,
+              0.9534883720930233
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "pr_auc": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.9111584488771945,
+              0.9914545643816156
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "precision": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.8085106382978723,
+              0.9722222222222222
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "recall": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.7786465546186137,
+              0.9740687097336765
+            ],
+            "limitation": "Assumes independent records; patient identity unverified",
+            "method": "two-sided Clopper-Pearson exact binomial",
+            "successes": 39,
+            "trials": 43
+          },
+          "roc_auc": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.8191214470284238,
+              0.9780361757105943
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          }
+        },
+        "limitation": "conditional on observed class counts and empirical records; no training uncertainty or clinical-generalization inference; independence unverified",
+        "requested_repetitions": 2000,
+        "seed": 20261001
+      },
+      "LAD": {
+        "completed_repetitions": 2000,
+        "intervals": {
+          "accuracy": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.5917125332438209,
+              0.8285279157397194
+            ],
+            "limitation": "Assumes independent records; patient identity unverified",
+            "method": "two-sided Clopper-Pearson exact binomial",
+            "successes": 44,
+            "trials": 61
+          },
+          "average_precision": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.8078076206388966,
+              0.9496584729624468
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "balanced_accuracy": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.6011904761904762,
+              0.8170995670995671
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "brier_score": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.11626588074678747,
+              0.22307561049663127
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "f1": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.6756756756756757,
+              0.8493150684931506
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "pr_auc": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.802145654222332,
+              0.9486295012284691
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "precision": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.6135732323232325,
+              0.8
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "recall": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.6810101802895636,
+              0.9489113006439188
+            ],
+            "limitation": "Assumes independent records; patient identity unverified",
+            "method": "two-sided Clopper-Pearson exact binomial",
+            "successes": 28,
+            "trials": 33
+          },
+          "roc_auc": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.7445616883116883,
+              0.9285714285714286
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          }
+        },
+        "limitation": "conditional on observed class counts and empirical records; no training uncertainty or clinical-generalization inference; independence unverified",
+        "requested_repetitions": 2000,
+        "seed": 20261002
+      },
+      "LCX": {
+        "completed_repetitions": 2000,
+        "intervals": {
+          "accuracy": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.47313607039430206,
+              0.7292710789301835
+            ],
+            "limitation": "Assumes independent records; patient identity unverified",
+            "method": "two-sided Clopper-Pearson exact binomial",
+            "successes": 37,
+            "trials": 61
+          },
+          "average_precision": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.42633044677472653,
+              0.7098307911049045
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "balanced_accuracy": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.4408783783783784,
+              0.6334459459459459
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "brier_score": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.20283960889375863,
+              0.24027337719909295
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "f1": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.06896551724137931,
+              0.4864864864864865
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "pr_auc": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.3958942393235776,
+              0.6937989325270999
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "precision": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.2,
+              0.8
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "recall": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.071318617198055,
+              0.42151284363725267
+            ],
+            "limitation": "Assumes independent records; patient identity unverified",
+            "method": "two-sided Clopper-Pearson exact binomial",
+            "successes": 5,
+            "trials": 24
+          },
+          "roc_auc": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.5371340090090091,
+              0.8018299549549548
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          }
+        },
+        "limitation": "conditional on observed class counts and empirical records; no training uncertainty or clinical-generalization inference; independence unverified",
+        "requested_repetitions": 2000,
+        "seed": 20261003
+      },
+      "RCA": {
+        "completed_repetitions": 2000,
+        "intervals": {
+          "accuracy": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.5399808515604617,
+              0.78693366418863
+            ],
+            "limitation": "Assumes independent records; patient identity unverified",
+            "method": "two-sided Clopper-Pearson exact binomial",
+            "successes": 41,
+            "trials": 61
+          },
+          "average_precision": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.4063172962132554,
+              0.7388667831454432
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "balanced_accuracy": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.48273809523809524,
+              0.6892857142857143
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "brier_score": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.1827145231693936,
+              0.22997201922808394
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "f1": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.14801587301587324,
+              0.5789473684210527
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "pr_auc": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.36803142110548515,
+              0.7266203835358513
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "precision": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.2857142857142857,
+              0.8461538461538461
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          },
+          "recall": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.1128094039219408,
+              0.5217511182471137
+            ],
+            "limitation": "Assumes independent records; patient identity unverified",
+            "method": "two-sided Clopper-Pearson exact binomial",
+            "successes": 6,
+            "trials": 21
+          },
+          "roc_auc": {
+            "confidence_level": 0.95,
+            "interval": [
+              0.5630952380952381,
+              0.820267857142857
+            ],
+            "method": "paired within-class stratified percentile bootstrap of saved labels/probabilities; no refitting or inference",
+            "reason": null
+          }
+        },
+        "limitation": "conditional on observed class counts and empirical records; no training uncertainty or clinical-generalization inference; independence unverified",
+        "requested_repetitions": 2000,
+        "seed": 20261004
+      }
+    }
+  }
+}

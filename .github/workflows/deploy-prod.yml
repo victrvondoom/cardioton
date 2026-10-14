@@ -78,7 +78,7 @@ jobs:
       - run: aws eks update-kubeconfig --name clincase-staging
       - name: helm upgrade --wait staging
         run: |
-          helm upgrade --install clincase-staging ./ops/k8s/chart \
+          helm upgrade --install clincase-staging ./CARDIO-INTELLIGENCE/core/ops/k8s/chart \
             --namespace clincase-staging --create-namespace \
             --set backend.image=${{ needs.verify-image.outputs.backend_image }} \
             --set frontend.image=${{ needs.verify-image.outputs.frontend_image }} \
@@ -87,7 +87,7 @@ jobs:
         run: |
           curl -f https://staging.clincase.example.com/api/v1/healthz
           # synthetic case run gated to staging
-          ./ops/sre/scripts/smoke-synthetic-case.sh staging
+          ./CARDIO-INTELLIGENCE/core/ops/sre/scripts/smoke-synthetic-case.sh staging
 
   approve-prod:
     needs: smoke-staging
@@ -113,12 +113,12 @@ jobs:
           aws-region: ap-south-1
       - name: terraform apply (multi-region)
         run: |
-          cd ops/terraform/multi-region
+          cd CARDIO-INTELLIGENCE/core/ops/terraform/multi-region
           terraform init -backend-config="bucket=${{ secrets.TF_STATE_BUCKET }}" -backend-config="key=multi-region/terraform.tfstate" -backend-config="region=ap-south-1"
           terraform apply -auto-approve -var-file=prod.tfvars
       - name: terraform apply (provisioned-throughput)
         run: |
-          cd ops/terraform/provisioned-throughput
+          cd CARDIO-INTELLIGENCE/core/ops/terraform/provisioned-throughput
           terraform init -backend-config="bucket=${{ secrets.TF_STATE_BUCKET }}" -backend-config="key=provisioned-throughput/terraform.tfstate" -backend-config="region=ap-south-1"
           terraform apply -auto-approve -var-file=prod.tfvars
 
@@ -137,7 +137,7 @@ jobs:
       - run: aws eks update-kubeconfig --name clincase-prod
       - name: helm upgrade --wait prod (canary 10%)
         run: |
-          helm upgrade --install clincase ./ops/k8s/chart \
+          helm upgrade --install clincase ./CARDIO-INTELLIGENCE/core/ops/k8s/chart \
             --namespace clincase --create-namespace \
             --set backend.image=${{ needs.verify-image.outputs.backend_image }} \
             --set frontend.image=${{ needs.verify-image.outputs.frontend_image }} \
@@ -146,12 +146,12 @@ jobs:
       - name: Post-deploy smoke
         run: |
           curl -f https://api.clincase.example.com/api/v1/healthz
-          ./ops/sre/scripts/smoke-synthetic-case.sh production
+          ./CARDIO-INTELLIGENCE/core/ops/sre/scripts/smoke-synthetic-case.sh production
       - name: Promote canary to 100% after 5 min
         run: |
           sleep 300
-          ./ops/sre/scripts/check-error-budget.sh production || exit 1
-          helm upgrade clincase ./ops/k8s/chart \
+          ./CARDIO-INTELLIGENCE/core/ops/sre/scripts/check-error-budget.sh production || exit 1
+          helm upgrade clincase ./CARDIO-INTELLIGENCE/core/ops/k8s/chart \
             --namespace clincase \
             --set canary.weight=100 \
             --reuse-values --wait --timeout=10m

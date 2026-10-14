@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Viewer - MedRelay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .resizer {
+            width: 6px;
+            cursor: col-resize;
+            background: #e5e7eb;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+        
+        .resizer:hover {
+            background: #9ca3af;
+        }
+        
+        .resizer::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 3px;
+            height: 40px;
+            background: #6b7280;
+            border-radius: 2px;
+        }
+        
+        .split-container {
+            display: flex;
+            height: calc(100vh - 200px);
+            min-height: 500px;
+        }
+        
+        .left-panel {
+            min-width: 200px;
+            max-width: 80%;
+            width: 40%;
+        }
+        
+        .right-panel {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .is-resizing {
+            user-select: none;
+        }
+        
+        .is-resizing * {
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-cover bg-center bg-no-repeat" style="background-image: url('/static/images/main_background.png');">
+    <div class="container mx-auto px-4 py-8">
+    {% include 'navigation.html' %}
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="mb-4 p-4 rounded-md {% if category == 'error' %}bg-red-50 text-red-700 border border-red-200{% elif category == 'success' %}bg-green-50 text-green-700 border border-green-200{% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- PDF Viewer Header -->
+    <div class="flex justify-between items-center mb-6 bg-white bg-opacity-95 rounded-lg p-4 shadow-lg">
+        <div>
+            <h2 class="text-2xl font-bold text-gray-800">PDF Viewer</h2>
+            <p class="text-gray-600">
+                {% if form.form_type == 'tricare' %}
+                    Tricare CMN Form - {{ form.timestamp.strftime('%B %d, %Y') if form and form.timestamp else 'Unknown Date' }}
+                {% elif form.form_type == 'cms1500' %}
+                    CMS-1500 Form - {{ form.timestamp.strftime('%B %d, %Y') if form and form.timestamp else 'Unknown Date' }}
+                {% elif form.form_type == 'cms1450' %}
+                    CMS-1450 Form - {{ form.timestamp.strftime('%B %d, %Y') if form and form.timestamp else 'Unknown Date' }}
+                {% elif form.form_type %}
+                    {{ form.form_type|title }} Form - {{ form.timestamp.strftime('%B %d, %Y') if form and form.timestamp else 'Unknown Date' }}
+                {% else %}
+                    Unknown Form - {{ form.timestamp.strftime('%B %d, %Y') if form and form.timestamp else 'Unknown Date' }}
+                {% endif %}
+            </p>
+        </div>
+        <div class="flex space-x-2">
+            <a href="{{ url_for('my_forms') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md font-medium">
+                ← Back to Forms
+            </a>
+        </div>
+    </div>
+
+        <!-- Split Container with overlay for content only -->
+        <div class="split-container bg-black bg-opacity-30 rounded-lg">
+            <!-- Left Panel - Dynamic Form Chatbot -->
+            <div class="left-panel bg-white rounded-l-lg shadow-lg flex flex-col">
+                <!-- Chatbot Header -->
+                <div class="p-4 border-b border-gray-200">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800">
+                                {% if form.form_type == 'tricare' %}
+                                    Tricare CMN Intelligence Agent
+                                {% elif form.form_type == 'cms1500' %}
+                                    CMS-1500 Intelligence Agent
+                                {% elif form.form_type == 'cms1450' %}
+                                    CMS-1450 Intelligence Agent
+                                {% elif form.form_type %}
+                                    {{ form.form_type|title }} Intelligence Agent
+                                {% else %}
+                                    Medical Form Intelligence Agent
+                                {% endif %}
+                            </h3>
+                            <p class="text-sm text-gray-600">
+                                {% if form.form_type == 'tricare' %}
+                                    Ask about DME forms, authorization, or equipment
+                                {% elif form.form_type == 'cms1500' %}
+                                    Ask about form fields, codes, or billing
+                                {% elif form.form_type == 'cms1450' %}
+                                    Ask about institutional billing or UB-04 forms
+                                {% else %}
+                                    Ask about form fields, codes, or billing
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat Messages Container -->
+                <div class="flex-1 overflow-y-auto p-4 space-y-4" id="chatMessages">
+                    <!-- Welcome Message -->
+                    <div class="flex items-start space-x-2">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3 max-w-full">
+                            <p class="text-sm text-gray-700">
+                                {% if form.form_type == 'tricare' %}
+                                    Hi! I'm your Tricare CMN form assistant. I can help you with:
+                                    <br>• Certificate of Medical Necessity forms
+                                    <br>• DME authorization requirements  
+                                    <br>• Equipment justification guidance
+                                    <br>• Tricare-specific billing procedures
+                                {% elif form.form_type == 'cms1500' %}
+                                    Hi! I'm your CMS-1500 form assistant. I can help you with:
+                                    <br>• Form field explanations
+                                    <br>• ICD-10 and CPT code lookups
+                                    <br>• Billing guidance
+                                    <br>• Form completion tips
+                                {% elif form.form_type == 'cms1450' %}
+                                    Hi! I'm your CMS-1450 (UB-04) form assistant. I can help you with:
+                                    <br>• Institutional billing procedures
+                                    <br>• Revenue codes and charge descriptions
+                                    <br>• Condition codes and occurrence codes
+                                    <br>• Hospital and facility billing guidance
+                                {% else %}
+                                    Hi! I'm your medical form assistant. I can help you with:
+                                    <br>• Form field explanations
+                                    <br>• Medical codes and billing guidance
+                                    <br>• Completion tips and best practices
+                                    <br>• Healthcare documentation requirements
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat Input -->
+                <div class="p-4 border-t border-gray-200">
+                    <!-- Loading indicator moved above input -->
+                    <div id="chatLoading" class="hidden mb-3 flex items-center space-x-2 text-sm text-gray-500">
+                        <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+                        <span>Assistant is thinking...</span>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        <input 
+                            type="text" 
+                            id="chatInput"
+                            placeholder="{% if form.form_type == 'tricare' %}Ask about Tricare CMN forms, DME, or authorization...{% elif form.form_type == 'cms1500' %}Ask about CMS-1500 forms, codes, or billing...{% elif form.form_type == 'cms1450' %}Ask about CMS-1450 forms, revenue codes, or institutional billing...{% else %}Ask about form fields, codes, or billing...{% endif %}"
+                            class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                            maxlength="500"
+                        >
+                        <button 
+                            id="sendButton"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 flex items-center"
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Resizer -->
+            <div class="resizer" id="resizer"></div>
+            
+            <!-- Right Panel - PDF Viewer -->
+            <div class="right-panel bg-white rounded-r-lg shadow-lg overflow-hidden">
+                <div class="h-full">
+                    <embed 
+                        id="pdfEmbed"
+                        src="{{ url_for('view_form', visit_id=visit_id) }}" 
+                        type="application/pdf" 
+                        width="100%" 
+                        height="100%"
+                        style="border: none;">
+                    
+                    <!-- Fallback for browsers that don't support embed -->
+                    <object 
+                        id="pdfObject"
+                        data="{{ url_for('view_form', visit_id=visit_id) }}" 
+                        type="application/pdf" 
+                        width="100%" 
+                        height="100%"
+                        style="display: none;">
+                        
+                        <!-- Final fallback - iframe -->
+                        <iframe 
+                            id="pdfIframe"
+                            src="{{ url_for('view_form', visit_id=visit_id) }}"
+                            width="100%" 
+                            height="100%"
+                            style="border: none;">
+                            
+                            <!-- Ultimate fallback - direct link -->
+                            <div class="p-8 text-center">
+                                <p class="text-gray-600 mb-4">Your browser doesn't support embedded PDFs.</p>
+                                <a href="{{ url_for('view_form', visit_id=visit_id) }}" 
+                                   target="_blank"
+                                   class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium">
+                                    Open PDF in New Tab
+                                </a>
+                            </div>
+                        </iframe>
+                    </object>
+                </div>
+            </div>
+        </div>
+
+        <!-- Simple Info Panel -->
+        <div class="mt-0 bg-white rounded-lg shadow-lg p-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600">This PDF contains fillable form fields. You can click and type directly in the form fields, then download when ready.</p>
+                </div>
+                <div class="text-sm text-gray-500">
+                    Visit ID: {{ visit_id }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PDF Loading Management
+        document.addEventListener('DOMContentLoaded', function() {
+            const embed = document.getElementById('pdfEmbed');
+            const object = document.getElementById('pdfObject');
+            
+            // If embed fails, try object
+            embed.addEventListener('error', function() {
+                console.log('Embed failed, trying object element');
+                embed.style.display = 'none';
+                object.style.display = 'block';
+            });
+            
+            // Log successful load
+            embed.addEventListener('load', function() {
+                console.log('PDF loaded successfully via embed');
+            });
+        });
+
+        // Chatbot Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatInput = document.getElementById('chatInput');
+            const sendButton = document.getElementById('sendButton');
+            const chatMessages = document.getElementById('chatMessages');
+            const chatLoading = document.getElementById('chatLoading');
+            const visitId = '{{ visit_id }}';
+
+            // Send message function
+            async function sendMessage() {
+                const message = chatInput.value.trim();
+                if (!message) return;
+
+                // Add user message to chat
+                addMessageToChat(message, 'user');
+                
+                // Clear input and show loading
+                chatInput.value = '';
+                chatLoading.classList.remove('hidden');
+                sendButton.disabled = true;
+
+                try {
+                    const response = await fetch('ere e/cms-chatbot', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            message: message,
+                            visit_id: visitId
+                        })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        // Add Contextus status indicator if available
+                        let enhancedResponse = data.response;
+                        if (data.contextus_enhanced) {
+                            enhancedResponse += '\n\n🤖 *Enhanced with AI learning from patient history*';
+                        }
+                        addMessageToChat(enhancedResponse, 'bot', false, true); // Enable typewriter
+                    } else {
+                        const errorData = await response.json();
+                        addMessageToChat('Sorry, I encountered an error: ' + (errorData.error || 'Unknown error'), 'bot', true);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    addMessageToChat('Sorry, I encountered a connection error. Please try again.', 'bot', true);
+                } finally {
+                    chatLoading.classList.add('hidden');
+                    sendButton.disabled = false;
+                    chatInput.focus();
+                }
+            }
+
+            // Add message to chat display
+            function addMessageToChat(message, sender, isError = false, useTypewriter = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'flex items-start space-x-2';
+
+                if (sender === 'user') {
+                    messageDiv.classList.add('flex-row-reverse', 'space-x-reverse');
+                    messageDiv.innerHTML = `
+                        <div class="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                        <div class="bg-blue-600 text-white rounded-lg p-3 max-w-xs">
+                            <p class="text-sm">${escapeHtml(message)}</p>
+                        </div>
+                    `;
+                } else {
+                    const bgColor = isError ? 'bg-red-50' : 'bg-gray-50';
+                    const textColor = isError ? 'text-red-700' : 'text-gray-700';
+                    messageDiv.innerHTML = `
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                        <div class="${bgColor} rounded-lg p-3 max-w-full">
+                            <div class="text-sm ${textColor} whitespace-pre-wrap" id="botMessage${Date.now()}"></div>
+                        </div>
+                    `;
+                }
+
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+                // Apply typewriter effect for bot messages
+                if (sender === 'bot' && useTypewriter && !isError) {
+                    const textElement = messageDiv.querySelector('[id^="botMessage"]');
+                    const formattedMessage = formatBotResponse(message);
+                    typewriterEffect(textElement, formattedMessage, 3); // 3ms delay between characters (faster)
+                } else if (sender === 'bot') {
+                    const textElement = messageDiv.querySelector('[id^="botMessage"]');
+                    textElement.innerHTML = formatBotResponse(message);
+                }
+            }
+
+            // Typewriter effect function
+            function typewriterEffect(element, html, delay = 15) {
+                // Create a temporary element to parse HTML
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+                
+                // Extract text content while preserving structure
+                const textContent = tempDiv.textContent || tempDiv.innerText || '';
+                
+                element.innerHTML = '';
+                let i = 0;
+                
+                function typeChar() {
+                    if (i < textContent.length) {
+                        // Get current character
+                        const char = textContent[i];
+                        
+                        // Update the element's text content
+                        element.textContent = textContent.substring(0, i + 1);
+                        
+                        // Auto-scroll as text appears
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                        
+                        i++;
+                        setTimeout(typeChar, delay);
+                    } else {
+                        // Once typing is complete, replace with formatted HTML
+                        element.innerHTML = html;
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+                }
+                
+                typeChar();
+            }
+
+            // Format bot response with basic markdown-like formatting
+            function formatBotResponse(text) {
+                return escapeHtml(text)
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/`(.*?)`/g, '<code class="bg-gray-200 px-1 rounded">$1</code>')
+                    .replace(/\n/g, '<br>');
+            }
+
+            // Escape HTML to prevent XSS
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            // Event listeners
+            sendButton.addEventListener('click', sendMessage);
+            
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Focus on input when page loads
+            chatInput.focus();
+        });
+
+        // Resizer Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const resizer = document.getElementById('resizer');
+            const leftPanel = document.querySelector('.left-panel');
+            const rightPanel = document.querySelector('.right-panel');
+            const container = document.querySelector('.split-container');
+            
+            let isResizing = false;
+            let startX = 0;
+            let startWidth = 0;
+
+            function startResize(e) {
+                isResizing = true;
+                startX = e.clientX;
+                startWidth = leftPanel.offsetWidth;
+                
+                // Add class to prevent text selection during resize
+                document.body.classList.add('is-resizing');
+                
+                document.addEventListener('mousemove', resize);
+                document.addEventListener('mouseup', stopResize);
+                
+                e.preventDefault();
+            }
+
+            function resize(e) {
+                if (!isResizing) return;
+                
+                const containerWidth = container.offsetWidth;
+                const resizerWidth = 6; // Width of the resizer
+                const newWidth = startWidth + (e.clientX - startX);
+                
+                // Calculate percentage and apply constraints
+                const percentage = (newWidth / containerWidth) * 100;
+                const minWidth = 200; // Minimum left panel width in pixels
+                const maxWidth = containerWidth * 0.8; // Maximum 80% of container width
+                
+                if (newWidth >= minWidth && newWidth <= maxWidth) {
+                    leftPanel.style.width = percentage + '%';
+                }
+            }
+
+            function stopResize() {
+                isResizing = false;
+                document.body.classList.remove('is-resizing');
+                document.removeEventListener('mousemove', resize);
+                document.removeEventListener('mouseup', stopResize);
+            }
+
+            // Attach event listeners
+            resizer.addEventListener('mousedown', startResize);
+            
+            // Handle double-click to reset to default size
+            resizer.addEventListener('dblclick', function() {
+                leftPanel.style.width = '40%';
+            });
+        });
+    </script>
+    </div>
+</body>
+</html>

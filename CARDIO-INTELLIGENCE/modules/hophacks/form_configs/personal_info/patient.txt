@@ -1,0 +1,10 @@
+{
+  "patient": {
+    "name_first": "John",
+    "name_last": "Smith",
+    "dob": "1991-10-17",
+    "address": "3870 Peck Court, El Toro CA, 92630",
+    "medicare_id": "35F2-0X4-GM24",
+    "ssn": "368-22-6266"
+  }
+}

@@ -4,8 +4,8 @@ services:
     name: clincase
     runtime: docker
     plan: free
-    dockerfilePath: ./Dockerfile
-    dockerContext: .
+    dockerfilePath: ./CARDIO-INTELLIGENCE/core/Dockerfile
+    dockerContext: ./CARDIO-INTELLIGENCE/core
     branch: main
     autoDeploy: true
     healthCheckPath: /api/v1/healthz

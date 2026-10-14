@@ -1,0 +1,49 @@
+{
+  "html_ms": 23.737124996841885,
+  "manifest_ms": 2.141,
+  "sequential_mesh_http_ms": 77.39166700048372,
+  "prediction_median_ms": 23.238,
+  "explanations": {
+    "CAD": {
+      "first_ms": 659.126,
+      "warm_ms": 1.876,
+      "residual": -6.661338147750939e-16
+    },
+    "LAD": {
+      "first_ms": 21.633,
+      "warm_ms": 1.565,
+      "residual": 0.0
+    },
+    "LCX": {
+      "first_ms": 23.866,
+      "warm_ms": 1.57,
+      "residual": -6.116750994600295e-10
+    },
+    "RCA": {
+      "first_ms": 26.021,
+      "warm_ms": 1.608,
+      "residual": -1.7709154698231089e-09
+    }
+  },
+  "probabilities": {
+    "CAD": 0.1709399517600908,
+    "LAD": 0.24305384913623826,
+    "LCX": 0.3705140009054133,
+    "RCA": 0.3090592361868292
+  },
+  "bundles": {
+    "index.html": {
+      "bytes": 396,
+      "gzip_bytes": 264
+    },
+    "assets/index-BsVTQ5g0.css": {
+      "bytes": 17825,
+      "gzip_bytes": 4482
+    },
+    "assets/index-oo5yTtrE.js": {
+      "bytes": 1216295,
+      "gzip_bytes": 330603
+    }
+  },
+  "note": "Loopback HTTP; sequential mesh transfer differs from browser parallel loading. First explanation includes lazy initialization only in a fresh server."
+}

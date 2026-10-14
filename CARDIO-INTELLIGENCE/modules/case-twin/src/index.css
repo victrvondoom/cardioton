@@ -1,0 +1,361 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --mr-text: #111827;
+    --mr-text-secondary: #6B7280;
+    --mr-border: #E5E7EB;
+    --mr-page: #ffffff;
+    --mr-bg-subtle: #F9FAFB;
+    --mr-action: #2563EB;
+    --mr-on-action: #ffffff;
+    --mr-success: #059669;
+    --mr-warning: #D97706;
+    --mr-error: #DC2626;
+    font-family:
+      "Inter",
+      "SF Pro Text",
+      "SF Pro Display",
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      system-ui,
+      sans-serif;
+  }
+
+  * {
+    border-color: var(--mr-border);
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: var(--mr-page);
+    color: var(--mr-text);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+@layer components {
+  .mr-container {
+    width: min(1320px, calc(100% - 2.5rem));
+    margin-inline: auto;
+  }
+
+  .mr-surface {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px;
+    border-radius: 8px;
+    border: 1px solid var(--mr-border);
+    background: #ffffff;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  .mr-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 24px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 15px;
+    line-height: 22px;
+    transition:
+      background-color 140ms ease,
+      color 140ms ease,
+      border-color 140ms ease,
+      opacity 140ms ease;
+  }
+
+  .mr-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(10, 103, 143, 0.24);
+  }
+
+  .mr-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .mr-btn--primary {
+    background: #111827;
+    border-color: #111827;
+    color: #ffffff;
+    font-weight: 500;
+  }
+
+  .mr-btn--secondary {
+    background: #ffffff;
+    border-color: var(--mr-border);
+    color: var(--mr-text);
+    font-weight: 500;
+  }
+
+  .mr-btn--tertiary {
+    background: transparent;
+    color: var(--mr-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    padding-inline: 0;
+    height: 36px;
+    font-weight: 400;
+  }
+
+  .mr-btn--sm {
+    height: 36px;
+    padding: 0 16px;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .mr-btn--full {
+    width: 100%;
+  }
+
+  .mr-input,
+  .mr-select,
+  .mr-textarea {
+    width: 100%;
+    border: 1px solid var(--mr-border);
+    border-radius: 6px;
+    background: #ffffff;
+    color: var(--mr-text);
+    font-size: 14px;
+    line-height: 20px;
+    padding: 0 12px;
+  }
+
+  .mr-input,
+  .mr-select {
+    height: 44px;
+  }
+
+  .mr-select {
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, #5b7388 50%),
+      linear-gradient(135deg, #5b7388 50%, transparent 50%);
+    background-position:
+      calc(100% - 17px) calc(50% + 1px),
+      calc(100% - 12px) calc(50% + 1px);
+    background-size:
+      5px 5px,
+      5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 32px;
+  }
+
+  .mr-textarea {
+    min-height: 120px;
+    resize: vertical;
+    padding: 12px;
+  }
+
+  .mr-input:focus-visible,
+  .mr-select:focus-visible,
+  .mr-textarea:focus-visible,
+  .mr-checkbox:focus-visible,
+  .mr-slider:focus-visible {
+    outline: none;
+    border-color: rgba(10, 103, 143, 0.55);
+    box-shadow: 0 0 0 2px rgba(10, 103, 143, 0.2);
+  }
+
+  .mr-checkbox {
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--mr-border);
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+    background: #ffffff;
+  }
+
+  .mr-checkbox[data-checked="true"] {
+    color: var(--mr-on-action);
+    background: var(--mr-action);
+    border-color: var(--mr-action);
+  }
+
+  .mr-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    border-radius: 6px;
+    padding: 0 8px;
+    font-size: 12px;
+    line-height: 16px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .mr-badge--success {
+    background: #ECFDF5;
+    color: var(--mr-success);
+  }
+
+  .mr-badge--warning {
+    background: #FFFBEB;
+    color: var(--mr-warning);
+  }
+
+  .mr-badge--neutral {
+    background: #F3F4F6;
+    color: var(--mr-text-secondary);
+  }
+
+  .mr-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--mr-border);
+  }
+
+  .mr-slider {
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: #d5e6f2;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .mr-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: var(--mr-action);
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 0 1px var(--mr-action);
+    cursor: pointer;
+    margin-top: -8px;
+  }
+
+  .mr-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: var(--mr-action);
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 0 1px var(--mr-action);
+    cursor: pointer;
+  }
+
+  .mr-slider::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: #d5e6f2;
+  }
+
+  /* ── Agentic status animations ── */
+
+  @keyframes mr-pulse-glow {
+
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(10, 103, 143, 0);
+    }
+
+    50% {
+      box-shadow: 0 0 12px 3px rgba(10, 103, 143, 0.18);
+    }
+  }
+
+  @keyframes mr-scan {
+    0% {
+      transform: translateY(-100%);
+    }
+
+    100% {
+      transform: translateY(100%);
+    }
+  }
+
+  @keyframes mr-status-pulse {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  .mr-agentic-border {
+    animation: mr-pulse-glow 2.4s ease-in-out infinite;
+  }
+
+  .mr-scan-overlay {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mr-scan-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+        transparent,
+        rgba(10, 103, 143, 0.08),
+        transparent);
+    transform: translateY(-100%);
+    animation: mr-scan 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    pointer-events: none;
+  }
+
+  .mr-status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--mr-action);
+    animation: mr-status-pulse 1.6s ease-in-out infinite;
+  }
+
+  .mr-status-dot--idle {
+    background: var(--mr-border);
+    animation: none;
+  }
+
+  .mr-status-dot--ready {
+    background: var(--mr-success);
+    animation: none;
+  }
+
+  .mr-dropzone {
+    border: 2px dashed var(--mr-border);
+    border-radius: 16px;
+    background: var(--mr-bg-subtle);
+    transition: border-color 160ms ease, background-color 160ms ease;
+    cursor: pointer;
+  }
+
+  .mr-dropzone--active {
+    border-color: var(--mr-action);
+    background: rgba(10, 103, 143, 0.04);
+  }
+}
+
+@media (max-width: 1024px) {
+  .mr-container {
+    width: calc(100% - 1.25rem);
+  }
+}

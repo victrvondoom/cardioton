@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "source_url": "https://archive.ics.uci.edu/static/public/411/extention+of+z+alizadeh+sani+dataset.zip",
+  "zip_sha256": "e97af1a18733d64fa88caa0628e5fe7ce6b2e26ec4c7ee03baade92a6f1470e8",
+  "workbook": "extention of Z-Alizadeh sani dataset.xlsx",
+  "expected_rows": 303,
+  "features": [
+    "Age", "Weight", "Length", "Sex", "BMI", "DM", "HTN", "Current Smoker", "EX-Smoker",
+    "FH", "Obesity", "CRF", "CVA", "Airway disease", "Thyroid Disease", "CHF", "DLP", "BP",
+    "PR", "Edema", "Weak Peripheral Pulse", "Lung rales", "Systolic Murmur", "Diastolic Murmur",
+    "Typical Chest Pain", "Dyspnea", "Function Class", "Atypical", "Nonanginal", "Exertional CP",
+    "LowTH Ang", "Q Wave", "St Elevation", "St Depression", "Tinversion", "LVH",
+    "Poor R Progression", "BBB", "FBS", "CR", "TG", "LDL", "HDL", "BUN", "ESR", "HB",
+    "K", "Na", "WBC", "Lymph", "Neut", "PLT", "EF-TTE", "Region RWMA", "VHD"
+  ],
+  "forbidden_feature_aliases": ["Cath", "CAD", "overall CAD", "overall CAD status", "LAD", "LCX", "RCA"],
+  "targets": {
+    "CAD": {"column": "Cath", "positive_class": "CAD", "negative_class": "Normal"},
+    "LAD": {"column": "LAD", "positive_class": "Stenotic", "negative_class": "Normal"},
+    "LCX": {"column": "LCX", "positive_class": "Stenotic", "negative_class": "Normal"},
+    "RCA": {"column": "RCA", "positive_class": "Stenotic", "negative_class": "Normal"}
+  },
+  "patient_id_column": null,
+  "license": "CC BY 4.0",
+  "doi": "10.24432/C5461K"
+}

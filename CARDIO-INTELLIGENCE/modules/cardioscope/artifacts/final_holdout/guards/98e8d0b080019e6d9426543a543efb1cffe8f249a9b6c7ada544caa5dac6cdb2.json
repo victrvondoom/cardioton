@@ -1,0 +1,9 @@
+{
+  "development_run_sha256": "bb08b3d0230a6cd00b40ee13f84977a70bbdf0e0ca5e78b5ac9c0ab7be11722c",
+  "evaluation_configuration_sha256": "4979dd5905ed7dff1a87967d4146c342744dcb19877f702a11dbb317cafd90fd",
+  "evaluation_id": "final-v1-f1fd0d4cdc334c65aba46c37fa68717b",
+  "output_directory": "artifacts/final_holdout/final-v1-f1fd0d4cdc334c65aba46c37fa68717b",
+  "split_sha256": "98e8d0b080019e6d9426543a543efb1cffe8f249a9b6c7ada544caa5dac6cdb2",
+  "status": "reserved",
+  "utc": "2026-10-01T13:39:28.373631+00:00"
+}

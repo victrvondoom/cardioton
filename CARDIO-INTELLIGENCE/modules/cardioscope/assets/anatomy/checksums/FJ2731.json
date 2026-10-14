@@ -1,0 +1,17 @@
+{
+  "bounds_max": [
+    5.9949,
+    -114.357,
+    1203.83
+  ],
+  "bounds_min": [
+    -20.3165,
+    -148.928,
+    1186.6
+  ],
+  "bytes": 52848,
+  "faces": 892,
+  "path": "meshes/FJ2731.obj",
+  "sha256": "ac26ffa55a72b44913d761c6b922f6c000f9a229f29740ab765e5ef5fe43f9c5",
+  "vertices": 454
+}

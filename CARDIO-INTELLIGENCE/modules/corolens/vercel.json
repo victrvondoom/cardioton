@@ -1,0 +1,5 @@
+{
+  "outputDirectory": "web",
+  "buildCommand": "",
+  "functions": { "api/intake.js": { "maxDuration": 30 } }
+}

@@ -1,0 +1,37 @@
+.venv/bin/python scripts/check_runtime.py
+Python 3.12.14: 53 pinned package versions verified.
+.venv/bin/python -m ruff check backend ml tests scripts
+All checks passed!
+.venv/bin/python -m ruff format --check backend ml tests scripts
+37 files already formatted
+cd frontend && npm run typecheck
+
+> cardioscope-frontend@0.1.0 typecheck
+> tsc --noEmit
+
+.venv/bin/python scripts/verify_immutable.py
+{
+  "protected_files": 256,
+  "byte_identical": true,
+  "manifest_sha256": "7f03a46a9edcb1e695fd68b4ae3ea485654645c1ab23e02dce00eb3321f77dd6"
+}
+.venv/bin/python -m ml.data verify
+{
+  "verified": true,
+  "scope": "immutable source bytes and development-only contract/folds",
+  "development_rows": 242,
+  "holdout_targets_decoded": false,
+  "folds_regenerated": false
+}
+.venv/bin/python -m ml.anatomy verify
+{
+  "prepared": true,
+  "unique_meshes": 83,
+  "group_leaf_counts": {
+    "heart": 30,
+    "LAD": 18,
+    "LCX": 6,
+    "RCA": 29
+  },
+  "manifest": "<ARCHIVAL_ROOT>/assets/anatomy/manifest.json"
+}

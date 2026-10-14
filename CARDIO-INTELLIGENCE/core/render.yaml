@@ -1,0 +1,24 @@
+# Render Blueprint: connect the GitHub repo once; every push to main redeploys.
+services:
+  - type: web
+    name: clincase
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    branch: main
+    autoDeploy: true
+    healthCheckPath: /api/v1/healthz
+    envVars:
+      - key: DEMO_PASSWORDLESS_LOGIN   # one-click Admin/Reviewer/Coordinator sign-in (dev environment only)
+        value: "true"
+      - key: AUTH_DBLESS_DEMO_ENABLED  # lets the demo identities work before a database is attached
+        value: "true"
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false

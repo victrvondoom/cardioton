@@ -1,0 +1,185 @@
+/*
+ * ProbabilityReadout presentation. Consumes design/tokens.css only — no colour
+ * literals live here. Decision and reliability are NEVER styled by colour:
+ * this file must not reference data-decision or data-reliability (glyph + text
+ * carry state; colour carries probability only — enforced by
+ * web/src/components/ProbabilityReadout.test.ts).
+ *
+ * DARK THEME: the card is --ct-color-surface-raised chrome framed by a
+ * hairline --ct-color-border on its --ct-color-surface container, with padding
+ * and row rhythm compacted one step down the spacing scale. Ink is
+ * --ct-color-text for the value, decision and reliability text;
+ * --ct-color-text-muted for the target label, thresholds and caveats.
+ * Tabular numerals stay on for every figure.
+ *
+ * PROBABILITY COLOUR LAW (Contracts §8.1 / AGENTS §7): this stylesheet owns
+ * NO data colour. The numeric value, its swatch and the bar fill are coloured
+ * by design/ramp.ts and injected by the component; chrome here is grey and
+ * ink only, and no colour token in this file may encode a probability, a
+ * decision or a reliability tier.
+ *
+ * ENTRANCE: one-shot ct-enter-up wraps the CARD shell (keyframes live in
+ * tokens.css; the shared duration token collapses to 0 ms under
+ * prefers-reduced-motion, so the card is still at rest). The animation never
+ * touches .ct-prob-readout__value itself — the tweening numeral is animated by
+ * the store's display channel (P-4) and must carry no transform of its own.
+ */
+
+.ct-prob-readout {
+  box-sizing: border-box;
+  min-width: 0;
+  background: var(--ct-color-surface-raised);
+  border: var(--ct-border-width) solid var(--ct-color-border);
+  border-radius: var(--ct-radius-md);
+  color: var(--ct-color-text);
+  font-family: var(--ct-font-sans);
+  font-variant-numeric: var(--ct-font-variant-numeric);
+  transition:
+    background-color var(--ct-transition-standard),
+    border-color var(--ct-transition-standard);
+  animation: ct-enter-up var(--ct-duration-enter) var(--ct-ease-out) both;
+}
+
+.ct-prob-readout *,
+.ct-prob-readout *::before,
+.ct-prob-readout *::after {
+  box-sizing: inherit;
+}
+
+.ct-prob-readout__live {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ct-space-2);
+}
+
+.ct-prob-readout__target {
+  font-size: var(--ct-text-xs);
+  line-height: var(--ct-leading-tight);
+  letter-spacing: var(--ct-letter-spacing-caps);
+  text-transform: uppercase;
+  color: var(--ct-color-text-muted);
+}
+
+.ct-prob-readout__value-row {
+  display: flex;
+  align-items: center;
+  gap: var(--ct-space-2);
+}
+
+.ct-prob-readout__value {
+  font-family: var(--ct-font-serif);
+  font-weight: 600;
+  font-size: var(--ct-text-lg);
+  line-height: var(--ct-leading-tight);
+  font-variant-numeric: var(--ct-font-variant-numeric);
+}
+
+.ct-prob-readout__swatch {
+  flex: 0 0 auto;
+  width: 0.9em;
+  height: 0.9em;
+  border-radius: var(--ct-radius-sm);
+  border: var(--ct-border-width) solid var(--ct-color-border-strong);
+}
+
+.ct-prob-readout__threshold {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ct-space-1);
+  font-size: var(--ct-text-sm);
+  line-height: var(--ct-leading-tight);
+  color: var(--ct-color-text-muted);
+}
+
+.ct-prob-readout__relation {
+  color: var(--ct-color-text);
+}
+
+.ct-prob-readout__bar {
+  position: relative;
+  height: 6px;
+  border-radius: var(--ct-radius-sm);
+  background: var(--ct-color-border);
+  overflow: visible;
+}
+
+.ct-prob-readout__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: var(--ct-radius-sm);
+  transition: width var(--ct-transition-data);
+}
+
+.ct-prob-readout__tick {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--ct-color-text);
+}
+
+.ct-prob-readout__decision,
+.ct-prob-readout__reliability {
+  display: flex;
+  align-items: center;
+  gap: var(--ct-space-2);
+  font-size: var(--ct-text-sm);
+  line-height: var(--ct-leading-tight);
+  color: var(--ct-color-text);
+}
+
+.ct-prob-readout__glyph {
+  flex: 0 0 auto;
+  /* Shared column so the Decision and Reliability rows' text align; sized to
+     the widest glyph (●●●) rather than a generous round number (D-28). */
+  min-width: 2.6em;
+  letter-spacing: var(--ct-letter-spacing-caps);
+  font-size: var(--ct-text-sm);
+}
+
+.ct-prob-readout__source {
+  font-size: var(--ct-text-xs);
+  line-height: var(--ct-leading-tight);
+  color: var(--ct-color-text-muted);
+}
+
+/* --- size variants (padding compacted one step, 2026-10-10) --- */
+
+.ct-prob-readout--compact {
+  padding: var(--ct-space-2);
+}
+
+.ct-prob-readout--compact .ct-prob-readout__value {
+  font-size: var(--ct-text-md);
+}
+
+.ct-prob-readout--compact .ct-prob-readout__bar {
+  height: 4px;
+}
+
+.ct-prob-readout--large {
+  padding: var(--ct-space-3);
+}
+
+.ct-prob-readout--large .ct-prob-readout__value {
+  font-size: var(--ct-text-2xl);
+}
+
+.ct-prob-readout--large .ct-prob-readout__decision,
+.ct-prob-readout--large .ct-prob-readout__reliability {
+  font-size: var(--ct-text-md);
+}
+
+/*
+ * Reduced motion: the entrance is chrome only, so it is dropped entirely
+ * (tokens.css also collapses --ct-duration-enter to 0 ms). The data
+ * transitions ride the shared motion tokens and collapse with them — truth
+ * and meaning are unchanged.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .ct-prob-readout {
+    animation: none;
+  }
+}

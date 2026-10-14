@@ -23,14 +23,14 @@ jobs:
     - name: Run healthz_burst
       uses: grafana/k6-action@v0.3.1
       with:
-        filename: ops/loadtest/scenarios/healthz_burst.js
+        filename: CARDIO-INTELLIGENCE/core/ops/loadtest/scenarios/healthz_burst.js
       env:
         API_BASE: ${{ secrets.STAGING_API_URL }}
 
     - name: Run architecture_layers
       uses: grafana/k6-action@v0.3.1
       with:
-        filename: ops/loadtest/scenarios/architecture_layers.js
+        filename: CARDIO-INTELLIGENCE/core/ops/loadtest/scenarios/architecture_layers.js
       env:
         API_BASE: ${{ secrets.STAGING_API_URL }}
         USER:     ${{ secrets.LOADTEST_USER }}
@@ -39,7 +39,7 @@ jobs:
     - name: Run case_create_steady
       uses: grafana/k6-action@v0.3.1
       with:
-        filename: ops/loadtest/scenarios/case_create_steady.js
+        filename: CARDIO-INTELLIGENCE/core/ops/loadtest/scenarios/case_create_steady.js
       env:
         API_BASE: ${{ secrets.STAGING_API_URL }}
         USER:     ${{ secrets.LOADTEST_USER }}

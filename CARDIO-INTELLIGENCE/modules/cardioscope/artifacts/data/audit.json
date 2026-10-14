@@ -1,0 +1,662 @@
+{
+  "cad_vessel_union_inconsistent_row_ids": [
+    "d26723acc4dbfbbd31c4bc0b4161d59999cc8dc31ad86cc9f4dd021d5c939128"
+  ],
+  "column_audit": {
+    "Age": {
+      "distinct": 46,
+      "missing": 0,
+      "observed_max": 86,
+      "observed_min": 30,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "Airway disease": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "Atypical": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "BBB": {
+      "distinct": 3,
+      "missing": 0,
+      "observed_values": [
+        "LBBB",
+        "N",
+        "RBBB"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "BMI": {
+      "distinct": 263,
+      "missing": 0,
+      "observed_max": 40.90065778377467,
+      "observed_min": 18.115412710007302,
+      "storage_dtype": "float64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "BP": {
+      "distinct": 17,
+      "missing": 0,
+      "observed_max": 190,
+      "observed_min": 90,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "BUN": {
+      "distinct": 33,
+      "missing": 0,
+      "observed_max": 52,
+      "observed_min": 6,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "CHF": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "CR": {
+      "distinct": 18,
+      "missing": 0,
+      "observed_max": 2.2,
+      "observed_min": 0.5,
+      "storage_dtype": "float64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "CRF": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "CVA": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "Cath": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "CAD",
+        "Normal"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "Current Smoker": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_max": 1,
+      "observed_min": 0,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "DLP": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "DM": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_max": 1,
+      "observed_min": 0,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "Diastolic Murmur": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "Dyspnea": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "EF-TTE": {
+      "distinct": 11,
+      "missing": 0,
+      "observed_max": 60,
+      "observed_min": 15,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "ESR": {
+      "distinct": 58,
+      "missing": 0,
+      "observed_max": 90,
+      "observed_min": 1,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "EX-Smoker": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_max": 1,
+      "observed_min": 0,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "Edema": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_max": 1,
+      "observed_min": 0,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "Exertional CP": {
+      "distinct": 1,
+      "missing": 0,
+      "observed_values": [
+        "N"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "FBS": {
+      "distinct": 113,
+      "missing": 0,
+      "observed_max": 400,
+      "observed_min": 62,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "FH": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_max": 1,
+      "observed_min": 0,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "Function Class": {
+      "distinct": 4,
+      "missing": 0,
+      "observed_max": 3,
+      "observed_min": 0,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "HB": {
+      "distinct": 66,
+      "missing": 0,
+      "observed_max": 17.6,
+      "observed_min": 8.9,
+      "storage_dtype": "float64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "HDL": {
+      "distinct": 47,
+      "missing": 0,
+      "observed_max": 111.0,
+      "observed_min": 15.9,
+      "storage_dtype": "float64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "HTN": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_max": 1,
+      "observed_min": 0,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "K": {
+      "distinct": 27,
+      "missing": 0,
+      "observed_max": 6.6,
+      "observed_min": 3.0,
+      "storage_dtype": "float64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "LAD": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "Normal",
+        "Stenotic"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "LCX": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "Normal",
+        "Stenotic"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "LDL": {
+      "distinct": 110,
+      "missing": 0,
+      "observed_max": 232,
+      "observed_min": 18,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "LVH": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "Length": {
+      "distinct": 44,
+      "missing": 0,
+      "observed_max": 188,
+      "observed_min": 140,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "LowTH Ang": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "Lung rales": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "Lymph": {
+      "distinct": 50,
+      "missing": 0,
+      "observed_max": 60,
+      "observed_min": 7,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "Na": {
+      "distinct": 25,
+      "missing": 0,
+      "observed_max": 156,
+      "observed_min": 128,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "Neut": {
+      "distinct": 52,
+      "missing": 0,
+      "observed_max": 89,
+      "observed_min": 32,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "Nonanginal": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "Obesity": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "PLT": {
+      "distinct": 135,
+      "missing": 0,
+      "observed_max": 742,
+      "observed_min": 25,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "PR": {
+      "distinct": 21,
+      "missing": 0,
+      "observed_max": 110,
+      "observed_min": 50,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "Poor R Progression": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "Q Wave": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_max": 1,
+      "observed_min": 0,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "RCA": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "Normal",
+        "Stenotic"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "Region RWMA": {
+      "distinct": 5,
+      "missing": 0,
+      "observed_max": 4,
+      "observed_min": 0,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "Sex": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "Fmale",
+        "Male"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "St Depression": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_max": 1,
+      "observed_min": 0,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "St Elevation": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_max": 1,
+      "observed_min": 0,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "Systolic Murmur": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "TG": {
+      "distinct": 147,
+      "missing": 0,
+      "observed_max": 1050,
+      "observed_min": 37,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "Thyroid Disease": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "Tinversion": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_max": 1,
+      "observed_min": 0,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "Typical Chest Pain": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_max": 1,
+      "observed_min": 0,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "VHD": {
+      "distinct": 4,
+      "missing": 0,
+      "observed_values": [
+        "Moderate",
+        "N",
+        "Severe",
+        "mild"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "WBC": {
+      "distinct": 78,
+      "missing": 0,
+      "observed_max": 18000,
+      "observed_min": 3700,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    },
+    "Weak Peripheral Pulse": {
+      "distinct": 2,
+      "missing": 0,
+      "observed_values": [
+        "N",
+        "Y"
+      ],
+      "storage_dtype": "object",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook",
+      "whitespace_values": []
+    },
+    "Weight": {
+      "distinct": 54,
+      "missing": 0,
+      "observed_max": 120,
+      "observed_min": 48,
+      "storage_dtype": "int64",
+      "unit": null,
+      "unit_status": "not established by the inspected workbook"
+    }
+  },
+  "columns": 59,
+  "constant_columns": [
+    "Exertional CP"
+  ],
+  "duplicate_predictor_groups": 0,
+  "exact_duplicate_rows": 0,
+  "missing_cells": 0,
+  "notes": [
+    "Descriptive full-source integrity audit, not fitted preprocessing or model evaluation.",
+    "Observed ranges are not clinical reference ranges or input rejection thresholds.",
+    "Possible numeric sentinel codes are unverified; zero is not silently treated as missing.",
+    "No authoritative patient identifiers: identical predictor rows are conservatively grouped.",
+    "Source spellings, casing, and constant columns are retained without clinical reinterpretation."
+  ],
+  "predictors": 55,
+  "rows": 303,
+  "schema_version": 1,
+  "targets": {
+    "CAD": {
+      "counts": {
+        "CAD": 216,
+        "Normal": 87
+      },
+      "source_column": "Cath"
+    },
+    "LAD": {
+      "counts": {
+        "Normal": 126,
+        "Stenotic": 177
+      },
+      "source_column": "LAD"
+    },
+    "LCX": {
+      "counts": {
+        "Normal": 184,
+        "Stenotic": 119
+      },
+      "source_column": "LCX"
+    },
+    "RCA": {
+      "counts": {
+        "Normal": 189,
+        "Stenotic": 114
+      },
+      "source_column": "RCA"
+    }
+  }
+}

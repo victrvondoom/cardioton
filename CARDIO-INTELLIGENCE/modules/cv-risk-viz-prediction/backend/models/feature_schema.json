@@ -1,0 +1,222 @@
+[
+  {
+    "feature": "Age",
+    "type": "numeric"
+  },
+  {
+    "feature": "Weight",
+    "type": "numeric"
+  },
+  {
+    "feature": "Length",
+    "type": "numeric"
+  },
+  {
+    "feature": "Sex",
+    "type": "categorical"
+  },
+  {
+    "feature": "BMI",
+    "type": "numeric"
+  },
+  {
+    "feature": "DM",
+    "type": "numeric"
+  },
+  {
+    "feature": "HTN",
+    "type": "numeric"
+  },
+  {
+    "feature": "Current Smoker",
+    "type": "numeric"
+  },
+  {
+    "feature": "EX-Smoker",
+    "type": "numeric"
+  },
+  {
+    "feature": "FH",
+    "type": "numeric"
+  },
+  {
+    "feature": "Obesity",
+    "type": "categorical"
+  },
+  {
+    "feature": "CRF",
+    "type": "categorical"
+  },
+  {
+    "feature": "CVA",
+    "type": "categorical"
+  },
+  {
+    "feature": "Airway disease",
+    "type": "categorical"
+  },
+  {
+    "feature": "Thyroid Disease",
+    "type": "categorical"
+  },
+  {
+    "feature": "CHF",
+    "type": "categorical"
+  },
+  {
+    "feature": "DLP",
+    "type": "categorical"
+  },
+  {
+    "feature": "BP",
+    "type": "numeric"
+  },
+  {
+    "feature": "PR",
+    "type": "numeric"
+  },
+  {
+    "feature": "Edema",
+    "type": "numeric"
+  },
+  {
+    "feature": "Weak Peripheral Pulse",
+    "type": "categorical"
+  },
+  {
+    "feature": "Lung rales",
+    "type": "categorical"
+  },
+  {
+    "feature": "Systolic Murmur",
+    "type": "categorical"
+  },
+  {
+    "feature": "Diastolic Murmur",
+    "type": "categorical"
+  },
+  {
+    "feature": "Typical Chest Pain",
+    "type": "numeric"
+  },
+  {
+    "feature": "Dyspnea",
+    "type": "categorical"
+  },
+  {
+    "feature": "Function Class",
+    "type": "numeric"
+  },
+  {
+    "feature": "Atypical",
+    "type": "categorical"
+  },
+  {
+    "feature": "Nonanginal",
+    "type": "categorical"
+  },
+  {
+    "feature": "Exertional CP",
+    "type": "categorical"
+  },
+  {
+    "feature": "LowTH Ang",
+    "type": "categorical"
+  },
+  {
+    "feature": "Q Wave",
+    "type": "numeric"
+  },
+  {
+    "feature": "St Elevation",
+    "type": "numeric"
+  },
+  {
+    "feature": "St Depression",
+    "type": "numeric"
+  },
+  {
+    "feature": "Tinversion",
+    "type": "numeric"
+  },
+  {
+    "feature": "LVH",
+    "type": "categorical"
+  },
+  {
+    "feature": "Poor R Progression",
+    "type": "categorical"
+  },
+  {
+    "feature": "BBB",
+    "type": "categorical"
+  },
+  {
+    "feature": "FBS",
+    "type": "numeric"
+  },
+  {
+    "feature": "CR",
+    "type": "numeric"
+  },
+  {
+    "feature": "TG",
+    "type": "numeric"
+  },
+  {
+    "feature": "LDL",
+    "type": "numeric"
+  },
+  {
+    "feature": "HDL",
+    "type": "numeric"
+  },
+  {
+    "feature": "BUN",
+    "type": "numeric"
+  },
+  {
+    "feature": "ESR",
+    "type": "numeric"
+  },
+  {
+    "feature": "HB",
+    "type": "numeric"
+  },
+  {
+    "feature": "K",
+    "type": "numeric"
+  },
+  {
+    "feature": "Na",
+    "type": "numeric"
+  },
+  {
+    "feature": "WBC",
+    "type": "numeric"
+  },
+  {
+    "feature": "Lymph",
+    "type": "numeric"
+  },
+  {
+    "feature": "Neut",
+    "type": "numeric"
+  },
+  {
+    "feature": "PLT",
+    "type": "numeric"
+  },
+  {
+    "feature": "EF-TTE",
+    "type": "numeric"
+  },
+  {
+    "feature": "Region RWMA",
+    "type": "numeric"
+  },
+  {
+    "feature": "VHD",
+    "type": "categorical"
+  }
+]

@@ -1,0 +1,474 @@
+{
+ "generated": "2026-10-08 09:39:14 IST",
+ "environment": {
+  "python": "3.13.5",
+  "scikit_learn": "1.9.1",
+  "numpy": "2.5.3",
+  "pandas": "3.0.6"
+ },
+ "split": {
+  "development": 242,
+  "test": 61,
+  "seed": 2026,
+  "test_prevalence_cad": 0.7049180327868853
+ },
+ "excluded_from_inputs": [
+  "LAD",
+  "LCX",
+  "RCA",
+  "Cath",
+  "Exertional CP (constant)"
+ ],
+ "nested_cv_dev": {
+  "CAD": {
+   "roc_auc_mean": 0.9273677163172961,
+   "roc_auc_sd": 0.04138144671016799,
+   "f1_mean": 0.9149814753224341,
+   "f1_sd": 0.03254630449260417,
+   "conformal_coverage_mean": 0.894515306122449,
+   "model_picked": {
+    "logreg_l1": 6,
+    "random_forest": 4
+   },
+   "folds": 10
+  },
+  "LAD": {
+   "roc_auc_mean": 0.8106435384271578,
+   "roc_auc_sd": 0.07427091372911353,
+   "f1_mean": 0.793116104621136,
+   "f1_sd": 0.07127304477684088,
+   "conformal_coverage_mean": 0.9030187074829932,
+   "model_picked": {
+    "logreg_l1": 4,
+    "random_forest": 6
+   },
+   "folds": 10
+  },
+  "LCX": {
+   "roc_auc_mean": 0.6894962053564784,
+   "roc_auc_sd": 0.08773602994450326,
+   "f1_mean": 0.44833385342658927,
+   "f1_sd": 0.12040220389321335,
+   "conformal_coverage_mean": 0.8968537414965987,
+   "model_picked": {
+    "logreg_l1": 2,
+    "random_forest": 8
+   },
+   "folds": 10
+  },
+  "RCA": {
+   "roc_auc_mean": 0.7407373391254257,
+   "roc_auc_sd": 0.041290771191878184,
+   "f1_mean": 0.43099194382842876,
+   "f1_sd": 0.09399740988467595,
+   "conformal_coverage_mean": 0.923469387755102,
+   "model_picked": {
+    "logreg_l1": 7,
+    "random_forest": 3
+   },
+   "folds": 10
+  }
+ },
+ "heldout_test": {
+  "CAD": {
+   "model": "logreg_l1",
+   "cv_auc_dev": {
+    "logreg_l1": 0.9249983070151138,
+    "random_forest": 0.9241348847231199
+   },
+   "metrics": {
+    "roc_auc": 0.9056847545219638,
+    "accuracy": 0.8524590163934426,
+    "precision": 0.8863636363636364,
+    "recall": 0.9069767441860465,
+    "f1": 0.896551724137931,
+    "brier": 0.10842411603105677
+   },
+   "ci95": {
+    "roc_auc": [
+     0.8121581010452962,
+     0.9756116094595596
+    ],
+    "accuracy": [
+     0.7540983606557377,
+     0.9344262295081968
+    ],
+    "precision": [
+     0.7842710997442455,
+     0.975015243902439
+    ],
+    "recall": [
+     0.8084198235599377,
+     0.9782608695652174
+    ],
+    "f1": [
+     0.8157651072124756,
+     0.9583333333333334
+    ],
+    "brier": [
+     0.05944974637409882,
+     0.1695477047057638
+    ]
+   },
+   "conformal": {
+    "q": 0.6383593293045241,
+    "coverage": 0.9016393442622951,
+    "singleton_rate": 0.8688524590163934,
+    "both_rate": 0.13114754098360656,
+    "empty_rate": 0.0
+   },
+   "prevalence_test": 0.7049180327868853
+  },
+  "LAD": {
+   "model": "random_forest",
+   "cv_auc_dev": {
+    "logreg_l1": 0.8075056689342405,
+    "random_forest": 0.8272724607084213
+   },
+   "metrics": {
+    "roc_auc": 0.91,
+    "accuracy": 0.8524590163934426,
+    "precision": 0.8461538461538461,
+    "recall": 0.9166666666666666,
+    "f1": 0.88,
+    "brier": 0.1194461690080098
+   },
+   "ci95": {
+    "roc_auc": [
+     0.8267179162445119,
+     0.9759779884493843
+    ],
+    "accuracy": [
+     0.7540983606557377,
+     0.9344262295081968
+    ],
+    "precision": [
+     0.7209302325581395,
+     0.95
+    ],
+    "recall": [
+     0.8181818181818182,
+     1.0
+    ],
+    "f1": [
+     0.7887110542040119,
+     0.9523809523809523
+    ],
+    "brier": [
+     0.07961836109720155,
+     0.16458901171331655
+    ]
+   },
+   "conformal": {
+    "q": 0.7400099532179938,
+    "coverage": 0.9508196721311475,
+    "singleton_rate": 0.6229508196721312,
+    "both_rate": 0.3770491803278688,
+    "empty_rate": 0.0
+   },
+   "prevalence_test": 0.5901639344262295
+  },
+  "LCX": {
+   "model": "random_forest",
+   "cv_auc_dev": {
+    "logreg_l1": 0.6580506822612086,
+    "random_forest": 0.727283950617284
+   },
+   "metrics": {
+    "roc_auc": 0.7298474945533769,
+    "accuracy": 0.639344262295082,
+    "precision": 0.6470588235294118,
+    "recall": 0.4074074074074074,
+    "f1": 0.5,
+    "brier": 0.20913147565824577
+   },
+   "ci95": {
+    "roc_auc": [
+     0.5975431223906833,
+     0.8548688408365828
+    ],
+    "accuracy": [
+     0.5245901639344263,
+     0.7540983606557377
+    ],
+    "precision": [
+     0.4,
+     0.8667391304347826
+    ],
+    "recall": [
+     0.22714646464646465,
+     0.5883021390374331
+    ],
+    "f1": [
+     0.3029545454545455,
+     0.6560109289617483
+    ],
+    "brier": [
+     0.1715065756839781,
+     0.2503370190835484
+    ]
+   },
+   "conformal": {
+    "q": 0.6876982748046975,
+    "coverage": 0.9344262295081968,
+    "singleton_rate": 0.4426229508196721,
+    "both_rate": 0.5573770491803278,
+    "empty_rate": 0.0
+   },
+   "prevalence_test": 0.4426229508196721
+  },
+  "RCA": {
+   "model": "logreg_l1",
+   "cv_auc_dev": {
+    "logreg_l1": 0.7339428865931078,
+    "random_forest": 0.7315508234357063
+   },
+   "metrics": {
+    "roc_auc": 0.6988888888888889,
+    "accuracy": 0.6229508196721312,
+    "precision": 0.5625,
+    "recall": 0.36,
+    "f1": 0.43902439024390244,
+    "brier": 0.22634537374389202
+   },
+   "ci95": {
+    "roc_auc": [
+     0.5633333333333334,
+     0.8177852784134249
+    ],
+    "accuracy": [
+     0.5081967213114754,
+     0.7377049180327869
+    ],
+    "precision": [
+     0.3333333333333333,
+     0.8
+    ],
+    "recall": [
+     0.17391304347826086,
+     0.5555555555555556
+    ],
+    "f1": [
+     0.23529411764705882,
+     0.6086956521739131
+    ],
+    "brier": [
+     0.17950630133185294,
+     0.28171230766296257
+    ]
+   },
+   "conformal": {
+    "q": 0.693583561365666,
+    "coverage": 0.8524590163934426,
+    "singleton_rate": 0.5081967213114754,
+    "both_rate": 0.4918032786885246,
+    "empty_rate": 0.0
+   },
+   "prevalence_test": 0.4098360655737705
+  }
+ },
+ "consistency_cad_vs_any_vessel_test": 0.9016393442622951,
+ "global_importance_dev": {
+  "CAD": [
+   {
+    "feature": "Typical Chest Pain",
+    "mean_abs_shap": 1.1576109907565906
+   },
+   {
+    "feature": "Age",
+    "mean_abs_shap": 0.729295313120754
+   },
+   {
+    "feature": "Region RWMA",
+    "mean_abs_shap": 0.5451072417705037
+   },
+   {
+    "feature": "DM",
+    "mean_abs_shap": 0.46311252827320604
+   },
+   {
+    "feature": "Tinversion",
+    "mean_abs_shap": 0.41295472053653126
+   },
+   {
+    "feature": "FH",
+    "mean_abs_shap": 0.3394278325046116
+   },
+   {
+    "feature": "HTN",
+    "mean_abs_shap": 0.2780044000639485
+   },
+   {
+    "feature": "PR",
+    "mean_abs_shap": 0.1937293912434361
+   },
+   {
+    "feature": "Sex_male",
+    "mean_abs_shap": 0.19233512465574418
+   },
+   {
+    "feature": "Dyspnea",
+    "mean_abs_shap": 0.14971031231654133
+   },
+   {
+    "feature": "DLP",
+    "mean_abs_shap": 0.1377449229380463
+   },
+   {
+    "feature": "FBS",
+    "mean_abs_shap": 0.1354362133263176
+   }
+  ],
+  "LAD": [
+   {
+    "feature": "Typical Chest Pain",
+    "mean_abs_shap": 0.06910793947413213
+   },
+   {
+    "feature": "Region RWMA",
+    "mean_abs_shap": 0.04564204503132227
+   },
+   {
+    "feature": "Age",
+    "mean_abs_shap": 0.04231359949749308
+   },
+   {
+    "feature": "EF-TTE",
+    "mean_abs_shap": 0.04025621408360965
+   },
+   {
+    "feature": "Atypical",
+    "mean_abs_shap": 0.037017236068458796
+   },
+   {
+    "feature": "ESR",
+    "mean_abs_shap": 0.01946186193793331
+   },
+   {
+    "feature": "Tinversion",
+    "mean_abs_shap": 0.015568737177113344
+   },
+   {
+    "feature": "Lymph",
+    "mean_abs_shap": 0.011261824810902798
+   },
+   {
+    "feature": "Neut",
+    "mean_abs_shap": 0.010847489449412414
+   },
+   {
+    "feature": "TG",
+    "mean_abs_shap": 0.010451935267725882
+   },
+   {
+    "feature": "FBS",
+    "mean_abs_shap": 0.010257303098359904
+   },
+   {
+    "feature": "WBC",
+    "mean_abs_shap": 0.009907977105715442
+   }
+  ],
+  "LCX": [
+   {
+    "feature": "Age",
+    "mean_abs_shap": 0.04578808208052391
+   },
+   {
+    "feature": "Typical Chest Pain",
+    "mean_abs_shap": 0.03560545387858553
+   },
+   {
+    "feature": "PLT",
+    "mean_abs_shap": 0.034620634927863485
+   },
+   {
+    "feature": "CR",
+    "mean_abs_shap": 0.022578737429378676
+   },
+   {
+    "feature": "FBS",
+    "mean_abs_shap": 0.01874566673523005
+   },
+   {
+    "feature": "TG",
+    "mean_abs_shap": 0.017115705096690553
+   },
+   {
+    "feature": "BUN",
+    "mean_abs_shap": 0.016947828452214424
+   },
+   {
+    "feature": "LDL",
+    "mean_abs_shap": 0.016172024168804006
+   },
+   {
+    "feature": "HB",
+    "mean_abs_shap": 0.012055998387812182
+   },
+   {
+    "feature": "K",
+    "mean_abs_shap": 0.011662936257691351
+   },
+   {
+    "feature": "BP",
+    "mean_abs_shap": 0.011634419758696952
+   },
+   {
+    "feature": "WBC",
+    "mean_abs_shap": 0.011488612613882716
+   }
+  ],
+  "RCA": [
+   {
+    "feature": "Age",
+    "mean_abs_shap": 0.4437528945038423
+   },
+   {
+    "feature": "DM",
+    "mean_abs_shap": 0.39682613047711845
+   },
+   {
+    "feature": "Dyspnea",
+    "mean_abs_shap": 0.3442737605834033
+   },
+   {
+    "feature": "Function Class",
+    "mean_abs_shap": 0.304430556214573
+   },
+   {
+    "feature": "Typical Chest Pain",
+    "mean_abs_shap": 0.2817344790758082
+   },
+   {
+    "feature": "Sex_male",
+    "mean_abs_shap": 0.2296952791462605
+   },
+   {
+    "feature": "Atypical",
+    "mean_abs_shap": 0.22109865154505007
+   },
+   {
+    "feature": "Neut",
+    "mean_abs_shap": 0.21693684501063473
+   },
+   {
+    "feature": "ESR",
+    "mean_abs_shap": 0.19395567737163802
+   },
+   {
+    "feature": "Poor R Progression",
+    "mean_abs_shap": 0.19195752973203734
+   },
+   {
+    "feature": "Weight",
+    "mean_abs_shap": 0.19114459669622272
+   },
+   {
+    "feature": "Region RWMA",
+    "mean_abs_shap": 0.12235729806929571
+   }
+  ]
+ },
+ "runtime_seconds": 356.1
+}

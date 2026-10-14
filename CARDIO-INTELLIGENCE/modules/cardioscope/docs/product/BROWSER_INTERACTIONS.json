@@ -1,0 +1,20 @@
+{
+  "meshSelection": "RCA",
+  "beforeOrbit": "0.076,-3.178,-0.159",
+  "afterOrbit": "-2.455,-1.455,0.856",
+  "afterZoom": "-2.588,-1.524,0.909",
+  "savedViewer": {
+    "camera": "-2.588,-1.524,0.909",
+    "isolated": "true",
+    "profile": "328ca73cba6befc4de6e8726096ffe2be7f639ce645b6e6b658b1a964468def3",
+    "selected": "RCA",
+    "target": "RCA"
+  },
+  "restoredViewer": {
+    "camera": "-2.588,-1.524,0.909",
+    "isolated": "true",
+    "profile": "328ca73cba6befc4de6e8726096ffe2be7f639ce645b6e6b658b1a964468def3",
+    "selected": "RCA",
+    "target": "RCA"
+  }
+}

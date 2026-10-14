@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Patient - MedRelay</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-cover bg-center bg-no-repeat" style="background-image: url('/static/images/main_background.png');">
+    <div class="min-h-screen p-8">
+        <!-- Main Content Container -->
+        <div class="w-full max-w-6xl mx-auto bg-white rounded-xl shadow-2xl p-8 min-h-[80vh]">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">MedRelay</h1>
+                    <p class="text-gray-600">Add New Patient</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600">Dr. {{ user.username }}</span>
+                    <a href="{{ url_for('select_patient') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium">
+                        Back to Patients
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium">
+                        Logout
+                    </a>
+                </div>
+            </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-4 p-4 rounded-md {% if category == 'error' %}bg-red-50 text-red-700 border border-red-200{% elif category == 'success' %}bg-green-50 text-green-700 border border-green-200{% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Add Patient Form -->
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white bg-opacity-95 backdrop-blur-sm rounded-lg shadow-lg p-8">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">Patient Information</h2>
+                
+                <form method="POST" class="space-y-8">
+                    <!-- Basic Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                First Name <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="first_name"
+                                name="first_name"
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Enter first name"
+                            >
+                        </div>
+
+                        <div>
+                            <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                Last Name <span class="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="last_name"
+                                name="last_name"
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Enter last name"
+                            >
+                        </div>
+
+                        <div>
+                            <label for="date_of_birth" class="block text-sm font-medium text-gray-700 mb-2">
+                                Date of Birth
+                            </label>
+                            <input
+                                type="date"
+                                id="date_of_birth"
+                                name="date_of_birth"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                        </div>
+
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                                Phone Number
+                            </label>
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="(555) 123-4567"
+                            >
+                        </div>
+
+                        <div>
+                            <label for="ssn" class="block text-sm font-medium text-gray-700 mb-2">
+                                Social Security Number
+                            </label>
+                            <input
+                                type="text"
+                                id="ssn"
+                                name="ssn"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="XXX-XX-XXXX"
+                                pattern="[0-9]{3}-[0-9]{2}-[0-9]{4}"
+                            >
+                        </div>
+
+                        <div>
+                            <label for="medicare_id" class="block text-sm font-medium text-gray-700 mb-2">
+                                Medicare/Insurance ID
+                            </label>
+                            <input
+                                type="text"
+                                id="medicare_id"
+                                name="medicare_id"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Insurance ID number"
+                            >
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                                Email Address
+                            </label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="patient@example.com"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Insurance Information -->
+                    <div class="border-t pt-6">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4">Insurance Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label for="insurance_provider" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Insurance Provider
+                                </label>
+                                <input
+                                    type="text"
+                                    id="insurance_provider"
+                                    name="insurance_provider"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Blue Cross, Aetna, etc."
+                                >
+                            </div>
+
+                            <div>
+                                <label for="policy_number" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Policy Number
+                                </label>
+                                <input
+                                    type="text"
+                                    id="policy_number"
+                                    name="policy_number"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Policy number"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="group_number" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Group Number
+                                </label>
+                                <input
+                                    type="text"
+                                    id="group_number"
+                                    name="group_number"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Group number"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Address Information -->
+                    <div class="border-t pt-6">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4">Address</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="md:col-span-2">
+                                <label for="street" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Street Address
+                                </label>
+                                <input
+                                    type="text"
+                                    id="street"
+                                    name="street"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="123 Main Street"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="city" class="block text-sm font-medium text-gray-700 mb-2">
+                                    City
+                                </label>
+                                <input
+                                    type="text"
+                                    id="city"
+                                    name="city"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="City"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="state" class="block text-sm font-medium text-gray-700 mb-2">
+                                    State
+                                </label>
+                                <input
+                                    type="text"
+                                    id="state"
+                                    name="state"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="CA"
+                                    maxlength="2"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="zip_code" class="block text-sm font-medium text-gray-700 mb-2">
+                                    ZIP Code
+                                </label>
+                                <input
+                                    type="text"
+                                    id="zip_code"
+                                    name="zip_code"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="12345"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Emergency Contact -->
+                    <div class="border-t pt-6">
+                        <h3 class="text-lg font-medium text-gray-800 mb-4">Emergency Contact</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label for="emergency_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Contact Name
+                                </label>
+                                <input
+                                    type="text"
+                                    id="emergency_name"
+                                    name="emergency_name"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Emergency contact name"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="emergency_relationship" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Relationship
+                                </label>
+                                <input
+                                    type="text"
+                                    id="emergency_relationship"
+                                    name="emergency_relationship"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Spouse, Parent, etc."
+                                >
+                            </div>
+
+                            <div>
+                                <label for="emergency_phone" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Phone Number
+                                </label>
+                                <input
+                                    type="tel"
+                                    id="emergency_phone"
+                                    name="emergency_phone"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="(555) 123-4567"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form Actions -->
+                    <div class="border-t pt-6 flex space-x-4">
+                        <button
+                            type="submit"
+                            class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                        >
+                            Add Patient
+                        </button>
+                        
+                        <a href="{{ url_for('select_patient') }}" 
+                           class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-3 rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Info Box -->
+        <div class="max-w-4xl mx-auto mt-6">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <h3 class="text-sm font-medium text-blue-800 mb-1">Patient Information</h3>
+                <p class="text-sm text-blue-700">
+                    Only first and last name are required. All other information is optional and can be added or updated later.
+                    This information will be used to generate medical forms and billing documents.
+                </p>
+            </div>
+        </div>
+        </div>
+    </div>
+</body>
+</html>

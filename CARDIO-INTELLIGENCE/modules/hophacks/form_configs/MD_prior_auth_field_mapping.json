@@ -1,0 +1,54 @@
+{
+  "form_name": "Maryland Prior Authorization Form",
+  "pdf_template": "src/prior_auth_forms/maryland.pdf",
+  "description": "Maryland Medicaid Prior Authorization Request Form",
+  "field_mapping": {
+    "request_info": {
+      "date": "Date",
+      "age_override": "Age override",
+      "clinical_criteria": "Clinical criteria",
+      "nonpreferred_drug": "Nonpreferred drug",
+      "quantity_limit": "Quantity limit",
+      "other_reason": "Other",
+      "other_text": "Other-0"
+    },
+    "patient": {
+      "name": "Name",
+      "dob": "DOB",
+      "gender_radio": "RadioButton",
+      "medicaid_number": "Medicaid Assistance Number",
+      "height": "Height",
+      "weight": "Weight"
+    },
+    "provider": {
+      "name": "Name-0",
+      "npi": "NPI",
+      "contact_person": "Contact Person Name",
+      "phone": "Phone",
+      "fax": "Fax"
+    },
+    "prescription": {
+      "initial_request": "Initial PA Request",
+      "renewal_request": "Renewal PA Request",
+      "medication": "Medication",
+      "strength": "Strength",
+      "quantity": "Quantity",
+      "refills": "Refills",
+      "directions": "Directions for use",
+      "diagnosis": "Diagnosis",
+      "rationale": "Rationale of this request"
+    },
+    "attestation": {
+      "not_clinical_trial": "The requested medication is not part of a clinical",
+      "benefits_outweigh_risks": "The benefits of the treatment outweigh the risks a"
+    },
+    "signature": {
+      "prescriber_signature": "Prescribers Signature",
+      "signature_date": "Date-0"
+    }
+  },
+  "special_fields": {
+    "gender_male": "_M_On",
+    "gender_female": "_F_On"
+  }
+}

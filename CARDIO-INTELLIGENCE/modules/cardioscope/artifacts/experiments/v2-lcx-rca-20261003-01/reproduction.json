@@ -1,0 +1,9 @@
+{
+  "elapsed_seconds": 583.659222583985,
+  "fit_count": 7060,
+  "holdout_use": false,
+  "protected_files_byte_identical": true,
+  "protocol_sha256": "9c0358077d457273ae01c9d92fdbb05da109843bb1ce00fcde493479fb679116",
+  "repeated_complete_experiment": true,
+  "same_selections_thresholds_metrics_oof_and_final_predictions": true
+}

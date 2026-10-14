@@ -1,0 +1,234 @@
+{
+  "cold_definition": "first call per target in fresh process; CAD also includes SHAP import/reference load",
+  "configuration_fingerprint": "aca7177ff9aeb4a6a817e73247f42eaf8cf7cf14d853c895b3491efddcf7ca80",
+  "hardware": "macOS-27.2-arm64-arm-64bit",
+  "model_version": "d955d81c63c3d1402766c7891fa8015919b737f36a7efb7e0130686c98e4bdcd",
+  "profile_selection": "existing example plus every 48th sorted remaining development ID, first five",
+  "python": "3.12.14",
+  "record_ids": [
+    "0056fb5ae87a9ac1510fd77cb5cd6bd3b348a0d0de578cf1a86132f8d87733dc",
+    "015a5a5898b86febc8482c72755f2451283d1e199f140ae987f3daebf4a59c7f",
+    "2ab5f29120657d325dbc2511bfd39497ebe4bc3f8d751410943ac14400128949",
+    "64f1b538ac61bab35394e4ef1b055e7a26b0195112fe4e0fa5b8e347d1ef5841",
+    "9b04f9e3c1ed190aff1b056a3221e312b1d9fd6eb7e4f9bcb3c974c5d8f28a82",
+    "cf4092f51e58fe06177c61c45561343affbaa23a24ea6772ae94e523e13d6797"
+  ],
+  "record_ids_sha256": "201e4a6cc5fc94d45398b689734be362e51a19cf0f682eb3cd8de45a74992777",
+  "repetitions_per_profile": 5,
+  "scope": "development-only; backend wall time; no fitting or holdout inference",
+  "targets": {
+    "CAD": {
+      "cold_first_ms": 550.8773749970715,
+      "example": {
+        "baseline": 0.8347788465281016,
+        "explained_output": -1.578980251525497,
+        "output_space": "log_odds",
+        "probability": 0.1709399517600908,
+        "reconstruction_residual": -6.661338147750939e-16
+      },
+      "example_top_absolute_contributions": [
+        {
+          "contribution": -0.914323475487605,
+          "feature": "Typical Chest Pain",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "contribution": 0.7251151380523552,
+          "feature": "FH",
+          "unit": null,
+          "value": 1
+        },
+        {
+          "contribution": -0.5896775037811485,
+          "feature": "Age",
+          "unit": null,
+          "value": 50
+        },
+        {
+          "contribution": -0.39393837189049663,
+          "feature": "HTN",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "contribution": -0.30911844771458336,
+          "feature": "DM",
+          "unit": null,
+          "value": 0
+        }
+      ],
+      "maximum_absolute_reconstruction_residual": 6.661338147750939e-16,
+      "warm_cached": {
+        "median_ms": 0.4097084965906106,
+        "p95_ms": 0.43452499812701717,
+        "samples": 30
+      },
+      "warm_uncached": {
+        "median_ms": 15.279395498509984,
+        "p95_ms": 16.91629404922423,
+        "samples": 30
+      }
+    },
+    "LAD": {
+      "cold_first_ms": 18.399833999865223,
+      "example": {
+        "baseline": 0.13288440678221453,
+        "explained_output": -1.1360090958105795,
+        "output_space": "log_odds",
+        "probability": 0.24305384913623826,
+        "reconstruction_residual": 0.0
+      },
+      "example_top_absolute_contributions": [
+        {
+          "contribution": -0.6029926933945422,
+          "feature": "Typical Chest Pain",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "contribution": 0.592321597809541,
+          "feature": "FH",
+          "unit": null,
+          "value": 1
+        },
+        {
+          "contribution": -0.5323323696105359,
+          "feature": "Age",
+          "unit": null,
+          "value": 50
+        },
+        {
+          "contribution": 0.48547366833185324,
+          "feature": "Current Smoker",
+          "unit": null,
+          "value": 1
+        },
+        {
+          "contribution": -0.2641950545575373,
+          "feature": "Region RWMA",
+          "unit": null,
+          "value": 0
+        }
+      ],
+      "maximum_absolute_reconstruction_residual": 2.220446049250313e-16,
+      "warm_cached": {
+        "median_ms": 0.4103960018255748,
+        "p95_ms": 0.4672772014600922,
+        "samples": 30
+      },
+      "warm_uncached": {
+        "median_ms": 15.647708001779392,
+        "p95_ms": 17.944321201866842,
+        "samples": 30
+      }
+    },
+    "LCX": {
+      "cold_first_ms": 53.081833000760525,
+      "example": {
+        "baseline": 0.3848793000341224,
+        "explained_output": 0.3705140009054133,
+        "output_space": "probability",
+        "probability": 0.3705140009054133,
+        "reconstruction_residual": -6.116750994600295e-10
+      },
+      "example_top_absolute_contributions": [
+        {
+          "contribution": 0.05028115396125941,
+          "feature": "CR",
+          "unit": null,
+          "value": 1.4
+        },
+        {
+          "contribution": -0.03963631860213354,
+          "feature": "Age",
+          "unit": null,
+          "value": 50
+        },
+        {
+          "contribution": -0.015368877041619272,
+          "feature": "Typical Chest Pain",
+          "unit": null,
+          "value": 0
+        },
+        {
+          "contribution": -0.01413884410081664,
+          "feature": "Atypical",
+          "unit": null,
+          "value": "Y"
+        },
+        {
+          "contribution": -0.013739489833533299,
+          "feature": "HTN",
+          "unit": null,
+          "value": 0
+        }
+      ],
+      "maximum_absolute_reconstruction_residual": 1.35843636339672e-09,
+      "warm_cached": {
+        "median_ms": 0.4196665031486191,
+        "p95_ms": 0.4834228006075135,
+        "samples": 30
+      },
+      "warm_uncached": {
+        "median_ms": 14.435249999223743,
+        "p95_ms": 26.61506614895188,
+        "samples": 30
+      }
+    },
+    "RCA": {
+      "cold_first_ms": 24.92599999823142,
+      "example": {
+        "baseline": 0.37617418935111857,
+        "explained_output": 0.3090592361868292,
+        "output_space": "probability",
+        "probability": 0.3090592361868292,
+        "reconstruction_residual": -1.7709154698231089e-09
+      },
+      "example_top_absolute_contributions": [
+        {
+          "contribution": -0.0354381071305761,
+          "feature": "Age",
+          "unit": null,
+          "value": 50
+        },
+        {
+          "contribution": 0.031729689796411546,
+          "feature": "CR",
+          "unit": null,
+          "value": 1.4
+        },
+        {
+          "contribution": -0.027104131339874583,
+          "feature": "Atypical",
+          "unit": null,
+          "value": "Y"
+        },
+        {
+          "contribution": -0.016351395840392798,
+          "feature": "Lymph",
+          "unit": null,
+          "value": 53
+        },
+        {
+          "contribution": 0.016259451664082006,
+          "feature": "Na",
+          "unit": null,
+          "value": 138
+        }
+      ],
+      "maximum_absolute_reconstruction_residual": 2.5492717381503383e-09,
+      "warm_cached": {
+        "median_ms": 0.3894790024787653,
+        "p95_ms": 0.45049985164951056,
+        "samples": 30
+      },
+      "warm_uncached": {
+        "median_ms": 14.54725000075996,
+        "p95_ms": 15.471937345137121,
+        "samples": 30
+      }
+    }
+  },
+  "warm_definition": "uncached computation after explainer creation; cached reported separately"
+}
